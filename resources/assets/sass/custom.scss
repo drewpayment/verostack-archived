@@ -1,0 +1,25 @@
+
+
+/**
+  FONTS
+ */
+
+@include font-face(Lora-Regular, 'https://fonts.googleapis.com/css?family=Lora', 400, normal);
+
+//body {
+//  background: url('../images/city-wallpaper-18.jpg') no-repeat center top;
+//}
+
+
+.hello-world {
+  font: 1rem Lora-Regular;
+
+  .btn {
+    font: 1rem $font-family-base;
+  }
+}
+
+.landing-navbar {
+  opacity: 0.85;
+}
+

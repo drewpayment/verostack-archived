@@ -1,0 +1,11 @@
+
+// mixins
+@import 'mixins.scss';
+
+// vendors
+@import 'bootstrap/bootstrap.scss';
+@import 'bootstrap-vue';
+@import '~font-awesome/scss/font-awesome.scss';
+
+// custom, user generated
+@import 'custom.scss';
