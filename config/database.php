@@ -46,16 +46,28 @@ return [
             'prefix' => '',
         ],
 
-	    'mysql' => [
+        'local-mysql' => [
 	        'driver' => 'mysql',
-		    'host' => env('DB_HOST', $url['DB_HOST']),
-		    'database' => $connArray[count($connArray) - 1],
-		    'username' => env('DB_USERNAME', $url['DB_USERNAME']),
-		    'password' => env('DB_PASSWORD', $url['DB_PASSWORD']),
-		    'charset' => 'utf8',
-		    'collation' => 'utf8_unicode_ci',
-		    'prefix' => ''
-	    ],
+	        'host' => env('DB_HOST', '127.0.0.1'),
+	        'port' => env('DB_PORT', '8889'),
+	        'database' => env('DB_DATABASE', 'verostack'),
+	        'username' => env('DB_USERNAME', 'root'),
+	        'password' => env('DB_PASSWORD', ''),
+	        'charset' => 'utf8',
+	        'collation' => 'utf8_unicode_ci',
+	        'prefix' => ''
+        ],
+
+//	    'mysql' => [
+//	        'driver' => 'mysql',
+//		    'host' => env('DB_HOST', $url['DB_HOST']),
+//		    'database' => $connArray[count($connArray) - 1],
+//		    'username' => env('DB_USERNAME', $url['DB_USERNAME']),
+//		    'password' => env('DB_PASSWORD', $url['DB_PASSWORD']),
+//		    'charset' => 'utf8',
+//		    'collation' => 'utf8_unicode_ci',
+//		    'prefix' => ''
+//	    ],
 
         'pgsql' => [
             'driver' => 'pgsql',
