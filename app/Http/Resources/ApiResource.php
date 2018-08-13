@@ -147,6 +147,26 @@ class ApiResource {
 	}
 
 	/**
+	 * Checks access of client id.
+	 *
+	 * @param $clientId
+	 * @param $userId
+	 *
+	 * @return ApiResource
+	 */
+	public function checkAccessByClient($clientId, $userId)
+	{
+		$user = User::find($userId)->first();
+		$selectedClient = $user->sessionUser->session_client;
+		$authorized = $clientId == $selectedClient;
+
+		if($authorized)
+			return $this->setToSuccess();
+		else
+			return $this->setToFail();
+	}
+
+	/**
 	 * Gets response information from resource
 	 *
 	 * @return mixed
