@@ -28,8 +28,10 @@ class SalesStatusController extends Controller
 	{
 		$result = new ApiResource();
 
+		$user = Auth::user();
+
 		$result
-			->checkAccessByClient($clientId, $this->$user->id)
+			->checkAccessByClient($clientId, $user->id)
 			->mergeInto($result);
 
 		if($result->hasError)

@@ -9,7 +9,7 @@ use App\SaleStatus;
 
 class SalesStatusService
 {
-	private $defaultClient = -1;
+	private $defaultClient = 0;
 
 	protected $helper;
 

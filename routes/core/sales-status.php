@@ -10,3 +10,9 @@ Route::prefix(['prefix' => 'clients', 'middleware' => 'auth:api'], function() {
 	Route::post('/{clientId}/sales-statuses/{saleStatusId}', 'SalesStatusController@updateStatus');
 
 });
+
+Route::middleware(['auth:api'])->group(function() {
+
+	Route::get('/clients/{clientId}/sale-statuses', 'SalesStatusController@getStatuses');
+
+});
