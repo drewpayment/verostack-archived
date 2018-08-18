@@ -15,4 +15,8 @@ Route::middleware(['auth:api'])->group(function() {
 
 	Route::get('/clients/{clientId}/sale-statuses', 'SalesStatusController@getStatuses');
 
+	Route::post("/clients/{clientId}/sale-statuses/{saleStatusId}", 'SalesStatusController@updateStatus');
+
+	Route::post('/clients/{clientId}/sale-statuses/all', 'SalesStatusController@createStatuses');
+
 });

@@ -69,4 +69,32 @@ class SalesStatusService
 		return $result->setData($curr);
 	}
 
+	/**
+	 * Creates new entities from a list of entities, assigning them new PKs.
+	 *
+	 * @param $dtoList
+	 *
+	 * @return ApiResource
+	 */
+	public function convertDefaultStatuses($dtoList)
+	{
+		$result = new ApiResource();
+		$resultList = [];
+
+		if(!is_array($dtoList))
+			return $result->setToFail();
+
+		foreach($dtoList as $d)
+		{
+			$dto = new SaleStatus();
+			$dto->name = $d['name'];
+			$dto->is_active = true;
+			$dto->client_id = $d['client_id'];
+			$dto->save();
+			$resultList[] = $dto;
+		}
+
+		return $result->setData($resultList);
+	}
+
 }

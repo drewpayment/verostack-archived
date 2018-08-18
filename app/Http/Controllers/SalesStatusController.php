@@ -95,4 +95,31 @@ class SalesStatusController extends Controller
 			->getResponse();
 	}
 
+	/**
+	 * Create sale statuses from a list of statuses passed in.
+	 *
+	 * @param Request $request
+	 * @param $clientId
+	 *
+	 * @return ApiResource|mixed
+	 */
+	public function createStatuses(Request $request, $clientId)
+	{
+		$result = new ApiResource();
+
+		$result
+			->checkAccessByClient($clientId, Auth::user()->id)
+			->mergeInto($result);
+
+		if($result->hasError) return $result->setToFail();
+
+		$dtoList = $request->dtos;
+
+		return $this->service
+			->convertDefaultStatuses($dtoList)
+			->mergeInto($result)
+			->throwApiException()
+			->getResponse();
+	}
+
 }
