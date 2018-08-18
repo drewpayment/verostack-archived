@@ -13,7 +13,7 @@ class SalesStatusService
 
 	protected $helper;
 
-	public function SalesStatusService(Helpers $_helper)
+	public function __construct(Helpers $_helper)
 	{
 		$this->helper = $_helper;
 	}
@@ -72,29 +72,34 @@ class SalesStatusService
 	/**
 	 * Creates new entities from a list of entities, assigning them new PKs.
 	 *
-	 * @param $dtoList
+	 * @param $clientId
+	 * @param array $dtoList
 	 *
 	 * @return ApiResource
 	 */
-	public function convertDefaultStatuses($dtoList)
+	public function convertDefaultStatuses($clientId, array $dtoList)
 	{
 		$result = new ApiResource();
-		$resultList = [];
+		$inserts = [];
 
 		if(!is_array($dtoList))
 			return $result->setToFail();
 
 		foreach($dtoList as $d)
 		{
-			$dto = new SaleStatus();
-			$dto->name = $d['name'];
-			$dto->is_active = true;
-			$dto->client_id = $d['client_id'];
-			$dto->save();
-			$resultList[] = $dto;
+			$pending = [
+				'name' => $d['name'],
+				'client_id' => $clientId,
+				'is_active' => $d['isActive']
+			];
+
+			$saved = SaleStatus::updateOrCreate($pending);
+			array_push($inserts,
+				$this->helper->normalizeLaravelObject($saved->toArray())
+			);
 		}
 
-		return $result->setData($resultList);
+		return $result->setData($inserts);
 	}
 
 }

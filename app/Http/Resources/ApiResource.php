@@ -40,6 +40,13 @@ class ApiResource {
 		return $resource;
 	}
 
+	public function combineStatus(ApiResource &$resource)
+	{
+		return $resource->hasData()
+			? $resource->setToSuccess()
+			: $resource->setToFail();
+	}
+
 	/**
 	 * Returns the locally stored data.
 	 *

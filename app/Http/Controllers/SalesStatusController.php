@@ -111,13 +111,13 @@ class SalesStatusController extends Controller
 			->checkAccessByClient($clientId, Auth::user()->id)
 			->mergeInto($result);
 
-		if($result->hasError) return $result->setToFail();
-
-		$dtoList = $request->dtos;
+		if($result->hasError) return $result
+			->setToFail()
+			->throwApiException()
+			->getResponse();
 
 		return $this->service
-			->convertDefaultStatuses($dtoList)
-			->mergeInto($result)
+			->convertDefaultStatuses($clientId, $request->all())
 			->throwApiException()
 			->getResponse();
 	}
