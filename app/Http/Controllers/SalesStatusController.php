@@ -79,17 +79,20 @@ class SalesStatusController extends Controller
 		$result = new ApiResource();
 
 		$result
-			->checkAccessByClient($clientId, $this->user->id)
+			->checkAccessByClient($clientId, Auth::user()->id)
 			->mergeInto($result);
 
 		if($saleStatusId == null || $saleStatusId < 1)
 			$result->setToFail();
 
 		if($result->hasError)
-			return $result->setToFail();
+			return $result
+				->setToFail()
+				->throwApiException()
+				->getResponse();
 
 		return $this->service
-			->updateStatus($request->dto)
+			->updateStatus($request)
 			->mergeInto($result)
 			->throwApiException()
 			->getResponse();

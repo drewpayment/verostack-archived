@@ -62,10 +62,18 @@ class SalesStatusService
 			$changed = true;
 		}
 
-		if(!$changed)
-			return $result->setToFail();
+		if($curr->is_active != $dto->isActive)
+		{
+			$curr->is_active = $dto->isActive;
+			$changed = true;
+		}
 
-		$curr->save();
+		if(!$changed) return $result;
+
+		$saveResult = $curr->save();
+
+		if(!$saveResult) $result->setToFail();
+
 		return $result->setData($curr);
 	}
 
