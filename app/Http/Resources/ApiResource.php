@@ -40,6 +40,13 @@ class ApiResource {
 		return $resource;
 	}
 
+	public function combineStatus(ApiResource &$resource)
+	{
+		return $resource->hasData()
+			? $resource->setToSuccess()
+			: $resource->setToFail();
+	}
+
 	/**
 	 * Returns the locally stored data.
 	 *
@@ -139,6 +146,26 @@ class ApiResource {
 		{
 			$authorized = $c->client_id == $selectedClientId;
 		}
+
+		if($authorized)
+			return $this->setToSuccess();
+		else
+			return $this->setToFail();
+	}
+
+	/**
+	 * Checks access of client id.
+	 *
+	 * @param $clientId
+	 * @param $userId
+	 *
+	 * @return ApiResource
+	 */
+	public function checkAccessByClient($clientId, $userId)
+	{
+		$user = User::find($userId)->first();
+		$selectedClient = $user->sessionUser->session_client;
+		$authorized = $clientId == $selectedClient;
 
 		if($authorized)
 			return $this->setToSuccess();
