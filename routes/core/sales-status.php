@@ -16,6 +16,9 @@ Route::middleware(['auth:api'])->group(function() {
 	Route::get('/clients/{clientId}/sale-statuses', 'SalesStatusController@getStatuses')
 		->where(['clientId' => '[0-9]+']);
 
+	Route::post('/clients/{clientId}/sale-statuses', 'SalesStatusController@saveNewStatus')
+		->where(['clientId' => '[0-9]+']);
+
 	Route::post('/clients/{clientId}/sale-statuses/{saleStatusId}', 'SalesStatusController@updateStatus')
 		->where(['saleStatusId' => '[0-9]+', 'clientId' => '[0-9]+']);
 

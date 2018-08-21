@@ -53,18 +53,19 @@ class SalesStatusController extends Controller
 	public function saveNewStatus(Request $request, $clientId)
 	{
 		$result = new ApiResource();
-		$user = Auth::user();
 
 		$result
-			->checkAccessByClient($clientId, $this->$user->id)
+			->checkAccessByClient($clientId, Auth::user()->id)
 			->mergeInto($result);
 
 		if($result->hasError)
 			return $result->getResponse();
 
 		return $this->service
-			->saveStatus($request->dto)
-			->mergeInto($result);
+			->saveStatus($request)
+			->mergeInto($result)
+			->throwApiException()
+			->getResponse();
 	}
 
 	/**

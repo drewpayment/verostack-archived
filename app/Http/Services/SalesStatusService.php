@@ -33,6 +33,11 @@ class SalesStatusService
 			->setData($statuses);
 	}
 
+	/**
+	 * @param $dto
+	 *
+	 * @return ApiResource
+	 */
 	public function saveStatus($dto)
 	{
 		$result = new ApiResource();
@@ -40,7 +45,7 @@ class SalesStatusService
 		$status = new SaleStatus();
 		$status->client_id = $dto->clientId;
 		$status->name = $dto->name;
-		$status->is_active = true;
+		$status->is_active = $dto->isActive;
 		$res = $status->save();
 
 		if(!$res)
