@@ -20,6 +20,7 @@ include('core/campaign.php');
 include('core/sales-pairings.php');
 include('core/invoices.php');
 include('core/sales-status.php');
+include('core/daily-sale.php');
 
 //Route::middleware('auth:api')->get('/user', function (Request $request) {
 //    return $request->user();

@@ -13,6 +13,7 @@ class DailySale extends Model
     protected $fillable = [
         'daily_sale_id',
 	    'agent_id',
+	    'client_id',
 	    'pod_account',
 	    'first_name',
 	    'last_name',
@@ -49,4 +50,30 @@ class DailySale extends Model
     {
     	return $query->where('agent_id', $agentId);
     }
+
+	/**
+	 * Filter entities by client id.
+	 *
+	 * @param $query \Illuminate\Database\Eloquent\Builder
+	 * @param $clientId
+	 *
+	 * @return mixed \Illuminate\Database\Eloquent\Builder
+	 */
+	public function scopeByClient($query, $clientId)
+    {
+    	return $query->where('client_id', $clientId);
+    }
+
+	/**
+	 * @param $query \Illuminate\Database\Eloquent\Builder
+	 * @param $startDate
+	 * @param $endDate
+	 *
+	 * @return mixed \Illuminate\Database\Eloquent\Builder
+	 */
+	public function scopeByDateRange($query, $startDate, $endDate)
+    {
+    	return $query->whereBetween('sale_date', [$startDate, $endDate]);
+    }
+
 }
