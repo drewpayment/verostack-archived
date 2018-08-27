@@ -14,6 +14,7 @@ class DailySale extends Model
         'daily_sale_id',
 	    'agent_id',
 	    'client_id',
+	    'campaign_id',
 	    'pod_account',
 	    'first_name',
 	    'last_name',

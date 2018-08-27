@@ -43,4 +43,21 @@ class DailySaleController extends Controller
 			->getResponse();
 	}
 
+	public function createDailySale(Request $request, $clientId)
+	{
+		$result = new ApiResource();
+
+		$result
+			->checkAccessByClient($clientId, Auth::user()->id)
+			->mergeInto($result);
+
+		if($result->hasError)
+			return $result->getResponse();
+
+		return $this->service->saveNewDailySale($request)
+			->mergeInto($result)
+			->throwApiException()
+			->getResponse();
+	}
+
 }
