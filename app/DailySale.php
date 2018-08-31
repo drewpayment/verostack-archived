@@ -74,7 +74,8 @@ class DailySale extends Model
 	 */
 	public function scopeByDateRange($query, $startDate, $endDate)
     {
-    	return $query->whereBetween('sale_date', [$startDate, $endDate]);
+		return $query->whereDate('sale_date', '>=', $startDate)
+			->whereDate('sale_date', '<=', $endDate);
     }
 
 }

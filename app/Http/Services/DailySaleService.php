@@ -33,6 +33,8 @@ class DailySaleService {
 	public function getDailySalesByClientId($clientId, $startDate, $endDate)
 	{
 		$result = new ApiResource();
+		$startDate = Carbon::createFromFormat('Y-m-d', $startDate)->toDateTimeString();
+		$endDate = Carbon::createFromFormat('Y-m-d', $endDate)->toDateTimeString();
 		return $result
 			->setData(DailySale::byClient($clientId)
 			                   ->byDateRange($startDate, $endDate)
@@ -63,8 +65,8 @@ class DailySaleService {
 		$s->state = $sale->state;
 		$s->zip = $sale->zip;
 		$s->status = $sale->status;
-		$s->sale_date = Carbon::now();
-		$s->last_touch_date = Carbon::now();
+		$s->sale_date = $sale->saleDate;
+		$s->last_touch_date = $sale->lastTouchDate;
 		$s->notes = $sale->notes;
 		$s->updated_at = Carbon::now();
 		$s->created_at = Carbon::now();
