@@ -25,20 +25,22 @@ class DailySaleService {
 
 	/**
 	 * @param $clientId
+	 * @param $campaignId
 	 * @param $startDate
 	 * @param $endDate
 	 *
 	 * @return ApiResource
 	 */
-	public function getDailySalesByClientId($clientId, $startDate, $endDate)
+	public function getDailySalesByClientId($clientId, $campaignId, $startDate, $endDate)
 	{
 		$result = new ApiResource();
 		$startDate = Carbon::createFromFormat('Y-m-d', $startDate)->toDateTimeString();
 		$endDate = Carbon::createFromFormat('Y-m-d', $endDate)->toDateTimeString();
 		return $result
 			->setData(DailySale::byClient($clientId)
-			                   ->byDateRange($startDate, $endDate)
-			                   ->get());
+				->byCampaign($campaignId)
+                ->byDateRange($startDate, $endDate)
+	            ->get());
 	}
 
 	/**
@@ -66,7 +68,7 @@ class DailySaleService {
 		$s->zip = $sale->zip;
 		$s->status = $sale->status;
 		$s->sale_date = $sale->saleDate;
-		$s->last_touch_date = $sale->lastTouchDate;
+		$s->last_touch_date = Carbon::now();
 		$s->notes = $sale->notes;
 		$s->updated_at = Carbon::now();
 		$s->created_at = Carbon::now();
@@ -75,6 +77,24 @@ class DailySaleService {
 
 		if($saved)
 			return $result->setData($s);
+		else
+			return $result->setToFail();
+	}
+
+	/**
+	 * @param $dailySaleId
+	 *
+	 * @return ApiResource
+	 */
+	public function deleteDailySale($dailySaleId)
+	{
+		$result = new ApiResource();
+
+		$sale = DailySale::find($dailySaleId)->first();
+		$deleted = $sale->delete();
+
+		if($deleted)
+			return $result->setToSuccess();
 		else
 			return $result->setToFail();
 	}

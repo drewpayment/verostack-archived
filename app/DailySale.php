@@ -24,6 +24,7 @@ class DailySale extends Model
 	    'state',
 	    'zip',
 	    'status',
+	    'paid_status',
 	    'sale_date',
 	    'last_touch_date',
 	    'notes'
@@ -74,8 +75,19 @@ class DailySale extends Model
 	 */
 	public function scopeByDateRange($query, $startDate, $endDate)
     {
-		return $query->whereDate('sale_date', '>=', $startDate)
-			->whereDate('sale_date', '<=', $endDate);
+		return $query->whereBetween('sale_date', [$startDate, $endDate]);
+    }
+
+	/**
+	 * @param $query \Illuminate\Database\Eloquent\Builder
+	 * @param $campaignId
+	 *
+	 * @return mixed \Illuminate\Database\Eloquent\Builder
+	 */
+	public function scopeByCampaign($query, $campaignId)
+    {
+    	if($campaignId < 1) return $query;
+        return $query->where('campaign_id', $campaignId);
     }
 
 }

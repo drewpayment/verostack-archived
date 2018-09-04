@@ -23,10 +23,13 @@ class DailySaleController extends Controller
 	 * Get daily sales entities by client id.
 	 *
 	 * @param $clientId
+	 * @param $campaignId
+	 * @param $startDate
+	 * @param $endDate
 	 *
 	 * @return mixed
 	 */
-	public function getDailySales($clientId, $startDate, $endDate)
+	public function getDailySales($clientId, $campaignId, $startDate, $endDate)
 	{
 		$result = new ApiResource();
 
@@ -37,12 +40,20 @@ class DailySaleController extends Controller
 		if($result->hasError)
 			return $result->getResponse();
 
-		return $this->service->getDailySalesByClientId($clientId, $startDate, $endDate)
+		return $this->service->getDailySalesByClientId($clientId, $campaignId, $startDate, $endDate)
 			->mergeInto($result)
 			->throwApiException()
 			->getResponse();
 	}
 
+	/**
+	 * Create a new daily sale entity.
+	 *
+	 * @param Request $request
+	 * @param $clientId
+	 *
+	 * @return mixed
+	 */
 	public function createDailySale(Request $request, $clientId)
 	{
 		$result = new ApiResource();
@@ -55,6 +66,31 @@ class DailySaleController extends Controller
 			return $result->getResponse();
 
 		return $this->service->saveNewDailySale($request)
+			->mergeInto($result)
+			->throwApiException()
+			->getResponse();
+	}
+
+	/**
+	 * Delete an existing daily sale. 
+	 *
+	 * @param $clientId
+	 * @param $dailySaleId
+	 *
+	 * @return mixed
+	 */
+	public function deleteDailySale($clientId, $dailySaleId)
+	{
+		$result = new ApiResource();
+
+		$result
+			->checkAccessByClient($clientId, Auth::user()->id)
+			->mergeInto($result);
+
+		if($result->hasError)
+			return $result->getResponse();
+
+		return $this->service->deleteDailySale($dailySaleId)
 			->mergeInto($result)
 			->throwApiException()
 			->getResponse();
