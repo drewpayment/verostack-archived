@@ -40,6 +40,7 @@ class DailySaleService {
 			->setData(DailySale::byClient($clientId)
 				->byCampaign($campaignId)
                 ->byDateRange($startDate, $endDate)
+				->with(['remarks', 'remarks.user'])
 	            ->get());
 	}
 
@@ -82,6 +83,44 @@ class DailySaleService {
 	}
 
 	/**
+	 * @param $sale
+	 *
+	 * @return ApiResource
+	 */
+	public function updateDailySale($sale)
+	{
+		$result = new ApiResource();
+
+		$c = DailySale::byDailySale($sale->dailySaleId)->first();
+
+		if($c == null)
+			return $result->setToFail();
+
+		$c->agent_id = $sale->agentId;
+		$c->campaign_id = $sale->campaignId;
+		$c->pod_account = $sale->podAccount;
+		$c->first_name = $sale->firstName;
+		$c->last_name = $sale->lastName;
+		$c->street = $sale->street;
+		$c->street2 = $sale->street2;
+		$c->city = $sale->city;
+		$c->state = $sale->state;
+		$c->zip = $sale->zip;
+		$c->status = $sale->status;
+		$c->paid_status = $sale->paidStatus;
+		$c->sale_date = $sale->saleDate;
+		$c->last_touch_date = Carbon::now();
+		$c->notes = $sale->notes;
+
+		$success = $c->save();
+
+		if($success)
+			return $result->setData($c);
+		else
+			return $result->setToFail();
+	}
+
+	/**
 	 * @param $dailySaleId
 	 *
 	 * @return ApiResource
@@ -90,7 +129,7 @@ class DailySaleService {
 	{
 		$result = new ApiResource();
 
-		$sale = DailySale::find($dailySaleId)->first();
+		$sale = DailySale::byDailySale($dailySaleId)->first();
 		$deleted = $sale->delete();
 
 		if($deleted)

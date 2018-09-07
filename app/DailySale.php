@@ -41,6 +41,36 @@ class DailySale extends Model
     }
 
 	/**
+	 * Gets remark entities related via the intermediate table.
+	 *
+	 * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+	 */
+	public function remarks()
+    {
+    	return $this->hasManyThrough(
+    		Remark::class,
+		    DailySaleRemark::class,
+		    'daily_sale_id', // foreign key on the daily sale remark table
+		    'remark_id', // foreign key on the remark table
+		    'daily_sale_id', // local key to relate from this table
+		    'remark_id' // key to use on the dialy sale remark table
+	    );
+    }
+
+	/**
+	 * Filter entities by daily sale id.
+	 *
+	 * @param $query \Illuminate\Database\Eloquent\Builder
+	 * @param $dailySaleId
+	 *
+	 * @return mixed \Illuminate\Database\Eloquent\Builder
+	 */
+    public function scopeByDailySale($query, $dailySaleId)
+    {
+    	return $query->where('daily_sale_id', $dailySaleId);
+    }
+
+	/**
 	 * Filter entities by agent id.
 	 *
 	 * @param $query \Illuminate\Database\Eloquent\Builder

@@ -8,6 +8,9 @@ Route::middleware(['auth:api'])->group(function() {
 	Route::post('/clients/{clientId}/daily-sales', 'DailySaleController@createDailySale')
 		->where(['clientId' => '[0-9]+']);
 
+	Route::post('/clients/{clientId}/daily-sales/{dailySaleId}', 'DailySaleController@updateDailySale')
+		->where(['clientId' => '[0-9]+', 'dailySaleId' => '[0-9]+']);
+
 	Route::delete('/clients/{clientId}/daily-sales/{dailySaleId}', 'DailySaleController@deleteDailySale')
 		->where(['clientId' => '[0-9]+', 'dailySaleId' => '[0-9]+']);
 

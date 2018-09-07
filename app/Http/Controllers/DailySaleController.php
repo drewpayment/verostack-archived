@@ -72,7 +72,39 @@ class DailySaleController extends Controller
 	}
 
 	/**
-	 * Delete an existing daily sale. 
+	 * Update an existing daily sale entity.
+	 *
+	 * @param Request $request
+	 * @param $clientId
+	 * @param $dailySaleId
+	 *
+	 * @return mixed
+	 */
+	public function updateDailySale(Request $request, $clientId, $dailySaleId)
+	{
+		$result = new ApiResource();
+
+		$result
+			->checkAccessByClient($clientId, Auth::user()->id)
+			->mergeInto($result);
+
+		if($dailySaleId < 1)
+			return $result
+				->setToFail()
+				->throwApiException()
+				->getResponse();
+
+		if($result->hasError)
+			return $result->getResponse();
+
+		return $this->service->updateDailySale($request)
+			->mergeInto($result)
+			->throwApiException()
+			->getResponse();
+	}
+
+	/**
+	 * Delete an existing daily sale.
 	 *
 	 * @param $clientId
 	 * @param $dailySaleId
