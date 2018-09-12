@@ -12,6 +12,7 @@ namespace App\Http\Services;
 use App\DailySale;
 use App\Http\Helpers;
 use App\Http\Resources\ApiResource;
+use App\Remark;
 use Carbon\Carbon;
 
 class DailySaleService {
@@ -70,7 +71,6 @@ class DailySaleService {
 		$s->status = $sale->status;
 		$s->sale_date = $sale->saleDate;
 		$s->last_touch_date = Carbon::now();
-		$s->notes = $sale->notes;
 		$s->updated_at = Carbon::now();
 		$s->created_at = Carbon::now();
 
@@ -110,14 +110,24 @@ class DailySaleService {
 		$c->paid_status = $sale->paidStatus;
 		$c->sale_date = $sale->saleDate;
 		$c->last_touch_date = Carbon::now();
-		$c->notes = $sale->notes;
 
 		$success = $c->save();
 
-		if($success)
-			return $result->setData($c);
-		else
-			return $result->setToFail();
+		if(!$success) return $result->setToFail();
+
+		foreach($sale->remarks as $remark)
+		{
+			$r = new Remark;
+			$r->description = $remark['description'];
+			$r->modified_by = $remark['modifiedBy'];
+			$r->save();
+			$r->dailySale()->attach($c);
+		}
+
+		return $result->setData(
+			DailySale::with('remarks')
+			         ->byDailySale($sale->dailySaleId)
+			         ->first());
 	}
 
 	/**

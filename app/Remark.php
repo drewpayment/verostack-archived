@@ -18,15 +18,13 @@ class Remark extends Model
 
 
 	/**
-	 * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+	 * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
 	 */
 	public function dailySale()
 	{
-		return $this->hasManyThrough(
+		return $this->belongsToMany(
 			DailySale::class,
-			DailySaleRemark::class,
-			'remark_id',
-			'daily_sale_id',
+			'daily_sale_remark',
 			'remark_id',
 			'daily_sale_id'
 		);

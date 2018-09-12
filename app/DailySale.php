@@ -26,8 +26,7 @@ class DailySale extends Model
 	    'status',
 	    'paid_status',
 	    'sale_date',
-	    'last_touch_date',
-	    'notes'
+	    'last_touch_date'
     ];
 
 	/**
@@ -43,18 +42,16 @@ class DailySale extends Model
 	/**
 	 * Gets remark entities related via the intermediate table.
 	 *
-	 * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+	 * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany|\Illuminate\Database\Eloquent\Relations\HasManyThrough
 	 */
 	public function remarks()
     {
-    	return $this->hasManyThrough(
-    		Remark::class,
-		    DailySaleRemark::class,
-		    'daily_sale_id', // foreign key on the daily sale remark table
-		    'remark_id', // foreign key on the remark table
-		    'daily_sale_id', // local key to relate from this table
-		    'remark_id' // key to use on the dialy sale remark table
-	    );
+		return $this->belongsToMany(
+			Remark::class,
+			'daily_sale_remark',
+			'daily_sale_id',
+			'remark_id'
+		);
     }
 
 	/**
