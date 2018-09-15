@@ -168,7 +168,7 @@ class DailySaleService {
 		}
 
 		return $result->setData(
-			DailySale::with('remarks')
+			DailySale::with('remarks.user')
 			         ->byDailySale($sale->dailySaleId)
 			         ->first());
 	}
