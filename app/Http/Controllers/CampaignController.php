@@ -7,6 +7,7 @@ use App\Http\Helpers;
 use App\Http\Resources\ApiResource;
 use App\Http\ResourceType;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CampaignController extends Controller
 {
@@ -34,15 +35,10 @@ class CampaignController extends Controller
 	 *
 	 * @return \Illuminate\Http\JsonResponse
 	 */
-	public function getCampaigns($clientId, $activeOnly = true) {
-		$activeOnly = is_string($activeOnly)
-			? strtolower($activeOnly) === 'true'
-			: $activeOnly;
+	public function getCampaigns($clientId, $activeOnly = null) {
 		$result = new ApiResource();
-		if($clientId == null) {
-			$result->setToFail();
-			return $result->getResponse();
-		}
+		if(is_null($clientId))
+			return $result->setToFail()->getResponse();
 
 		return $result
 			->setData(Campaign::active($activeOnly)->byClientId($clientId)->get())
@@ -86,27 +82,36 @@ class CampaignController extends Controller
 	public function saveCampaign($clientId, $campaignId = null, Request $request)
 	{
 		$result = new ApiResource();
-		$user = $request->user();
 
 		// Check to make sure that the user has rights to access and edit this client
-		$this->helper->checkAccessById(new ResourceType(ResourceType::Client), $user->id, $clientId)
-		             ->mergeInto($result);
-		if($result->hasError) return $result->throwApiException()->getResponse();
+		$result
+			->checkAccessByClient($clientId, Auth::user()->id)
+			->mergeInto($result);
+		if($result->hasError)
+			return $result->setToFail()->getResponse();
 
 		$data = $request->dto;
 
-		$entity = Campaign::firstOrNew([
-			'campaign_id' => $campaignId != null ? $campaignId : $data['campaignId'],
-			'client_id' => $clientId != null ? $clientId : $data['clientId']
-		]);
+		if($campaignId == null && $data['campaignId'] == null)
+		{
+			$entity = new Campaign;
+			$entity->client_id = $clientId ?? $data['clientId'];
+			$entity->name = $data['name'];
+			$entity->active = $data['active'];
+		}
+		else
+		{
+			$entity = Campaign::find($campaignId)->first();
+			$entity->active = $data['active'];
+		}
 
-		$entity->name = $data['name'];
-		$entity->active = $data['active'];
-		$entity->save();
+		$s = $entity->save();
 
-		return $result->setData(
-			$this->helper->normalizeLaravelObject($entity->toArray())
-		)->throwApiException()->getResponse();
+		if(!$s) return $result->setToFail()->getResponse();
+
+		return $result->setData($entity)
+			->throwApiException()
+			->getResponse();
 	}
 
 }

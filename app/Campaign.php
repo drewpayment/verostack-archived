@@ -41,7 +41,15 @@ class Campaign extends Model
 	 */
     public function scopeActive($query, $activeOnly = true)
     {
-    	if($activeOnly) return $query->where('active', $activeOnly);
+    	if(is_null($activeOnly))
+	    {
+	    	$activeOnly = true;
+	    }
+	    else if (is_string($activeOnly))
+	    {
+	    	$activeOnly = (strtolower($activeOnly) === 'true');
+	    }
+    	if($activeOnly === true) return $query->where('active', $activeOnly);
 	    return $query;
     }
 
@@ -57,4 +65,5 @@ class Campaign extends Model
     {
     	return $query->where('name', $name);
     }
+
 }
