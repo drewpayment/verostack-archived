@@ -1,0 +1,164 @@
+
+<mat-horizontal-stepper linear="true" #addAgent>
+  <mat-step [stepControl]="userForm">
+    <form [formGroup]="userForm">
+      <ng-template matStepLabel>User Login Info</ng-template>
+
+      <mat-form-field>
+        <input matInput type="text" placeholder="First Name" formControlName="firstName" required />
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput type="text" placeholder="Last Name" formControlName="lastName" required />
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput type="text" placeholder="Username" formControlName="username" required />
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput type="text" placeholder="Email" formControlName="email" required />
+      </mat-form-field>
+      <mat-form-field class="clickable" (click)="copyPasswordText(userForm.value.password)">
+        <input matInput
+          class="clickable"
+          type="text"
+          placeholder="Random Password"
+          formControlName="password"
+          readonly
+        />
+        <mat-icon matSuffix>filter_none</mat-icon>
+        <mat-hint align="start">
+          Click to Copy
+        </mat-hint>
+      </mat-form-field>
+      <div class="d-flex justify-content-end pt-4">
+        <button mat-button matStepperNext>Next</button>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step [stepControl]="detailForm">
+    <form [formGroup]="detailForm">
+      <ng-template matStepLabel>Detail Info</ng-template>
+
+      <mat-form-field>
+        <input matInput type="text" placeholder="Street" formControlName="street" required />
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput type="text" placeholder="Street 2" formControlName="street2" />
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput type="text" placeholder="City" formControlName="city" required />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-select placeholder="State" formControlName="state" required>
+          <mat-option *ngFor="let s of states" [value]="s.abbreviation">{{s.name}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput type="text" placeholder="Postal Code" formControlName="zip" required />
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput
+          [matDatepicker]="birthDate"
+          placeholder="Date of Birth"
+          formControlName="birthDate"
+          required
+        />
+        <mat-datepicker-toggle matSuffix [for]="birthDate"></mat-datepicker-toggle>
+        <mat-datepicker #birthDate></mat-datepicker>
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput
+          type="text"
+          placeholder="Phone No"
+          (keypress)="phoneNoKeyPress($event)"
+          formControlName="phone"
+          required
+        />
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput type="text" placeholder="Social Security Number" formControlName="ssn" />
+        <mat-hint align="start" class="text-muted font-italic">Optional</mat-hint>
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput
+          type="text"
+          placeholder="Bank Routing"
+          formControlName="bankRouting"
+          (keyup)="validateVerifyRouting()"
+        />
+        <mat-hint align="start" class="text-muted font-italic">Optional</mat-hint>
+      </mat-form-field>
+      <mat-form-field [hidden]="!(detailForm.value.bankRouting > 0)">
+        <input matInput
+          type="text"
+          placeholder="Verify Routing"
+          formControlName="verifyRouting"
+          [required]="detailForm.value.bankRouting > 0 && detailForm.get('bankRouting').valid"
+          (keyup)="compareRouting()"
+        />
+        <mat-error *ngIf="detailForm.get('verifyRouting').getError('notEqual')">
+          Routing numbers must match.
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput
+          type="text"
+          placeholder="Bank Account"
+          formControlName="bankAccount"
+          [required]="detailForm.value.bankRouting > 0 && detailForm.get('bankRouting').valid"
+          (keyup)="validateVerifyAccount()"
+        />
+        <mat-hint
+          align="start"
+          class="text-muted font-italic"
+          [hidden]="detailForm.value.bankRouting > 0 && detailForm.get('bankRouting').valid"
+        >Optional</mat-hint>
+      </mat-form-field>
+      <mat-form-field [hidden]="!(detailForm.value.bankAccount > 0)">
+        <input matInput
+          type="text"
+          placeholder="Verify Account"
+          formControlName="verifyAccount"
+          [required]="detailForm.value.bankAccount > 0 && detailForm.get('bankAccount').valid"
+          (keyup)="compareAccounts()"
+        />
+        <mat-error *ngIf="detailForm.get('verifyAccount').getError('notEqual')">
+          Account numbers must match.
+        </mat-error>
+      </mat-form-field>
+      <div class="d-flex justify-content-between pt-4">
+        <button mat-button matStepperPrevious>Previous</button>
+        <button mat-button matStepperNext (click)="test()">Next</button>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step [stepControl]="agentForm">
+    <form [formGroup]="agentForm">
+      <ng-template matStepLabel>Permissions</ng-template>
+
+      <mat-form-field class="py-3">
+        <mat-select placeholder="Select Manager" formControlName="managerId" required>
+          <mat-option *ngFor="let m of managers" [value]="m.agentId">
+            {{m.firstName}} {{m.lastName}}
+          </mat-option>
+        </mat-select>
+        <mat-hint>Who will the agent report to?</mat-hint>
+      </mat-form-field>
+
+      <mat-checkbox
+        formControlName="isManager"
+        matTooltip="Is this agent a manager?"
+      >Enable Manager Access</mat-checkbox>
+
+      <mat-divider></mat-divider>
+
+      <div class="text-muted font-sm font-italic mt-4">
+        Sales ID(s) can be added by saving the new agent and then clicking <span class="font-weight-bold">edit</span> on
+        their agent card after this dialog is closed.
+      </div>
+    </form>
+    <div class="d-flex justify-content-between pt-4">
+      <button mat-button matStepperPrevious>Previous</button>
+      <button mat-button (click)="saveNewUserAgentEntity()">Save</button>
+    </div>
+  </mat-step>
+</mat-horizontal-stepper>

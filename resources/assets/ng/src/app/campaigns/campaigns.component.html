@@ -1,0 +1,102 @@
+<mat-card>
+  <mat-card-content>
+    <h2>{{user.selectedClient.name}}'s Campaigns</h2>
+    <mat-tab-group class="campaign-tab-group" [selectedIndex]="activeTab">
+      <mat-tab label="Active">
+        <div class="campaign-tab-content">
+          <div class="mat-elevation-z2 p-3 d-flex justify-content-center" *ngIf="activeTableSource.length === 0">
+              <h5 class="mb-0">No Active Campaigns</h5>
+          </div>
+          <div class="campaigns-table active mat-elevation-z8" *ngIf="activeTableSource.length > 0">
+            <table mat-table #table [dataSource]="activeTableSource" class="active-table">
+
+              <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef>Name</th>
+                <td mat-cell *matCellDef="let item" class="hover">
+                  {{item.name}}
+                  <i class="material-icons clickable" (click)="editCampaign(item)">create</i>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="campaignId">
+                <th mat-header-cell *matHeaderCellDef>Campaign ID</th>
+                <td mat-cell *matCellDef="let item">{{item.campaignId}}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="active">
+                <th mat-header-cell *matHeaderCellDef>Deactivate</th>
+                <td mat-cell *matCellDef="let item">
+                  <button mat-icon-button>
+                    <mat-icon aria-label="Deactivate" color="warn" (click)="switchActiveStatus(item)">clear</mat-icon>
+                  </button>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="createdAt">
+                <th mat-header-cell *matHeaderCellDef>Date Added</th>
+                <td mat-cell *matCellDef="let item">{{item.createdAt | date }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="updatedAt">
+                <th mat-header-cell *matHeaderCellDef>Last Modified</th>
+                <td mat-cell *matCellDef="let item">{{item.updatedAt | date:'short'}}</td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="activeTableColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: activeTableColumns;"></tr>
+            </table>
+          </div>
+        </div>
+      </mat-tab>
+      <mat-tab label="Inactive">
+        <div class="campaign-tab-content">
+          <div class="mat-elevation-z2 p-3 d-flex justify-content-center" *ngIf="inactiveTableSource.length === 0">
+            <h5 class="mb-0">No Inactive Campaigns</h5>
+          </div>
+          <div class="campaigns-table active mat-elevation-z8" *ngIf="inactiveTableSource.length > 0">
+            <table mat-table #table [dataSource]="inactiveTableSource" class="active-table">
+
+              <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef>Name</th>
+                <td mat-cell *matCellDef="let item">{{item.name}}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="campaignId">
+                <th mat-header-cell *matHeaderCellDef>Campaign ID</th>
+                <td mat-cell *matCellDef="let item">{{item.campaignId}}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="active">
+                <th mat-header-cell *matHeaderCellDef>Activate</th>
+                <td mat-cell *matCellDef="let item">
+                  <button mat-icon-button>
+                    <mat-icon aria-label="Activate" color="primary" (click)="switchActiveStatus(item)">check_cirle_outline</mat-icon>
+                  </button>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="createdAt">
+                <th mat-header-cell *matHeaderCellDef>Date Added</th>
+                <td mat-cell *matCellDef="let item">{{item.createdAt | date }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="updatedAt">
+                <th mat-header-cell *matHeaderCellDef>Last Modified</th>
+                <td mat-cell *matCellDef="let item">{{item.updatedAt | date:'short'}}</td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="activeTableColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: activeTableColumns;"></tr>
+            </table>
+          </div>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </mat-card-content>
+</mat-card>
+
+<vs-float-button
+  mat-icon="add"
+  (callback)="addCampaign()"
+  [isOpen]="floatIsOpen"
+></vs-float-button>

@@ -1,0 +1,10 @@
+
+// mat-toolbar {
+//   background-color: #000000;
+// }
+$break: 480px;
+@media screen and (min-width: $break + 1) {
+  .sidenav-close {
+    display: none;
+  }
+}

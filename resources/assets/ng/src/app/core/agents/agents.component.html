@@ -1,0 +1,331 @@
+
+<div class="row justify-content-center mb-5">
+  <div class="col-lg-10">
+    <mat-card>
+      <h2>
+        <mat-icon inline="true">people</mat-icon> Personnel
+      </h2>
+    </mat-card>
+  </div>
+</div>
+<div class="row justify-content-center" *ngIf="!editAgent">
+  <div class="col-md-10">
+    <form [formGroup]="form">
+      <div class="row">
+        <div class="col-md-4" *ngFor="let agent of agents">
+          <mat-card class="my-1">
+            <mat-card-header>
+              <mat-icon mat-card-avatar>account_box</mat-icon>
+              <mat-card-title>
+                <h4>{{agent.firstName}} {{agent.lastName}}</h4>
+              </mat-card-title>
+              <mat-card-subtitle>Hire Date: {{agent.createdAt | amDateFormat:'LL'}}</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content class="d-flex justify-content-between align-items-center">
+              <mat-slide-toggle [checked]="agent.isActive" (change)="changeActiveStatus(agent, $event)">Active</mat-slide-toggle>
+              <button mat-button type="button" (click)="editAgentDetail(agent)">
+                <mat-icon inline="true">build</mat-icon> Edit
+              </button>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<div *ngIf="editAgent">
+  <form [formGroup]="detailForm" style="width:100% !important;">
+    <div class="row justify-content-center">
+      <div class="col-md-3 my-1">
+        <mat-card>
+          <mat-card-header>
+            <mat-icon mat-card-avatar>build</mat-icon>
+            <mat-card-title>
+              <h4>{{editingFirstName}} {{editingLastName}}</h4>
+            </mat-card-title>
+            <mat-card-subtitle class="d-flex justify-content-between align-items-center">
+              Editing
+              <button type="button" mat-button (click)="cancelUserAndDetailEditing()">
+                <mat-icon inline="true">reply</mat-icon> Back
+              </button>
+            </mat-card-subtitle>
+          </mat-card-header>
+        </mat-card>
+      </div>
+      <div class="col-md-6">
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>
+              <h4>Agent Details</h4>
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <mat-tab-group>
+              <mat-tab label="User">
+                <div class="m-4">
+                  <div formGroupName="agentInfo">
+                    <div class="form-group">
+                      <mat-form-field>
+                        <input class="form-control"
+                          matInput
+                          placeholder="First Name"
+                          formControlName="firstName"
+                          required
+                        />
+                      </mat-form-field>
+                    </div>
+                    <div class="form-group">
+                      <mat-form-field>
+                        <input class="form-control"
+                          matInput
+                          placeholder="Last Name"
+                          formControlName="lastName"
+                          required
+                        />
+                      </mat-form-field>
+                    </div>
+                    <div class="form-group">
+                      <mat-form-field>
+                        <mat-select placeholder="Reports To" formControlName="managerId">
+                          <mat-option *ngFor="let manager of managers" [value]="manager.managerId">
+                            {{manager.firstName}} {{manager.lastName}}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                    <div class="form-group">
+                      <mat-checkbox formControlName="isManager">Manager Permissions</mat-checkbox>
+                    </div>
+                  </div>
+                  <div formGroupName="userInfo">
+                    <div class="form-group">
+                      <mat-form-field>
+                        <input class="form-control"
+                          matInput
+                          placeholder="Username"
+                          formControlName="username"
+                          required
+                        />
+                      </mat-form-field>
+                    </div>
+                    <div class="form-group">
+                      <mat-checkbox
+                        formControlName="canLogin"
+                        matTooltip="User can login to their account."
+                      >Account Access</mat-checkbox>
+                    </div>
+                    <div class="form-group">
+                      <mat-checkbox
+                        formControlName="isActive"
+                        matTooltip="Manages whether agent will show up throughout system."
+                      >Disable Agent</mat-checkbox>
+                    </div>
+                    <div class="form-group">
+                      <mat-form-field>
+                        <input class="form-control"
+                          matInput
+                          placeholder="Email"
+                          formControlName="email"
+                          required
+                        />
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+                <div class="d-flex justify-content-between p-4">
+                  <button type="button" mat-button (click)="cancelUserAndDetailEditing()">Cancel</button>
+                  <button type="button" mat-raised-button
+                    [disabled]="detailForm.get('agentInfo').pristine || detailForm.get('agentInfo').invalid"
+                    color="accent"
+                    (click)="handleUserTabSave()"
+                  >Save</button>
+                </div>
+              </mat-tab>
+              <mat-tab label="Detail">
+                <div class="m-4" formGroupName="detailInfo">
+                  <div class="form-group mt-4">
+                    <mat-form-field>
+                      <input class="form-control"
+                        matInput
+                        placeholder="Street"
+                        formControlName="street"
+                        required
+                      />
+                    </mat-form-field>
+                  </div>
+                  <div class="form-group">
+                    <mat-form-field>
+                      <input class="form-control"
+                        matInput
+                        placeholder="Street 2"
+                        formControlName="street2"
+                      />
+                    </mat-form-field>
+                  </div>
+                  <div class="form-group">
+                    <mat-form-field>
+                      <input class="form-control"
+                        matInput
+                        placeholder="City"
+                        formControlName="city"
+                        required
+                      />
+                    </mat-form-field>
+                  </div>
+                  <div class="form-group">
+                    <mat-form-field>
+                      <input class="form-control"
+                        matInput
+                        placeholder="State"
+                        formControlName="state"
+                        required
+                      />
+                    </mat-form-field>
+                  </div>
+                  <div class="form-group">
+                    <mat-form-field>
+                      <input class="form-control"
+                        matInput
+                        placeholder="Postal Code"
+                        formControlName="postalCode"
+                        required
+                      />
+                    </mat-form-field>
+                  </div>
+                  <div class="form-group">
+                    <mat-form-field>
+                      <input matInput
+                        [matDatepicker]="datepicker"
+                        placeholder="Date of Birth"
+                        formControlName="birthDate"
+                        required
+                      />
+                      <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
+                      <mat-datepicker #datepicker></mat-datepicker>
+                    </mat-form-field>
+                  </div>
+                  <div class="form-group">
+                    <mat-form-field>
+                      <input class="form-control"
+                        matInput
+                        placeholder="Phone Number"
+                        formControlName="phone"
+                        required
+                      />
+                    </mat-form-field>
+                  </div>
+                  <div class="form-group">
+                    <mat-form-field>
+                      <input class="form-control"
+                        matInput
+                        placeholder="Bank Routing"
+                        formControlName="bankRouting"
+                      />
+                      <mat-hint class="font-italic">Optional</mat-hint>
+                    </mat-form-field>
+                  </div>
+                  <div class="form-group">
+                    <mat-form-field>
+                      <input class="form-control"
+                        matInput
+                        placeholder="Bank Accounting"
+                        formControlName="bankAccount"
+                      />
+                      <mat-hint class="font-italic">Optional</mat-hint>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="d-flex justify-content-between p-4">
+                  <button type="button" mat-button (click)="cancelUserAndDetailEditing()">Cancel</button>
+                  <button type="button" mat-raised-button
+                    [disabled]="detailForm.get('detailInfo').pristine || detailForm.get('detailInfo').invalid"
+                    color="accent"
+                    (click)="updateFormDetailInfo()"
+                  >Save</button>
+                </div>
+              </mat-tab>
+              <mat-tab label="IDs">
+                <div class="m-4">
+                  <mat-accordion multi="true" formArrayName="pairings">
+                    <mat-expansion-panel
+                      *ngFor="let group of pairings.controls; let i = index;"
+                      [formGroupName]="i"
+                      [expanded]="getPairingOpenedStatus(i)"
+                      (opened)="pairingsIsOpened[i] = true"
+                      (closed)="pairingsIsOpened[i] = false"
+                      #panel
+                      hideToggle
+                    >
+                      <mat-expansion-panel-header>
+                        <mat-panel-title>
+                          <span *ngIf="group.value.campaignId > 0;else addInfo;">{{getCampaignName(group.value.campaignId)}}</span>
+                          <ng-template #addInfo>
+                            <span>Click to Add New Sales Info</span>
+                          </ng-template>
+                        </mat-panel-title>
+                        <mat-panel-description class="d-flex justify-content-between">
+                          <span>&nbsp;</span>
+                          <mat-icon *ngIf="!pairingsIsOpened[i];else showUpArrow;">keyboard_arrow_down</mat-icon>
+                          <ng-template #showUpArrow>
+                            <mat-icon>keyboard_arrow_up</mat-icon>
+                          </ng-template>
+                        </mat-panel-description>
+                      </mat-expansion-panel-header>
+
+                      <ng-template matExpansionPanelContent>
+                        <mat-form-field class="mx-1">
+                          <mat-select
+                            placeholder="Campaign"
+                            [value]="group.value.campaignId"
+                            formControlName="campaignId"
+                            [required]="group.value.salesId > 0"
+                          >
+                            <mat-option *ngFor="let c of campaigns" [value]="c.campaignId">{{c.name}}</mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                        <mat-form-field class="mx-1">
+                          <input class="form-control"
+                            matInput
+                            placeholder="Sales ID"
+                            formControlName="salesId"
+                            [required]="group.value.campaignId > 0"
+                          />
+                        </mat-form-field>
+                        <div class="d-flex justify-content-end">
+                          <button type="button"
+                            mat-stroked-button color="warn"
+                            (click)="removeAgentSalesPairing(salesPairings[i])"
+                            *ngIf="group.value.salesId > 0 && group.value.campaignId > 0"
+                          >
+                            <mat-icon
+                              aria-label="Delete the campaign and sale pairing."
+                            >clear</mat-icon> Remove
+                          </button>
+                        </div>
+                      </ng-template>
+                    </mat-expansion-panel>
+                  </mat-accordion>
+                </div>
+                <div class="d-flex justify-content-between p-4">
+                  <button type="button" mat-button (click)="cancelUserAndDetailEditing()">Cancel</button>
+                  <button type="button" mat-raised-button
+                    [disabled]="(detailForm.get('pairings').pristine || detailForm.get('pairings').invalid) && isNotRemovingSalesPairing"
+                    color="accent"
+                    (click)="updateAgentSalesPairings()"
+                  >Save</button>
+                </div>
+              </mat-tab>
+            </mat-tab-group>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </form>
+</div>
+
+<vs-float-button
+  *ngIf="!editAgent"
+  mat-icon="add"
+  (callback)="addAgent()"
+  [isOpen]="floatIsOpen"
+></vs-float-button>

@@ -1,0 +1,22 @@
+
+<div class="row justify-content-center">
+  <div class="col-sm-4" [ngClass]="{'text-center': pageLoading}">
+    <div class="card">
+      <img class="card-img-top" src="dist/assets/images/login.png" alt="Login image">
+      <div class="card-body">
+        <form #f="ngForm" (ngSubmit)="onSubmit(f)" novalidate class="login-container">
+          <mat-form-field floatLabel="true" hintLabel="We'll never share your login credentials.">
+            <input matInput name="username" ngModel #username="ngModel" placeholder="username" required [disabled]=lockLoginInputs />
+            <mat-error *ngIf="username.invalid">{{getErrorMessage()}}</mat-error>
+          </mat-form-field>
+          <mat-form-field floatLabel="password">
+            <input matInput name="password" ngModel #password="ngModel" placeholder="password" required type="password" [disabled]=lockLoginInputs />
+            <mat-error *ngIf="password.invalid">{{getErrorMessage()}}</mat-error>
+          </mat-form-field>
+          <button mat-button [disabled]=lockLoginInputs>Login</button>
+        </form>
+        <mat-progress-bar *ngIf="lockLoginInputs" mode="indeterminate"></mat-progress-bar>
+      </div>
+    </div>
+  </div>
+</div>

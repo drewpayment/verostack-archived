@@ -1,0 +1,38 @@
+.mat-sidenav-content {
+  height: 100vh;
+}
+
+.navigation {
+  background-color: #fafafa;
+}
+
+html, body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+}
+
+mat-sidenav-container, .sidenav-content {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+}
+
+mat-sidenav-layout {
+  background: rgba(0,0,0,0.03);
+}
+
+$break: 480px;
+$break-large: 768px;
+
+@media screen and (max-width: $break) {
+  .sidenav {
+    width: 100%;
+  }
+}
+
+@media screen and (min-width: $break + 1) {
+  .sidenav {
+    width: 300px;
+  }
+}

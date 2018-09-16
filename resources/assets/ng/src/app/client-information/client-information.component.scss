@@ -1,0 +1,27 @@
+
+mat-form-field {
+  display: block;
+}
+
+mat-card {
+  margin: 1rem 0 1rem 0;
+}
+
+// Targets edit toggle on the page to apply material icon edit pencil
+:host ::ng-deep .mat-slide-toggle-thumb {
+  text-align: center;
+  vertical-align: middle;
+
+  &::before {
+    font-size: .8rem;
+    font-family: "Material Icons";
+    content: "\e3c9";
+  }
+}
+
+.status-table {
+
+  table {
+    width: 100%;
+  }
+}

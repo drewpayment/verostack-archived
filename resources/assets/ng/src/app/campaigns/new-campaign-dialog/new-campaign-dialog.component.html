@@ -1,0 +1,16 @@
+
+<h2 mat-dialog-title>Add a Campaign</h2>
+<mat-dialog-content>
+  <form [formGroup]="form" (ngSubmit)="saveCampaign()">
+    <mat-form-field>
+      <input type="text" matInput placeholder="Name" formControlName="name" />
+    </mat-form-field>
+    <mat-checkbox
+      formControlName="active"
+    >Active</mat-checkbox>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions class="justify-content-between">
+  <button mat-button type="button" (click)="cancel()">Cancel</button>
+  <button mat-raised-button color="primary" (click)="saveCampaign()">Save</button>
+</mat-dialog-actions>

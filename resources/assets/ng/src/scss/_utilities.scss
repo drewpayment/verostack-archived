@@ -1,0 +1,126 @@
+/* Rules for sizing the icon. */
+.material-icons.md-18 { font-size: 18px; }
+.material-icons.md-24 { font-size: 24px; }
+.material-icons.md-36 { font-size: 36px; }
+.material-icons.md-48 { font-size: 48px; }
+
+/* Rules for using icons as black on a light background. */
+.material-icons.md-dark { color: rgba(0, 0, 0, 0.54); }
+.material-icons.md-dark.md-inactive { color: rgba(0, 0, 0, 0.26); }
+
+/* Rules for using icons as white on a dark background. */
+.material-icons.md-light { color: rgba(255, 255, 255, 1); }
+.material-icons.md-light.md-inactive { color: rgba(255, 255, 255, 0.3); }
+
+// .icon-background {
+//   padding
+// }
+
+.material-icons.avatar {
+  background-color: #909090;
+  padding: 3px;
+  border-radius: 10rem;
+}
+
+.fill-remaining-space {
+  flex: 1 1 auto;
+}
+
+.card-container {
+  padding: 5px 0 5px 0;
+}
+
+.hover {
+
+  > a, i {
+    position: absolute;
+    display: inline;
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s, opacity 0.5s linear;
+    margin-left: 1rem;
+  }
+
+  &:hover {
+
+    > a, i {
+      visibility: visible;
+      opacity: 1;
+    }
+  }
+}
+
+a.nostyle:link {
+  text-decoration: inherit;
+  color: inherit;
+}
+
+a.nostyle:visited {
+  text-decoration: inherit;
+  color: inherit;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.header-card {
+  color: $dark-primary-text;
+
+  > h3 {
+    margin: 0;
+  }
+}
+
+.mat-drawer-content {
+  background-color: #5c6bc0;
+}
+
+vs-float-button {
+  position: relative;
+  z-index: 2;
+}
+
+/**
+ * DESKTOP/TABLET
+ *
+ */
+@media screen and (min-width: 751px) {
+  router-outlet {
+    + * {
+      > * {
+        margin: 0 1rem 0 1rem;
+      }
+    }
+  }
+}
+
+/**
+ * MOBILE
+ *
+ */
+@media screen and (max-width: 750px) {
+  router-outlet {
+    + * {
+      > * {
+        margin: 0 2px 0 2px;
+      }
+    }
+  }
+}
+
+.mat-router-link-active {
+  background-color: map-get($grays, '200') !important;
+}
+
+.mat-list-item-focus {
+  background-color: inherit !important;
+}
+
+.white-space-normal {
+  white-space: normal !important;
+}
+
+.min-100 {
+  min-width: 100px;
+}

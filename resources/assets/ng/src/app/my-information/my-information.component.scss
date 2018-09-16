@@ -1,0 +1,33 @@
+
+.weather-placeholder {
+  min-height: 50px;
+}
+
+mat-form-field.mat-form-field {
+  display: block;
+  font-size: 16px;
+}
+
+mat-card {
+  margin: 1rem;
+}
+
+mat-checkbox {
+  margin: 1rem;
+}
+
+h1, h2, h3, h4, h5 {
+  color: #505050;
+}
+
+// Targets edit toggle on the page to apply material icon edit pencil
+:host ::ng-deep .mat-slide-toggle-thumb {
+  text-align: center;
+  vertical-align: middle;
+
+  &::before {
+    font-size: .8rem;
+    font-family: "Material Icons";
+    content: "\e3c9";
+  }
+}

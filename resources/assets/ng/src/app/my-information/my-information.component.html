@@ -1,0 +1,187 @@
+
+<mat-card>
+  <form #f="ngForm" (ngSubmit)="save(f)">
+    <mat-card-header class="justify-content-between">
+      <mat-card-title>
+        <h2>Welcome, {{welcome}}.</h2>
+      </mat-card-title>
+      <mat-card-subtitle>
+        <p *ngIf="weather === undefined" class="text-muted weather-placeholder">Your weather is loading...</p>
+        <p *ngIf="weather !== undefined" class="weather-placeholder">
+          Today looks like a low of {{minTemp}} and high of {{maxTemp}} near {{weather.name}} <img src="https://openweathermap.org/img/w/{{weather.weather[0].icon}}.png" />
+        </p>
+      </mat-card-subtitle>
+      <mat-slide-toggle
+        [ngClass]="{'float-right': true, 'text-muted': !editProfile, 'text-light': editProfile}"
+        [checked]="editProfile"
+        (change)="changeEditMode(f)"
+        [disabled]="f.touched"
+        color="primary"
+      ></mat-slide-toggle>
+    </mat-card-header>
+    <mat-card-content class="flex-column">
+      <h5 class="mb-2">User Details</h5>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="row">
+            <div class="col-md-6">
+              <mat-form-field>
+                <mat-label>First Name</mat-label>
+                <input type="text" name="firstName"
+                  [ngModel]="(user$ | async).firstName"
+                  (ngModelChange)="user.firstName=$event"
+                  matInput
+                  [disabled]="!editProfile"
+                />
+              </mat-form-field>
+              <mat-form-field>
+                <mat-label>Last Name</mat-label>
+                <input type="text" name="lastName"
+                  [ngModel]="(user$ | async).lastName"
+                  (ngModelChange)="user.lastName=$event"
+                  matInput
+                  [disabled]="!editProfile"
+                />
+              </mat-form-field>
+              <mat-form-field>
+                <mat-label>Username</mat-label>
+                <input type="text" name="username"
+                  matInput
+                  [ngModel]="(user$ | async).username"
+                  disabled
+                />
+              </mat-form-field>
+              <mat-form-field>
+                <mat-label>Email</mat-label>
+                <input type="text" name="email"
+                  [(ngModel)]="user.email"
+                  [ngModel]="(user$ | async).email"
+                  (ngModelChange)="user.email=$event"
+                  matInput
+                  [disabled]="!editProfile"
+                />
+              </mat-form-field>
+            </div>
+            <div class="col-md-6">
+              <mat-form-field>
+                <mat-label>Street Address</mat-label>
+                <input type="text" name="street"
+                  [ngModel]="(detail$ | async).street"
+                  (ngModelChange)="detail.street=$event" matInput
+                  [disabled]="!editProfile"
+                />
+              </mat-form-field>
+              <mat-form-field>
+                <mat-label>Apt/Suite</mat-label>
+                <input type="text" name="street2"
+                  [ngModel]="(detail$ | async).street2"
+                  (ngModelChange)="detail.street2=$event" matInput
+                  [disabled]="!editProfile"
+                />
+              </mat-form-field>
+              <mat-form-field>
+                <mat-label>City</mat-label>
+                <input type="text" name="city"
+                  [ngModel]="(detail$ | async).city"
+                  (ngModelChange)="detail.city=$event" matInput
+                  [disabled]="!editProfile"
+                />
+              </mat-form-field>
+              <mat-form-field>
+                <mat-label>State</mat-label>
+                <input type="text" name="state"
+                  [ngModel]="(detail$ | async).state"
+                  (ngModelChange)="detail.state=$event" matInput
+                  [disabled]="!editProfile"
+                />
+              </mat-form-field>
+              <mat-form-field>
+                <mat-label>Zip Code</mat-label>
+                <input type="text" name="zip"
+                  [ngModel]="(detail$ | async).zip"
+                  (ngModelChange)="detail.zip=$event" matInput
+                  [disabled]="!editProfile"
+                />
+              </mat-form-field>
+              <mat-form-field>
+              <mat-label>Phone Number</mat-label>
+                <input type="text" name="phone" matInput
+                  [ngModel]="(detail$ | async).phone"
+                  (ngModelChange)="detail.phone=$event"
+                  [disabled]="!editProfile"
+                />
+              </mat-form-field>
+              <mat-form-field>
+                <mat-label>Date of Birth</mat-label>
+                <input type="text" name="birthDate" matInput
+                  [ngModel]="(detail$ | async).birthDate | date:'shortDate'"
+                  (ngModelChange)="detail.birthDate=$event"
+                  [disabled]="!editProfile"
+                />
+              </mat-form-field>
+              <mat-form-field>
+                <mat-label>Social Security Number</mat-label>
+                <input type="text" name="ssn" matInput
+                  [ngModel]="(detail$ | async).ssn"
+                  (ngModelChange)="detail.ssn=$event"
+                  [disabled]="!editProfile"
+                />
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="row mb-3">
+            <div class="col-12">
+              <mat-form-field>
+                <mat-label>Routing Number</mat-label>
+                <input type="text" name="routingNo" matInput
+                  [ngModel]="(detail$ | async).bankRouting"
+                  (ngModelChange)="detail.bankRouting=$event"
+                  [disabled]="!editProfile"
+                />
+              </mat-form-field>
+              <mat-form-field>
+                <mat-label>Account Number</mat-label>
+                <input type="text" name="accountNo" matInput
+                  [ngModel]="(detail$ | async).bankAccount"
+                  (ngModelChange)="detail.bankAccount=$event"
+                  [disabled]="!editProfile"
+                />
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </mat-card-content>
+    <mat-card-actions class="d-flex justify-content-between">
+      <button mat-button type="button" *ngIf="editProfile" (click)="cancel(f)">Cancel</button>
+      <button mat-raised-button type="submit" color="primary" *ngIf="editProfile">Save</button>
+    </mat-card-actions>
+  </form>
+</mat-card>
+<mat-card *ngIf="client.clientId !== null && client.clientId > 0 && user.selectedClient.options.hasOnboarding">
+  <form #onboardingForm="ngForm" (ngSubmit)="saveOnboarding(onboardingForm)">
+    <mat-card-header class="justify-content-between">
+      <mat-card-title>
+        <h3>Onboarding <small class="text-muted">(coming soon)</small></h3>
+      </mat-card-title>
+      <!-- uncomment when onboarding stuff is ready -->
+      <!-- <mat-slide-toggle class="float-right" [checked]="editDetails" (change)="changeOnboardingEditMode(onboardingForm)" [disabled]="onboardingForm.touched">Edit Mode</mat-slide-toggle> -->
+    </mat-card-header>
+    <mat-card-content class="flex-column">
+      <mat-form-field>
+        <mat-label>Driver's License</mat-label>
+        <input type="text" name="license" matInput [disabled]="!editDetails" />
+      </mat-form-field>
+      <mat-checkbox disabled="true">Direct Deposit Info</mat-checkbox>
+      <mat-checkbox disabled="true">ID Badge Image (headshot)</mat-checkbox>
+      <mat-checkbox disabled="true">Full Profile Image (full body)</mat-checkbox>
+    </mat-card-content>
+    <mat-card-actions class="d-flex justify-content-between">
+      <button mat-button type="button" *ngIf="editDetails" (click)="cancelDetails(onboardingForm)">Cancel</button>
+      <button mat-raised-button type="submit" color="primary" *ngIf="editDetails">Save</button>
+    </mat-card-actions>
+  </form>
+</mat-card>

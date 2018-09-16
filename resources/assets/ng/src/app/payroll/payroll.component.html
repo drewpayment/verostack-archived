@@ -1,0 +1,451 @@
+<form [formGroup]="form" vs-paste>
+  <div class="desktop-only">
+    <mat-card class="d-flex align-items-center align-center header-card">
+      <h3>Create a Paystub</h3>
+      <span class="toolbar-spacer"></span>
+      <!-- <mat-icon
+        class="toolbar-icon clickable"
+        *ngIf="invoice.agentId != null && invoice.campaignId != null"
+        (click)="clickFileUploader()"
+      >publish</mat-icon> -->
+    </mat-card>
+    <div class="d-flex justify-content-center card-container">
+      <mat-card class="sales-card">
+        <mat-card-header>
+          <!-- <mat-card-title>
+            Choose an Agent and Campaign to import your payfile.
+          </mat-card-title> -->
+        </mat-card-header>
+        <mat-card-content class="d-flex justify-content-between">
+          <mat-form-field [hideRequiredMarker]="true">
+            <mat-select
+              placeholder="Pick an Agent"
+              formControlName="agentId"
+              (selectionChange)="changeAgent()"
+              required
+            >
+              <mat-option *ngFor="let a of agents" [value]="a.agentId">{{a.firstName}} {{a.lastName}}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="form.get('agentId').touched && form.get('agentId').invalid">Select an Agent</mat-error>
+          </mat-form-field>
+          <mat-form-field [hideRequiredMarker]="true">
+            <mat-select
+              placeholder="Pick a Campaign"
+              formControlName="campaignId"
+              required
+            >
+              <mat-option *ngFor="let c of campaigns" [value]="c.campaignId">{{c.name}}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="form.get('campaignId').touched && form.get('campaignId').invalid">Select a Campaign</mat-error>
+          </mat-form-field>
+          <mat-form-field [hideRequiredMarker]="true">
+            <input
+              matInput
+              [matDatepicker]="issueDate"
+              placeholder="Issue Date"
+              formControlName="issueDate"
+              required
+            />
+            <mat-datepicker-toggle matSuffix [for]="issueDate"></mat-datepicker-toggle>
+            <mat-datepicker #issueDate></mat-datepicker>
+            <mat-error *ngIf="form.get('issueDate').touched && form.get('issueDate').invalid">Select an Issue Date</mat-error>
+          </mat-form-field>
+          <mat-form-field [hideRequiredMarker]="true">
+            <input
+              matInput
+              [matDatepicker]="weekending"
+              placeholder="Weekending"
+              formControlName="weekEnding"
+              required
+            />
+            <mat-datepicker-toggle matSuffix [for]="weekending"></mat-datepicker-toggle>
+            <mat-datepicker #weekending></mat-datepicker>
+            <mat-error *ngIf="form.get('weekEnding').touched && form.get('weekEnding').invalid">Select a Weekending Date</mat-error>
+          </mat-form-field>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- SALES CARD  -->
+    <div class="d-flex justify-content-center card-container">
+      <mat-card class="sales-card">
+        <mat-card-header class="flex-column">
+          <mat-card-title class="d-flex justify-content-between align-items-center">
+            <h4>Sales Details</h4>
+            <!-- <input type="file"
+              ng2FileSelect
+              [hidden]="true"
+              id="file-uploader"
+              [uploader]="uploader"
+              (change)="chooseFile($event)"
+              vs-paste
+            />
+            <label
+              for="file-uploader"
+              class="mat-button mat-raised-button mat-primary"
+              *ngIf="invoice.agentId != null && invoice.campaignId != null"
+            >Import File</label> -->
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <mat-table #table [dataSource]="dataSource" class="form-table sales-table" formArrayName="sales">
+            <mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns; let idx = index"></mat-row>
+
+            <ng-container matColumnDef="saleDate">
+              <mat-header-cell *matHeaderCellDef>Date</mat-header-cell>
+              <mat-cell *matCellDef="let item; let i = index" [formGroupName]="i">
+                <mat-form-field class="max-width-90">
+                  <input matInput
+                    [matDatepicker]="saleDatePicker"
+                    [value]="item.saleDate"
+                    (click)="saleDatePicker.open()"
+                    (dateChange)="saleDateEvent(item, $event)"
+                    formControlName="saleDate"
+                    required
+                  >
+                  <mat-datepicker-toggle matSuffix [for]="saleDatePicker"></mat-datepicker-toggle>
+                  <mat-datepicker #saleDatePicker></mat-datepicker>
+                </mat-form-field>
+              </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="firstName">
+              <mat-header-cell *matHeaderCellDef>First Name</mat-header-cell>
+              <mat-cell *matCellDef="let item; let i = index" [formGroupName]="i">
+                <mat-form-field>
+                  <input matInput
+                    [value]="item.firstName"
+                    (change)="handleRowEdit('firstName', item, $event, i)"
+                    formControlName="firstName"
+                    required
+                  >
+                </mat-form-field>
+              </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="lastName">
+              <mat-header-cell *matHeaderCellDef>Last Name</mat-header-cell>
+              <mat-cell *matCellDef="let item; let i = index" [formGroupName]="i">
+                <mat-form-field>
+                  <input matInput
+                    [value]="item.lastName"
+                    (change)="handleRowEdit('lastName', item, $event, i)"
+                    formControlName="lastName"
+                    required
+                  >
+                </mat-form-field>
+              </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="address">
+              <mat-header-cell *matHeaderCellDef>Address</mat-header-cell>
+              <mat-cell *matCellDef="let item; let i = index">
+                <mat-form-field class="custom-width w-140" [formGroupName]="i">
+                  <input matInput
+                    [value]="item.address"
+                    (change)="handleRowEdit('address', item, $event, i)"
+                    formControlName="address"
+                    required
+                  >
+                </mat-form-field>
+              </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="city">
+              <mat-header-cell *matHeaderCellDef>City</mat-header-cell>
+              <mat-cell *matCellDef="let item; let i = index" [formGroupName]="i">
+                <mat-form-field>
+                  <input matInput
+                    [value]="item.city"
+                    (change)="handleRowEdit('city', item, $event, i)"
+                    formControlName="city"
+                    required
+                  >
+                </mat-form-field>
+              </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="state">
+              <mat-header-cell *matHeaderCellDef>State</mat-header-cell>
+              <mat-cell *matCellDef="let item; let i = index" [formGroupName]="i">
+                <mat-form-field>
+                  <mat-select
+                    [value]="item.state"
+                    (change)="handleRowEdit('state', item, $event, i)"
+                    formControlName="state"
+                    required
+                  >
+                    <mat-option *ngFor="let s of states" [value]="s.abbreviation">
+                      {{s.name}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="postalCode">
+              <mat-header-cell *matHeaderCellDef>Postal Code</mat-header-cell>
+              <mat-cell *matCellDef="let item; let i = index" [formGroupName]="i">
+                <mat-form-field>
+                  <input matInput
+                    [value]="item.postalCode"
+                    (change)="handleRowEdit('postalCode', item, $event, i)"
+                    formControlName="postalCode"
+                    required
+                  >
+                </mat-form-field>
+              </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="statusType">
+              <mat-header-cell *matHeaderCellDef>Status</mat-header-cell>
+              <mat-cell *matCellDef="let item; let i = index" [formGroupName]="i">
+                <mat-form-field>
+                  <mat-select
+                    [value]="item.statusType"
+                    (change)="handleRowEdit('statusType', item, $event, i)"
+                    formControlName="statusType"
+                    required
+                  >
+                    <mat-option value="true">Accepted</mat-option>
+                    <mat-option value="false">Rejected</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="amount">
+              <mat-header-cell *matHeaderCellDef>Amount</mat-header-cell>
+              <mat-cell *matCellDef="let item; let i = index" [formGroupName]="i">
+                <mat-form-field>
+                  <input matInput
+                    [value]="item.amount"
+                    (change)="handleRowEdit(item, $event, i)"
+                    formControlName="amount"
+                    required
+                  >
+                </mat-form-field>
+              </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="note">
+              <mat-header-cell *matHeaderCellDef></mat-header-cell>
+              <mat-cell *matCellDef="let item; let i = index">
+                <div class="d-flex justify-content-between">
+                  <button mat-icon-button (click)="openRejectDialog(item, i)" *ngIf="item.statusType == 'false'">
+                    <mat-icon aria-label="Open reject note" class="{ 'text-danger': item.note }">note</mat-icon>
+                  </button>
+                  <button mat-icon-button (click)="removeRow('sales', i)" *ngIf="dataSource$.getValue().length > 1 && i != (dataSource$.getValue().length - 1)">
+                    <mat-icon aria-label="Delete the current row" color="warn">remove_circle</mat-icon>
+                  </button>
+                </div>
+              </mat-cell>
+            </ng-container>
+          </mat-table>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- OVERRIDES AND EXPENSES -->
+    <div class="overrides-expenses-panel">
+      <div class="d-flex justify-content-between py-3">
+
+        <!-- OVERRIDES CARD -->
+        <mat-card class="widthp-50 mr-2" *ngIf="!disableOverrides">
+          <mat-card-header>
+            <mat-card-title class="d-flex justify-content-between w-100">
+              <h3 *ngIf="!disableOverrides">Overrides</h3>
+              <button mat-icon-button
+                type="button"
+                class="float-right mx-1"
+                (click)="addOverrideRow(true)"
+                *ngIf="overrideDataSource$.getValue().length === 0 && !disableOverrides"
+              >
+                <mat-icon aria-label="Add override" color="accent">add_circle</mat-icon>
+              </button>
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <mat-table #overrideTable
+              [dataSource]="overrideDataSource"
+              class="form-table"
+              *ngIf="overrideDataSource$.getValue().length > 0"
+              formArrayName="overrides"
+            >
+              <mat-header-row *matHeaderRowDef="overrideColumns; sticky: true"></mat-header-row>
+              <mat-row *matRowDef="let row; columns: overrideColumns; let idx = index"></mat-row>
+
+              <!-- AGENT ID -->
+              <ng-container matColumnDef="agentId">
+                <mat-header-cell *matHeaderCellDef>Agent</mat-header-cell>
+                <mat-cell *matCellDef="let item; let i = index" [formGroupName]="i">
+                  <mat-form-field [hideRequiredMarker]="true">
+                    <mat-select
+                      placeholder="Select an Agent"
+                      (selectionChange)="overrideRowEdit('agentId', item, $event, i)"
+                      formControlName="agentId"
+                      [value]="item.agentId"
+                      required
+                    >
+                      <mat-option *ngFor="let agent of overrideAgents" [value]="agent.agentId">
+                        {{agent.firstName}} {{agent.lastName}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </mat-cell>
+              </ng-container>
+
+              <!-- NUMBER OF SALES -->
+              <ng-container matColumnDef="sales">
+                <mat-header-cell *matHeaderCellDef>Sales</mat-header-cell>
+                <mat-cell *matCellDef="let item; let i = index" [formGroupName]="i">
+                  <mat-form-field>
+                    <input matInput
+                      (change)="overrideRowEdit('sales', item, $event, i)"
+                      formControlName="sales"
+                      [value]="item.sales"
+                      required
+                    >
+                  </mat-form-field>
+                </mat-cell>
+              </ng-container>
+
+              <!-- COMMISSION -->
+              <ng-container matColumnDef="commission">
+                <mat-header-cell *matHeaderCellDef>Commission</mat-header-cell>
+                <mat-cell *matCellDef="let item; let i = index" [formGroupName]="i">
+                  <mat-form-field>
+                    <input matInput
+                      (change)="overrideRowEdit('commission', item, $event, i)"
+                      formControlName="commission"
+                      [value]="item.commission"
+                      required
+                    >
+                  </mat-form-field>
+                </mat-cell>
+              </ng-container>
+
+              <!-- TOTAL -->
+              <ng-container matColumnDef="total">
+                <mat-header-cell *matHeaderCellDef>Total</mat-header-cell>
+                <mat-cell *matCellDef="let item; let i = index" [formGroupName]="i">
+                  <mat-form-field>
+                    <input matInput
+                      (change)="overrideRowEdit('total', item, $event, i)"
+                      formControlName="total"
+                      [value]="item.total"
+                      required
+                    >
+                  </mat-form-field>
+                </mat-cell>
+              </ng-container>
+
+              <!-- DELETE -->
+              <ng-container matColumnDef="delete">
+                <mat-header-cell *matHeaderCellDef>&nbsp;</mat-header-cell>
+                <mat-cell *matCellDef="let item; let i = index">
+                  <button mat-icon-button (click)="removeRow('overrides', i)" *ngIf="item.overrideId == null">
+                    <mat-icon aria-label="Delete the current row" color="warn">remove_circle</mat-icon>
+                  </button>
+                </mat-cell>
+              </ng-container>
+            </mat-table>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- EXPENSES CARD -->
+        <mat-card [ngClass]="{'widthp-50': !disableOverrides, 'ml-2': !disableOverrides, 'w-100': disableOverrides}">
+          <mat-card-header>
+            <mat-card-title class="d-flex justify-content-between">
+              <h3>Expenses</h3>
+              <button mat-icon-button
+                class="float-right mx-1"
+                (click)="addExpenseRow()"
+                *ngIf="expenseDataSource$.getValue().length === 0"
+              >
+                <mat-icon aria-label="Add expense" color="accent">add_circle</mat-icon>
+              </button>
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <mat-table #expenseTable
+              [dataSource]="expenseDataSource"
+              class="form-table"
+              *ngIf="expenseDataSource$.getValue().length > 0"
+              formArrayName="expenses"
+            >
+              <!-- TITLE -->
+              <ng-container matColumnDef="title">
+                <mat-header-cell *matHeaderCellDef>Title</mat-header-cell>
+                <mat-cell *matCellDef="let item; let i = index" [formGroupName]="i">
+                  <mat-form-field>
+                    <input matInput
+                      [value]="item.title"
+                      (change)="expenseRowEdit('title', item, $event, i)"
+                      formControlName="title"
+                      required
+                    >
+                  </mat-form-field>
+                </mat-cell>
+              </ng-container>
+
+              <!-- AMOUNT -->
+              <ng-container matColumnDef="amount">
+                <mat-header-cell *matHeaderCellDef>Amount</mat-header-cell>
+                <mat-cell *matCellDef="let item; let i = index" [formGroupName]="i">
+                  <mat-form-field>
+                    <input matInput
+                      [value]="item.amount"
+                      (change)="expenseRowEdit('amount', item, $event, i)"
+                      formControlName="amount"
+                      required
+                    >
+                  </mat-form-field>
+                </mat-cell>
+              </ng-container>
+
+              <!-- DESCRIPTION -->
+              <ng-container matColumnDef="description">
+                <mat-header-cell *matHeaderCellDef>Description</mat-header-cell>
+                <mat-cell *matCellDef="let item; let i = index" [formGroupName]="i">
+                  <mat-form-field>
+                    <input matInput
+                      [value]="item.description"
+                      (change)="expenseRowEdit('description', item, $event, i)"
+                      formControlName="description"
+                      required
+                    >
+                  </mat-form-field>
+                </mat-cell>
+              </ng-container>
+
+              <!-- DELETE -->
+              <ng-container matColumnDef="delete">
+                <mat-header-cell *matHeaderCellDef>&nbsp;</mat-header-cell>
+                <mat-cell *matCellDef="let item: let i = index">
+                  <button mat-icon-button (click)="removeRow('expenses', i)" *ngIf="item.expenseId == null">
+                    <mat-icon aria-label="Delete the current row" color="warn">remove_circle</mat-icon>
+                  </button>
+                </mat-cell>
+              </ng-container>
+
+              <mat-header-row *matHeaderRowDef="expenseColumns; sticky:true"></mat-header-row>
+              <mat-row *matRowDef="let row; columns: expenseColumns"></mat-row>
+            </mat-table>
+          </mat-card-content>
+        </mat-card>
+      </div>
+      <div class="d-flex justify-content-between card-container">
+        <button mat-button class="m-3 float-left">Cancel</button>
+        <button mat-raised-button
+          color="accent"
+          class="m-3 float-right"
+          (click)="validateInvoice()"
+        >Save</button>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="d-flex justify-content-center mobile-warning">
+    <mat-card>
+      <mat-card-header>
+        <h4 class="text-center">
+          Sorry, but you can only enter sales and make edits from a computer.
+        </h4>
+      </mat-card-header>
+    </mat-card>
+  </div>
+</form>

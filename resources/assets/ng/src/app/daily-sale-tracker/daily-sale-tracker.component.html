@@ -1,0 +1,227 @@
+
+
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>
+      <h2>Sales Tracker</h2>
+    </mat-card-title>
+    <mat-card-subtitle>
+      <mat-form-field class="mx-1">
+        <input matInput
+          [matDatepicker]="trackerStart"
+          placeholder="Start Date"
+          [(value)]="startDate"
+          (dateChange)="handleDateChange($event, true)"
+        />
+        <mat-datepicker-toggle matSuffix [for]="trackerStart"></mat-datepicker-toggle>
+        <mat-datepicker #trackerStart [startAt]="startDate"></mat-datepicker>
+      </mat-form-field>
+      <mat-form-field class="mx-1">
+        <input matInput
+          [matDatepicker]="trackerEnd"
+          placeholder="End Date"
+          [(value)]="endDate"
+          (dateChange)="handleDateChange($event, false)"
+        />
+        <mat-datepicker-toggle matSuffix [for]="trackerEnd"></mat-datepicker-toggle>
+        <mat-datepicker #trackerEnd [startAt]="endDate"></mat-datepicker>
+      </mat-form-field>
+      <mat-form-field class="mx-1" *ngIf="selectedCampaign != null">
+        <mat-select placeholder="Select Campaign" [value]="selectedCampaign.campaignId" (selectionChange)="changeSelectedCampaignId($event)">
+          <mat-option *ngFor="let c of campaigns" [value]="c.campaignId">
+            {{ c.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <button
+        type="button"
+        mat-button
+        class="mx-4"
+        (click)="showAddSaleDialog()"
+      >
+        Add Sale
+      </button>
+    </mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+
+    <!-- NO TABLE DATA VIEW -->
+    <div class="row justify-content-center no-data-message" *ngIf="!(dataSource$.getValue() != null && dataSource$.getValue().length); else hasTableData;">
+      <div class="col-md-6 text-center">
+        <h4>
+          Looks like you don't have any sales or this time period. Adjust the date range above or add a sale.
+        </h4>
+        <button
+          mat-raised-button
+          type="button"
+          color="primary"
+          (click)="showAddSaleDialog()"
+        >Add Sale</button>
+      </div>
+    </div>
+
+    <!-- TABLE -->
+    <ng-template #hasTableData>
+      <form [formGroup]="form">
+        <table mat-table [dataSource]="sales" multiTemplateDataRows formArrayName="sales" *ngIf="dataSource$.getValue() != null && dataSource$.getValue().length > 0">
+
+          <ng-container matColumnDef="saleDate">
+            <th mat-header-cell *matHeaderCellDef>Date</th>
+            <td mat-cell *matCellDef="let item; let i=dataIndex" [formGroupName]="i" class="pl-0 pr-1">
+              <button
+                type="button"
+                mat-icon-button
+                (click)="expandedRowHover(item)"
+                matTooltip="Show Notes"
+                *ngIf="item.remarks.length > 0"
+              >
+                <mat-icon>{{showNotes ? 'add_circle' : 'add_circle_outline'}}</mat-icon>
+              </button>
+              {{ item.saleDate | date:'shortDate' }}
+            </td>
+          </ng-container>
+
+          <!-- agent dropdown -->
+          <ng-container matColumnDef="agentId">
+            <th mat-header-cell *matHeaderCellDef>Agent</th>
+            <td mat-cell *matCellDef="let item; let i=dataIndex" [formGroupName]="i" class="px-1">
+              {{getAgentName(item.agentId)}}
+            </td>
+          </ng-container>
+
+          <!-- account number  -->
+          <ng-container matColumnDef="podAccount">
+            <th mat-header-cell *matHeaderCellDef>POD/Account</th>
+            <td mat-cell *matCellDef="let item; let i=dataIndex" [formGroupName]="i" class="px-1 min-100">
+              {{item.podAccount}}
+            </td>
+          </ng-container>
+
+          <!-- customer first name -->
+          <ng-container matColumnDef="firstName">
+            <th mat-header-cell *matHeaderCellDef>First Name</th>
+            <td mat-cell *matCellDef="let item; let i=dataIndex" [formGroupName]="i" class="min-120">
+              {{item.firstName}}
+            </td>
+          </ng-container>
+
+          <!-- customer last name -->
+          <ng-container matColumnDef="lastName">
+            <th mat-header-cell *matHeaderCellDef>Last Name</th>
+            <td mat-cell *matCellDef="let item; let i=dataIndex" [formGroupName]="i" class="min-120">
+              {{item.lastName}}
+            </td>
+          </ng-container>
+
+          <!-- sale status -->
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef>Status</th>
+            <td mat-cell *matCellDef="let item; let i=dataIndex" [formGroupName]="i">
+              <mat-form-field appearance="outline">
+                <mat-select formControlName="status" required (selectionChange)="updateExistingSalesRow(i)">
+                  <mat-option *ngFor="let s of statuses | async" [value]="s.saleStatusId">
+                    {{s.name}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </td>
+          </ng-container>
+
+          <!-- paid status -->
+          <ng-container matColumnDef="paidStatus">
+            <th mat-header-cell *matHeaderCellDef>Paid Status</th>
+            <td mat-cell *matCellDef="let item; let i=dataIndex" [formGroupName]="i">
+              <mat-form-field appearance="outline">
+                <mat-select formControlName="paidStatus" required (selectionChange)="updateExistingSalesRow(i)">
+                  <mat-option *ngFor="let p of paidStatusOptions" [value]="p.id">
+                    {{p.name}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </td>
+          </ng-container>
+
+          <!-- activity date -->
+          <ng-container matColumnDef="activityDate">
+            <th mat-header-cell *matHeaderCellDef>Activity</th>
+            <td mat-cell *matCellDef="let item; let i=dataIndex" [formGroupName]="i">
+              <mat-form-field appearance="outline">
+                <input matInput [matDatepicker]="activityPicker" formControlName="activityDate" (dateChange)="updateExistingSalesRow(i, $event)" />
+                <mat-datepicker-toggle matSuffix [for]="activityPicker"></mat-datepicker-toggle>
+                <mat-datepicker #activityPicker></mat-datepicker>
+              </mat-form-field>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="save">
+            <th mat-header-cell *matHeaderCellDef>&nbsp;</th>
+            <td mat-cell *matCellDef="let item; let i=dataIndex">
+              <!-- <button
+                mat-icon-button
+                color="primary"
+                class="fade-in"
+                *ngIf="getFormGroup('sales', i).valid && getFormGroup('sales', i).dirty"
+                (click)="updateExistingSalesRow(i)"
+              >
+                <mat-icon>save</mat-icon>
+              </button> -->
+              <button
+                mat-icon-button
+                [class.edit]="!item.showNotes"
+                color="accent"
+                (click)="editExistingSale(i)"
+              >
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                [class.edit]="!item.showNotes"
+                color="warn"
+                (click)="deleteSale(i)"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="expandedDetail">
+            <td mat-cell *matCellDef="let item; let i = dataIndex" [attr.colspan]="displayColumns.length">
+              <div class="element-detail"
+                [@detailExpand]="item == expandedElement ? 'expanded' : 'collapsed'"
+              >
+                <mat-list>
+                  <h3 mat-subheader>Notes</h3>
+                  <mat-list-item *ngIf="item.remarks.length == 0; else hasRemarks">
+                    <mat-icon mat-list-icon>error_outline</mat-icon>
+                    <h4 mat-line>Sorry, no notes for this sale exist.</h4>
+                  </mat-list-item>
+                  <ng-template #hasRemarks>
+                    <mat-list-item *ngFor="let r of item.remarks">
+                      <mat-icon mat-list-icon>folder</mat-icon>
+                      <h4 mat-line class="white-space-normal">{{r.description}}</h4>
+                      <p mat-line>{{r.updatedAt | date:'shortDate'}}</p>
+                    </mat-list-item>
+                  </ng-template>
+                </mat-list>
+              </div>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayColumns; sticky: true"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayColumns; let i=index"
+            class="element-row"
+          ></tr>
+          <tr mat-row *matRowDef="let expandedRow; columns: ['expandedDetail']" class="detail-row"></tr>
+        </table>
+      </form>
+    </ng-template>
+
+
+  </mat-card-content>
+</mat-card>
+
+<vs-float-button
+  mat-icon="add"
+  (callback)="showAddSaleDialog()"
+  [isOpen]="floatIsOpen"
+></vs-float-button>

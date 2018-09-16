@@ -1,0 +1,2 @@
+<div #spinnerContainer [ngClass]="{'visible': showSpinner, 'hidden': !showSpinner, 'spinner': true, 'center': true}" [innerHTML]="template"></div>
+<h1 [style.zIndex]="zIndex" [ngClass]="{'visible': showSpinner, 'hidden': !showSpinner, 'loading-text': true}"> {{loadingText}} </h1>

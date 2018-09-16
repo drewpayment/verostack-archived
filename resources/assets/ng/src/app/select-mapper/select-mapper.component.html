@@ -1,0 +1,12 @@
+
+
+<mat-card-title>Choose a mapping method.</mat-card-title>
+<mat-card-content>
+  The best method to map is to use the agent's sales id. However, it is imperative that you make sure both the sales ID is updated in their
+  profile and is displayed properly in the invoice. The fallback option would be to match the agent by name, but this requires that the name
+  typed into the invoice matches identically to the agent's profile.
+</mat-card-content>
+<mat-card-actions class="d-flex justify-content-between mx-0">
+  <button type="button" mat-button (click)="closeDialog('username')">Username</button>
+  <button type="button" mat-raised-button color="primary" (click)="closeDialog('salesId')">Sales ID</button>
+</mat-card-actions>

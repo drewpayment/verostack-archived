@@ -1,0 +1,58 @@
+table {
+  width: 100%;
+}
+
+.no-data-message {
+  padding: 1rem 0;
+}
+
+button.edit {
+  opacity: 0;
+}
+
+tr {
+  &:hover > * > button.edit {
+    animation: fadeIn 0.8s forwards;
+  }
+
+  & > * > button.fade-in {
+    animation: fadeIn 0.8s forwards;
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+
+  30% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.element-detail {
+  overflow: hidden;
+  display: flex;
+}
+
+.detail-row {
+  height: 0;
+}
+
+.min-120 {
+  min-width: 120px;
+}
+
+.min-180 {
+  min-width: 180px;
+}
+
+:host ::ng-deep td > * > .mat-form-field-wrapper {
+  padding: .25rem 0;
+}

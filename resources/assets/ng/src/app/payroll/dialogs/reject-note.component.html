@@ -1,0 +1,11 @@
+
+<h2 mat-dailog-title>Reject Notes</h2>
+<mat-dialog-content>
+  <mat-form-field class="reject-note">
+    <textarea matInput placeholder="Why was the sale rejected?" [(ngModel)]="item.note"></textarea>
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions class="d-flex justify-content-between">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button [mat-dialog-close]="item" color="primary">Save</button>
+</mat-dialog-actions>

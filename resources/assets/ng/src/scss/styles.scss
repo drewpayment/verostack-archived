@@ -1,0 +1,111 @@
+@import
+  '~bootstrap/scss/bootstrap.scss',
+  './_variables.scss',
+  // '~@angular/material/prebuilt-themes/deeppurple-amber.css'
+  './_theme.scss',
+  './_utilities.scss',
+  '~handsontable/dist/handsontable.full.css';
+
+.font-sm {
+  font-size: .75rem;
+}
+
+.font-xs {
+  font-size: .5rem;
+}
+
+// .mat-form-field-wrapper .mat-form-field-flex {
+//   min-width: 74px;
+// }
+
+// .mat-form-field {
+//   width:auto;
+
+//   > {
+//     width: auto;
+//   }
+// }
+
+// td[class^=".mat-column-"] {
+//   .mat-form-field-wrapper .mat-form-field-flex .mat-form-field-infix {
+//     width: auto !important;
+//   }
+
+//   min-width:74px;
+//   max-width: 140px;
+//   width: auto;
+// }
+
+// vs-daily-sale-tracker > mat-card > mat-card-content > table > tbody > tr > td > mat-form-field > div > div.mat-form-field-flex > div {
+//   width: auto;
+// }
+
+vs-daily-sale-tracker > mat-card > mat-card-content > table > tbody > tr > td {
+
+  // .mat-form-field-wrapper .mat-form-field-flex {
+  //   min-width: 100px;
+  // }
+
+  mat-form-field {
+    margin: 0 5px;
+
+    // div > div.mat-form-field-flex > div {
+    //   width: auto;
+    // }
+  }
+}
+
+.wp-100 {
+  width: 100%;
+}
+
+body, html {
+  height: 100%;
+  font-size: 100%;
+}
+.app-loading {
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  height:100%;
+}
+.app-loading .spinner {
+  height:200px;
+  width:200px;
+  animation:rotate 2s linear infinite;
+  transform-origin:center center;
+  position:absolute;
+  top:0;
+  bottom:0;
+  right:0;
+  left:0;
+  margin:auto;
+}
+.app-loading .spinner .path {
+  stroke-dasharray: 1, 200;
+  stroke-dashoffset: 0;
+  animation: dash 1.5s ease-in-out infinite;
+  stroke-linecap: round;
+  stroke: #ddd;
+}
+@keyframes rotate {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@keyframes dash {
+  0% {
+    stroke-dasharray: 1, 200;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 89, 200;
+    stroke-dashoffset: -35px;
+  }
+  100% {
+    stroke-dasharray: 89, 200;
+    stroke-dashoffset: -124px;
+  }
+}
