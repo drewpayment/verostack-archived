@@ -74,6 +74,7 @@ export class LoginComponent implements OnInit, AfterViewChecked {
 
           this.session.login(token);
           this.userService.loadUser(this.usernameInput);
+          this.session.navigateTo(this.session.navigateQueue[0]);
         })
         .catch(err => {
           this.pageLoading = false;

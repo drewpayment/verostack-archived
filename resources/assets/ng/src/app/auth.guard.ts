@@ -24,24 +24,12 @@ export class AuthGuard implements CanActivate {
   ) {}
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | boolean {
-    const url: string = state.url;
-    let result: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+    const url:string = state.url;
+    if (this.session.isUserLoggedIn) return true;
 
-    // if the user is logged in, we redirect them to their info page instead of allowing them to
-    // navigate to the login page
-    if(this.authenticated === undefined) {
-      this.session.getUserAuthenticationStatus()
-        .then((user:IUser) => {
-          this.authenticated = true;
-          this.session.navigateTo(url);
-        })
-        .catch((err:string) => {
-          this.session.navigateQueue.push('login');
-          this.session.navigateTo('login');
-        });
-    } else {
-      return this.getActivationStatus(url);
-    }
+    this.session.navigateQueue.push(url);
+    this.session.navigateTo('login');
+    return false;
   }
 
   private getActivationStatus(url:string):boolean {

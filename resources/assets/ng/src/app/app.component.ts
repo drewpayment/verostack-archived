@@ -25,10 +25,10 @@ export class AppComponent implements OnInit, AfterViewChecked {
   ) {
     this.loggedInStatus = this.session.isLoginSubject.asObservable();
     this.loading = this.session.loading$.asObservable();
+    this.session.loadUserStorageItem();
   }
 
   ngOnInit() {
-    this.session.loadUserStorageItem();
 
     // exposes the app's sidenav for use by the header
     this.session.setSidenav(this.sidenav);

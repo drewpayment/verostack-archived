@@ -60,7 +60,7 @@
     </div>
 
     <div class="row">
-      <div class="col-3">
+      <div class="col-4">
         <mat-form-field>
           <input matInput placeholder="POD/Account" formControlName="account" required />
           <mat-error *ngIf="form.get('account').hasError('required') && (form.get('account').touched || submitted)">
@@ -68,7 +68,7 @@
           </mat-error>
         </mat-form-field>
       </div>
-      <div class="col-3">
+      <div class="col-4">
         <mat-form-field>
           <mat-select placeholder="Sale Status" formControlName="status" required>
             <mat-option *ngFor="let s of statuses" [value]="s.saleStatusId">
@@ -80,9 +80,9 @@
           </mat-error>
         </mat-form-field>
       </div>
-      <div class="col-3">
+      <div class="col-4">
         <mat-form-field>
-          <mat-select placeholder="Paid Status" formControlName="paidStatus" required (selectionChange)="handlePaidStatusChange($event)">
+          <mat-select placeholder="Paid Status" formControlName="paidStatus" required>
             <mat-option value="0">Unpaid</mat-option>
             <mat-option value="1">Paid</mat-option>
             <mat-option value="2">Chargeback</mat-option>
@@ -93,11 +93,28 @@
           </mat-error>
         </mat-form-field>
       </div>
-      <div class="col-3">
+    </div>
+
+    <div class="row">
+      <div class="col-4">
         <mat-form-field>
-          <input matInput [matDatepicker]="activityPicker" formControlName="activityDate" placeholder="Activity Date" />
-          <mat-datepicker-toggle matSuffix [for]="activityPicker"></mat-datepicker-toggle>
-          <mat-datepicker #activityPicker></mat-datepicker>
+          <input matInput [matDatepicker]="paidDatePicker" formControlName="paidDate" placeholder="Paid Date" />
+          <mat-datepicker-toggle matSuffix [for]="paidDatePicker"></mat-datepicker-toggle>
+          <mat-datepicker #paidDatePicker></mat-datepicker>
+        </mat-form-field>
+      </div>
+      <div class="col-4">
+        <mat-form-field>
+          <input matInput [matDatepicker]="chargebackDatePicker" formControlName="chargeDate" placeholder="Chargeback Date" />
+          <mat-datepicker-toggle matSuffix [for]="chargebackDatePicker"></mat-datepicker-toggle>
+          <mat-datepicker #chargebackDatePicker></mat-datepicker>
+        </mat-form-field>
+      </div>
+      <div class="col-4">
+        <mat-form-field>
+          <input matInput [matDatepicker]="repaidDatePicker" formControlName="repaidDate" placeholder="Repaid Date" />
+          <mat-datepicker-toggle matSuffix [for]="repaidDatePicker"></mat-datepicker-toggle>
+          <mat-datepicker #repaidDatePicker></mat-datepicker>
         </mat-form-field>
       </div>
     </div>

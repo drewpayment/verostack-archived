@@ -7,6 +7,7 @@ import * as moment from 'moment';
 import * as _ from 'lodash';
 import { IState, States } from "@app/shared/models/state.model";
 import { Moment } from "moment";
+import { CampaignService } from "@app/campaigns/campaign.service";
 
 interface DialogData {
   statuses:SaleStatus[],
@@ -43,29 +44,39 @@ export class AddSaleDialog implements OnInit {
   newRemarkInputValue:FormControl;
   submitted:boolean;
   remarkControl:FormGroup;
+  isExistingSale:boolean;
 
   constructor(
     public ref:MatDialogRef<AddSaleDialog>,
     @Inject(MAT_DIALOG_DATA) public data:DialogData,
-    private fb:FormBuilder
+    private fb:FormBuilder,
+    private campaignService:CampaignService
   ) {}
 
   ngOnInit() {
     this.newRemarks = [];
     this.today = moment();
     this.existingSale = this.data.sale || {} as DailySale;
+    this.isExistingSale = this.data.sale != null;
     this.remarks = this.data.sale != null
       ? this.data.sale.remarks : [];
     this.sortRemarks();
     this.statuses = this.data.statuses;
     this.agents = this.data.agents;
     this.selectedCampaign = this.data.selectedCampaign;
-    this.campaigns = _.cloneDeep(this.data.campaigns);
-
-    // remove "all campaigns" option, so that the user has to be pick a valid campaign
-    _.remove(this.campaigns, {'campaignId':0});
-
     this.user = this.data.user;
+
+    if (this.isExistingSale) {
+      this.campaignService.getCampaigns(this.user.selectedClient.clientId, false)
+        .then(results => {
+          this.campaigns = results;
+        });
+    } else {
+      this.campaigns = _.cloneDeep(this.data.campaigns);
+      // remove "all campaigns" option, so that the user has to be pick a valid campaign
+      _.remove(this.campaigns, {'campaignId':0});
+    }
+
     this.createForm();
     this.submitted = true;
   }
@@ -156,7 +167,7 @@ export class AddSaleDialog implements OnInit {
     this.form = this.fb.group({
       saleDate: this.fb.control(this.existingSale.saleDate || this.today, [Validators.required]),
       agent: this.fb.control(this.existingSale.agentId || '', [Validators.required]),
-      campaign: this.fb.control(campaignValue, [Validators.required]),
+      campaign: this.fb.control({value: campaignValue, disabled:this.isExistingSale}, [Validators.required]),
       account: this.fb.control(this.existingSale.podAccount || '', [Validators.required]),
       firstName: this.fb.control(this.existingSale.firstName || '', [Validators.required]),
       lastName: this.fb.control(this.existingSale.lastName || '', [Validators.required]),
@@ -167,7 +178,9 @@ export class AddSaleDialog implements OnInit {
       zip: this.fb.control(this.existingSale.zip || '', [Validators.required]),
       status: this.fb.control(this.existingSale.status || '', [Validators.required]),
       paidStatus: this.fb.control(this.formatPaidStatus() || '', [Validators.required]),
-      activityDate: this.fb.control(this.calculateActivityDate(this.existingSale)),
+      paidDate: this.fb.control(this.existingSale.paidDate || ''),
+      chargeDate: this.fb.control(this.existingSale.chargeDate || ''),
+      repaidDate: this.fb.control(this.existingSale.repaidDate || ''),
       remarks: this.createRemarksFormArray()
     });
   }

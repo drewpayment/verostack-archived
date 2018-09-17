@@ -66,6 +66,10 @@ export class SessionService implements OnInit {
 
   ngOnInit() {}
 
+  get isUserLoggedIn():boolean {
+    return this.userLoggedIn;
+  }
+
   private hasToken():boolean {
     this.hasTokenSubject.subscribe((hasToken:boolean) => {
       this.userLoggedIn = hasToken;
@@ -97,7 +101,7 @@ export class SessionService implements OnInit {
     this.clearStorage();
     this.isLoginSubject.next(false);
     this.hasTokenSubject.next(false);
-    window.location.href = rootUrl + '/login';
+    this.navigateTo('login');
   }
 
   getUserItem():Observable<IUser> {

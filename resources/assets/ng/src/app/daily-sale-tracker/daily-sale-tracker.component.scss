@@ -37,7 +37,9 @@ tr {
 }
 
 .element-detail {
+  max-height: 25vh;
   overflow: hidden;
+  overflow-y: auto;
   display: flex;
 }
 

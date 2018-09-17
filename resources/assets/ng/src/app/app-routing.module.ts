@@ -11,24 +11,25 @@ import { AuthGuard } from './auth.guard';
 import { CampaignsComponent } from '@app/campaigns/campaigns.component';
 import { AgentsComponent } from '@app/core/agents/agents.component';
 import { DailySaleTrackerComponent } from '@app/daily-sale-tracker/daily-sale-tracker.component';
+import { environment } from '@env/environment';
 
 const routes: Routes = [
-  // {
-  //   path: '',
-  //   canActivate: [AuthGuard],
-  //   children: [
-      { path: 'login', component: LoginComponent },
-      { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
-      { path: 'my-information', component: MyInformationComponent, canActivate: [AuthGuard] },
-      { path: 'client-information', component: ClientInformationComponent, canActivate: [AuthGuard] },
-      { path: 'campaigns', component: CampaignsComponent, canActivate: [AuthGuard] },
-      { path: 'payroll-tools', component: PayrollComponent, canActivate: [AuthGuard] },
-      { path: 'agents', component: AgentsComponent, canActivate: [AuthGuard] },
-      { path: 'daily-tracker', component: DailySaleTrackerComponent, canActivate: [AuthGuard] },
-      { path: '', redirectTo: 'login', pathMatch: 'full', canActivate: [AuthGuard] },
-      { path: '**', component: AppComponent }
-  //   ]
-  // }
+    { path: 'login', component: LoginComponent },
+    {
+      path: '',
+      canActivate: [AuthGuard],
+      children: [
+        { path: 'dashboard', component: DashboardComponent },
+        { path: 'my-information', component: MyInformationComponent },
+        { path: 'client-information', component: ClientInformationComponent },
+        { path: 'campaigns', component: CampaignsComponent },
+        { path: 'payroll-tools', component: PayrollComponent },
+        { path: 'agents', component: AgentsComponent },
+        { path: 'daily-tracker', component: DailySaleTrackerComponent },
+        { path: '', redirectTo: 'login', pathMatch: 'full' },
+      ]
+    },
+    { path: '**', component: AppComponent }
 ]
 
 @NgModule({
@@ -37,9 +38,9 @@ const routes: Routes = [
     RouterModule.forRoot(
       routes,
       {
-        useHash: true
+        useHash: true,
+        // enableTracing: !environment.production // used to debug routing, consoles all router methods
       }
-      // { enableTracing: true } // <-- debugging only, remove before production
     )
   ]
 })

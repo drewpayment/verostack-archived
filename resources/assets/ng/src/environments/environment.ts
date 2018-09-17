@@ -5,6 +5,6 @@
 
 export const environment = {
   production: false,
-  rootUrl: 'http://localhost:4200',
+  rootUrl: 'http://verostack:8888',
   apiUrl: 'http://verostack:8888/'
 };

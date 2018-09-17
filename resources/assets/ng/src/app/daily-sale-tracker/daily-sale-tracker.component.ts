@@ -154,7 +154,7 @@ export class DailySaleTrackerComponent implements OnInit {
   handleDateChange($event:MatDatepickerInputEvent<Moment>, isStartDate:boolean):void {
     const mDate = $event.value;
 
-    if(isStartDate) {
+    if (isStartDate) {
       this.startDate = mDate;
     } else {
       this.endDate = mDate;
