@@ -230,7 +230,43 @@ export class DailySaleTrackerComponent implements OnInit {
     // which simply unsets the activity date
     if (sale.value.paidStatus == PaidStatusType.unpaid) this.handleUnpaidSaleStatus(index);
 
-    const dto = this.prepareModel(sale, index);
+    let dto = this.prepareModel(sale, index);
+
+    let changeType, changeDate;
+    switch(sale.value.paidStatus) {
+      case PaidStatusType.chargeback:
+        changeType = 'Chargeback';
+        changeDate = dto.chargeDate;
+        break;
+      case PaidStatusType.paid:
+        changeType = 'Paid';
+        changeDate = dto.paidDate;
+        break;
+      case PaidStatusType.repaid:
+        changeType = 'Repaid';
+        changeDate = dto.repaidDate;
+        break;
+      case PaidStatusType.unpaid:
+      default:
+        changeType = 'Unpaid';
+        changeDate = null;
+        break;
+    }
+
+    if (sale.value.paidStatus != PaidStatusType.unpaid) {
+      let changeDateTime = moment().toString();
+      let formattedChangeDate:string = moment(changeDate).format('MM-DD-YYYY');
+      let changeAgent = this.userInfo.firstName + ' ' + this.userInfo.lastName;
+      let remark = `Paid status was changed to: ${changeType} (${formattedChangeDate}) on ${changeDateTime} by: ${changeAgent}.`;
+
+      dto.remarks.push({
+        remarkId: null,
+        dailySaleId: dto.dailySaleId,
+        description: remark,
+        modifiedBy: this.userInfo.id
+      });
+    }
+    
     this.trackerService.updateDailySale(dto.clientId, dto)
       .subscribe(result => {
         this.store.sales[index] = result;
@@ -324,9 +360,9 @@ export class DailySaleTrackerComponent implements OnInit {
       this.formatSqlDate(startRange),
       this.formatSqlDate(endRange)
     ).subscribe(sales => {
-      this.store.sales = sales;
+      this.store.sales = _.orderBy(sales, ['saleDate'], ['desc']);
       this.tableEmpty = sales.length < 1;
-      this.dataSource$.next(sales);
+      this.dataSource$.next(this.store.sales);
       this.createForm();
     });
   }
