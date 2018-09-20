@@ -6,6 +6,8 @@ import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { MessageService } from '../message.service';
 
+import * as moment from 'moment';
+
 import { IUser, User, IToken, ILocalStorage } from '../models/index';
 import { UserService } from '../user-features/user.service';
 
@@ -69,12 +71,13 @@ export class LoginComponent implements OnInit, AfterViewChecked {
 
           let token:ILocalStorage<IToken> = <ILocalStorage<IToken>>{
             data: data,
-            expires: data.expires_in
+            expires: moment().valueOf() + (1000 * (60 * 24 * 3))
           };
 
           this.session.login(token);
           this.userService.loadUser(this.usernameInput);
-          this.session.navigateTo(this.session.navigateQueue[0]);
+          // TODO: this isn't working yet... need to re-work login routing
+          // this.session.navigateTo(this.session.navigateQueue[0]);
         })
         .catch(err => {
           this.pageLoading = false;

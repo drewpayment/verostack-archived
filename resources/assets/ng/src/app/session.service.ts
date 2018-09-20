@@ -9,6 +9,10 @@ import { Router } from '@angular/router';
 import { IRole } from '@app/models/role.model';
 import { environment } from '../environments/environment';
 
+import * as moment from 'moment';
+
+declare var window:any;
+
 const rootUrl = environment.rootUrl;
 
 const schema: JSONSchema = {
@@ -101,7 +105,7 @@ export class SessionService implements OnInit {
     this.clearStorage();
     this.isLoginSubject.next(false);
     this.hasTokenSubject.next(false);
-    this.navigateTo('login');
+    window.location.href = this.router.url;
   }
 
   getUserItem():Observable<IUser> {
@@ -138,7 +142,7 @@ export class SessionService implements OnInit {
    */
   navigateTo(view:string):void {
     this.navigateQueue.push(view);
-    this.router.navigate([view]);
+    this.router.navigateByUrl(view);
   }
 
   navigateByUrl(url:string):void {
@@ -193,7 +197,7 @@ export class SessionService implements OnInit {
 
   setItem<T>(itemName:string, data:ILocalStorage<T>): void {
     if(this.dataStore[itemName]) this.dataStore[itemName] = data.data;
-    data.expires = Date.now() + (1000 * 60 * data.expires);
+    data.expires = data.expires == null ? moment().valueOf() + (1000 * (60 * 24 * 3)) : data.expires;
     this.localStorage.setItemSubscribe(itemName, data);
   }
 
@@ -228,12 +232,17 @@ export class SessionService implements OnInit {
    *
    */
   loadUserStorageItem():void {
-    this.pruneExpiredStorage();
     this.localStorage.getItem('user')
       .subscribe((item:ILocalStorage<IUser>) => {
-        if(item == null) return;
+        if(item == null){
+          this.userLoggedIn = false;
+          return;
+        }
 
-        if(item.expires <= Date.now()) {
+        console.dir(item);
+        const now = moment().valueOf();
+        console.log(now);
+        if(item.expires <= moment().valueOf()) {
           this.userLoggedIn = false;
           this.removeItem('user');
         } else {
@@ -241,6 +250,8 @@ export class SessionService implements OnInit {
           this.dataStore.user = item.data;
           this.userItem$.next(item.data);
         }
+
+        console.dir(this.userLoggedIn);
         this.loggedInService.next(this.userLoggedIn);
       });
   }

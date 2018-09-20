@@ -28,23 +28,24 @@ export class AuthGuard implements CanActivate {
     if (this.session.isUserLoggedIn) return true;
 
     this.session.navigateQueue.push(url);
-    this.session.navigateTo('login');
+    this.router.navigateByUrl('login');
+    this.router.dispose();
     return false;
   }
 
-  private getActivationStatus(url:string):boolean {
-    if(this.authenticated && url.indexOf('login') > -1) {
-      this.session.navigateQueue.push(url);
-      this.session.navigateTo('my-information');
-      return false;
-    } else if(!this.authenticated) {
-      this.session.navigateQueue.push(url);
-      this.session.navigateTo('login');
-      return false;
-    }
+  // private getActivationStatus(url:string):boolean {
+  //   if(this.authenticated && url.indexOf('login') > -1) {
+  //     this.session.navigateQueue.push(url);
+  //     this.router.navigateByUrl('my-information');
+  //     return false;
+  //   } else if(!this.authenticated) {
+  //     this.session.navigateQueue.push(url);
+  //     this.router.navigateByUrl('login');
+  //     return false;
+  //   }
 
-    return true;
-  }
+  //   return true;
+  // }
 
   // canActivateChild(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
   //   return this.canActivate(route, state);

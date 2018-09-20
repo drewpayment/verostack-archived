@@ -5,6 +5,7 @@ import { SessionService } from './session.service';
 import { MatSidenav } from '@angular/material';
 import { UserService } from './user-features/user.service';
 import { Router } from '@angular/router';
+import { environment } from '@env/environment.prod';
 
 @Component({
   selector: 'app-root',
@@ -41,6 +42,6 @@ export class AppComponent implements OnInit, AfterViewChecked {
 
     // dev only bug -
     // https://stackoverflow.com/questions/39787038/how-to-manage-angular2-expression-has-changed-after-it-was-checked-exception-w
-    this.cd.detectChanges();
+    if (!environment.production) this.cd.detectChanges();
   }
 }

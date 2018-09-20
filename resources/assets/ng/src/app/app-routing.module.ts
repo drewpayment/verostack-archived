@@ -14,21 +14,15 @@ import { DailySaleTrackerComponent } from '@app/daily-sale-tracker/daily-sale-tr
 import { environment } from '@env/environment';
 
 const routes: Routes = [
+    { path: '', component: LoginComponent, pathMatch: 'full' },
     { path: 'login', component: LoginComponent },
-    {
-      path: '',
-      canActivate: [AuthGuard],
-      children: [
-        { path: 'dashboard', component: DashboardComponent },
-        { path: 'my-information', component: MyInformationComponent },
-        { path: 'client-information', component: ClientInformationComponent },
-        { path: 'campaigns', component: CampaignsComponent },
-        { path: 'payroll-tools', component: PayrollComponent },
-        { path: 'agents', component: AgentsComponent },
-        { path: 'daily-tracker', component: DailySaleTrackerComponent },
-        { path: '', redirectTo: 'login', pathMatch: 'full' },
-      ]
-    },
+    { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
+    { path: 'my-information', component: MyInformationComponent, canActivate: [AuthGuard] },
+    { path: 'client-information', component: ClientInformationComponent, canActivate: [AuthGuard] },
+    { path: 'campaigns', component: CampaignsComponent, canActivate: [AuthGuard] },
+    { path: 'payroll-tools', component: PayrollComponent, canActivate: [AuthGuard] },
+    { path: 'agents', component: AgentsComponent, canActivate: [AuthGuard] },
+    { path: 'daily-tracker', component: DailySaleTrackerComponent, canActivate: [AuthGuard] },
     { path: '**', component: AppComponent }
 ]
 

@@ -6,6 +6,7 @@ import { Observable, ReplaySubject, Subject } from 'rxjs';
 import { SessionService } from '../session.service';
 
 import * as _ from 'lodash';
+import * as moment from 'moment';
 import { environment } from '@env/environment';
 import { IUserDetailInfo } from '@app/models/user-detail-info.model';
 
@@ -336,7 +337,7 @@ export class UserService {
    */
   private setLocalStorageUser(user: IUser): void {
     let data: ILocalStorage<IUser> = <ILocalStorage<IUser>>{
-      expires: Date.now() + (60 * 24 * 3),
+      expires: moment().valueOf() + (1000 * (60 * 24 * 3)),
       data: user
     };
     this.session.setItem('user', data);

@@ -10,21 +10,23 @@ import { LoadingModule } from 'ngx-loading';
 import { HeaderComponent } from './header/header.component';
 import { AppRoutingModule } from './app-routing.module';
 import { SharedModule } from './shared';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    SidenavComponent,
-    ScrollLockDirective,
-    HeaderComponent
-  ],
   imports: [
+    BrowserAnimationsModule,
     CommonModule,
     BrowserModule,
     CoreModule,
     MaterialModule,
     LoadingModule,
     AppRoutingModule
+  ],
+  declarations: [
+    AppComponent,
+    SidenavComponent,
+    ScrollLockDirective,
+    HeaderComponent
   ],
   providers: [
   ],
