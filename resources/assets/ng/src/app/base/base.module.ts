@@ -9,6 +9,7 @@ import { LoginComponent } from '../login/login.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '@app/material/material.module';
+import { Ng2GoogleChartsModule } from 'ng2-google-charts';
 
 @NgModule({
   imports: [
@@ -16,7 +17,8 @@ import { MaterialModule } from '@app/material/material.module';
     BrowserModule,
     FormsModule,
     ReactiveFormsModule,
-    MaterialModule
+    MaterialModule,
+    Ng2GoogleChartsModule
   ],
   declarations: [
     LoginComponent,

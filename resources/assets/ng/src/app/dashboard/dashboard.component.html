@@ -1,3 +1,81 @@
-<p>
-  dashboard works!
-</p>
+
+<div class="container">
+  <div class="row mb-4">
+    <div class="col-12">
+      <mat-toolbar color="accent">
+        <mat-toolbar-row>
+          <span *ngIf="(user|async).role.role < roleType.companyAdmin; else adminWorkspace">My Workspace</span>
+          <ng-template #adminWorkspace>
+            <span>{{(user|async).firstName}} {{(user|async).lastName}}'s Workspace</span>
+            <mat-form-field appearance="outline">
+              <mat-select placeholder="Choose Agent">
+                <mat-option value="">Need to Populate</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </ng-template>
+          <span class="flex-spacer"></span>
+          <mat-icon class="vs-toolbar-icon">add_circle</mat-icon>
+        </mat-toolbar-row>
+      </mat-toolbar>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-6">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>
+            <h4>Sales per Day</h4>
+          </mat-card-title>
+          <mat-card-subtitle>
+            Aggregated sales organized by their current sale status.
+          </mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <google-chart [data]="chartData"></google-chart>
+        </mat-card-content>
+        <mat-card-actions>
+          <div class="d-flex justify-content-between mx-4">
+            <mat-form-field>
+              <input matInput 
+                [matDatepicker]="startDatepicker" 
+                placeholder="Start Date" 
+                [value]="startDate"
+                (dateInput)="updateDashboard()" 
+              />
+              <mat-datepicker-toggle matSuffix [for]="startDatepicker"></mat-datepicker-toggle>
+              <mat-datepicker #startDatepicker></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field>
+              <input matInput 
+                [matDatepicker]="endDatepicker" 
+                placeholder="End Date" 
+                [value]="endDate" 
+                (dateInput)="updateDashboard()"
+              />
+              <mat-datepicker-toggle matSuffix [for]="endDatepicker"></mat-datepicker-toggle>
+              <mat-datepicker #endDatepicker></mat-datepicker>
+            </mat-form-field>
+          </div>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+    <div class="col-6">
+      <mat-card class="h-100">
+        <mat-card-header>
+          <mat-card-title>
+            <h5>Messages</h5>
+          </mat-card-title>
+          <mat-card-subtitle>
+            Plan ahead to know where you're going. 
+          </mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <!-------Do not change below this line------->
+          <div align="center" *ngIf="messages == null">
+            <iframe align="center" src="http://widget.calendarlabs.com/v1/quot.php?cid=101&uid=5635389853&c=random&l=en&cbg=FFFFFF&cb=1&cbc=000000&cf=calibri&cfg=000000&qfs=bi&qta=center&tfg=000000&tfs=bi&afc=000000&afs=i" width="188" height="210" marginwidth=0 marginheight=0 frameborder=0 scrolling=no allowtransparency='true'>Loading...</iframe>
+          </div><!-------Do not change above this line------->
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>
