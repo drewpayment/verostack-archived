@@ -238,10 +238,7 @@ export class SessionService implements OnInit {
           this.userLoggedIn = false;
           return;
         }
-
-        console.dir(item);
-        const now = moment().valueOf();
-        console.log(now);
+        
         if(item.expires <= moment().valueOf()) {
           this.userLoggedIn = false;
           this.removeItem('user');
@@ -251,7 +248,6 @@ export class SessionService implements OnInit {
           this.userItem$.next(item.data);
         }
 
-        console.dir(this.userLoggedIn);
         this.loggedInService.next(this.userLoggedIn);
       });
   }
