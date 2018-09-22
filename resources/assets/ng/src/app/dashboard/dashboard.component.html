@@ -6,15 +6,21 @@
         <mat-toolbar-row>
           <span *ngIf="(user|async).role.role < roleType.companyAdmin; else adminWorkspace">My Workspace</span>
           <ng-template #adminWorkspace>
-            <span>{{(user|async).firstName}} {{(user|async).lastName}}'s Workspace</span>
-            <mat-form-field appearance="outline">
-              <mat-select placeholder="Choose Agent">
-                <mat-option value="">Need to Populate</mat-option>
+            <!-- <span>{{(user|async).firstName}} {{(user|async).lastName}}'s Workspace</span> -->
+            <mat-form-field class="vs-toolbar-select">
+              <mat-select [value]="selectedAgent.agentId">
+                <mat-option *ngFor="let a of (agents|async)" [value]="a.agentId">
+                  {{a.firstName}} {{a.lastName}}
+                </mat-option>
               </mat-select>
             </mat-form-field>
+            <span>'s Workspace</span>
           </ng-template>
           <span class="flex-spacer"></span>
-          <mat-icon class="vs-toolbar-icon">add_circle</mat-icon>
+          <!-- <mat-icon class="vs-toolbar-icon">add_circle</mat-icon> -->
+          <button mat-flat-button type="button" class="vs-toolbar-icon">
+            <mat-icon inline="true">add_circle</mat-icon> SALE
+          </button>
         </mat-toolbar-row>
       </mat-toolbar>
     </div>

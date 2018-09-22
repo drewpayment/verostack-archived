@@ -14,4 +14,6 @@ Route::group(['prefix' => 'campaigns', 'middleware' => 'auth:api'], function() {
 
 	Route::post('/clients/{clientId}/campaigns/{campaignId?}', 'CampaignController@saveCampaign');
 
+	Route::get('/clients/{clientId}/agents/{agentId}', 'CampaignController@getCampaignsByAgent');
+
 });

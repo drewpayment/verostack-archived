@@ -66,4 +66,6 @@ class Campaign extends Model
     	return $query->where('name', $name);
     }
 
+
+
 }

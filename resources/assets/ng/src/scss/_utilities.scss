@@ -129,10 +129,32 @@ vs-float-button {
   height: 100%;
 }
 
-.vs-toolbar-icon {
-  padding: 0 1rem;
-}
+// .vs-toolbar-icon {
+//   padding: 0 1rem;
+// }
 
 .flex-spacer {
   flex: 1 1 auto;
+}
+
+mat-toolbar-row {
+
+  mat-form-field.vs-toolbar-select {
+    margin-left: 0.5rem;
+    font-size: 1rem !important;
+    line-height: 1rem !important;
+  }
+
+  button.vs-toolbar-icon {
+    padding: 0 1rem;
+    
+    .mat-button-wrapper {
+      display: flex;
+      align-items: center;
+
+      mat-icon {
+        vertical-align: unset;
+      }
+    }
+  }
 }

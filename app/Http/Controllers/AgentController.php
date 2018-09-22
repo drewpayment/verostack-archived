@@ -3,17 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Agent;
+use App\Http\AgentService;
 use App\Http\Helpers;
 use App\Http\Resources\ApiResource;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AgentController extends Controller
 {
-
+	protected $service;
 	protected $helpers;
 
-	public function __construct(Helpers $_helpers)
+	public function __construct(Helpers $_helpers, AgentService $agent_service)
 	{
+		$this->service = $agent_service;
 		$this->helpers = $_helpers;
 	}
 
@@ -32,6 +35,33 @@ class AgentController extends Controller
 
 		return $result
 			->setData(Agent::activeOnly($activeOnly)->get())
+			->throwApiException()
+			->getResponse();
+	}
+
+	/**
+	 * Get a list of agents by associated client.
+	 *
+	 * @param $clientId
+	 *
+	 * @return mixed
+	 */
+	public function getAgentsByClient($clientId)
+	{
+		$result = new ApiResource();
+
+		$result
+			->checkAccessByClient($clientId, Auth::user()->id)
+			->mergeInto($result);
+
+		if($result->hasError)
+			return $result->throwApiException()
+				->getResponse();
+
+		$this->service->getAgentsByClient($clientId)
+			->mergeInto($result);
+
+		return $result
 			->throwApiException()
 			->getResponse();
 	}

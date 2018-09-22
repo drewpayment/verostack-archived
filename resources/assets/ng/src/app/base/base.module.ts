@@ -10,6 +10,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '@app/material/material.module';
 import { Ng2GoogleChartsModule } from 'ng2-google-charts';
+import { AgentAddSaleDialog } from '@app/dashboard/dialogs/add-sale-dialog.component';
 
 @NgModule({
   imports: [
@@ -26,7 +27,11 @@ import { Ng2GoogleChartsModule } from 'ng2-google-charts';
     ClientSelectorComponent,
     ClientInformationComponent,
     SelectMapperComponent,
-    LoadingSpinnerComponent
+    LoadingSpinnerComponent,
+    AgentAddSaleDialog
+  ],
+  entryComponents: [
+    AgentAddSaleDialog
   ]
 })
 export class BaseModule { }

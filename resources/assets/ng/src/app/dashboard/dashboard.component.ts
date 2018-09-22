@@ -2,9 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { Moment } from 'moment';
 
 import * as moment from 'moment';
-import { Observable } from 'rxjs';
-import { IUser } from '@app/models';
+import { Observable, of } from 'rxjs';
+import { IUser, IAgent, ICampaign } from '@app/models';
 import { SessionService } from '@app/session.service';
+import { AgentsService } from '@app/core/agents/agents.service';
+import { MatDialog } from '@angular/material';
+import { AgentAddSaleDialog } from '@app/dashboard/dialogs/add-sale-dialog.component';
+import { CampaignService } from '@app/campaigns/campaign.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -24,6 +28,9 @@ export class DashboardComponent implements OnInit {
   user:Observable<IUser>;
   startDate:Moment;
   endDate:Moment;
+  selectedAgent:IAgent;
+  agents:Observable<IAgent[]>;
+  campaigns:Observable<ICampaign[]>;
 
   messages:any[];
 
@@ -37,10 +44,29 @@ export class DashboardComponent implements OnInit {
     }
   };
 
-  constructor(private session:SessionService) { }
+  constructor(
+    private session:SessionService,
+    private agentService:AgentsService,
+    private dialog:MatDialog,
+    private campaignService:CampaignService
+  ) { }
 
   ngOnInit() {
-    this.user = this.session.getUserItem();
+    this.selectedAgent = {};
+    this.session.getUserItem()
+      .subscribe(u => {
+        this.user = of(u);
+
+        if (u.role.role > this.roleType.companyAdmin) {
+          this.agentService.getAgentsByClient(u.selectedClient.clientId)
+            .subscribe(agents => {
+              this.agents = of(agents);
+              this.selectedAgent = agents[0];
+              this.campaigns = this.campaignService.getCampaignsByAgent(u.selectedClient.clientId, this.selectedAgent.agentId);
+            });
+        }
+      });
+
     const today = moment();
     this.startDate = today.clone().subtract(7, 'days');
     this.endDate = today.clone();
@@ -60,6 +86,21 @@ export class DashboardComponent implements OnInit {
 
   updateDashboard():void { 
 
+  }
+
+  showAddSaleDialog():void {
+    this.dialog.open(AgentAddSaleDialog, {
+      width: '500px',
+      data: {
+        agent: this.selectedAgent
+      }
+    })
+    .afterClosed()
+    .subscribe(result => {
+      if(result == null) return;
+
+      console.dir(result);
+    });
   }
 
 }

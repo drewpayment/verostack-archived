@@ -1,7 +1,9 @@
 import { Injectable, OnInit } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { ICampaign } from '../models';
 import { AuthService } from '../auth.service';
+import { throwError, Observable } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Injectable()
 export class CampaignService {
@@ -27,6 +29,20 @@ export class CampaignService {
       ? `${this.apiUrl}campaigns/clients/${clientId}/active`
       : `${this.apiUrl}campaigns/clients/${clientId}/active/${activeOnly}`;
     return this.http.get<ICampaign[]>(url).toPromise();
+  }
+
+  /**
+   * Get campaign entities by agent.
+   * 
+   * @param clientId 
+   * @param agentId 
+   */
+  getCampaignsByAgent(clientId:number, agentId:number):Observable<ICampaign[]> {
+    const url = `${this.apiUrl}campaigns/clients/${clientId}/agents/${agentId}`;
+    return this.http.get<ICampaign[]>(url)
+      .pipe(
+        catchError(this.handleError)
+      );
   }
 
   /**
@@ -60,6 +76,19 @@ export class CampaignService {
         url,
         { dto: dto }
       ).toPromise();
+  }
+
+  private handleError(error:HttpErrorResponse) {
+    if(error.error instanceof ErrorEvent) {
+      // client side network error
+      console.log('Error occurred: ', error.error.message || error.message);
+    } else {
+      // backend returned server error
+      console.error(`
+        Server returned error code ${error.status}: ${error.error}
+      `)
+    }
+    return throwError('There was a network error. Please try again.');
   }
 
 }

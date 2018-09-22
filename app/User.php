@@ -81,6 +81,16 @@ class User extends Authenticatable
 	}
 
 	/**
+	 * Get related agent entity.
+	 *
+	 * @return \Illuminate\Database\Eloquent\Relations\HasOne
+	 */
+	public function agent()
+	{
+		return $this->hasOne(Agent::class, 'user_id', 'id');
+	}
+
+	/**
 	 * Sets the active property on the model back to an integer
 	 * so when it is sent to db, it matches the column int.
 	 *

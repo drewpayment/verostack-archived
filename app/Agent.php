@@ -49,7 +49,7 @@ class Agent extends Model
 	 *
 	 * @return mixed \Illuminate\Database\Eloquent\Builder
 	 */
-	public function scopeId($query, $agentId)
+	public function scopeByAgentId($query, $agentId)
 	{
 		return $query->where('agent_id', $agentId);
 	}
@@ -104,6 +104,16 @@ class Agent extends Model
 	public function salesPairings()
 	{
 		return $this->hasMany(SalesPairing::class);
+	}
+
+	/**
+	 * Agent has one user record.
+	 *
+	 * @return \Illuminate\Database\Eloquent\Relations\HasOne
+	 */
+	public function user()
+	{
+		return $this->hasOne(User::class, 'id', 'user_id');
 	}
 
 }

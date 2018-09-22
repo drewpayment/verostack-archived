@@ -10,6 +10,7 @@ namespace App\Http;
 
 
 use App\Agent;
+use App\Client;
 use App\Http\Resources\ApiResource;
 
 class AgentService {
@@ -40,6 +41,39 @@ class AgentService {
 		$result->setToSuccess();
 
 		return $result;
+	}
+
+	/**
+	 * @param $agentId
+	 *
+	 * Get an agent by their agent id.
+	 *
+	 * @return ApiResource
+	 */
+	public function getAgentByAgentId($agentId)
+	{
+		$result = new ApiResource();
+		return $result->setData(Agent::byAgentId($agentId)->first());
+	}
+
+	/**
+	 * Get agents by an associated client.
+	 *
+	 * @param $clientId
+	 *
+	 * @return ApiResource
+	 */
+	public function getAgentsByClient($clientId)
+	{
+		$result = new ApiResource();
+
+		$agents = Client::with('users.agent')
+	                    ->clientId($clientId)
+						->first()
+						->users
+						->pluck('agent');
+
+		return $result->setData($agents);
 	}
 
 }

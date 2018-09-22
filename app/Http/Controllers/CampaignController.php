@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Campaign;
+use App\Http\AgentService;
 use App\Http\Helpers;
 use App\Http\Resources\ApiResource;
 use App\Http\ResourceType;
@@ -17,13 +18,17 @@ class CampaignController extends Controller
 	 */
 	protected $helper;
 
+	protected $agentService;
+
 	/**
 	 * CampaignController constructor.
 	 *
 	 * @param Helpers $_helper
+	 * @param AgentService $agent_service
 	 */
-	public function __construct(Helpers $_helper) {
+	public function __construct(Helpers $_helper, AgentService $agent_service) {
 		$this->helper = $_helper;
+		$this->agentService = $agent_service;
 	}
 
 	/**
@@ -42,6 +47,36 @@ class CampaignController extends Controller
 
 		return $result
 			->setData(Campaign::active($activeOnly)->byClientId($clientId)->get())
+			->throwApiException()
+			->getResponse();
+	}
+
+	/**
+	 * @param $clientId
+	 * @param $agentId
+	 *
+	 * @return mixed
+	 */
+	public function getCampaignsByAgent($clientId, $agentId)
+	{
+		$result = new ApiResource();
+		if(is_null($clientId))
+			return $result->setToFail()->getResponse();
+
+		$result
+			->checkAccessByClient($clientId, Auth::user()->id)
+			->mergeInto($result);
+
+		$this->agentService->getAgentByAgentId($agentId)
+			->mergeInto($result);
+
+		if($result->hasError) return $result->getResponse();
+
+		$campaigns = Campaign::active()
+			->byClientId($clientId)
+			->get();
+
+		return $result->setData($campaigns)
 			->throwApiException()
 			->getResponse();
 	}
