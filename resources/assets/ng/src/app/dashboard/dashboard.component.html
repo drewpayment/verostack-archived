@@ -8,7 +8,7 @@
           <ng-template #adminWorkspace>
             <!-- <span>{{(user|async).firstName}} {{(user|async).lastName}}'s Workspace</span> -->
             <mat-form-field class="vs-toolbar-select">
-              <mat-select [value]="selectedAgent.agentId">
+              <mat-select [value]="selectedAgent.agentId" (selectionChange)="handleAgentChange($event)">
                 <mat-option *ngFor="let a of (agents|async)" [value]="a.agentId">
                   {{a.firstName}} {{a.lastName}}
                 </mat-option>

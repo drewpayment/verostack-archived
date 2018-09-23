@@ -47,6 +47,24 @@ class DailySaleService {
 	}
 
 	/**
+	 * @param $agentId
+	 * @param $startDate
+	 * @param $endDate
+	 *
+	 * @return ApiResource
+	 */
+	public function getDailySalesByAgent($agentId, $startDate, $endDate)
+	{
+		$result = new ApiResource();
+		$startDate = Carbon::createFromFormat('Y-m-d', $startDate)->toDateTimeString();
+		$endDate = Carbon::createFromFormat('Y-m-d', $endDate)->toDateTimeString();
+		return $result->setData(DailySale::byAgentId($agentId)
+			->byDateRange($startDate, $endDate)
+			->with(['remarks', 'remarks.user'])
+			->get());
+	}
+
+	/**
 	 * Save a new daily sale entity.
 	 *
 	 * @param $sale

@@ -47,6 +47,34 @@ class DailySaleController extends Controller
 	}
 
 	/**
+	 * @param $clientId
+	 * @param $agentId
+	 * @param $startDate
+	 * @param $endDate
+	 *
+	 * @return mixed
+	 */
+	public function getDailySalesByAgent($clientId, $agentId, $startDate, $endDate)
+	{
+		$result = new ApiResource();
+
+		$result
+			->checkAccessByClient($clientId, Auth::user()->id)
+			->mergeInto($result);
+
+		if($result->hasError)
+			return $result->throwApiException()
+				->getResponse();
+
+		$this->service->getDailySalesByAgent($agentId, $startDate, $endDate)
+			->mergeInto($result);
+
+		return $result
+			->throwApiException()
+			->getResponse();
+	}
+
+	/**
 	 * Create a new daily sale entity.
 	 *
 	 * @param Request $request

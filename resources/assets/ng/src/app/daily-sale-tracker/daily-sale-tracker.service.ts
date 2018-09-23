@@ -19,6 +19,14 @@ export class DailySaleTrackerService {
     return this.http.get<DailySale[]>(url);
   }
 
+  getDailySalesByAgent(clientId:number, agentId:number, startDate:string, endDate:string):Observable<DailySale[]> {
+    const url = `${this.url}/clients/${clientId}/daily-sales/agents/${agentId}/from/${startDate}/to/${endDate}`;
+    return this.http.get<DailySale[]>(url)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
   createDailySale(clientId:number, dto:DailySale):Observable<DailySale> {
     const url = `${this.url}/clients/${clientId}/daily-sales`;
     return this.http.post<DailySale>(url, dto);
