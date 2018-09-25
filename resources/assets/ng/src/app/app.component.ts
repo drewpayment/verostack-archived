@@ -6,6 +6,7 @@ import { MatSidenav } from '@angular/material';
 import { UserService } from './user-features/user.service';
 import { Router } from '@angular/router';
 import { environment } from '@env/environment.prod';
+import { MomentExtensions } from '@app/shared/moment-extensions';
 
 @Component({
   selector: 'app-root',
@@ -24,6 +25,9 @@ export class AppComponent implements OnInit, AfterViewChecked {
     private session: SessionService,
     private cd:ChangeDetectorRef
   ) {
+    // wire up our extension methods 
+    MomentExtensions.init();
+
     this.loggedInStatus = this.session.isLoginSubject.asObservable();
     this.loading = this.session.loading$.asObservable();
     this.session.loadUserStorageItem();

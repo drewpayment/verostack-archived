@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { Moment } from 'moment';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { Moment } from '../shared/moment-extensions';
 
 import * as moment from 'moment';
 import * as _ from 'lodash';
@@ -7,16 +7,19 @@ import { Observable, of } from 'rxjs';
 import { IUser, IAgent, ICampaign, SaleStatus, DailySale } from '@app/models';
 import { SessionService } from '@app/session.service';
 import { AgentsService } from '@app/core/agents/agents.service';
-import { MatDialog, MatSelectChange } from '@angular/material';
+import { MatDialog, MatSelectChange, MatDatepickerInputEvent } from '@angular/material';
 import { AgentAddSaleDialog } from '@app/dashboard/dialogs/add-sale-dialog.component';
 import { CampaignService } from '@app/campaigns/campaign.service';
 import { ClientService } from '@app/client-information/client.service';
 import { DailySaleTrackerService } from '@app/daily-sale-tracker/daily-sale-tracker.service';
+import { Chart } from 'chart.js';
 
 interface DataStore {
+  user:IUser,
   agents:IAgent[],
   statuses:SaleStatus[],
-  sales:DailySale[]
+  sales:DailySale[],
+  campaigns:ICampaign[]
 }
 
 @Component({
@@ -43,16 +46,8 @@ export class DashboardComponent implements OnInit {
   store:DataStore = {} as DataStore;
 
   messages:any[];
-
-  chartData = {
-    chartType: 'ColumnChart',
-    dataTable: [],
-    options: {
-      legend: { position: 'top', maxLines: 3 },
-      bar: { groupWidth: '75%' },
-      isStacked: true
-    }
-  };
+  chartData:any;
+  @ViewChild('chart') private chartRef;
 
   constructor(
     private session:SessionService,
@@ -64,9 +59,14 @@ export class DashboardComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    const today = moment();
+    this.startDate = today.clone().subtract(1, 'week');
+    this.endDate = today.clone().subtract(1, 'days');
+
     this.selectedAgent = {};
     this.session.getUserItem()
       .subscribe(u => {
+        this.store.user = u;
         this.user = of(u);
 
         if (u.role.role > this.roleType.companyAdmin) {
@@ -75,14 +75,18 @@ export class DashboardComponent implements OnInit {
               this.store.agents = agents;
               this.agents = of(agents);
               this.selectedAgent = agents[0];
-              this.campaigns = this.campaignService.getCampaignsByAgent(u.selectedClient.clientId, this.selectedAgent.agentId);
+              this.campaignService.getCampaignsByAgent(u.selectedClient.clientId, this.selectedAgent.agentId)
+                .subscribe(campaigns => {
+                  this.store.campaigns = campaigns;
+                  this.campaigns = of(campaigns);
+                });
 
               this.dailySaleService
                 .getDailySalesByAgent(
                   u.selectedClient.clientId,
                   this.selectedAgent.agentId,
-                  this.startDate.format('YYYY-MM-DD'),
-                  this.endDate.format('YYYY-MM-DD')
+                  this.startDate.toDateString(),
+                  this.endDate.toDateString()
                 )
                 .subscribe(sales => {
                   this.store.sales = sales;
@@ -91,71 +95,128 @@ export class DashboardComponent implements OnInit {
                     .subscribe(statuses => {
                       this.store.statuses = statuses;
 
-                      let chartDate = this.startDate.clone();
-                      const header = _.map(statuses, 'name') as string[];
-                      let salesData = [];
-
-                      for (let i = 0; i < 7; i++) {
-                        var arr = [];
-                        if (i === 0) {
-                          arr.push(chartDate.format('l'));
-                          salesData.push(this.buildChartDataRow(arr, sales, statuses, chartDate));
-                          continue;
-                        } else if (i === 6) {
-                          arr.push(this.endDate.format('l'));
-                          salesData.push(this.buildChartDataRow(arr, sales, statuses, this.endDate));
-                          continue;
-                        }
-
-                        arr.push(chartDate.clone().add(i, 'days').format('l'));
-                        salesData.push(this.buildChartDataRow(arr, sales, statuses, chartDate));
-                      }
-
-                      this.chartData.dataTable = _.concat([header], salesData);
-
-                      console.dir(this.chartData.dataTable);
-
-                      // this.chartData.dataTable = [
-                      //   header,
-                      //   [chartDate.format('l'), 2, 0, 0, 1], 
-                      //   [chartDate.clone().add(1, 'days').format('l'), 1, 4, 1, 0],
-                      //   [chartDate.clone().add(2, 'days').format('l'), 0, 1, 1, 0],
-                      //   [chartDate.clone().add(3, 'days').format('l'), 6, 0, 0, 0],
-                      //   [chartDate.clone().add(4, 'days').format('l'), 0, 0, 3, 0],
-                      //   [chartDate.clone().add(5, 'days').format('l'), 1, 2, 2, 4],
-                      //   [this.endDate.format('l'), 11, 0, 0, 0]
-                      // ];
+                      // creates new chartjs object
+                      this.createChart(sales);
                     });
-                })
+                });
             });
         }
-
-        
-
-        
       });
+  }
 
-    const today = moment();
-    this.startDate = today.clone().subtract(7, 'days');
-    this.endDate = today.clone();
+  private createChart(sales:DailySale[]):void { 
+    let chartDate = this.startDate.clone();
+    let labels = [],
+      suggestedMax:number = 0;
+    const numDays = Math.round(moment.duration(this.endDate.diff(this.startDate)).asDays()) + 1;
+    for(let i = 0; i < numDays; i++) {
+      let checkDate = i === 0 ? chartDate.clone() : chartDate.clone().add(i, 'days');
+      labels.push(checkDate.format('l'));
 
+      let salesCount:number = _.filter(sales, (s:DailySale) => {
+        return moment(s.saleDate).isSame(checkDate, 'day');
+      }).length;
+      if(salesCount > suggestedMax) suggestedMax = salesCount + 3;
+    };
+
+    this.chartData = new Chart(this.chartRef.nativeElement, {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: this.createSaleDataArray(sales)
+      },
+      options: {
+        scales: {
+          xAxes: [{ stacked: true }],
+          yAxes: [{ 
+            stacked: true,
+            beginAtZero: true,
+            ticks: {
+              suggestedMax: suggestedMax,
+              min: 0,
+              stepSize: 1
+            }
+          }]
+        }
+      }
+    });
+  }
+
+  private updateChartDatasets(sales:DailySale[]):void {
+    this.chartData.config.data.datasets = this.createSaleDataArray(sales);
+    const chartDate = this.startDate.clone();
+    let labels = [];
+    let suggestedMax = 0;
+    const numDays = Math.round(moment.duration(this.endDate.diff(this.startDate)).asDays()) + 1;
+    for(let i = 0; i < numDays; i++) {
+      let checkDate = i === 0 ? chartDate.clone() : chartDate.clone().add(i, 'days');
+      labels.push(checkDate.format('l'));
+
+      let salesCount:number = _.filter(sales, (s:DailySale) => {
+        return moment(s.saleDate).isSame(checkDate, 'day');
+      }).length;
+      if(salesCount > suggestedMax) suggestedMax = salesCount + 3;
+    };
     
+    this.chartData.config.data.labels = labels;
+    this.chartData.config.options.scales.yAxes[0].ticks.suggestedMax = suggestedMax;
+    this.chartData.chart.update();
   }
 
-  private buildChartDataRow(row:any[], sales:DailySale[], statuses:SaleStatus[], date:Moment):any[] {
-    for(let i = 0; i < statuses.length; i++) {
-      let currStatus = statuses[i];
-      var filteredSales = _.filter(sales, (s:DailySale) => {
-        return s.status == currStatus.saleStatusId
-          && moment(s.saleDate).diff(date, 'days') == 0;
-      });
-      row.push(filteredSales.length);
-    }
-    return row;
+  private createSaleDataArray(sales:DailySale[]):any[] {
+    let chartDate = this.startDate.clone();
+    let salesData = [];
+
+    this.store.statuses.forEach((s:SaleStatus) => {
+      let columnData = {
+        label: s.name,
+        data: [],
+        backgroundColor: this.randomColor()
+      };
+
+      const numDays = Math.round(moment.duration(this.endDate.diff(this.startDate)).asDays()) + 1;
+      // loop through seven days
+      for(let i = 0; i < numDays; i++) {
+        let checkDate = i === 0 ? chartDate.clone() : chartDate.clone().add(i, 'days');
+        let filteredSales = _.filter(sales, (sale:DailySale) => {
+          return sale.status == s.saleStatusId
+            && moment(sale.saleDate).isSame(checkDate, 'day');
+        });
+        columnData.data.push({
+          x: checkDate.format('l'),
+          y: filteredSales.length || 0
+        });
+      }
+
+      salesData.push(columnData);
+    });
+    
+    return salesData;
   }
 
-  updateDashboard():void { 
+  private randomColor():string {
+    const r = Math.floor(Math.random() * 255);
+    const g = Math.floor(Math.random() * 255);
+    const b = Math.floor(Math.random() * 255);
+    return `rgba(${r}, ${g}, ${b}, 0.5)`;
+  }
 
+  updateDashboard(event:MatDatepickerInputEvent<Moment> = null, isStart:boolean = true):void { 
+    
+    if(isStart)
+      this.startDate = event.value;
+    else
+      this.endDate = event.value;
+
+    this.dailySaleService.getDailySalesByAgent(
+      this.store.user.id, 
+      this.selectedAgent.agentId, 
+      this.startDate.toDateString(),
+      this.endDate.toDateString()
+    ).subscribe(sales => {
+      this.updateChartDatasets(sales);
+    });
+      
   }
 
   handleAgentChange(event:MatSelectChange):void {
@@ -167,7 +228,10 @@ export class DashboardComponent implements OnInit {
     this.dialog.open(AgentAddSaleDialog, {
       width: '500px',
       data: {
-        agent: this.selectedAgent
+        user: this.store.user,
+        agent: this.selectedAgent,
+        campaigns: this.store.campaigns,
+        statuses: this.store.statuses
       }
     })
     .afterClosed()

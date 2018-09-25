@@ -1,0 +1,141 @@
+
+<h3 mat-dialog-title>
+    Add Sale
+    <button type="button" class="float-right" mat-icon-button (click)="onNoClick()" tabindex="-1">
+        <mat-icon>clear</mat-icon>
+    </button>
+</h3>
+<p class="text-muted">
+    All fields denoted with * are required.
+</p>
+<mat-dialog-content class="add-daily-sale-form">
+    <form [formGroup]="form">
+
+        <!-- CAMPAIGN AND SALE DATE -->
+        <div class="row">
+            <div class="col-6">
+                <mat-form-field>
+                    <mat-select placeholder="Campaign" formControlName="campaignId" required [disabled]="campaigns.length < 2">
+                        <mat-option *ngFor="let c of campaigns" [value]="c.campaignId">
+                            {{c.name}}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="form.get('campaignId').hasError('required') && (form.get('campaign').touched || submitted)">
+                        Please select a campaign
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+            <div class="col-6">
+                <mat-form-field>
+                    <input 
+                        matInput
+                        [matDatepicker]="saleDatepicker"
+                        placeholder="Sale Date"
+                        formControlName="saleDate"
+                        required
+                    />
+                    <mat-datepicker-toggle matSuffix [for]="saleDatepicker"></mat-datepicker-toggle>
+                    <mat-datepicker #saleDatepicker></mat-datepicker>
+                    <mat-error *ngIf="form.get('saleDate').hasError('required') && (form.get('saleDate').touched || submitted)">
+                        Please select a sale date
+                    </mat-error>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <div class="row my-4">
+            <div class="col-12">
+                <span>Customer Information</span>
+                <mat-divider></mat-divider>
+            </div>
+        </div>
+
+        <!-- POD/ACCOUNT -->
+        <div class="row">
+            <div class="col-12">
+                <mat-form-field>
+                    <input matInput placeholder="POD/Account" formControlName="podAccount" required />
+                    <mat-error *ngIf="form.get('podAccount').hasError('required') && (form.get('account').touched || submitted)">
+                        Please enter a POD or Account No
+                    </mat-error>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <!-- CUSTOMER NAME  -->
+        <div class="row">
+            <div class="col-6">
+                <mat-form-field>
+                    <input matInput placeholder="First Name" formControlName="firstName" required />
+                    <mat-error *ngIf="form.get('firstName').hasError('required') && (form.get('firstName').touched || submitted)">
+                        Please enter a first name
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="col-6">
+                <mat-form-field>
+                    <input matInput placeholder="Last Name" formControlName="lastName" required />
+                    <mat-error *ngIf="form.get('lastName').hasError('required') && (form.get('lastName').touched || submitted)">
+                        Please enter a last name
+                    </mat-error>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <!-- CUSTOMER ADDRESS -->
+        <div class="row">
+            <div class="col-8">
+                <mat-form-field>
+                    <input matInput placeholder="Address" formControlName="street" required />
+                    <mat-error *ngIf="form.get('street').hasError('required') && (form.get('street').touched || submitted)">
+                        Please enter a street address
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="col-4">
+                <mat-form-field>
+                    <input matInput placeholder="Apt/Suite/Unit" formControlName="street2" />
+                    <mat-hint>Optional</mat-hint>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <!-- CUSTOMER ADDRESS CON'T -->
+        <div class="row">
+            <div class="col-7">
+                <mat-form-field>
+                    <input matInput placeholder="City" formControlName="city" required />
+                    <mat-error *ngIf="form.get('city').hasError('required') && (form.get('city').touched || submitted)">
+                        Please enter a city
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="col-2">
+                <mat-form-field>
+                    <mat-select formControlName="state" placeholder="State" required>
+                        <mat-option *ngFor="let s of states" [value]="s.abbreviation">
+                            {{s.name}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="col-3">
+                <input matInput placeholder="Postal Code" formControlName="zip" required />
+                <mat-error *ngIf="form.get('zip').hasError('required') && (form.get('zip').touched || submitted)">
+                    Please enter a zip code
+                </mat-error>
+            </div>
+        </div>
+
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions class="d-flex justify-content-between">
+    <button mat-button (click)="onNoClick()">Cancel</button>
+    <button
+        mat-raised-button
+        (click)="saveAgentSale()"
+        color="primary"
+        [disabled]="form.invalid"
+    >Save</button>
+</mat-dialog-actions>

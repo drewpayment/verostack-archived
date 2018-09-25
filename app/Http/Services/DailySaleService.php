@@ -36,8 +36,8 @@ class DailySaleService {
 	public function getDailySalesByClientId($clientId, $campaignId, $startDate, $endDate)
 	{
 		$result = new ApiResource();
-		$startDate = Carbon::createFromFormat('Y-m-d', $startDate)->toDateTimeString();
-		$endDate = Carbon::createFromFormat('Y-m-d', $endDate)->toDateTimeString();
+		$startDate = Carbon::createFromFormat('Y-m-d', $startDate)->toDateString();
+		$endDate = Carbon::createFromFormat('Y-m-d', $endDate)->toDateString();
 		return $result
 			->setData(DailySale::byClient($clientId)
 				->byCampaign($campaignId)
@@ -56,8 +56,8 @@ class DailySaleService {
 	public function getDailySalesByAgent($agentId, $startDate, $endDate)
 	{
 		$result = new ApiResource();
-		$startDate = Carbon::createFromFormat('Y-m-d', $startDate)->toDateTimeString();
-		$endDate = Carbon::createFromFormat('Y-m-d', $endDate)->toDateTimeString();
+		$startDate = Carbon::createFromFormat('Y-m-d', $startDate)->toDateString();
+		$endDate = Carbon::createFromFormat('Y-m-d', $endDate)->toDateString();
 		return $result->setData(DailySale::byAgentId($agentId)
 			->byDateRange($startDate, $endDate)
 			->with(['remarks', 'remarks.user'])

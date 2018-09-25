@@ -18,7 +18,7 @@
           </ng-template>
           <span class="flex-spacer"></span>
           <!-- <mat-icon class="vs-toolbar-icon">add_circle</mat-icon> -->
-          <button mat-flat-button type="button" class="vs-toolbar-icon">
+          <button mat-flat-button type="button" class="vs-toolbar-icon" (click)="showAddSaleDialog()">
             <mat-icon inline="true">add_circle</mat-icon> SALE
           </button>
         </mat-toolbar-row>
@@ -26,18 +26,18 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-6">
+    <div class="col-8">
       <mat-card>
         <mat-card-header>
           <mat-card-title>
-            <h4>Sales per Day</h4>
+            <h4>Sales Activity</h4>
           </mat-card-title>
           <mat-card-subtitle>
             Aggregated sales organized by their current sale status.
           </mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
-          <google-chart [data]="chartData"></google-chart>
+          <canvas #chart>{{chartData}}</canvas>
         </mat-card-content>
         <mat-card-actions>
           <div class="d-flex justify-content-between mx-4">
@@ -46,7 +46,8 @@
                 [matDatepicker]="startDatepicker" 
                 placeholder="Start Date" 
                 [value]="startDate"
-                (dateInput)="updateDashboard()" 
+                (dateInput)="updateDashboard($event)" 
+                [max]="endDate"
               />
               <mat-datepicker-toggle matSuffix [for]="startDatepicker"></mat-datepicker-toggle>
               <mat-datepicker #startDatepicker></mat-datepicker>
@@ -56,7 +57,8 @@
                 [matDatepicker]="endDatepicker" 
                 placeholder="End Date" 
                 [value]="endDate" 
-                (dateInput)="updateDashboard()"
+                (dateInput)="updateDashboard($event, false)"
+                [min]="startDate"
               />
               <mat-datepicker-toggle matSuffix [for]="endDatepicker"></mat-datepicker-toggle>
               <mat-datepicker #endDatepicker></mat-datepicker>
@@ -65,7 +67,7 @@
         </mat-card-actions>
       </mat-card>
     </div>
-    <div class="col-6">
+    <div class="col-4">
       <mat-card class="h-100">
         <mat-card-header>
           <mat-card-title>

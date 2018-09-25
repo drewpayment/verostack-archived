@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class DailySale extends Model
@@ -102,7 +103,7 @@ class DailySale extends Model
 	 */
 	public function scopeByDateRange($query, $startDate, $endDate)
     {
-		return $query->whereBetween('sale_date', [$startDate, $endDate]);
+		return $query->whereBetween('sale_date', [$startDate, Carbon::createFromFormat('Y-m-d', $endDate)->addDay()->toDateString()]);
     }
 
 	/**

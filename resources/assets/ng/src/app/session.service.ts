@@ -197,7 +197,7 @@ export class SessionService implements OnInit {
 
   setItem<T>(itemName:string, data:ILocalStorage<T>): void {
     if(this.dataStore[itemName]) this.dataStore[itemName] = data.data;
-    data.expires = data.expires == null ? moment().valueOf() + (1000 * (60 * 24 * 3)) : data.expires;
+    data.expires = data.expires == null ? moment().valueOf() + moment.duration(3, 'days').milliseconds() : data.expires;
     this.localStorage.setItemSubscribe(itemName, data);
   }
 
