@@ -13,6 +13,7 @@ import { CampaignService } from '@app/campaigns/campaign.service';
 import { ClientService } from '@app/client-information/client.service';
 import { DailySaleTrackerService } from '@app/daily-sale-tracker/daily-sale-tracker.service';
 import { Chart } from 'chart.js';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 interface DataStore {
   user:IUser,
@@ -48,6 +49,7 @@ export class DashboardComponent implements OnInit {
   messages:any[];
   chartData:any;
   @ViewChild('chart') private chartRef;
+  isMobileLayout:boolean;
 
   constructor(
     private session:SessionService,
@@ -55,8 +57,16 @@ export class DashboardComponent implements OnInit {
     private dialog:MatDialog,
     private campaignService:CampaignService,
     private clientService:ClientService,
-    private dailySaleService:DailySaleTrackerService
-  ) { }
+    private dailySaleService:DailySaleTrackerService,
+    private breakpoints:BreakpointObserver
+  ) { 
+    breakpoints.observe([
+      Breakpoints.HandsetLandscape,
+      Breakpoints.HandsetPortrait
+    ]).subscribe(result => {
+      this.isMobileLayout = result.matches;
+    });
+  }
 
   ngOnInit() {
     const today = moment();
@@ -226,7 +236,7 @@ export class DashboardComponent implements OnInit {
 
   showAddSaleDialog():void {
     this.dialog.open(AgentAddSaleDialog, {
-      width: '500px',
+      width: '600px',
       data: {
         user: this.store.user,
         agent: this.selectedAgent,

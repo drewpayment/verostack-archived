@@ -10,6 +10,7 @@ import { IRole } from '@app/models/role.model';
 import { environment } from '../environments/environment';
 
 import * as moment from 'moment';
+import { map } from 'rxjs/operators';
 
 declare var window:any;
 
@@ -225,6 +226,13 @@ export class SessionService implements OnInit {
         }
         this.loggedInService.next(this.userLoggedIn);
       });
+  }
+
+  /**
+   * Exposes our localstorage user via the session service.
+   */
+  isUserAuthenticated():Observable<ILocalStorage<IUser>> {
+    return this.localStorage.getItem('user');
   }
 
   /**

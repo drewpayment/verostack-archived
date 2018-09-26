@@ -42,7 +42,11 @@ export class AgentAddSaleDialog implements OnInit {
     }
 
     saveAgentSale():void {
-        console.log('SOLD!');
+        this.submitted = true;
+
+        if (this.form.invalid) return;
+
+        this.ref.close(this.prepareModel());
     }
 
     onNoClick() {
@@ -50,10 +54,10 @@ export class AgentAddSaleDialog implements OnInit {
     }
 
     private createForm():void { 
-        this.form = this.fb.group({
+        this.form = new FormGroup({
             saleDate: this.fb.control(moment(), [Validators.required]),
             agentId: this.fb.control(this.agent.agentId, [Validators.required]),
-            campaignId: this.fb.control({value:'', disabled: this.campaigns.length < 2}, [Validators.required]),
+            campaignId: this.fb.control({value:this.campaigns[0].campaignId, disabled: this.campaigns.length < 2}, [Validators.required]),
             podAccount: this.fb.control('', [Validators.required]),
             firstName: this.fb.control('', [Validators.required]),
             lastName: this.fb.control('', [Validators.required]),

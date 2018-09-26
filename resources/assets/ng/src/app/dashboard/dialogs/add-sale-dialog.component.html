@@ -13,20 +13,20 @@
 
         <!-- CAMPAIGN AND SALE DATE -->
         <div class="row">
-            <div class="col-6">
+            <div class="col-md-6">
                 <mat-form-field>
-                    <mat-select placeholder="Campaign" formControlName="campaignId" required [disabled]="campaigns.length < 2">
+                    <mat-select placeholder="Campaign" formControlName="campaignId" required>
                         <mat-option *ngFor="let c of campaigns" [value]="c.campaignId">
                             {{c.name}}
                         </mat-option>
                     </mat-select>
-                    <mat-error *ngIf="form.get('campaignId').hasError('required') && (form.get('campaign').touched || submitted)">
+                    <mat-error *ngIf="form.get('campaignId').hasError('required') && (form.get('campaignId').touched || submitted)">
                         Please select a campaign
                     </mat-error>
                 </mat-form-field>
             </div>
 
-            <div class="col-6">
+            <div class="col-md-6">
                 <mat-form-field>
                     <input 
                         matInput
@@ -45,7 +45,7 @@
         </div>
 
         <div class="row my-4">
-            <div class="col-12">
+            <div class="col-md-12">
                 <span>Customer Information</span>
                 <mat-divider></mat-divider>
             </div>
@@ -53,10 +53,10 @@
 
         <!-- POD/ACCOUNT -->
         <div class="row">
-            <div class="col-12">
+            <div class="col-md-6">
                 <mat-form-field>
                     <input matInput placeholder="POD/Account" formControlName="podAccount" required />
-                    <mat-error *ngIf="form.get('podAccount').hasError('required') && (form.get('account').touched || submitted)">
+                    <mat-error *ngIf="form.get('podAccount').hasError('required') && (form.get('podAccount').touched || submitted)">
                         Please enter a POD or Account No
                     </mat-error>
                 </mat-form-field>
@@ -65,7 +65,7 @@
 
         <!-- CUSTOMER NAME  -->
         <div class="row">
-            <div class="col-6">
+            <div class="col-md-6">
                 <mat-form-field>
                     <input matInput placeholder="First Name" formControlName="firstName" required />
                     <mat-error *ngIf="form.get('firstName').hasError('required') && (form.get('firstName').touched || submitted)">
@@ -73,7 +73,7 @@
                     </mat-error>
                 </mat-form-field>
             </div>
-            <div class="col-6">
+            <div class="col-md-6">
                 <mat-form-field>
                     <input matInput placeholder="Last Name" formControlName="lastName" required />
                     <mat-error *ngIf="form.get('lastName').hasError('required') && (form.get('lastName').touched || submitted)">
@@ -85,7 +85,7 @@
 
         <!-- CUSTOMER ADDRESS -->
         <div class="row">
-            <div class="col-8">
+            <div class="col-md-8">
                 <mat-form-field>
                     <input matInput placeholder="Address" formControlName="street" required />
                     <mat-error *ngIf="form.get('street').hasError('required') && (form.get('street').touched || submitted)">
@@ -93,7 +93,7 @@
                     </mat-error>
                 </mat-form-field>
             </div>
-            <div class="col-4">
+            <div class="col-md-4">
                 <mat-form-field>
                     <input matInput placeholder="Apt/Suite/Unit" formControlName="street2" />
                     <mat-hint>Optional</mat-hint>
@@ -103,7 +103,7 @@
 
         <!-- CUSTOMER ADDRESS CON'T -->
         <div class="row">
-            <div class="col-7">
+            <div class="col-md-6">
                 <mat-form-field>
                     <input matInput placeholder="City" formControlName="city" required />
                     <mat-error *ngIf="form.get('city').hasError('required') && (form.get('city').touched || submitted)">
@@ -111,20 +111,25 @@
                     </mat-error>
                 </mat-form-field>
             </div>
-            <div class="col-2">
+            <div class="col-md-3">
                 <mat-form-field>
                     <mat-select formControlName="state" placeholder="State" required>
                         <mat-option *ngFor="let s of states" [value]="s.abbreviation">
                             {{s.name}}
                         </mat-option>
                     </mat-select>
+                    <mat-error *ngIf="form.get('state').hasError('required') && (form.get('state').touched || submitted)">
+                        Please select a state
+                    </mat-error>
                 </mat-form-field>
             </div>
-            <div class="col-3">
-                <input matInput placeholder="Postal Code" formControlName="zip" required />
-                <mat-error *ngIf="form.get('zip').hasError('required') && (form.get('zip').touched || submitted)">
-                    Please enter a zip code
-                </mat-error>
+            <div class="col-md-3">
+                <mat-form-field>
+                    <input matInput placeholder="Postal Code" formControlName="zip" required />
+                    <mat-error *ngIf="form.get('zip').hasError('required') && (form.get('zip').touched || submitted)">
+                        Please enter a zip code
+                    </mat-error>
+                </mat-form-field>
             </div>
         </div>
 

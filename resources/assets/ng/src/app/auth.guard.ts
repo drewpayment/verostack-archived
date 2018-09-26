@@ -1,10 +1,11 @@
 import { Injectable, OnInit } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, Router, RouterStateSnapshot } from '@angular/router';
 import { AuthService } from './auth.service'
-import { Observable ,  BehaviorSubject } from 'rxjs';
+import { Observable ,  BehaviorSubject, of, Observer } from 'rxjs';
 import { UserService } from './user-features/user.service';
-import { IUser } from './models';
+import { IUser, ILocalStorage } from './models';
 import { SessionService } from './session.service';
+import * as moment from 'moment';
 
 
 /**
@@ -23,13 +24,21 @@ export class AuthGuard implements CanActivate {
     private session:SessionService
   ) {}
 
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | boolean {
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot):Observable<boolean> | boolean {
     const url:string = state.url;
-    if (this.session.isUserLoggedIn) return true;
-
-    this.session.navigateQueue.push(url);
-    this.router.navigateByUrl('login');
-    return false;
+    return Observable.create((observer:Observer<boolean>) => this.session.isUserAuthenticated()
+      .toPromise()
+      .then((store:ILocalStorage<IUser>) => {
+        if (store != null && store.expires > moment().valueOf()) {
+          observer.next(true);
+          observer.complete();
+        } else {
+          this.session.navigateQueue.push(url);
+          this.router.navigateByUrl('login');
+          observer.next(false);
+          observer.complete();
+        }
+      }));
   }
 
 }

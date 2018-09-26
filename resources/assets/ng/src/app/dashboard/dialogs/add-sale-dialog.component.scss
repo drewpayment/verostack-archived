@@ -1,0 +1,13 @@
+
+.add-daily-sale-form {
+
+    mat-form-field {
+      display: block;
+    }
+  
+    /deep/ .mat-form-field-infix {
+      width: 100%;
+    }
+  
+  }
+  

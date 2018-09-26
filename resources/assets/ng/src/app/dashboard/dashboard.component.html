@@ -1,9 +1,9 @@
 
 <div class="container">
   <div class="row mb-4">
-    <div class="col-12">
+    <div class="col-md-12">
       <mat-toolbar color="accent">
-        <mat-toolbar-row>
+        <mat-toolbar-row [class.justify-content-between]="isMobileLayout">
           <span *ngIf="(user|async).role.role < roleType.companyAdmin; else adminWorkspace">My Workspace</span>
           <ng-template #adminWorkspace>
             <!-- <span>{{(user|async).firstName}} {{(user|async).lastName}}'s Workspace</span> -->
@@ -14,9 +14,9 @@
                 </mat-option>
               </mat-select>
             </mat-form-field>
-            <span>'s Workspace</span>
+            <span *ngIf="!isMobileLayout">'s Workspace</span>
           </ng-template>
-          <span class="flex-spacer"></span>
+          <span class="flex-spacer" *ngIf="!isMobileLayout"></span>
           <!-- <mat-icon class="vs-toolbar-icon">add_circle</mat-icon> -->
           <button mat-flat-button type="button" class="vs-toolbar-icon" (click)="showAddSaleDialog()">
             <mat-icon inline="true">add_circle</mat-icon> SALE
@@ -26,7 +26,7 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-8">
+    <div class="col-md-8">
       <mat-card>
         <mat-card-header>
           <mat-card-title>
@@ -40,34 +40,40 @@
           <canvas #chart>{{chartData}}</canvas>
         </mat-card-content>
         <mat-card-actions>
-          <div class="d-flex justify-content-between mx-4">
-            <mat-form-field>
-              <input matInput 
-                [matDatepicker]="startDatepicker" 
-                placeholder="Start Date" 
-                [value]="startDate"
-                (dateInput)="updateDashboard($event)" 
-                [max]="endDate"
-              />
-              <mat-datepicker-toggle matSuffix [for]="startDatepicker"></mat-datepicker-toggle>
-              <mat-datepicker #startDatepicker></mat-datepicker>
-            </mat-form-field>
-            <mat-form-field>
-              <input matInput 
-                [matDatepicker]="endDatepicker" 
-                placeholder="End Date" 
-                [value]="endDate" 
-                (dateInput)="updateDashboard($event, false)"
-                [min]="startDate"
-              />
-              <mat-datepicker-toggle matSuffix [for]="endDatepicker"></mat-datepicker-toggle>
-              <mat-datepicker #endDatepicker></mat-datepicker>
-            </mat-form-field>
+          <div class="row px-4">
+            <div class="col-md-6" [ngClass]="{'d-flex justify-content-center': isMobileLayout}">
+              <mat-form-field>
+                <input matInput 
+                  [matDatepicker]="startDatepicker" 
+                  placeholder="Start Date" 
+                  [value]="startDate"
+                  (dateInput)="updateDashboard($event)" 
+                  [max]="endDate"
+                />
+                <mat-datepicker-toggle matSuffix [for]="startDatepicker"></mat-datepicker-toggle>
+                <mat-datepicker #startDatepicker></mat-datepicker>
+              </mat-form-field>
+            </div>
+            
+            <div class="col-md-6" [ngClass]="{'d-flex justify-content-center': isMobileLayout}">
+              <mat-form-field [class.float-right]="!isMobileLayout">
+                <input matInput 
+                  [matDatepicker]="endDatepicker" 
+                  placeholder="End Date" 
+                  [value]="endDate" 
+                  (dateInput)="updateDashboard($event, false)"
+                  [min]="startDate"
+                />
+                <mat-datepicker-toggle matSuffix [for]="endDatepicker"></mat-datepicker-toggle>
+                <mat-datepicker #endDatepicker></mat-datepicker>
+              </mat-form-field>
+            </div>
+            
           </div>
         </mat-card-actions>
       </mat-card>
     </div>
-    <div class="col-4">
+    <div class="col-md-4">
       <mat-card class="h-100">
         <mat-card-header>
           <mat-card-title>

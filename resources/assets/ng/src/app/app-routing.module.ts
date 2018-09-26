@@ -14,7 +14,7 @@ import { DailySaleTrackerComponent } from '@app/daily-sale-tracker/daily-sale-tr
 import { environment } from '@env/environment';
 
 const routes: Routes = [
-    { path: '', component: LoginComponent, pathMatch: 'full' },
+    { path: '', redirectTo: 'login', pathMatch: 'full' },
     { path: 'login', component: LoginComponent },
     { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
     { path: 'my-information', component: MyInformationComponent, canActivate: [AuthGuard] },
@@ -23,7 +23,7 @@ const routes: Routes = [
     { path: 'payroll-tools', component: PayrollComponent, canActivate: [AuthGuard] },
     { path: 'agents', component: AgentsComponent, canActivate: [AuthGuard] },
     { path: 'daily-tracker', component: DailySaleTrackerComponent, canActivate: [AuthGuard] },
-    { path: '**', component: AppComponent }
+    // { path: '**', component: AppComponent }
 ]
 
 @NgModule({
