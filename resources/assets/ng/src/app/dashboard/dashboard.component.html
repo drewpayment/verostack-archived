@@ -73,21 +73,26 @@
         </mat-card-actions>
       </mat-card>
     </div>
-    <div class="col-md-4">
-      <mat-card class="h-100">
+    <div class="col-md-4" [class.sale-stream]="!isMobileLayout">
+      <mat-card *ngFor="let s of (sales|async)" class="my-1">
         <mat-card-header>
-          <mat-card-title>
-            <h5>Messages</h5>
-          </mat-card-title>
-          <mat-card-subtitle>
-            Plan ahead to know where you're going. 
-          </mat-card-subtitle>
+          <i class="material-icons" mat-card-avatar>person</i>
+          <h4 class="font-weight-bold" mat-card-title>{{s.firstName}} {{s.lastName}}</h4>
+          <mat-card-subtitle>Sold: {{s.saleDate | date:'shortDate'}}</mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
-          <!-------Do not change below this line------->
-          <div align="center" *ngIf="messages == null">
-            <iframe align="center" src="http://widget.calendarlabs.com/v1/quot.php?cid=101&uid=5635389853&c=random&l=en&cbg=FFFFFF&cb=1&cbc=000000&cf=calibri&cfg=000000&qfs=bi&qta=center&tfg=000000&tfs=bi&afc=000000&afs=i" width="188" height="210" marginwidth=0 marginheight=0 frameborder=0 scrolling=no allowtransparency='true'>Loading...</iframe>
-          </div><!-------Do not change above this line------->
+          <mat-divider></mat-divider>
+          <mat-list>
+            <mat-list-item>
+              <h4 mat-line><span class="font-weight-bold">Status:</span> {{getStatus(s.status).name}}</h4>
+              <h4 mat-line><span class="font-weight-bold">Pay Status:</span> {{getPaidStatus(s.paidStatus)}}</h4>
+              <p mat-line *ngIf="isSalePaid(s.paidStatus)" class="text-muted"><span class="font-italic">Paid:</span> {{s.paidDate | date:'shortDate'}}</p>
+              <address mat-line>
+                {{s.street}} {{s.street2}} <br />
+                {{s.city}}, {{s.state}} {{s.zip}}
+              </address>
+            </mat-list-item>
+          </mat-list>
         </mat-card-content>
       </mat-card>
     </div>

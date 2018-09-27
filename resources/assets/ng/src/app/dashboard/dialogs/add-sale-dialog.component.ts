@@ -3,6 +3,7 @@ import { IAgent, ICampaign, DailySale, IUser, SaleStatus, PaidStatusType } from 
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import * as moment from 'moment';
+import * as _ from 'lodash';
 import { IState, States } from "@app/shared/models/state.model";
 
 interface DialogData {
@@ -70,6 +71,7 @@ export class AgentAddSaleDialog implements OnInit {
     }
 
     private prepareModel():DailySale {
+        let pendingStatusQuery = _.find(this.statuses, {'name':'pending'});
         return {
             dailySaleId: null,
             agentId: this.form.value.agentId,
@@ -82,7 +84,7 @@ export class AgentAddSaleDialog implements OnInit {
             city: this.form.value.city,
             state: this.form.value.state,
             zip: this.form.value.zip,
-            status: -1,
+            status: pendingStatusQuery || -1,
             paidStatus: PaidStatusType.unpaid,
             podAccount: this.form.value.podAccount,
             remarks: [],

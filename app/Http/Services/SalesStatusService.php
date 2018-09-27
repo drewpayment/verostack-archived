@@ -54,6 +54,37 @@ class SalesStatusService
 		return $result->setData($status);
 	}
 
+	/**
+	 * If the client doesn't have a sale status type that is "pending" we are going to create one
+	 * so that when the agent saves a sale it goes into "pending" status.
+	 *
+	 * @param $clientId
+	 *
+	 * @return ApiResource
+	 */
+	public function createPendingStatus($clientId)
+	{
+		$result = new ApiResource();
+
+		$status = new SaleStatus();
+		$status->client_id = $dto->$clientId;
+		$status->name = 'Pending';
+		$status->is_active = true;
+		$res = $status->save();
+
+		if(!$res)
+			return $result->setToFail();
+
+		return $result->setData($status);
+	}
+
+	/**
+	 * update an existing status.
+	 *
+	 * @param $dto
+	 *
+	 * @return ApiResource
+	 */
 	public function updateStatus($dto)
 	{
 		$result = new ApiResource();

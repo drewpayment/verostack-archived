@@ -4,7 +4,7 @@ import { Moment } from '../shared/moment-extensions';
 import * as moment from 'moment';
 import * as _ from 'lodash';
 import { Observable, of } from 'rxjs';
-import { IUser, IAgent, ICampaign, SaleStatus, DailySale } from '@app/models';
+import { IUser, IAgent, ICampaign, SaleStatus, DailySale, PaidStatusType } from '@app/models';
 import { SessionService } from '@app/session.service';
 import { AgentsService } from '@app/core/agents/agents.service';
 import { MatDialog, MatSelectChange, MatDatepickerInputEvent } from '@angular/material';
@@ -26,7 +26,7 @@ interface DataStore {
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.css']
+  styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {
   roleType = {
@@ -45,6 +45,7 @@ export class DashboardComponent implements OnInit {
   agents:Observable<IAgent[]>;
   campaigns:Observable<ICampaign[]>;
   store:DataStore = {} as DataStore;
+  sales:Observable<DailySale[]>;
 
   messages:any[];
   chartData:any;
@@ -58,7 +59,7 @@ export class DashboardComponent implements OnInit {
     private campaignService:CampaignService,
     private clientService:ClientService,
     private dailySaleService:DailySaleTrackerService,
-    private breakpoints:BreakpointObserver
+    public breakpoints:BreakpointObserver
   ) { 
     breakpoints.observe([
       Breakpoints.HandsetLandscape,
@@ -99,7 +100,8 @@ export class DashboardComponent implements OnInit {
                   this.endDate.toDateString()
                 )
                 .subscribe(sales => {
-                  this.store.sales = sales;
+                  this.store.sales = _.orderBy(sales, ['saleDate'], ['desc']);
+                  this.sales = of(this.store.sales);
 
                   this.clientService.getSaleStatuses(u.selectedClient.clientId)
                     .subscribe(statuses => {
@@ -112,6 +114,37 @@ export class DashboardComponent implements OnInit {
             });
         }
       });
+  }
+
+  getStatus(statusId:number):SaleStatus {
+    if(statusId == null) return { name: null, clientId: null, saleStatusId: null, isActive: null };
+    return _.find(this.store.statuses, {'saleStatusId':statusId}) || { name: null, clientId: null, saleStatusId: null, isActive: null };
+  }
+
+  getPaidStatus(paidStatusId:number):string {
+    if(paidStatusId == null) return null;
+    var result:string;
+    switch(paidStatusId) {
+      case PaidStatusType.paid:
+        result = 'Paid';
+        break;
+      case PaidStatusType.repaid:
+        result = 'Repaid';
+        break;
+      case PaidStatusType.chargeback:
+        result = 'Chargeback';
+        break;
+      case PaidStatusType.unpaid:
+      default:
+        result = 'Unpaid';
+        break;
+    }
+    return result;
+  }
+
+  isSalePaid(paidStatus:number):boolean {
+    if(paidStatus == null) return false;
+    return paidStatus == PaidStatusType.paid || paidStatus == PaidStatusType.repaid;
   }
 
   private createChart(sales:DailySale[]):void { 
@@ -224,6 +257,8 @@ export class DashboardComponent implements OnInit {
       this.startDate.toDateString(),
       this.endDate.toDateString()
     ).subscribe(sales => {
+      this.store.sales = _.orderBy(sales, ['saleDate'], ['desc']);
+      this.sales = of(this.store.sales);
       this.updateChartDatasets(sales);
     });
       
@@ -248,7 +283,10 @@ export class DashboardComponent implements OnInit {
     .subscribe(result => {
       if(result == null) return;
 
-      console.dir(result);
+      this.dailySaleService.createDailySale(this.store.user.selectedClient.clientId, result)
+        .subscribe(sale => {
+
+        });
     });
   }
 

@@ -19,10 +19,12 @@ use Illuminate\Support\Facades\Auth;
 class DailySaleService {
 
 	protected $helper;
+	protected $saleStatusService;
 
-	public function __construct(Helpers $_helper)
+	public function __construct(Helpers $_helper, SalesStatusService $sales_status_service)
 	{
 		$this->helper = $_helper;
+		$this->saleStatusService = $sales_status_service;
 	}
 
 	/**
@@ -74,6 +76,14 @@ class DailySaleService {
 	public function saveNewDailySale($sale)
 	{
 		$result = new ApiResource();
+
+		if($sale->status === -1)
+		{
+			$sale->status = $this->saleStatusService
+				->createPendingStatus($sale->clientId)
+				->getData()
+				->status;
+		}
 
 		$s = new DailySale;
 		$s->agent_id = $sale->agentId;
