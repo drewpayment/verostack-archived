@@ -5,6 +5,8 @@ import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import * as moment from 'moment';
 import * as _ from 'lodash';
 import { IState, States } from "@app/shared/models/state.model";
+import { DailySaleTrackerService } from '@app/daily-sale-tracker/daily-sale-tracker.service';
+import { MessageService } from '@app/message.service';
 
 interface DialogData {
     user:IUser,
@@ -30,7 +32,8 @@ export class AgentAddSaleDialog implements OnInit {
     constructor(
         public ref:MatDialogRef<AgentAddSaleDialog>,
         @Inject(MAT_DIALOG_DATA) public data:DialogData,
-        private fb:FormBuilder
+        private fb:FormBuilder,
+        private dailySaleService:DailySaleTrackerService
     ) {}
 
     ngOnInit() {
@@ -54,9 +57,18 @@ export class AgentAddSaleDialog implements OnInit {
         this.ref.close();
     }
 
+    checkUniqueAccount():void { 
+        const account = this.form.value.podAccount;
+        this.dailySaleService.checkUniquePodAccount(account)
+            .subscribe((unique:boolean) => {
+                if(!unique)
+                    this.form.controls.podAccount.setErrors({ 'notUnique': true });
+            }); 
+    }
+
     private createForm():void { 
         this.form = new FormGroup({
-            saleDate: this.fb.control(moment(), [Validators.required]),
+            saleDate: this.fb.control(moment().format('YYYY-MM-DD'), [Validators.required]),
             agentId: this.fb.control(this.agent.agentId, [Validators.required]),
             campaignId: this.fb.control({value:this.campaigns[0].campaignId, disabled: this.campaigns.length < 2}, [Validators.required]),
             podAccount: this.fb.control('', [Validators.required]),
@@ -71,7 +83,9 @@ export class AgentAddSaleDialog implements OnInit {
     }
 
     private prepareModel():DailySale {
-        let pendingStatusQuery = _.find(this.statuses, {'name':'pending'});
+        let pendingStatusQuery = _.find(this.statuses, (s:SaleStatus) => {
+            return s.name.toLowerCase() == 'pending';
+        }).saleStatusId;
         return {
             dailySaleId: null,
             agentId: this.form.value.agentId,

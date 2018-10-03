@@ -118,4 +118,15 @@ class DailySale extends Model
         return $query->where('campaign_id', $campaignId);
     }
 
+	/**
+	 * @param $query \Illuminate\Database\Eloquent\Builder
+	 * @param $pod
+	 *
+	 * @return mixed \Illuminate\Database\Eloquent\Builder
+	 */
+	public function scopeByAccount($query, $pod)
+    {
+    	return $query->where('pod_account', $pod);
+    }
+
 }

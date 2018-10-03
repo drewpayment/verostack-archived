@@ -14,44 +14,10 @@
   font-size: .5rem;
 }
 
-// .mat-form-field-wrapper .mat-form-field-flex {
-//   min-width: 74px;
-// }
-
-// .mat-form-field {
-//   width:auto;
-
-//   > {
-//     width: auto;
-//   }
-// }
-
-// td[class^=".mat-column-"] {
-//   .mat-form-field-wrapper .mat-form-field-flex .mat-form-field-infix {
-//     width: auto !important;
-//   }
-
-//   min-width:74px;
-//   max-width: 140px;
-//   width: auto;
-// }
-
-// vs-daily-sale-tracker > mat-card > mat-card-content > table > tbody > tr > td > mat-form-field > div > div.mat-form-field-flex > div {
-//   width: auto;
-// }
-
 vs-daily-sale-tracker > mat-card > mat-card-content > table > tbody > tr > td {
-
-  // .mat-form-field-wrapper .mat-form-field-flex {
-  //   min-width: 100px;
-  // }
 
   mat-form-field {
     margin: 0 5px;
-
-    // div > div.mat-form-field-flex > div {
-    //   width: auto;
-    // }
   }
 }
 
@@ -61,7 +27,8 @@ vs-daily-sale-tracker > mat-card > mat-card-content > table > tbody > tr > td {
 
 body, html {
   height: 100%;
-  font-size: 100%;
+  font-size: 16px;
+  line-height: 1.15rem;
 }
 .app-loading {
   position:relative;

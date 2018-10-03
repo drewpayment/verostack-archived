@@ -6,5 +6,8 @@
 		{
 			"path": "."
 		}
-	]
+	],
+	"settings": {
+		"prettier.tabWidth": 4
+	}
 }

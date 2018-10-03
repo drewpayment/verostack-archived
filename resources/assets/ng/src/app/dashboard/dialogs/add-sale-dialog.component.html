@@ -55,9 +55,12 @@
         <div class="row">
             <div class="col-md-6">
                 <mat-form-field>
-                    <input matInput placeholder="POD/Account" formControlName="podAccount" required />
+                    <input matInput placeholder="POD/Account" formControlName="podAccount" (blur)="checkUniqueAccount()" required />
                     <mat-error *ngIf="form.get('podAccount').hasError('required') && (form.get('podAccount').touched || submitted)">
                         Please enter a POD or Account No
+                    </mat-error>
+                    <mat-error *ngIf="form.get('podAccount').hasError('notUnique') && (form.get('podAccount').touched || submitted)">
+                        Please enter a unique Account No
                     </mat-error>
                 </mat-form-field>
             </div>

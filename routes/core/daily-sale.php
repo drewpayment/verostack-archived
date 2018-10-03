@@ -17,4 +17,7 @@ Route::middleware(['auth:api'])->group(function() {
 	Route::delete('/clients/{clientId}/daily-sales/{dailySaleId}', 'DailySaleController@deleteDailySale')
 		->where(['clientId' => '[0-9]+', 'dailySaleId' => '[0-9]+']);
 
+	Route::get('/pods/{pod}', 'DailySaleController@checkUniquePodAccount')
+		->where(['pod' => '[0-9]+']);
+
 });

@@ -12,7 +12,7 @@ export class MomentExtensions {
     }
 
     toDateString = function():string {
-        return moment(this).format('YYYY-MM-DD');
+        return moment(this).clone().format('YYYY-MM-DD');
     }
 
     static init = () => new MomentExtensions();

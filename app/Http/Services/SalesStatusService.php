@@ -67,7 +67,7 @@ class SalesStatusService
 		$result = new ApiResource();
 
 		$status = new SaleStatus();
-		$status->client_id = $dto->$clientId;
+		$status->client_id = $clientId;
 		$status->name = 'Pending';
 		$status->is_active = true;
 		$res = $status->save();

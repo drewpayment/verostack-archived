@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\DailySale;
 use App\Http\Helpers;
 use App\Http\Resources\ApiResource;
 use App\Http\Services\DailySaleService;
@@ -97,6 +98,18 @@ class DailySaleController extends Controller
 			->mergeInto($result)
 			->throwApiException()
 			->getResponse();
+	}
+
+	/**
+	 * @param $pod
+	 *
+	 * @return \Illuminate\Http\JsonResponse
+	 */
+	public function checkUniquePodAccount($pod)
+	{
+		$existing = DailySale::byAccount($pod)->first();
+		$result = is_null($existing);
+		return response()->json($result);
 	}
 
 	/**

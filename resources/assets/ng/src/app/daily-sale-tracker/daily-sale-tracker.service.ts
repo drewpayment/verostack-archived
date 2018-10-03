@@ -32,6 +32,14 @@ export class DailySaleTrackerService {
     return this.http.post<DailySale>(url, dto);
   }
 
+  checkUniquePodAccount(account:number):Observable<boolean> {
+      const url = `${this.url}/pods/${account}`;
+      return this.http.get<boolean>(url)
+        .pipe(
+            catchError(this.handleError)
+        );
+  }
+
   updateDailySale(clientId:number, dto:DailySale):Observable<DailySale> {
     const url = `${this.url}/clients/${clientId}/daily-sales/${dto.dailySaleId}`;
     return this.http.post<DailySale>(url, dto)
