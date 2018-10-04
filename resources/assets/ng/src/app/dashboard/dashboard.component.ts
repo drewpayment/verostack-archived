@@ -35,6 +35,7 @@ interface DataStore {
     styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit, AfterContentInit {
+    selectedFilter:PaidStatusType | string = '-1';
     roleType = {
         systemAdmin: 7,
         companyAdmin: 6,
@@ -205,8 +206,6 @@ export class DashboardComponent implements OnInit, AfterContentInit {
         }
 
         this.createNewChart(suggestedMax, labels, sales);
-
-
     }
 
     private createNewChart(suggestedMax: number, labels: string[], sales: DailySale[]): void {
@@ -251,7 +250,6 @@ export class DashboardComponent implements OnInit, AfterContentInit {
         let suggestedMax = 0;
 
         const numDays = this.calculateDuration();
-        console.log(numDays);
 
         for (let i = 0; i <= numDays; i++) {
             let checkDate = chartDate.clone().add(i, 'days');
@@ -334,8 +332,7 @@ export class DashboardComponent implements OnInit, AfterContentInit {
             )
             .subscribe(sales => {
                 this.store.sales = _.orderBy(sales, ['saleDate'], ['desc']);
-                this.sales = of(this.store.sales);
-                this.updateChartDatasets(sales);
+                this.handleFilter();
             });
     }
 
@@ -371,14 +368,25 @@ export class DashboardComponent implements OnInit, AfterContentInit {
                             this.store.sales[existing] = sale;
                         }
 
-                        this.updateChartDatasets(this.store.sales);
-                        this.sales = of(this.store.sales);
+                        this.handleFilter();
                     });
             });
     }
 
-    handleFilter(event:MatButtonToggleChange) {
-        console.dir(event);
+    handleFilter(event:MatButtonToggleChange = null) {
+        if(event != null) this.selectedFilter = event.value;
+
+        if(this.selectedFilter == -1) {
+            this.updateChartDatasets(this.store.sales);
+            this.sales = of(this.store.sales);
+        } else {
+            let filteredSales = _.filter(this.store.sales, (sale:DailySale) => {
+                return sale.paidStatus == this.selectedFilter;
+            });
+
+            this.updateChartDatasets(filteredSales);
+            this.sales = of(filteredSales);
+        }
     }
 
 }

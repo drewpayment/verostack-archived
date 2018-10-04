@@ -14,7 +14,11 @@ class Campaign extends Model
         'campaign_id',
         'client_id',
         'name',
-        'active'
+        'active',
+	    'compensation',
+	    'md_details',
+	    'md_onboarding',
+	    'md_other'
     ];
 
 	/**

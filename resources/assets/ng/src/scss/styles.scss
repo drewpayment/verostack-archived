@@ -4,7 +4,10 @@
   // '~@angular/material/prebuilt-themes/deeppurple-amber.css'
   './_theme.scss',
   './_utilities.scss',
-  '~handsontable/dist/handsontable.full.css';
+  '~handsontable/dist/handsontable.full.css',
+  '~quill/dist/quill.core.css',
+  '~quill/dist/quill.snow.css',
+  '~quill/dist/quill.bubble.css';
 
 .font-sm {
   font-size: .75rem;

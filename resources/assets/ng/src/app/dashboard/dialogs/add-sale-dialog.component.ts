@@ -59,6 +59,7 @@ export class AgentAddSaleDialog implements OnInit {
 
     checkUniqueAccount():void { 
         const account = this.form.value.podAccount;
+        if(account == null || account.length < 1) return;
         this.dailySaleService.checkUniquePodAccount(account)
             .subscribe((unique:boolean) => {
                 if(!unique)

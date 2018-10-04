@@ -66,10 +66,10 @@
             </mat-card>
         </div>
         <div class="col-md-4 sale-stream-container">
-            <h5 class="text-light">Filter: </h5>
-            <div class="card">
-                <mat-button-toggle-group #filterBy="matButtonToggleGroup" (change)="handleFilter($event)">
-                    <mat-button-toggle value="">
+            <h5 class="text-light mb-0">Filter: </h5>
+            <div class="card mb-2">
+                <mat-button-toggle-group #filterBy="matButtonToggleGroup" (change)="handleFilter($event)" [value]="selectedFilter">
+                    <mat-button-toggle value="-1">
                         None
                     </mat-button-toggle>
                     <mat-button-toggle value="0">

@@ -96,7 +96,7 @@ export class CampaignsComponent implements OnInit {
     this.floatBtnIsOpen$.next(true);
     // show dialog with form...
     let ref = this.dialog.open(NewCampaignDialogComponent, {
-      width: '300px',
+      width: '650px',
       data: {
         data: this.user
       }
