@@ -46,6 +46,23 @@
   }
 }
 
+.hoverable {
+
+    .hover-item {
+        display: inline;
+        visibility: hidden;
+        opacity: 0;
+        transition: visibility 0s, opacity 0.5s linear;
+    }
+
+    &:hover {
+        .hover-item {
+            visibility: visible;
+            opacity: 1;
+        }
+    }
+}
+
 a.nostyle:link {
   text-decoration: inherit;
   color: inherit;
