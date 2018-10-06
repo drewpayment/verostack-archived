@@ -3,7 +3,9 @@ import { MatSnackBar, MatSnackBarRef, SimpleSnackBar, MatSnackBarConfig } from '
 import { HttpErrorResponse } from '@angular/common/http';
 import { SessionService } from '@app/session.service';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class MessageService {
   messages: string[] = [];
   openBar: MatSnackBarRef<SimpleSnackBar> = null;

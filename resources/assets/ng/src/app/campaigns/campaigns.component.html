@@ -96,11 +96,7 @@
 </mat-card> -->
 
 <div class="container">
-    <div class="row mb-4">
-        <div class="col-12 card">
-            <h5 class="display-4">Campaign Management</h5>
-        </div>
-    </div>
+    <h5 class="display-4">Campaign Management</h5>
 
     <!-- <div class="row">
         <div class="col-12 card bg-light"> -->
@@ -109,59 +105,31 @@
                     <div class="card hoverable">
                         <!-- <div class="card-header text-center">{{c.name}}</div> -->
                         <div class="card-body p-3 pb-1">
-                            <h6 class="card-title">{{c.name}}</h6>
-                            <!-- <h6 class="card-subtitle mb-2 text-muted">{{c.active ? 'Active' : 'Inactive'}}</h6> -->
+                            <div class="row">
+                                <div class="col-md-10 d-flex align-items-center">
+                                    <h5 class="card-title mb-0">{{c.name}}</h5>
+                                </div>
+                                <div class="col-md-2 d-flex align-items-start justify-content-end">
+                                    <button mat-icon-button type="button" [matMenuTriggerFor]="menu" class="float-right">
+                                        <mat-icon>more_vert</mat-icon>
+                                    </button>
+                                    <mat-menu #menu>
+                                        <button mat-menu-item (click)="editCampaign(c)">Edit</button>
+                                        <button mat-menu-item (click)="switchActiveStatus(c, i)">{{c.active ? 'Deactivate' : 'Activate'}}</button>
+                                    </mat-menu>
+                                </div>
+                            </div>
+                            
                             <div class="card-text my-2" *ngIf="c.mdDetails != null; else noDetail" [innerHTML]="sanitize(c.mdDetails)"></div>
                             <ng-template #noDetail>
                                 <div class="card-text font-italic text-muted my-2">No details saved.</div>
                             </ng-template>
 
-                            
-
-                            <!-- <button type="button" mat-button *ngIf="c.active; else isInactive;" color="warn">Deactivate</button>
-                            <ng-template #isInactive>
-                                <button type="button" mat-button color="primary">
-                                    Reactivate
-                                </button>
-                            </ng-template> -->
-                            <button type="button" 
-                                class="btn btn-outline-danger btn-sm hover-item float-right" 
-                                *ngIf="c.active; else isInactive;"
-                                (click)="switchActiveStatus(c, i)"
-                            >Deactivate</button>
-                            <ng-template #isInactive>
-                                <button type="button"
-                                    class="btn btn-outline-secondary btn-sm hover-item float-right"
-                                    (click)="switchActiveStatus(c, i)"
-                                >Activate</button>
-                            </ng-template>
                         </div>
-                        <div class="card-footer d-flex justify-content-end">
-                            
-                            <!-- <small><a href="#" class="card-link text-danger" *ngIf="c.active; else isInactive;">Deactivate</a></small>
-                            <ng-template #isInactive>
-                                <small><a href="#" class="card-link text-info">Reactivate</a></small>
-                            </ng-template> -->
-                            <small class="text-muted font-italic">{{c.active ? 'Active' : 'Inactive'}}</small>
+                        <div class="card-footer d-flex justify-content-end bg-light">
+                            <small class="font-italic" [ngClass]="!c.active ? 'text-muted' : 'text-primary'">{{c.active ? 'Active' : 'Inactive'}}</small>
                         </div>
                     </div>
-                    <!-- <mat-card class="m-3" style="height: 152px;">
-                        <mat-card-header>
-                            <i class="material-icons" mat-card-avatar>person</i>
-                            <h4 mat-card-title>{{c.name}}</h4>
-                            <mat-card-subtitle>{{c.active ? 'Active' : 'Inactive'}}</mat-card-subtitle>
-                        </mat-card-header>
-                        <mat-card-content style="max-height:300px;" [innerHTML]="sanitize(c.mdDetails)">
-                        </mat-card-content>
-                        <mat-card-actions>
-                            <button type="button" mat-button *ngIf="c.active; else isInactive;" color="warn">Deactivate</button>
-                            <ng-template #isInactive>
-                                <button type="button" mat-button color="primary">
-                                    Reactivate
-                                </button>
-                            </ng-template>
-                        </mat-card-actions>
-                    </mat-card> -->
                 </div>
             </div>
         <!-- </div>

@@ -30,10 +30,6 @@ export class SidenavComponent implements OnInit {
   role:any;
 
   constructor(
-    private auth: AuthService,
-    private router: Router,
-    private userService: UserService,
-    private msg:MessageService,
     private session:SessionService
   ) {}
 
@@ -48,13 +44,9 @@ export class SidenavComponent implements OnInit {
      * link in the sidenav, the router event will signal here and we will
      * close the sidenav.
      */
-    this.router.events.subscribe(() => {
-      this.sidenav.close();
-    });
-  }
-
-  toggleSidenav() {
-    this.sidenav.toggle();
+    // this.router.events.subscribe(() => {
+    //   this.sidenav.close();
+    // });
   }
 
 }

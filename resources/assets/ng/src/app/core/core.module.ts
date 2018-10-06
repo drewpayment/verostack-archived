@@ -50,14 +50,7 @@ import { DeleteSaleDialog } from '@app/daily-sale-tracker/dialogs/delete-sale.co
     DeleteSaleDialog
   ],
   providers: [
-    AuthService,
-    SessionService,
-    ClientService,
-    CampaignService,
     AuthGuard,
-    LoadingSpinnerService,
-    MessageService,
-    DailySaleTrackerService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,

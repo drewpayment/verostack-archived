@@ -7,6 +7,11 @@ import {SessionService} from '@app/session.service';
 import {MessageService} from '@app/message.service';
 import { QuillEditorComponent } from 'ngx-quill';
 
+interface DialogData {
+    user:IUser,
+    campaign:ICampaign
+}
+
 @Component({
     selector: 'app-new-campaign-dialog',
     templateUrl: './new-campaign-dialog.component.html',
@@ -41,7 +46,7 @@ export class NewCampaignDialogComponent implements OnInit {
         private session: SessionService,
         private msg: MessageService
     ) {
-        this.hasExistingCampaign = data.campaign != null;
+        this.hasExistingCampaign = this.data.campaign != null;
 
         if (!this.hasExistingCampaign) {
             this.createForm();
@@ -51,7 +56,7 @@ export class NewCampaignDialogComponent implements OnInit {
             this.createForm(this.campaign);
         }
 
-        this.user = data.data;
+        this.user = this.data.user;
     }
 
     ngOnInit() {

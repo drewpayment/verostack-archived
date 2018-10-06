@@ -76,8 +76,10 @@ $vs-mat-amber: $mat-amber;
 
 // Define the palettes for your theme using the Material Design palettes available in palettes.scss
 // (imported above). For each palette, you can optionally specify a default, lighter and darker hue.
-$vs-app-primary: mat-palette($vs-mat-indigo, 800, 400, 600);
-$vs-app-accent: mat-palette($vs-mat-amber, 600);
+// $vs-app-primary: mat-palette($vs-mat-indigo, 800, 400, 600);
+// $vs-app-accent: mat-palette($vs-mat-cyan, 200);
+$vs-app-primary: mat-palette($mat-indigo, 500, 200, 800);
+$vs-app-accent: mat-palette($mat-orange, 500);
 
 // The warn palette is optional (defaults to red)
 $vs-app-warn: mat-palette($mat-red);

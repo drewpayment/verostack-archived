@@ -1,80 +1,80 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { AuthService } from '../auth.service';
-import { SessionService } from '../session.service';
-import { IUser } from '../models/user.model';
-import {
-  MatSidenav,
-  MatDialog
-} from '@angular/material';
-import { ClientSelectorComponent } from '../client-selector/client-selector.component';
-import { Router } from '@angular/router';
-import { UserService } from '../user-features/user.service';
+import {Component, OnInit, Input, AfterViewInit} from '@angular/core';
+import {BehaviorSubject, Observable} from 'rxjs';
+import {AuthService} from '../auth.service';
+import {SessionService} from '../session.service';
+import {IUser} from '../models/user.model';
+import {MatSidenav, MatDialog} from '@angular/material';
+import {ClientSelectorComponent} from '../client-selector/client-selector.component';
+import {Router} from '@angular/router';
+import {UserService} from '../user-features/user.service';
+import { SidenavService } from '@app/sidenav/sidenav.service';
 
 @Component({
-  selector: 'app-header',
-  templateUrl: './header.component.html',
-  styleUrls: ['./header.component.css']
+    selector: 'app-header',
+    templateUrl: './header.component.html',
+    styleUrls: ['./header.component.css']
 })
-export class HeaderComponent implements OnInit {
-  private defaultTitle: string = 'Verostack Development';
+export class HeaderComponent implements OnInit, AfterViewInit {
+    private defaultTitle: string = 'Verostack Development';
 
-  isLoggedIn:boolean;
-  user:IUser;
-  isAdmin:boolean;
-  menuTitle: BehaviorSubject<string> = new BehaviorSubject<string>(this.defaultTitle);
-  showClientSelector:boolean;
-  @Input() private sidenav: MatSidenav;
-  loggedInStatus:Observable<boolean>;
+    isLoggedIn: boolean;
+    user: IUser;
+    isAdmin: boolean;
+    menuTitle: BehaviorSubject<string> = new BehaviorSubject<string>(this.defaultTitle);
+    showClientSelector: boolean;
+    loggedInStatus: Observable<boolean>;
 
-  constructor(
-    private authService:AuthService,
-    private userService:UserService,
-    private session:SessionService,
-    private dialog:MatDialog,
-    private router:Router
-  ) {
-    this.loggedInStatus = this.session.isLoginSubject.asObservable();
-    this.loggedInStatus.subscribe((authenticated:boolean) => {
-      if(!authenticated) {
-        this.menuTitle.next(this.defaultTitle);
-      }
-    });
-    this.session.userItem.subscribe((next:IUser) => {
-      this.user = next;
-      this.menuTitle.next(this.user.selectedClient.name);
-      if(this.user.clients.length > 1) this.showClientSelector = true;
-      this.isAdmin = this.user.role.role > 6;
-    });
-  }
+    constructor(
+        private authService: AuthService,
+        private userService: UserService,
+        private session: SessionService,
+        private dialog: MatDialog,
+        private router: Router,
+        private sidenavService:SidenavService
+    ) {
+        this.loggedInStatus = this.session.isLoginSubject.asObservable();
+        this.loggedInStatus.subscribe((authenticated: boolean) => {
+            if (!authenticated) {
+                this.menuTitle.next(this.defaultTitle);
+            }
+        });
+        this.session.userItem.subscribe((next: IUser) => {
+            this.user = next;
+            this.menuTitle.next(this.user.selectedClient.name);
+            if (this.user.clients.length > 1) this.showClientSelector = true;
+            this.isAdmin = this.user.role.role > 6;
+        });
+    }
 
-  ngOnInit() {
-    this.session.getItem('user');
-  }
+    ngOnInit() {
+        this.session.getItem('user');
+    }
 
-  onLogout() {
-    this.authService.logout()
-      .then((url:string) => {
-        this.session.navigateByUrl(url);
-      });
-  }
+    ngAfterViewInit() {
+        // this.sidenav.
+    }
 
-  /**
-   * Uses session service to toggle side nav
-   */
-  toggleSidenav(): void {
-    this.sidenav.toggle();
-  }
+    onLogout() {
+        this.authService.logout().then((url: string) => {
+            this.session.navigateByUrl(url);
+        });
+    }
 
-  openDialog(): void {
-    let dialogRef = this.dialog.open(ClientSelectorComponent, {
-      width: '400px',
-      data: this.user
-    });
+    /**
+     * Uses session service to toggle side nav
+     */
+    toggleSidenav(): void {
+        this.sidenavService.toggle();
+    }
 
-    dialogRef.afterClosed().subscribe(result => {
-      // console.log('dialog was closed');
-    });
-  }
+    openDialog(): void {
+        let dialogRef = this.dialog.open(ClientSelectorComponent, {
+            width: '400px',
+            data: this.user
+        });
 
+        dialogRef.afterClosed().subscribe(result => {
+            // console.log('dialog was closed');
+        });
+    }
 }

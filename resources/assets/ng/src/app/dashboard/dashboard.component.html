@@ -1,7 +1,7 @@
 <div class="container">
     <div class="row mb-4">
         <div class="col-md-12">
-            <mat-toolbar color="accent">
+            <mat-toolbar color="primary">
                 <mat-toolbar-row [class.justify-content-between]="isMobileLayout">
                     <span *ngIf="(user|async).role.role < roleType.companyAdmin; else adminWorkspace">Sales Analysis</span>
                     <ng-template #adminWorkspace>
@@ -17,7 +17,7 @@
                     </ng-template>
                     <span class="flex-spacer" *ngIf="!isMobileLayout"></span>
                     <!-- <mat-icon class="vs-toolbar-icon">add_circle</mat-icon> -->
-                    <button mat-flat-button type="button" class="vs-toolbar-icon" (click)="showAddSaleDialog()">
+                    <button mat-raised-button type="button" class="vs-toolbar-icon" (click)="showAddSaleDialog()">
                         <mat-icon inline="true">add_circle</mat-icon> SALE
                     </button>
                 </mat-toolbar-row>
@@ -66,7 +66,7 @@
             </mat-card>
         </div>
         <div class="col-md-4 sale-stream-container">
-            <h5 class="text-light mb-0">Filter: </h5>
+            <h5 class="mb-0">Filter: </h5>
             <div class="card mb-2">
                 <mat-button-toggle-group #filterBy="matButtonToggleGroup" (change)="handleFilter($event)" [value]="selectedFilter">
                     <mat-button-toggle value="-1">

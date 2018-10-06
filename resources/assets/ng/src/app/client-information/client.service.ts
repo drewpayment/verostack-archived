@@ -15,7 +15,9 @@ interface DataStore {
   campaigns: ICampaign[]
 }
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class ClientService {
   private url: string;
   client: Observable<IClient>;

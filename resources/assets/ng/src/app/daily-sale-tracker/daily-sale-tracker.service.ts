@@ -5,7 +5,9 @@ import { SaleStatus, DailySale, HttpErrorResponse } from '@app/models';
 import { HttpClient } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class DailySaleTrackerService {
 
   url:string;

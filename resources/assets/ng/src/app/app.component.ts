@@ -1,51 +1,51 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef, AfterViewChecked } from '@angular/core';
-import { Observable } from 'rxjs';
-import { AuthService } from './auth.service';
-import { SessionService } from './session.service';
-import { MatSidenav } from '@angular/material';
-import { UserService } from './user-features/user.service';
-import { Router } from '@angular/router';
-import { environment } from '@env/environment.prod';
-import { MomentExtensions } from '@app/shared/moment-extensions';
+import {Component, OnInit, ViewChild, ChangeDetectorRef, AfterViewChecked, AfterViewInit} from '@angular/core';
+import {Observable} from 'rxjs';
+import {SessionService} from './session.service';
+import {MatSidenav} from '@angular/material';
+import {environment} from '@env/environment.prod';
+import {MomentExtensions} from '@app/shared/moment-extensions';
+import {SidenavService} from '@app/sidenav/sidenav.service';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit, AfterViewChecked {
-  title = 'app';
-  // loading:boolean = true;
-  loggedInStatus:Observable<boolean>;
-  loading:Observable<boolean>;
+    title = 'app';
+    // loading:boolean = true;
+    loggedInStatus: Observable<boolean>;
+    loading: Observable<boolean>;
+    opened$: Observable<boolean>;
 
-  @ViewChild('sidenav') public sidenav: MatSidenav;
+    @ViewChild('navigation') public sidenav: MatSidenav;
 
-  constructor(
-    private session: SessionService,
-    private cd:ChangeDetectorRef
-  ) {
-    // wire up our extension methods 
-    MomentExtensions.init();
+    constructor(
+        private session: SessionService,
+        private cd: ChangeDetectorRef,
+        private sidenavService: SidenavService
+    ) {
+        // wire up our extension methods
+        MomentExtensions.init();
 
-    this.loggedInStatus = this.session.isLoginSubject.asObservable();
-    this.loading = this.session.loading$.asObservable();
-    this.session.loadUserStorageItem();
-  }
+        this.loggedInStatus = this.session.isLoginSubject.asObservable();
+        this.loading = this.session.loading$.asObservable();
+    }
 
-  ngOnInit() {
+    ngOnInit() {
+        this.session.loadUserStorageItem();
+    }
 
-    // exposes the app's sidenav for use by the header
-    this.session.setSidenav(this.sidenav);
-  }
+    ngAfterViewChecked() {
+        // initialize our sidenav service
+        this.sidenavService.setSidenav(this.sidenav);
 
-  ngAfterViewChecked() {
-    //Called after ngOnInit when the component's or directive's content has been initialized.
-    //Add 'implements AfterContentInit' to the class.
-    // this.loading = this.session.loadingState;
+        //Called after ngOnInit when the component's or directive's content has been initialized.
+        //Add 'implements AfterContentInit' to the class.
+        // this.loading = this.session.loadingState;
 
-    // dev only bug -
-    // https://stackoverflow.com/questions/39787038/how-to-manage-angular2-expression-has-changed-after-it-was-checked-exception-w
-    if (!environment.production) this.cd.detectChanges();
-  }
+        // dev only bug -
+        // https://stackoverflow.com/questions/39787038/how-to-manage-angular2-expression-has-changed-after-it-was-checked-exception-w
+        if (!environment.production) this.cd.detectChanges();
+    }
 }

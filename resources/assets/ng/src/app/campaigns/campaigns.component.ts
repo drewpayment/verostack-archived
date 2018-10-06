@@ -95,7 +95,7 @@ export class CampaignsComponent implements OnInit {
         let ref = this.dialog.open(NewCampaignDialogComponent, {
             width: '650px',
             data: {
-                data: this.user
+                user: this.user
             }
         });
 
@@ -112,9 +112,9 @@ export class CampaignsComponent implements OnInit {
 
     editCampaign(item: ICampaign): void {
         let ref = this.dialog.open(NewCampaignDialogComponent, {
-            width: '300px',
+            width: '650px',
             data: {
-                data: this.user,
+                user: this.user,
                 campaign: item
             }
         });

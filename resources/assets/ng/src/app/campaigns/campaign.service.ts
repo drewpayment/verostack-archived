@@ -5,7 +5,9 @@ import { AuthService } from '../auth.service';
 import { throwError, Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class CampaignService {
   private apiUrl:string;
   campaign:ICampaign;

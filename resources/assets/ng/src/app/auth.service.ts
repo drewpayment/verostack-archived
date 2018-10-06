@@ -11,7 +11,9 @@ import { IUser, User, IClient } from './models';
 import { IUserRole } from './models/role.model';
 import { UserService } from './user-features/user.service';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class AuthService {
   apiUrl:string = 'http://verostack:8888/';
   roles: IUserRole[];
