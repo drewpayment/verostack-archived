@@ -1,13 +1,6 @@
 <mat-toolbar color="primary" *ngIf="(user | async) != null">
   <mat-toolbar-row>
-    <!-- <a type="button" mat-icon-button routerLink="my-information" routerLinkActive="mat-router-link-active">
-      <mat-icon class="md-48 mt-3">account_circle</mat-icon>
-    </a> -->
     <i class="material-icons md-48 mt-3">account_circle</i>
-    <span class="fill-remaining-space"></span>
-    <button mat-button (click)="toggleSidenav()" class="sidenav-close">
-        <i class="material-icons">close</i>
-    </button>
   </mat-toolbar-row>
   <mat-toolbar-row class="d-flex flex-column align-items-start mb-2 mt-3">
     {{(user | async).firstName}} {{(user | async).lastName}}

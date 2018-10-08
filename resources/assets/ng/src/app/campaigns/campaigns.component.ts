@@ -11,6 +11,8 @@ import {CampaignService} from '@app/campaigns/campaign.service';
 import {MessageService} from '@app/message.service';
 import {UserRole} from '@app/models/role.model';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { CampaignFilters, CompOperator } from '@app/models/campaign-filters.model';
+import { CampaignFilterDialogComponent } from '@app/campaigns/campaign-filter-dialog/campaign-filter-dialog.component';
 
 interface DataStore {
     campaigns: ICampaign[];
@@ -22,6 +24,15 @@ interface DataStore {
     styleUrls: ['./campaigns.component.scss']
 })
 export class CampaignsComponent implements OnInit {
+    private readonly defaultFilter:CampaignFilters = {
+        activeStatus: 'all',
+        compOperator: CompOperator.Equals,
+        compensation: null,
+        location: { name: 'Michigan', abbreviation: 'MI' }
+    }   
+    filter:CampaignFilters;
+    filterActive:boolean;
+    numFilters:number = 0;
     store:DataStore = {} as DataStore;
     activeTab: number;
     tableData: ICampaign[];
@@ -43,7 +54,9 @@ export class CampaignsComponent implements OnInit {
         private service: CampaignService,
         private msg: MessageService,
         private sanitizer:DomSanitizer
-    ) {}
+    ) {
+        this.filter = this.defaultFilter;
+    }
 
     ngOnInit() {
         this.session.showLoader();
@@ -78,12 +91,15 @@ export class CampaignsComponent implements OnInit {
 
     switchActiveStatus(item: ICampaign, index:number): void {
         this.session.showLoader();
-        let pendingCampaign: ICampaign = _.find(this.store.campaigns, { campaignId:item.campaignId });
+        index = _.findIndex(this.store.campaigns, { campaignId:item.campaignId });
+        let pendingCampaign = this.store.campaigns[index];
+
+        pendingCampaign.active = !pendingCampaign.active;
 
         this.service.saveCampaign(this.user.selectedClient.clientId, pendingCampaign.campaignId, pendingCampaign)
             .then(updated => {
                 this.session.hideLoader();
-                this.store.campaigns[index] = updated;
+                this.store.campaigns.map(c => c.campaignId === item.campaignId ? updated : c);
                 this.campaigns.next(this.store.campaigns);
             })
             .catch(this.msg.showWebApiError);
@@ -131,6 +147,88 @@ export class CampaignsComponent implements OnInit {
                 this.updateActiveTab();
             }
         });
+    }
+
+    setFilters():void {
+        this.dialog.open(CampaignFilterDialogComponent, {
+            width: '350px',
+            data: {
+                filter: this.filter
+            }
+        })
+        .afterClosed()
+        .subscribe(result => {
+            if(result == null) return;
+            this.filter = result;
+            this.updateCampaignsByFilter();
+        });
+    }
+
+    updateCampaignsByFilter():void {
+        let result:ICampaign[];
+        this.numFilters = 0;
+
+        if(this.filter.activeStatus === 'all') {
+            result = this.store.campaigns;
+            this.numFilters++;
+        } else {
+
+            if(this.filter.activeStatus === 'active') {
+                result = _.filter(this.store.campaigns, (c:ICampaign) => {
+                    return c.active;
+                });
+                this.numFilters++;
+            } 
+            
+            if (this.filter.activeStatus === 'inactive') {
+                result = _.filter(this.store.campaigns, (c:ICampaign) => {
+                    return !c.active;
+                });
+                this.numFilters++;
+            }
+
+        }
+
+        if(this.filter.compensation > 0) {
+            if(this.filter.compOperator == CompOperator.Equals) {
+                result = _.filter(result, (c:ICampaign) => {
+                    return c.compensation === this.filter.compensation;
+                });
+            } else if(this.filter.compOperator == CompOperator.GreaterThan) {
+                result = _.filter(result, (c:ICampaign) => {
+                    return c.compensation > this.filter.compensation;
+                });
+            } else if(this.filter.compOperator == CompOperator.GreaterThanEqualTo) {
+                result = _.filter(result, (c:ICampaign) => {
+                    return c.compensation >= this.filter.compensation;
+                });
+            } else if(this.filter.compOperator == CompOperator.LessThan) {
+                result = _.filter(result, (c:ICampaign) => {
+                    return c.compensation < this.filter.compensation;
+                });
+            } else if(this.filter.compOperator == CompOperator.LessThanEqualTo) {
+                result = _.filter(result, (c:ICampaign) => {
+                    return c.compensation <= this.filter.compensation;
+                });
+            }
+            this.numFilters++;
+        }
+
+        // if(this.filter.location != null) {
+            // add this... 
+            // result = _.filter(result, (c:ICampaign) => {
+            //     return c.
+            // });
+        // }
+        if(result != null) this.campaigns.next(result);
+        this.filterActive = true;
+    }
+
+    clearFilters():void {
+        this.filterActive = false;
+        this.campaigns.next(this.store.campaigns);
+        this.filter = this.defaultFilter;
+        this.numFilters = 0;
     }
 
     sanitize(value:string):SafeHtml {

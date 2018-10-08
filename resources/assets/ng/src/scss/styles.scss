@@ -1,9 +1,10 @@
 @import
-  '~bootstrap/scss/bootstrap.scss',
-  './_variables.scss',
+  '~bootstrap/scss/bootstrap',
+  './_variables',
   // '~@angular/material/prebuilt-themes/deeppurple-amber.css'
-  './_theme.scss',
-  './_utilities.scss',
+  './_theme',
+  './_utilities',
+  './mixins',
   '~handsontable/dist/handsontable.full.css',
   '~quill/dist/quill.core.css',
   '~quill/dist/quill.snow.css',
@@ -27,6 +28,8 @@ vs-daily-sale-tracker > mat-card > mat-card-content > table > tbody > tr > td {
 .wp-100 {
   width: 100%;
 }
+
+
 
 body, html {
   height: 100%;
@@ -92,4 +95,31 @@ button:focus {
 
 .hide {
   display: none !important;
+}
+
+.mat-dialog-container {
+    padding: 0.5rem 1.5rem !important;
+}
+
+.modal-header {
+    padding: 0 0 1rem 0;
+    border: 0;
+    align-items: center;
+}
+
+.modal-body {
+    padding: 0;
+}
+
+.modal-footer {
+    padding: 1rem 0 0;
+}
+
+
+
+.filter-active {
+    // box-shadow: 2px 2px 2px $primary-filter-light !important;
+    // border: 1px solid $primary-filter-light !important;
+    background-color: $primary-filter !important;
+    color: $white !important;
 }

@@ -123,7 +123,7 @@ class CampaignController extends Controller
 			->checkAccessByClient($clientId, Auth::user()->id)
 			->mergeInto($result);
 		if($result->hasError)
-			return $result->setToFail()->getResponse();
+			return $result->setToFail()->throwApiException()->getResponse();
 
 		$data = $request->dto;
 
@@ -133,16 +133,24 @@ class CampaignController extends Controller
 			$entity->client_id = $clientId ?? $data['clientId'];
 			$entity->name = $data['name'];
 			$entity->active = $data['active'];
+			$entity->compensation = $data['compensation'];
+			$entity->md_details = $data['mdDetails'];
+			$entity->md_onboarding = $data['mdOnboarding'];
+			$entity->md_other = $data['mdOther'];
 		}
 		else
 		{
-			$entity = Campaign::find($campaignId)->first();
+			$entity = Campaign::byCampaign($campaignId)->first();
 			$entity->active = $data['active'];
+			$entity->compensation = $data['compensation'];
+			$entity->md_details = $data['mdDetails'];
+			$entity->md_onboarding = $data['mdOnboarding'];
+			$entity->md_other = $data['mdOther'];
 		}
 
 		$s = $entity->save();
 
-		if(!$s) return $result->setToFail()->getResponse();
+		if(!$s) return $result->setToFail()->throwApiException()->getResponse();
 
 		return $result->setData($entity)
 			->throwApiException()

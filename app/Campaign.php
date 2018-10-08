@@ -21,6 +21,21 @@ class Campaign extends Model
 	    'md_other'
     ];
 
+    protected $casts = [
+        'active' => 'boolean'
+    ];
+
+	/**
+	 * Set's the campaign's active attribute.
+	 *
+	 * @param boolean $value
+	 * @return void
+	 */
+	public function setActiveAttribute($value)
+    {
+    	$this->attributes['active'] = $value ? 1 : 0;
+    }
+
 	/**
 	 * Filter by client id.
 	 *
@@ -68,6 +83,17 @@ class Campaign extends Model
     public function scopeByCampaignName($query, $name)
     {
     	return $query->where('name', $name);
+    }
+
+	/**
+	 * @param $query \Illuminate\Database\Eloquent\Builder
+	 * @param $id
+	 *
+	 * @return mixed \Illuminate\Database\Eloquent\Builder
+	 */
+	public function scopeByCampaign($query, $id)
+    {
+    	return $query->where('campaign_id', $id);
     }
 
 

@@ -1,254 +1,239 @@
+<div class="modal-header">
+    <h3 class="modal-title">
+        {{existingSale != null && existingSale.dailySaleId > 0 ? 'Edit Sale' : 'Add Sale'}}
+    </h3>
+    <span class="clickable float-right">
+        <i class="material-icons" (click)="onNoClick()">clear</i>
+    </span>
+</div>
+<div class="modal-body">
+    <p class="text-muted">
+        All fields denoted with * are required.
+    </p>
+    <form [formGroup]="form" class="add-daily-sale-form">
 
-<h3 mat-dialog-title>
-  {{existingSale != null && existingSale.dailySaleId > 0 ? 'Edit Sale' : 'Add Sale'}}
-  <span class="clickable float-right">
-    <i class="material-icons" (click)="onNoClick()">clear</i>
-  </span>
-</h3>
-<p class="text-muted">
-  All fields denoted with * are required.
-</p>
-<mat-dialog-content class="add-daily-sale-form">
-  <form [formGroup]="form">
+        <!-- CAMPAIGN ROW -->
+        <div class="row">
+            <div class="col-md-6">
+                <mat-form-field>
+                    <!-- <input matInput placeholder="Campaign" [value]="selectedCampaign.name" /> -->
+                    <mat-select placeholder="Campaign" formControlName="campaign" required>
+                        <mat-option *ngFor="let c of campaigns" [value]="c.campaignId">
+                            {{c.name}}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="form.get('campaign').hasError('required') && (form.get('campaign').touched || submitted)">
+                        Please select a campaign
+                    </mat-error>
+                </mat-form-field>
+            </div>
+        </div>
 
-    <!-- CAMPAIGN ROW -->
-    <div class="row">
-      <div class="col-md-6">
-        <mat-form-field>
-          <!-- <input matInput placeholder="Campaign" [value]="selectedCampaign.name" /> -->
-          <mat-select placeholder="Campaign" formControlName="campaign" required>
-            <mat-option *ngFor="let c of campaigns" [value]="c.campaignId">
-              {{c.name}}
-            </mat-option>
-          </mat-select>
-          <mat-error *ngIf="form.get('campaign').hasError('required') && (form.get('campaign').touched || submitted)">
-            Please select a campaign
-          </mat-error>
-        </mat-form-field>
-      </div>
+        <!-- AGENT AND SALE DATE -->
+        <div class="row">
+            <div class="col-md-6">
+                <mat-form-field>
+                    <mat-select placeholder="Agent" formControlName="agent" required>
+                        <mat-option *ngFor="let a of agents" [value]="a.agentId">
+                            {{a.firstName}} {{a.lastName}}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="form.get('agent').hasError('required') && (form.get('agent').touched || submitted)">
+                        Please select an Agent
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="col-md-6">
+                <mat-form-field>
+                    <input matInput [matDatepicker]="saleDatePicker" placeholder="Sale Date" formControlName="saleDate"
+                        required />
+                    <mat-datepicker-toggle matSuffix [for]="saleDatePicker"></mat-datepicker-toggle>
+                    <mat-datepicker #saleDatePicker></mat-datepicker>
+                    <mat-error *ngIf="form.get('saleDate').hasError('required') && (form.get('saleDate').touched || submitted)">
+                        Please select a sale date
+                    </mat-error>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-4">
+                <mat-form-field>
+                    <input matInput placeholder="POD/Account" formControlName="account" required />
+                    <mat-error *ngIf="form.get('account').hasError('required') && (form.get('account').touched || submitted)">
+                        Please enter a POD or Account No
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="col-4">
+                <mat-form-field>
+                    <mat-select placeholder="Sale Status" formControlName="status" required>
+                        <mat-option *ngFor="let s of statuses" [value]="s.saleStatusId">
+                            {{s.name}}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="form.get('status').hasError('required') && (form.get('status').touched || submitted)">
+                        Please select a status
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="col-4">
+                <mat-form-field>
+                    <mat-select placeholder="Paid Status" formControlName="paidStatus" required>
+                        <mat-option value="0">Unpaid</mat-option>
+                        <mat-option value="1">Paid</mat-option>
+                        <mat-option value="2">Chargeback</mat-option>
+                        <mat-option value="3">Repaid</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="form.get('paidStatus').hasError('required') && (form.get('paidStatus').touched || submitted)">
+                        Please select paid status
+                    </mat-error>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-4">
+                <mat-form-field>
+                    <input matInput [matDatepicker]="paidDatePicker" formControlName="paidDate" placeholder="Paid Date" />
+                    <mat-datepicker-toggle matSuffix [for]="paidDatePicker"></mat-datepicker-toggle>
+                    <mat-datepicker #paidDatePicker></mat-datepicker>
+                </mat-form-field>
+            </div>
+            <div class="col-4">
+                <mat-form-field>
+                    <input matInput [matDatepicker]="chargebackDatePicker" formControlName="chargeDate" placeholder="Chargeback Date" />
+                    <mat-datepicker-toggle matSuffix [for]="chargebackDatePicker"></mat-datepicker-toggle>
+                    <mat-datepicker #chargebackDatePicker></mat-datepicker>
+                </mat-form-field>
+            </div>
+            <div class="col-4">
+                <mat-form-field>
+                    <input matInput [matDatepicker]="repaidDatePicker" formControlName="repaidDate" placeholder="Repaid Date" />
+                    <mat-datepicker-toggle matSuffix [for]="repaidDatePicker"></mat-datepicker-toggle>
+                    <mat-datepicker #repaidDatePicker></mat-datepicker>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <div class="row my-4">
+            <div class="col-md-12">
+                <span>Customer Information</span>
+                <mat-divider></mat-divider>
+            </div>
+        </div>
+
+        <!-- CUSTOMER NAME -->
+        <div class="row">
+            <div class="col-md-6">
+                <mat-form-field>
+                    <input matInput placeholder="First Name" formControlName="firstName" required />
+                    <mat-error *ngIf="form.get('firstName').hasError('required') && (form.get('firstName').touched || submitted)">
+                        Please enter a first name
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="col-md-6">
+                <mat-form-field>
+                    <input matInput placeholder="Last Name" formControlName="lastName" required />
+                    <mat-error *ngIf="form.get('lastName').hasError('required') && (form.get('lastName').touched || submitted)">
+                        Please enter a last name
+                    </mat-error>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <!-- CUSTOMER ADDRESS -->
+        <div class="row">
+            <div class="col-md-8">
+                <mat-form-field>
+                    <input matInput placeholder="Address" formControlName="address" required />
+                    <mat-error *ngIf="form.get('address').hasError('required') && (form.get('address').touched || submitted)">
+                        Please enter a street address
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="col-md-4">
+                <mat-form-field>
+                    <input matInput placeholder="Apt/Suite/Unit" formControlName="address2" />
+                    <mat-hint>Optional</mat-hint>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <!-- CUSTOMER ADDRESS CONT'D -->
+        <div class="row">
+            <div class="col-md-7">
+                <mat-form-field>
+                    <input matInput placeholder="City" formControlName="city" required />
+                    <mat-error *ngIf="form.get('city').hasError('required') && (form.get('city').touched || submitted)">
+                        Please enter a city
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="col-md-2">
+                <mat-form-field>
+                    <mat-select formControlName="state" placeholder="State" required>
+                        <mat-option *ngFor="let s of states" [value]="s.abbreviation">{{s.name}}</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="form.get('state').hasError('required') && (form.get('state').touched || submitted)">
+                        Select a State
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="col-md-3">
+                <mat-form-field>
+                    <input matInput placeholder="Zip" formControlName="zip" required />
+                    <mat-error *ngIf="form.get('zip').hasError('required') && (form.get('zip').touched || submitted)">
+                        Please enter a zip code
+                    </mat-error>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <mat-list formArrayName="remarks">
+                    <div class="d-flex justify-content-between">
+                        <h4 class="m-0">
+                            Activity
+                        </h4>
+                        <span *ngIf="remarks.length">
+                            <button type="button" mat-stroked-button color="primary" (click)="addRemark()">
+                                Add Remark
+                            </button>
+                        </span>
+                    </div>
+
+                    <mat-form-field *ngIf="showAddRemarkInput">
+                        <textarea matInput placeholder="Enter Remark" #remarkField [formControl]="getRemarkFormControl()"></textarea>
+                        <button mat-button type="button" matSuffix mat-icon-button (click)="saveNewRemark()">
+                            <mat-icon inline="true">save</mat-icon>
+                        </button>
+                        <button mat-button type="button" matSuffix mat-icon-button (click)="cancelNewRemark()">
+                            <mat-icon inline="true">clear</mat-icon>
+                        </button>
+                    </mat-form-field>
+                    <mat-list-item *ngFor="let r of remarks; let i=index" [formGroupName]="i" [matTooltip]="r.description">
+                        <mat-icon mat-list-icon>note</mat-icon>
+                        <h4 mat-line>{{r.user.firstName}} {{r.user.lastName}}</h4>
+                        <p mat-line>{{r.description}}</p>
+                        <p mat-line>{{r.updatedAt | date}}</p>
+                        <mat-divider></mat-divider>
+                    </mat-list-item>
+                    <mat-list-item *ngIf="remarks.length < 1 && !showAddRemarkInput" class="clickable" (click)="addRemark()">
+                        <mat-icon mat-list-icon>note_add</mat-icon>
+                        <h4 mat-line>Add a Remark</h4>
+                    </mat-list-item>
+
+                </mat-list>
+
+            </div>
+        </div>
+
+    </form>
+    <div class="float-right">
+        <button mat-button (click)="onNoClick()">Cancel</button>
+        <button mat-raised-button (click)="saveDialog()" color="primary" [disabled]="form.invalid">Save</button>
     </div>
-
-    <!-- AGENT AND SALE DATE -->
-    <div class="row">
-      <div class="col-md-6">
-        <mat-form-field>
-          <mat-select placeholder="Agent" formControlName="agent" required>
-            <mat-option *ngFor="let a of agents" [value]="a.agentId">
-              {{a.firstName}} {{a.lastName}}
-            </mat-option>
-          </mat-select>
-          <mat-error *ngIf="form.get('agent').hasError('required') && (form.get('agent').touched || submitted)">
-            Please select an Agent
-          </mat-error>
-        </mat-form-field>
-      </div>
-      <div class="col-md-6">
-        <mat-form-field>
-          <input matInput
-            [matDatepicker]="saleDatePicker"
-            placeholder="Sale Date"
-            formControlName="saleDate"
-            required
-          />
-          <mat-datepicker-toggle matSuffix [for]="saleDatePicker"></mat-datepicker-toggle>
-          <mat-datepicker #saleDatePicker></mat-datepicker>
-          <mat-error *ngIf="form.get('saleDate').hasError('required') && (form.get('saleDate').touched || submitted)">
-            Please select a sale date
-          </mat-error>
-        </mat-form-field>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-4">
-        <mat-form-field>
-          <input matInput placeholder="POD/Account" formControlName="account" required />
-          <mat-error *ngIf="form.get('account').hasError('required') && (form.get('account').touched || submitted)">
-            Please enter a POD or Account No
-          </mat-error>
-        </mat-form-field>
-      </div>
-      <div class="col-4">
-        <mat-form-field>
-          <mat-select placeholder="Sale Status" formControlName="status" required>
-            <mat-option *ngFor="let s of statuses" [value]="s.saleStatusId">
-              {{s.name}}
-            </mat-option>
-          </mat-select>
-          <mat-error *ngIf="form.get('status').hasError('required') && (form.get('status').touched || submitted)">
-            Please select a status
-          </mat-error>
-        </mat-form-field>
-      </div>
-      <div class="col-4">
-        <mat-form-field>
-          <mat-select placeholder="Paid Status" formControlName="paidStatus" required>
-            <mat-option value="0">Unpaid</mat-option>
-            <mat-option value="1">Paid</mat-option>
-            <mat-option value="2">Chargeback</mat-option>
-            <mat-option value="3">Repaid</mat-option>
-          </mat-select>
-          <mat-error *ngIf="form.get('paidStatus').hasError('required') && (form.get('paidStatus').touched || submitted)">
-            Please select paid status
-          </mat-error>
-        </mat-form-field>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-4">
-        <mat-form-field>
-          <input matInput [matDatepicker]="paidDatePicker" formControlName="paidDate" placeholder="Paid Date" />
-          <mat-datepicker-toggle matSuffix [for]="paidDatePicker"></mat-datepicker-toggle>
-          <mat-datepicker #paidDatePicker></mat-datepicker>
-        </mat-form-field>
-      </div>
-      <div class="col-4">
-        <mat-form-field>
-          <input matInput [matDatepicker]="chargebackDatePicker" formControlName="chargeDate" placeholder="Chargeback Date" />
-          <mat-datepicker-toggle matSuffix [for]="chargebackDatePicker"></mat-datepicker-toggle>
-          <mat-datepicker #chargebackDatePicker></mat-datepicker>
-        </mat-form-field>
-      </div>
-      <div class="col-4">
-        <mat-form-field>
-          <input matInput [matDatepicker]="repaidDatePicker" formControlName="repaidDate" placeholder="Repaid Date" />
-          <mat-datepicker-toggle matSuffix [for]="repaidDatePicker"></mat-datepicker-toggle>
-          <mat-datepicker #repaidDatePicker></mat-datepicker>
-        </mat-form-field>
-      </div>
-    </div>
-
-    <div class="row my-4">
-      <div class="col-md-12">
-        <span>Customer Information</span>
-        <mat-divider></mat-divider>
-      </div>
-    </div>
-
-    <!-- CUSTOMER NAME -->
-    <div class="row">
-      <div class="col-md-6">
-        <mat-form-field>
-          <input matInput placeholder="First Name" formControlName="firstName" required />
-          <mat-error *ngIf="form.get('firstName').hasError('required') && (form.get('firstName').touched || submitted)">
-            Please enter a first name
-          </mat-error>
-        </mat-form-field>
-      </div>
-      <div class="col-md-6">
-        <mat-form-field>
-          <input matInput placeholder="Last Name" formControlName="lastName" required />
-          <mat-error *ngIf="form.get('lastName').hasError('required') && (form.get('lastName').touched || submitted)">
-            Please enter a last name
-          </mat-error>
-        </mat-form-field>
-      </div>
-    </div>
-
-    <!-- CUSTOMER ADDRESS -->
-    <div class="row">
-      <div class="col-md-8">
-        <mat-form-field>
-          <input matInput placeholder="Address" formControlName="address" required />
-          <mat-error *ngIf="form.get('address').hasError('required') && (form.get('address').touched || submitted)">
-            Please enter a street address
-          </mat-error>
-        </mat-form-field>
-      </div>
-      <div class="col-md-4">
-        <mat-form-field>
-          <input matInput placeholder="Apt/Suite/Unit" formControlName="address2" />
-          <mat-hint>Optional</mat-hint>
-        </mat-form-field>
-      </div>
-    </div>
-
-    <!-- CUSTOMER ADDRESS CONT'D -->
-    <div class="row">
-      <div class="col-md-7">
-        <mat-form-field>
-          <input matInput placeholder="City" formControlName="city" required />
-          <mat-error *ngIf="form.get('city').hasError('required') && (form.get('city').touched || submitted)">
-            Please enter a city
-          </mat-error>
-        </mat-form-field>
-      </div>
-      <div class="col-md-2">
-        <mat-form-field>
-          <mat-select formControlName="state" placeholder="State" required>
-            <mat-option *ngFor="let s of states" [value]="s.abbreviation">{{s.name}}</mat-option>
-          </mat-select>
-          <mat-error *ngIf="form.get('state').hasError('required') && (form.get('state').touched || submitted)">
-            Select a State
-          </mat-error>
-        </mat-form-field>
-      </div>
-      <div class="col-md-3">
-        <mat-form-field>
-          <input matInput placeholder="Zip" formControlName="zip" required />
-          <mat-error *ngIf="form.get('zip').hasError('required') && (form.get('zip').touched || submitted)">
-            Please enter a zip code
-          </mat-error>
-        </mat-form-field>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-12">
-        <mat-list formArrayName="remarks">
-          <div class="d-flex justify-content-between">
-            <h4 class="m-0">
-              Activity
-            </h4>
-            <span *ngIf="remarks.length">
-              <button type="button" mat-stroked-button color="primary" (click)="addRemark()">
-                Add Remark
-              </button>
-            </span>
-          </div>
-
-          <mat-form-field *ngIf="showAddRemarkInput">
-            <textarea matInput placeholder="Enter Remark" #remarkField [formControl]="getRemarkFormControl()"></textarea>
-            <button mat-button type="button" matSuffix mat-icon-button (click)="saveNewRemark()">
-              <mat-icon inline="true">save</mat-icon>
-            </button>
-            <button mat-button type="button" matSuffix mat-icon-button (click)="cancelNewRemark()">
-              <mat-icon inline="true">clear</mat-icon>
-            </button>
-          </mat-form-field>
-          <mat-list-item
-            *ngFor="let r of remarks; let i=index"
-            [formGroupName]="i"
-            [matTooltip]="r.description"
-          >
-            <mat-icon mat-list-icon>note</mat-icon>
-            <h4 mat-line>{{r.user.firstName}} {{r.user.lastName}}</h4>
-            <p mat-line>{{r.description}}</p>
-            <p mat-line>{{r.updatedAt | date}}</p>
-            <mat-divider></mat-divider>
-          </mat-list-item>
-          <mat-list-item
-            *ngIf="remarks.length < 1 && !showAddRemarkInput"
-            class="clickable"
-            (click)="addRemark()"
-          >
-            <mat-icon mat-list-icon>note_add</mat-icon>
-            <h4 mat-line>Add a Remark</h4>
-          </mat-list-item>
-
-        </mat-list>
-
-      </div>
-    </div>
-
-  </form>
-</mat-dialog-content>
-<mat-dialog-actions class="d-flex justify-content-between">
-  <button mat-button (click)="onNoClick()">Cancel</button>
-  <button mat-raised-button
-    (click)="saveDialog()"
-    color="primary"
-    [disabled]="form.invalid"
-  >Save</button>
-</mat-dialog-actions>
+</div>

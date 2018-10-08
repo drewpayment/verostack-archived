@@ -96,44 +96,79 @@
 </mat-card> -->
 
 <div class="container">
-    <h5 class="display-4">Campaign Management</h5>
+    <div class="row">
+        <div class="col-md-10">
+            <h6 class="display-4">Campaign Management</h6>
+        </div>
+        <div class="col-md-2 d-flex justify-content-end align-items-center">
+            <button type="button" 
+                mat-icon-button 
+                color="primary" 
+                (click)="setFilters()" 
+                [class.filter-active]="filterActive"
+            >
+                <mat-icon>filter_list</mat-icon>
+            </button>
+            <button type="button"
+                class="ml-2"
+                mat-flat-button
+                color="primary"
+                [matBadge]="numFilters"
+                matBadgePosition="after"
+                matBadgeColor="accent"
+                [matBadgeHidden]="!filterActive"
+                matBadgeOverlap="true"
+                (click)="clearFilters()"
+                *ngIf="filterActive"
+            >
+                Clear Filters
+            </button>
+        </div>
+    </div>
 
-    <!-- <div class="row">
-        <div class="col-12 card bg-light"> -->
-            <div class="row">
-                <div class="col-md-3 my-2" *ngFor="let c of (campaigns | async); let i = index">
-                    <div class="card hoverable">
-                        <!-- <div class="card-header text-center">{{c.name}}</div> -->
-                        <div class="card-body p-3 pb-1">
-                            <div class="row">
-                                <div class="col-md-10 d-flex align-items-center">
-                                    <h5 class="card-title mb-0">{{c.name}}</h5>
-                                </div>
-                                <div class="col-md-2 d-flex align-items-start justify-content-end">
-                                    <button mat-icon-button type="button" [matMenuTriggerFor]="menu" class="float-right">
-                                        <mat-icon>more_vert</mat-icon>
-                                    </button>
-                                    <mat-menu #menu>
-                                        <button mat-menu-item (click)="editCampaign(c)">Edit</button>
-                                        <button mat-menu-item (click)="switchActiveStatus(c, i)">{{c.active ? 'Deactivate' : 'Activate'}}</button>
-                                    </mat-menu>
-                                </div>
-                            </div>
-                            
-                            <div class="card-text my-2" *ngIf="c.mdDetails != null; else noDetail" [innerHTML]="sanitize(c.mdDetails)"></div>
-                            <ng-template #noDetail>
-                                <div class="card-text font-italic text-muted my-2">No details saved.</div>
-                            </ng-template>
-
+    <div class="row">
+        <div class="col-md-6 my-2" *ngFor="let c of (campaigns | async); let i = index">
+            <div class="card hoverable">
+                <!-- <div class="card-header text-center">{{c.name}}</div> -->
+                <div class="card-body px-3 pt-1 pb-2" [ngClass]="c.active ? 'border-top-info' : 'border-top-light'">
+                    <div class="row">
+                        <div class="col-md-10 d-flex align-items-center">
+                            <h5 class="card-title mb-0" [class.text-muted]="!c.active">{{c.name}}</h5>
                         </div>
-                        <div class="card-footer d-flex justify-content-end bg-light">
-                            <small class="font-italic" [ngClass]="!c.active ? 'text-muted' : 'text-primary'">{{c.active ? 'Active' : 'Inactive'}}</small>
+                        <div class="col-md-2 d-flex align-items-start justify-content-end">
+                            <button mat-icon-button type="button" [matMenuTriggerFor]="menu" class="float-right" [class.text-muted]="!c.active">
+                                <mat-icon>more_vert</mat-icon>
+                            </button>
+                            <mat-menu #menu>
+                                <button mat-menu-item (click)="editCampaign(c)" *ngIf="c.active">Edit</button>
+                                <button mat-menu-item (click)="switchActiveStatus(c, i)">{{c.active ? 'Deactivate' : 'Activate'}}</button>
+                            </mat-menu>
                         </div>
                     </div>
+                    
+                    <div 
+                        class="card-text my-2" 
+                        *ngIf="c.mdDetails != null; else noDetail" 
+                        [innerHTML]="sanitize(c.mdDetails)"
+                        [class.campaign-body]="c.mdDetails != null"
+                    ></div>
+                    <ng-template #noDetail>
+                        <div 
+                            class="card-text font-italic text-muted my-2"
+                            [class.campaign-body]="c.mdDetails != null"
+                        >No details saved.</div>
+                    </ng-template>
+
+                </div>
+                <div class="card-footer d-flex bg-light" [ngClass]="c.compensation != null ? 'justify-content-between' : 'justify-content-end'">
+                    <small class="font-italic text-dark" *ngIf="c.compensation != null">Compensation: ${{c.compensation}}</small>
+                    <small class="font-italic" [ngClass]="!c.active ? 'text-muted' : 'text-info'">
+                        {{c.active ? 'Active' : 'Inactive'}}
+                    </small>
                 </div>
             </div>
-        <!-- </div>
-    </div> -->
+        </div>
+    </div>
     
 </div>
 

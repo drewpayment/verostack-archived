@@ -32,12 +32,14 @@ import {
   MatToolbarModule,
   MatTooltipModule,
   MatStepperModule,
+  MatBadgeModule,
 } from '@angular/material';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
 
 @NgModule({
   exports: [
     MatAutocompleteModule,
+    MatBadgeModule,
     MatButtonModule,
     MatButtonToggleModule,
     MatCardModule,

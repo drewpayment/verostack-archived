@@ -1,0 +1,9 @@
+
+@each $color, $value in $theme-colors {
+  .border-top-#{$color} {
+    border-top-color: $value;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    border-top-style: solid;
+  }
+}

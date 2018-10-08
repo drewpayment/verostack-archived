@@ -31,6 +31,7 @@ export class NewCampaignDialogComponent implements OnInit {
             [{ 'font': [] }],
             [{ 'color': [], 'background': [] }],
             [{ 'header': [1, 2, 3, 4, 5, 6, false] }], // headings
+            [{ 'list': 'ordered' }, { 'list': 'bullet' }], // lists
             [{ 'align': [] }],
             ['blockquote'],
             [{ 'indent': '-1'}, { 'indent': '+1' }], // indentations
@@ -112,7 +113,7 @@ export class NewCampaignDialogComponent implements OnInit {
     }
 
     quillContentChanged(event) {
-        console.dir(this.form.value);
+        // console.dir(this.form.value);
     }
 
     // PRIVATE METHODS

@@ -7,6 +7,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { FabFloatBtnModule } from '@app/fab-float-btn/fab-float-btn.module';
 import { QuillModule } from 'ngx-quill';
+import { CampaignFilterDialogComponent } from './campaign-filter-dialog/campaign-filter-dialog.component';
 
 @NgModule({
   imports: [
@@ -19,10 +20,12 @@ import { QuillModule } from 'ngx-quill';
   ],
   declarations: [
     CampaignsComponent,
-    NewCampaignDialogComponent
+    NewCampaignDialogComponent,
+    CampaignFilterDialogComponent
   ],
   entryComponents: [
-    NewCampaignDialogComponent
+    NewCampaignDialogComponent,
+    CampaignFilterDialogComponent
   ]
 })
 export class CampaignsModule { }

@@ -27,9 +27,8 @@ export class AppComponent implements OnInit, AfterViewChecked {
     ) {
         // wire up our extension methods
         MomentExtensions.init();
-
-        this.loggedInStatus = this.session.isLoginSubject.asObservable();
         this.loading = this.session.loading$.asObservable();
+        this.loggedInStatus = this.session.isLoginSubject.asObservable();
     }
 
     ngOnInit() {
