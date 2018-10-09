@@ -9,8 +9,9 @@ import { ScrollLockDirective } from './scroll-lock.directive';
 import { LoadingModule } from 'ngx-loading';
 import { HeaderComponent } from './header/header.component';
 import { AppRoutingModule } from './app-routing.module';
-import { SharedModule } from './shared';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AgentComponent } from './agent/agent.component';
+import { FabFloatBtnModule } from '@app/fab-float-btn/fab-float-btn.module';
 
 @NgModule({
   imports: [
@@ -20,13 +21,15 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     CoreModule,
     MaterialModule,
     LoadingModule,
-    AppRoutingModule
+    AppRoutingModule,
+    FabFloatBtnModule
   ],
   declarations: [
     AppComponent,
     SidenavComponent,
     ScrollLockDirective,
-    HeaderComponent
+    HeaderComponent,
+    AgentComponent
   ],
   providers: [
   ],

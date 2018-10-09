@@ -1,6 +1,10 @@
 <mat-toolbar color="primary" *ngIf="(user | async) != null">
   <mat-toolbar-row>
     <i class="material-icons md-48 mt-3">account_circle</i>
+    <span class="fill-remaining-space"></span>
+    <button mat-button (click)="toggleSidenav()" class="sidenav-close">
+        <i class="material-icons">close</i>
+    </button>
   </mat-toolbar-row>
   <mat-toolbar-row class="d-flex flex-column align-items-start mb-2 mt-3">
     {{(user | async).firstName}} {{(user | async).lastName}}
@@ -63,10 +67,10 @@
       <i class="material-icons px-1">monetization_on</i>
       <span>Pay Status</span>
     </a>
-    <a mat-list-item routerLink="payroll-tools" routerLinkActive="mat-router-link-active">
+    <!-- <a mat-list-item routerLink="payroll-tools" routerLinkActive="mat-router-link-active">
       <i class="material-icons px-1">build</i>
       <span>Payroll Entry</span>
-    </a>
+    </a> -->
     <a mat-list-item class="hide">
       <i class="material-icons px-1">assignment_ind</i>
       <span>Overrides</span>

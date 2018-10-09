@@ -337,7 +337,7 @@ export class DashboardComponent implements OnInit, AfterContentInit {
     }
 
     handleAgentChange(event: MatSelectChange): void {
-        this.selectedAgent = _.find(this.store.agents, {agentId: event.value});
+        this.selectedAgent = _.find(this.store.agents, {agentId: event.value}) as IAgent;
         this.updateDashboard();
     }
 

@@ -150,7 +150,7 @@ export class UserService {
   getAgentByUserId(userId: number):Promise<IAgent> {
     if(this.dataStore.agents == null) this.loadAgents(true);
     return new Promise((resolve) => {
-      let agent = _.filter(this.dataStore.agents, (a: IAgent) => { return a.userId == userId; });
+      let agent = _.filter(this.dataStore.agents, (a: IAgent) => { return a.userId == userId; }) as IAgent;
       resolve(agent);
     });
   }

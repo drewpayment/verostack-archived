@@ -514,7 +514,7 @@ export class PayrollComponent implements OnInit {
    * that we can properly set the var that shows/hides the overrides panel.
    */
   changeAgent():void {
-    this.agent = _.find(this.agents, {'agentId':this.form.value.agentId});
+    this.agent = _.find(this.agents, {'agentId':this.form.value.agentId}) as IAgent;
     this.disableOverrides = !(this.agent.isActive && this.agent.isManager);
   }
 

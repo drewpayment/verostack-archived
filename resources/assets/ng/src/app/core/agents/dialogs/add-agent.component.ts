@@ -1,7 +1,7 @@
-import { Component, Inject, OnInit } from "../../../../../node_modules/@angular/core";
-import { MatDialogRef, MAT_DIALOG_DATA } from "../../../../../node_modules/@angular/material";
+import { Component, Inject, OnInit } from "@angular/core";
+import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material";
 import { IUser, IUserDetail, IAgent } from "@app/models";
-import { FormGroup, FormBuilder, Validators, ValidationErrors } from "../../../../../node_modules/@angular/forms";
+import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { IState, States } from "@app/shared/models/state.model";
 import { MessageService } from "@app/message.service";
 import { AgentsService } from "@app/core/agents/agents.service";
@@ -57,11 +57,6 @@ export class AddAgentDialogComponent implements OnInit {
   }
 
   saveNewUserAgentEntity():void {
-    console.dir([
-      this.userForm,
-      this.detailForm,
-      this.agentForm
-    ]);
     if(this.userForm.invalid || this.detailForm.invalid || this.agentForm.invalid) return;
 
     this.session.showLoader();

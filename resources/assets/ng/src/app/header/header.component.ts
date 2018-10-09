@@ -23,6 +23,7 @@ export class HeaderComponent implements OnInit, AfterViewInit {
     menuTitle: BehaviorSubject<string> = new BehaviorSubject<string>(this.defaultTitle);
     showClientSelector: boolean;
     loggedInStatus: Observable<boolean>;
+    navOpen:Observable<boolean>;
 
     constructor(
         private authService: AuthService,
@@ -44,6 +45,7 @@ export class HeaderComponent implements OnInit, AfterViewInit {
             if (this.user.clients.length > 1) this.showClientSelector = true;
             this.isAdmin = this.user.role.role > 6;
         });
+        this.navOpen = this.sidenavService.opened$.asObservable();
     }
 
     ngOnInit() {

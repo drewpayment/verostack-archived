@@ -2,7 +2,7 @@
   <mat-toolbar-row>
     <span *ngIf="(loggedInStatus | async)">
       <button mat-icon-button (click)="toggleSidenav()">
-        <mat-icon>menu</mat-icon>
+        <mat-icon>{{(navOpen|async) ? 'arrow_back_ios' : 'menu'}}</mat-icon>
       </button>
     </span>
     <span routerLink="/">{{menuTitle | async}}</span>

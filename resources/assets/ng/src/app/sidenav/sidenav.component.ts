@@ -1,12 +1,9 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { MatSidenav } from '@angular/material';
-import { IUser, User } from '../models';
-import { AuthService } from '../auth.service';
-import { Router } from '@angular/router';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { UserService } from '../user-features/user.service';
-import { MessageService } from '@app/message.service';
+import { IUser } from '../models';
+import { Observable } from 'rxjs';
 import { SessionService } from '@app/session.service';
+import { SidenavService } from '@app/sidenav/sidenav.service';
 
 @Component({
   selector: 'side-nav',
@@ -30,7 +27,8 @@ export class SidenavComponent implements OnInit {
   role:any;
 
   constructor(
-    private session:SessionService
+    private session:SessionService,
+    private navService:SidenavService
   ) {}
 
   ngOnInit() {
@@ -47,6 +45,10 @@ export class SidenavComponent implements OnInit {
     // this.router.events.subscribe(() => {
     //   this.sidenav.close();
     // });
+  }
+
+  toggleSidenav():void {
+      this.navService.toggle();
   }
 
 }

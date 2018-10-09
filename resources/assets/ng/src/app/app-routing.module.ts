@@ -9,9 +9,10 @@ import { AppComponent } from './app.component';
 
 import { AuthGuard } from './auth.guard';
 import { CampaignsComponent } from '@app/campaigns/campaigns.component';
-import { AgentsComponent } from '@app/core/agents/agents.component';
+
 import { DailySaleTrackerComponent } from '@app/daily-sale-tracker/daily-sale-tracker.component';
 import { environment } from '@env/environment';
+import { AgentComponent } from '@app/agent/agent.component';
 
 const routes: Routes = [
     { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -21,7 +22,7 @@ const routes: Routes = [
     { path: 'client-information', component: ClientInformationComponent, canActivate: [AuthGuard] },
     { path: 'campaigns', component: CampaignsComponent, canActivate: [AuthGuard] },
     { path: 'payroll-tools', component: PayrollComponent, canActivate: [AuthGuard] },
-    { path: 'agents', component: AgentsComponent, canActivate: [AuthGuard] },
+    { path: 'agents', component: AgentComponent, canActivate: [AuthGuard] },
     { path: 'daily-tracker', component: DailySaleTrackerComponent, canActivate: [AuthGuard] },
     // { path: '**', component: AppComponent }
 ]

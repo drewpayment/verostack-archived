@@ -1,19 +1,18 @@
+<div class="modal-header">
+    <h3 class="modal-title">Add Sale Status</h3>
+    <span class="clickable float-right">
+        <i class="material-icons" (click)="onNoClick()">clear</i>
+    </span>
+</div>
+<div class="modal-body">
+    <form [formGroup]="form">
+        <mat-form-field class="wp-100" [hideRequiredMarker]="true">
+        <input matInput placeholder="Status Description" formControlName="name" required />
+        </mat-form-field>
+    </form>
+    <div class="float-right">
+        <button mat-button (click)="onNoClick()">Cancel</button>
+        <button mat-raised-button [mat-dialog-close]="form.value" color="primary" [disabled]="form.invalid || form.pristine">Save</button>
+    </div>
+</div>
 
-
-<h3 mat-dialog-title>
-  Add Sale Status
-  <span class="float-right">
-    <mat-icon (click)="onNoClick()">clear</mat-icon>
-  </span>
-</h3>
-<mat-dialog-content class="my-4">
-  <form [formGroup]="form">
-    <mat-form-field class="wp-100" [hideRequiredMarker]="true">
-      <input matInput placeholder="Status Description" formControlName="name" required />
-    </mat-form-field>
-  </form>
-</mat-dialog-content>
-<mat-dialog-actions class="justify-content-end">
-  <button mat-button (click)="onNoClick()">Cancel</button>
-  <button mat-raised-button [mat-dialog-close]="form.value" color="primary" [disabled]="form.invalid || form.pristine">Save</button>
-</mat-dialog-actions>

@@ -87,7 +87,7 @@ export class SalesMappingComponent {
       };
       for(let h in this.mappings) {
         if(this.mappings[h] !== null) {
-          let mapIndex = _.find(this.optionPairs, { 'key': this.mappings[h] }).index;
+          let mapIndex = (<IOptionPairing>_.find(this.optionPairs, { 'key': this.mappings[h] })).index;
           if(h == 'status') {
             obj[h] = row[mapIndex].match(/accept/gi) !== null ? 'true' : 'false';
           } else if (h === 'saleDate') {
