@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Client;
 use App\Http\Resources\ApiResource;
 use App\User;
 use App\UserDetail;
@@ -65,12 +66,15 @@ class UserService
 	 *
 	 * @param $user
 	 * @param $detail
+	 * @param $clientId
 	 *
 	 * @return ApiResource|mixed
 	 */
-	public function saveUser($user, $detail)
+	public function saveUser($user, $detail, $clientId)
     {
     	$result = new ApiResource();
+
+    	$client = Client::clientId($clientId)->first();
 
     	$u = new User();
     	$u->first_name = $user['firstName'];
@@ -84,6 +88,8 @@ class UserService
 
     	if(!$success)
     		return $result->setToFail()->getResponse();
+
+    	$u->clients()->attach($client);
 
 	    $success = $u->detail()->save($this->prepareUserDetail($detail, $u->id));
 

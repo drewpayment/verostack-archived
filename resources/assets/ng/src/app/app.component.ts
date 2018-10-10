@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewChild, ChangeDetectorRef, AfterViewChecked, AfterViewInit} from '@angular/core';
-import {Observable, Subscription} from 'rxjs';
+import {Observable, Subscription, of} from 'rxjs';
 import {SessionService} from './session.service';
 import {MatSidenav} from '@angular/material';
 import {environment} from '@env/environment.prod';
@@ -17,8 +17,10 @@ export class AppComponent implements OnInit, AfterViewChecked {
     title = 'app';
     // loading:boolean = true;
     loggedInStatus: Observable<boolean>;
-    loading: Observable<boolean>;
+    loading$: Observable<boolean>;
     opened$: Observable<boolean>;
+    _loading:boolean;
+    _loggedIn:boolean;
 
     @ViewChild('navigation') public sidenav: MatSidenav;
 
@@ -31,10 +33,19 @@ export class AppComponent implements OnInit, AfterViewChecked {
         private breakpointObserver:BreakpointObserver,
         private router:Router
     ) {
+        let counter = 0;
         // wire up our extension methods
         MomentExtensions.init();
-        this.loading = this.session.loading$.asObservable();
-        this.loggedInStatus = this.session.isLoginSubject.asObservable();
+        this.session.loading$.subscribe(next => {
+            if(next == null) return;
+            this.loading$ = of(next);
+            this._loading = next;
+        })
+        this.session.isLoginSubject.subscribe(next => {
+            if(next == null) return;
+            this.loggedInStatus = of(next);
+            this._loggedIn = next;
+        });
 
         this.observeBreakpoints();
     }

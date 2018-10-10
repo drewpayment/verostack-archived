@@ -1,6 +1,24 @@
 
-
-
+<div class="row">
+    <div class="col-md-6" *ngFor="let user of users | async">
+        <div class="card">
+            <div class="card-header">
+                <ul class="nav nav-tabs card-header-tabs">
+                    <li class="nav-item">
+                        <button mat-button class="nav-link active">Summary</button>
+                    </li>
+                    <li class="nav-item">
+                        <button mat-button class="nav-link">Detail</button>
+                    </li>
+                </ul>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">{{user.firstName}} {{user.lastName}}</h5>
+                <p class="card-text">Member since: {{user.agent != null ? user.agent.createdAt : user.createdAt | date:'shortDate'}}</p>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 

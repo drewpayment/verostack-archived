@@ -2,6 +2,7 @@ import { SessionUser } from './sessionuser.model';
 import { IClient } from './client.model';
 import { IRole } from './role.model';
 import { IUserDetail } from '.';
+import { IAgent } from '@app/models/agent.model';
 
 export interface IUser {
   id?: number,
@@ -20,7 +21,8 @@ export interface IUser {
 
   // RELATIONSHIPS
   clients?:IClient[],
-  detail?:IUserDetail
+  detail?:IUserDetail,
+  agent?:IAgent
 }
 
 export class User implements IUser {

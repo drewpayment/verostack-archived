@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
-import {IAgent} from '@app/models';
+import {IAgent, IUser} from '@app/models';
 import { Observable, throwError } from 'rxjs';
 import { AuthService } from '@app/auth.service';
 import { catchError } from 'rxjs/operators';
@@ -24,9 +24,9 @@ export class AgentService {
      * 
      * @param clientId
      */
-    getAgentsByClient(clientId:number):Observable<IAgent[]> {
+    getAgentsByClient(clientId:number):Observable<IUser[]> {
         let url = `${this.api}/clients/${clientId}/agents`;
-        return this.http.get<IAgent[]>(url)
+        return this.http.get<IUser[]>(url)
             .pipe(
                 catchError(this.handleError)
             )

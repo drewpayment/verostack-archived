@@ -19,7 +19,6 @@ import { CampaignsModule } from '../campaigns/campaigns.module';
 import { SharedModule } from '@app/shared';
 import { MessagesComponent } from '@app/messages/messages.component';
 import { MessageService } from '@app/message.service';
-import { AgentsComponent } from './agents/agents.component';
 import { FabFloatBtnModule } from '@app/fab-float-btn/fab-float-btn.module';
 import { AddAgentDialogComponent } from '@app/core/agents/dialogs/add-agent.component';
 import { AddSaleStatusDialog } from '@app/client-information/dialogs/add-sale-status.component';
@@ -42,7 +41,6 @@ import { DeleteSaleDialog } from '@app/daily-sale-tracker/dialogs/delete-sale.co
   ],
   declarations: [
     MessagesComponent,
-    AgentsComponent,
     AddAgentDialogComponent,
     AddSaleStatusDialog,
     AddSaleDialog,

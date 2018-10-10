@@ -1,17 +1,17 @@
 
-<mat-sidenav-container *ngIf="(loggedInStatus | async); let loggedIn; else loggedOut;">
+<mat-sidenav-container *ngIf="_loggedIn; else loggedOut;">
   <mat-sidenav #navigation mode="side" class="sidenav" autoFocus="false">
     <side-nav></side-nav>
   </mat-sidenav>
-  <mat-sidenav-content scrollLock class="pb-4">
-    <ngx-loading [show]="(loading | async)"></ngx-loading>
+  <mat-sidenav-content scrollLock [trapScroll]="_loading" class="pb-4">
+    <ngx-loading [show]="_loading"></ngx-loading>
     <app-header></app-header>
     <router-outlet></router-outlet>
   </mat-sidenav-content>
 </mat-sidenav-container>
 <ng-template #loggedOut>
-  <div scrollLock [trapScroll]="(loading | async)">
-    <ngx-loading [show]="(loading | async)"></ngx-loading>
+  <div scrollLock [trapScroll]="_loading">
+    <ngx-loading [show]="_loading"></ngx-loading>
     <app-header></app-header>
     <router-outlet></router-outlet>
   </div>

@@ -61,7 +61,7 @@ Route::group(['prefix' => 'users', 'middleware' => 'auth:api'], function() {
 
 	Route::post('{userId}/client-selector/{clientId}', 'ApiController@setSelectedClient');
 
-	Route::post('new-user-agent', 'UserController@saveNewUserAgentEntity');
+	Route::post('clients/{clientId}/new-user-agent', 'UserController@saveNewUserAgentEntity');
 
 });
 

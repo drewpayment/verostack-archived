@@ -203,7 +203,7 @@ class UserController extends Controller
 			->getResponse();
     }
 
-    public function saveNewUserAgentEntity(Request $r)
+    public function saveNewUserAgentEntity(Request $r, $clientId)
     {
     	$result = new ApiResource();
 
@@ -211,7 +211,7 @@ class UserController extends Controller
     	$a = $r->agent;
     	$d = $r->detail;
 
-		$this->service->saveUser($u, $d)
+		$this->service->saveUser($u, $d, $clientId)
 		              ->mergeInto($result);
 
 		if($result->hasError)

@@ -55,7 +55,7 @@ export class SessionService {
     private tokenItem$: Subject<IToken> = new ReplaySubject<IToken>(1);
     tokenItem: Observable<IToken>;
 
-    loading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+    loading$: Subject<boolean> = new Subject<boolean>();
     loadingState: Observable<boolean>;
 
     private hasTokenSubject = new ReplaySubject<boolean>(1);

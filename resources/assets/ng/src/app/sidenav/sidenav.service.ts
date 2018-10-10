@@ -23,6 +23,7 @@ export class SidenavService {
 
     close():Promise<MatDrawerToggleResult> {
         this.opened$.next(false);
+        if(this.sidenav == null) return;
         return this.sidenav.close();
     }
 

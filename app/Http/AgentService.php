@@ -70,8 +70,9 @@ class AgentService {
 		$agents = Client::with('users.agent')
 	                    ->clientId($clientId)
 						->first()
-						->users
-						->pluck('agent');
+						->users;
+
+
 
 		return $result->setData($agents);
 	}

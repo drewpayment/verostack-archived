@@ -9,8 +9,8 @@ import { AddAgentDialogComponent } from '@app/core/agents/dialogs/add-agent.comp
 import { FloatBtnService } from '@app/fab-float-btn/float-btn.service';
 
 interface DataStore {
-    agents:IAgent[],
-    managers:IAgent[]
+    users:IUser[],
+    managers:IUser[]
 }
 
 @Component({
@@ -22,7 +22,8 @@ interface DataStore {
 export class AgentComponent implements OnInit {
     user:IUser;
     store:DataStore = {} as DataStore;
-    agents$:Subject<IAgent[]> = new Subject<IAgent[]>();
+    users:Observable<IUser[]>;
+    users$:Subject<IUser[]> = new Subject<IUser[]>();
     managers$:Subject<IAgent[]> = new Subject<IAgent[]>();
     floatOpen$:Observable<boolean>;
 
@@ -33,12 +34,13 @@ export class AgentComponent implements OnInit {
         private floatBtnService:FloatBtnService
     ) {
         this.floatOpen$ = this.floatBtnService.opened$.asObservable();
+        this.users = this.users$.asObservable();
     }
 
     ngOnInit() {
         this.session.showLoader();
         this.session.userItem.subscribe(user => {
-            if(user == null) return;
+            if(user == null || this.user != null) return;
             this.user = user;
             this.refreshAgents();
         });
@@ -64,16 +66,19 @@ export class AgentComponent implements OnInit {
 
     private refreshAgents():void {
         this.service.getAgentsByClient(this.user.selectedClient.clientId)
-            .subscribe(agents => {
-                this.store.agents = agents;
-                this.agents$.next(agents);
-                this.setManagers(agents);
+            .subscribe(users => {
+                _.remove(users, u => u.agent == null);
+                this.store.users = users;
+                this.users$.next(users);
+                this.setManagers(users);
                 this.session.hideLoader();
             });
     }
 
-    private setManagers(agents:IAgent[]):void {
-        this.store.managers = _.filter(agents, { 'isManager': true }) as IAgent[];
+    private setManagers(users:IUser[]):void {
+        this.store.managers = _.filter(users, user => {
+            return user.agent.isManager;
+        }) as IAgent[];
         this.managers$.next(this.store.managers);
     }
 }
