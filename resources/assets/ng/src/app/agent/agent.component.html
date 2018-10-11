@@ -1,25 +1,34 @@
 
-<div class="row">
-    <div class="col-md-6" *ngFor="let user of users | async">
-        <div class="card">
-            <div class="card-header">
-                <ul class="nav nav-tabs card-header-tabs">
-                    <li class="nav-item">
-                        <button mat-button class="nav-link active">Summary</button>
-                    </li>
-                    <li class="nav-item">
-                        <button mat-button class="nav-link">Detail</button>
-                    </li>
-                </ul>
-            </div>
-            <div class="card-body">
-                <h5 class="card-title">{{user.firstName}} {{user.lastName}}</h5>
-                <p class="card-text">Member since: {{user.agent != null ? user.agent.createdAt : user.createdAt | date:'shortDate'}}</p>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 py-2" *ngFor="let user of users | async">
+            <div class="card">
+                <div class="card-header bg-secondary text-white">
+                    <ul class="nav nav-tabs card-header-tabs">
+                        <li class="nav-item">
+                            <button mat-button class="nav-link" [class.active]="user.display === 0" (click)="user.display = 0">Summary</button>
+                        </li>
+                        <li class="nav-item">
+                            <button mat-button class="nav-link" [class.active]="user.display === 1" (click)="user.display = 1">Detail</button>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card-body">
+                    <ng-container *ngIf="user.display === 0">
+                        <div class="d-flex flex-column justify-content-center align-items-center" style="width:100%;height:100%;">
+                            <i class="material-icons" style="font-size:48px;">account_box</i>
+                            <h4 class="card-title">{{user.firstName}} {{user.lastName}}</h4>
+                            <p class="card-text">Member since: {{ user.createdAt | date:'shortDate' }}</p>
+                        </div>
+                    </ng-container>
+                    <ng-container *ngIf="user.display === 1">
+                        <p>This is where our agent detail is going to go</p>
+                    </ng-container>
+                </div>
             </div>
         </div>
     </div>
 </div>
-
 
 
 <vs-float-button

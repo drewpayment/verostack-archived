@@ -4,13 +4,25 @@ import { IAgent, IUser } from '@app/models';
 import { Subject, Observable } from 'rxjs';
 import { SessionService } from '@app/session.service';
 import * as _ from 'lodash';
+import * as moment from 'moment';
 import { MatDialog } from '@angular/material';
 import { AddAgentDialogComponent } from '@app/core/agents/dialogs/add-agent.component';
 import { FloatBtnService } from '@app/fab-float-btn/float-btn.service';
+import { map } from 'rxjs/operators';
+import { FormGroup, FormBuilder } from '@angular/forms';
 
 interface DataStore {
     users:IUser[],
     managers:IUser[]
+}
+
+enum AgentDisplay {
+    Summary, 
+    Detail
+}
+
+interface UserView extends IUser {
+    display:AgentDisplay
 }
 
 @Component({
@@ -22,16 +34,18 @@ interface DataStore {
 export class AgentComponent implements OnInit {
     user:IUser;
     store:DataStore = {} as DataStore;
-    users:Observable<IUser[]>;
-    users$:Subject<IUser[]> = new Subject<IUser[]>();
+    users:Observable<UserView[]>;
+    users$:Subject<UserView[]> = new Subject<UserView[]>();
     managers$:Subject<IAgent[]> = new Subject<IAgent[]>();
     floatOpen$:Observable<boolean>;
+    form:FormGroup;
 
     constructor(
         private service:AgentService,
         private session:SessionService,
         private dialog:MatDialog,
-        private floatBtnService:FloatBtnService
+        private floatBtnService:FloatBtnService,
+        private fb:FormBuilder
     ) {
         this.floatOpen$ = this.floatBtnService.opened$.asObservable();
         this.users = this.users$.asObservable();
@@ -66,6 +80,7 @@ export class AgentComponent implements OnInit {
 
     private refreshAgents():void {
         this.service.getAgentsByClient(this.user.selectedClient.clientId)
+            .pipe(map(this.setMoments))
             .subscribe(users => {
                 _.remove(users, u => u.agent == null);
                 this.store.users = users;
@@ -75,10 +90,32 @@ export class AgentComponent implements OnInit {
             });
     }
 
+    private setMoments(users:UserView[]):UserView[] {
+        if(!users)
+            return users;
+        users.forEach(user => {
+            if(user.agent == null) return;
+            user.agent.createdAt = moment(user.agent.createdAt);
+            user.display = AgentDisplay.Summary;
+        });
+        return users;
+    }
+
     private setManagers(users:IUser[]):void {
         this.store.managers = _.filter(users, user => {
             return user.agent.isManager;
         }) as IAgent[];
         this.managers$.next(this.store.managers);
+    }
+
+    private createForm():void {
+        this.form = this.fb.group({
+            user: this.fb.group({
+
+            }),
+            agent: this.fb.group({
+                
+            })
+        })
     }
 }
