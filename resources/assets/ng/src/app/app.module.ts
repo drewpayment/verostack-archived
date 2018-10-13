@@ -12,6 +12,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AgentComponent } from './agent/agent.component';
 import { FabFloatBtnModule } from '@app/fab-float-btn/fab-float-btn.module';
+import { PipesModule } from '@app/pipes/pipes.module';
 
 @NgModule({
   imports: [
@@ -22,7 +23,8 @@ import { FabFloatBtnModule } from '@app/fab-float-btn/fab-float-btn.module';
     MaterialModule,
     LoadingModule,
     AppRoutingModule,
-    FabFloatBtnModule
+    FabFloatBtnModule,
+    PipesModule
   ],
   declarations: [
     AppComponent,

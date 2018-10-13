@@ -19,13 +19,15 @@ import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
 import { MessageService } from '@app/message.service';
 import { PortalOutlet, TemplatePortal } from '@angular/cdk/portal';
 import { CdkAccordionItem } from '@angular/cdk/accordion';
+import { map } from 'rxjs/operators';
 
 interface DataStore {
-    user: IUser;
-    agents: IAgent[];
-    statuses: SaleStatus[];
-    sales: DailySale[];
-    campaigns: ICampaign[];
+    user: IUser,
+    users:IUser[],
+    agents: IAgent[],
+    statuses: SaleStatus[],
+    sales: DailySale[],
+    campaigns: ICampaign[]
 }
 
 
@@ -73,7 +75,10 @@ export class DashboardComponent implements OnInit, AfterContentInit {
         private msg:MessageService,
         private rend:Renderer2
     ) {
-        breakpoints.observe([Breakpoints.HandsetLandscape, Breakpoints.HandsetPortrait]).subscribe(result => {
+        breakpoints.observe([
+            Breakpoints.HandsetLandscape, 
+            Breakpoints.HandsetPortrait
+        ]).subscribe(result => {
             this.isMobileLayout = result.matches;
         });
     }
@@ -91,36 +96,38 @@ export class DashboardComponent implements OnInit, AfterContentInit {
             this.user = of(u);
 
             if (u.role.role > this.roleType.companyAdmin) {
-                this.agentService.getAgentsByClient(u.selectedClient.clientId).subscribe(agents => {
-                    this.store.agents = agents;
-                    this.agents = of(agents);
-                    this.selectedAgent = agents[0];
-                    this.campaignService
-                        .getCampaignsByAgent(u.selectedClient.clientId, this.selectedAgent.agentId)
-                        .subscribe(campaigns => {
-                            this.store.campaigns = campaigns;
-                            this.campaigns = of(campaigns);
-                        });
-
-                    this.dailySaleService
-                        .getDailySalesByAgent(
-                            u.selectedClient.clientId,
-                            this.selectedAgent.agentId,
-                            this.startDate.toDateString(),
-                            this.endDate.toDateString()
-                        )
-                        .subscribe(sales => {
-                            this.store.sales = _.orderBy(sales, ['saleDate'], ['desc']);
-                            this.sales = of(this.store.sales);
-
-                            this.clientService.getSaleStatuses(u.selectedClient.clientId).subscribe(statuses => {
-                                this.store.statuses = statuses;
-
-                                // creates new chartjs object
-                                this.createChart(sales);
+                this.agentService.getAgentsByClient(u.selectedClient.clientId)
+                    .subscribe((users:IUser[]) => {
+                        this.store.users = users;
+                        this.store.agents = this.mapUserToAgent(users);
+                        this.agents = of(this.store.agents);
+                        this.selectedAgent = this.store.agents[0];
+                        this.campaignService
+                            .getCampaignsByAgent(u.selectedClient.clientId, this.selectedAgent.agentId)
+                            .subscribe(campaigns => {
+                                this.store.campaigns = campaigns;
+                                this.campaigns = of(campaigns);
                             });
-                        });
-                });
+
+                        this.dailySaleService
+                            .getDailySalesByAgent(
+                                u.selectedClient.clientId,
+                                this.selectedAgent.agentId,
+                                this.startDate.toDateString(),
+                                this.endDate.toDateString()
+                            )
+                            .subscribe(sales => {
+                                this.store.sales = _.orderBy(sales, ['saleDate'], ['desc']);
+                                this.sales = of(this.store.sales);
+
+                                this.clientService.getSaleStatuses(u.selectedClient.clientId).subscribe(statuses => {
+                                    this.store.statuses = statuses;
+
+                                    // creates new chartjs object
+                                    this.createChart(sales);
+                                });
+                            });
+                    });
             }
         });
 
@@ -136,6 +143,15 @@ export class DashboardComponent implements OnInit, AfterContentInit {
 
     addChartElement() {
         
+    }
+
+    mapUserToAgent(users:IUser[]):IUser[] {
+        let result:IAgent[] = [];
+        for(let i = 0; i < users.length; i++) {
+            if(users[i].agent == null) continue;
+            result.push(users[i].agent);
+        }
+        return result;
     }
 
     getStatus(statusId: number): SaleStatus {

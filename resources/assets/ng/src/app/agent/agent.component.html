@@ -3,12 +3,12 @@
     <div class="row">
         <div class="col-md-6 py-2" *ngFor="let user of users | async">
             <div class="card">
-                <div class="card-header bg-secondary text-white">
+                <div class="card-header bg-vs-primary text-white">
                     <ul class="nav nav-tabs card-header-tabs">
                         <li class="nav-item">
                             <button mat-button class="nav-link" [class.active]="user.display === 0" (click)="user.display = 0">Summary</button>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item" *ngIf="user.detail != null">
                             <button mat-button class="nav-link" [class.active]="user.display === 1" (click)="user.display = 1">Detail</button>
                         </li>
                     </ul>
@@ -16,13 +16,41 @@
                 <div class="card-body">
                     <ng-container *ngIf="user.display === 0">
                         <div class="d-flex flex-column justify-content-center align-items-center" style="width:100%;height:100%;">
-                            <i class="material-icons" style="font-size:48px;">account_box</i>
-                            <h4 class="card-title">{{user.firstName}} {{user.lastName}}</h4>
-                            <p class="card-text">Member since: {{ user.createdAt | date:'shortDate' }}</p>
+                            <h3 class="card-title">{{user.firstName}} {{user.lastName}}</h3>
+                            <div class="d-flex align-items-center text-muted">
+                                <i class="material-icons">account_box</i>
+                                {{user.username}}
+                            </div>
+                            <p class="card-text" *ngIf="user.detail">Birthdate: {{user.detail.birthDate | date:'shortDate'}}</p>
+                            <p class="card-text">Anniversary: {{ user.createdAt | date:'shortDate' }}</p>
                         </div>
                     </ng-container>
                     <ng-container *ngIf="user.display === 1">
-                        <p>This is where our agent detail is going to go</p>
+                        <p class="font-weight-light font-italic text-muted">{{user.firstName}} {{user.lastName}}</p>
+                        <div *ngIf="user.detail">
+                            <span class="font-weight-bold">Address: </span>
+                            <address class="font-weight-light">
+                                {{user.detail.street}}
+                                {{user.detail.street2}}
+                                {{user.detail.city}} {{user.detail.state}} {{user.detail.zip}}
+                            </address>
+                        </div>
+                        <div *ngIf="user.detail">
+                            <span class="font-weight-bold">Phone: </span>
+                            <span class="font-weight-light">{{user.detail.phone | phone}}</span>
+                        </div>
+                        <div *ngIf="user.detail && user.detail.ssn != null">
+                            <span class="font-weight-bold">SSN: </span>
+                            <span class="font-weight-light">{{replaceCharAt(user.detail.ssn, 0, 4, 'X')}}</span>
+                        </div>
+                        <div *ngIf="user.detail && user.detail.bankRouting">
+                            <span class="font-weight-bold">Routing: </span>
+                            <span class="font-weight-light">{{user.detail.bankRouting}}</span>
+                        </div>
+                        <div *ngIf="user.detail && user.detail.bankAccount">
+                            <span class="font-weight-bold">Account: </span>
+                            <span class="font-weight-light">{{user.detail.bankAccount}}</span>
+                        </div>
                     </ng-container>
                 </div>
             </div>

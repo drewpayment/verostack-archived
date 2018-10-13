@@ -108,14 +108,14 @@ export class AgentComponent implements OnInit {
         this.managers$.next(this.store.managers);
     }
 
-    private createForm():void {
-        this.form = this.fb.group({
-            user: this.fb.group({
+    replaceCharAt(input:string, start:number, end:number, replaceChar:string) {
+        let counter = end - start;
+        let calculatedReplacement:string;
+        for(let i = 0; i < counter; i++) {
+            calculatedReplacement += replaceChar;
+        }
 
-            }),
-            agent: this.fb.group({
-                
-            })
-        })
+        return input.substr(start, end) + calculatedReplacement + input.substr(end, calculatedReplacement.length);
     }
+
 }

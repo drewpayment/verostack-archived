@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { IAgent } from '@app/models';
+import { IAgent, User, IUser } from '@app/models';
 
 import { environment } from 'environments/environment';
 import { ISalesPairing } from '@app/models/sales-pairings.model';
@@ -38,9 +38,9 @@ export class AgentsService {
    * 
    * @param clientId 
    */
-  getAgentsByClient(clientId:number):Observable<IAgent[]> {
+  getAgentsByClient(clientId:number):Observable<IUser[]> {
     const url = `${this.api}clients/${clientId}/agents`;
-    return this.http.get<IAgent[]>(url)
+    return this.http.get<IUser[]>(url)
       .pipe(
         catchError(this.handleError)
       );
