@@ -1,0 +1,187 @@
+<!-- <mat-dialog-container> -->
+    <h3 mat-dialog-title>
+        Edit Agent
+        <button type="button" class="float-right" mat-icon-button (click)="onNoClick()" tabindex="-1">
+            <mat-icon>clear</mat-icon>
+        </button>
+    </h3>
+    <p class="text-muted">
+        All fields denoted with * are required.
+    </p>
+    <mat-dialog-content>
+        <form [formGroup]="form">
+            <ng-container formGroupName="user">
+                <div class="row">
+                    <div class="col-md-6">
+                        <mat-form-field>
+                            <input type="text" matInput formControlName="firstName" placeholder="First Name" required /> 
+                            <mat-error *ngIf="form.get('user').get('firstName').hasError('required')">
+                                Please enter a first name.
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-6">
+                        <mat-form-field>
+                            <input type="text" matInput formControlName="lastName" placeholder="Last Name" required />
+                            <mat-error *ngIf="form.get('user').get('lastName').hasError('required')">
+                                Please enter a last name.
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <mat-form-field>
+                            <input type="text" matInput formControlName="username" placeholder="Username" required readonly />
+                            <mat-error *ngIf="form.get('user').get('username').hasError('required')">
+                                Please enter a username.
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-6 d-flex flex-column">
+                        <mat-checkbox formControlName="active">Portal Access</mat-checkbox>
+                        <span class="text-muted font-italic font-sm">Allow user to login to online portal</span>
+                    </div>
+                </div>
+            </ng-container>
+            <ng-container formGroupName="detail">
+                <div class="row">
+                    <div class="col-md-8">
+                        <mat-form-field>
+                            <input type="text" matInput formControlName="street" placeholder="Street Address" required />
+                            <mat-error *ngIf="form.get('detail').get('street').hasError('required')">
+                                Please enter a street address.
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-4">
+                        <mat-form-field>
+                            <input type="text" matInput formControlName="street2" placeholder="Apt/Unit/Suite" />
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <mat-form-field>
+                            <input type="text" matInput formControlName="city" placeholder="City" required />
+                            <mat-error *ngIf="form.get('detail').get('city').hasError('required')">
+                                Please enter a city.
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-3">
+                        <mat-form-field>
+                            <mat-select placeholder="State" formControlName="state" required>
+                                <mat-option *ngFor="let state of states" [value]="state.abbreviation">
+                                    {{state.name}}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="form.get('detail').get('state').hasError('required')">
+                                Please select a state.
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-3">
+                        <mat-form-field>
+                            <input type="text" matInput formControlName="zip" placeholder="Postal Code" required />
+                            <mat-error *ngIf="form.get('detail').get('zip').hasError('required')">
+                                Please enter a postal code.
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <mat-form-field>
+                            <input matInput [matDatepicker]="birthDatePicker" placeholder="Birth Date" formControlName="birthDate" />
+                            <mat-datepicker-toggle matSuffix [for]="birthDatePicker"></mat-datepicker-toggle>
+                            <mat-datepicker #birthDatePicker></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-6">
+                        <mat-form-field>
+                            <input type="text" matInput placeholder="Social Security Number" formControlName="ssn" />
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <mat-form-field>
+                            <input type="text" matInput placeholder="Phone" formControlName="phone" required />
+                            <mat-error *ngIf="form.get('detail').get('phone').hasError('required')">
+                                Please enter a phone number.
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <mat-form-field>
+                            <input type="text" matInput placeholder="Bank Routing" formControlName="routing" />
+                            <mat-hint>
+                                Use if agent has direct deposit setup.
+                            </mat-hint>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-6">
+                        <mat-form-field>
+                            <input type="text" matInput placeholder="Bank Account" formControlName="account" />
+                            <mat-hint>
+                                Use if agent has direct deposit setup.
+                            </mat-hint>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </ng-container>
+            <ng-container formGroupName="agent">
+                <div class="row py-4">
+                    <div class="col-md-6">
+                        <mat-form-field>
+                            <mat-select placeholder="Manager" formControlName="manager" required>
+                                <mat-option *ngFor="let manager of managers" [value]="manager.id">
+                                    {{manager.firstName}} {{manager.lastName}}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="form.get('agent').get('manager').hasError('required')">
+                                Please select a manager.
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="text-muted">
+                            Select the manager that this agent reports to.
+                        </p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <mat-checkbox formControlName="isManager">Manager</mat-checkbox>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="text-muted">
+                            This denotes the agent as a manager in the system, enabling their overrides and allowing you to assign
+                            other users to them for payroll.
+                        </p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <mat-checkbox formControlName="active">Active Employee</mat-checkbox>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="text-muted">
+                            If this is unchecked, the agent is considered "terminated" and will no longer show up in the system as 
+                            an active employee. This will affect payroll and if they are not active, their payroll will not be calculated. This 
+                            does <strong>NOT</strong> disable their login access, because terminated employees may need access to their historical
+                            pay data for a determinate amount of time.
+                        </p>
+                    </div>
+                </div>
+            </ng-container>
+        </form>
+    </mat-dialog-content>
+    <mat-dialog-actions>
+        <button type="button" mat-button (click)="onNoClick()">Cancel</button>
+        <button type="button" mat-button color="primary">Save</button>
+    </mat-dialog-actions>
+<!-- </mat-dialog-container> -->

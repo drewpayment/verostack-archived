@@ -13,6 +13,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AgentComponent } from './agent/agent.component';
 import { FabFloatBtnModule } from '@app/fab-float-btn/fab-float-btn.module';
 import { PipesModule } from '@app/pipes/pipes.module';
+import { EditAgentDialogComponent } from './agent/edit-agent-dialog/edit-agent-dialog.component';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 @NgModule({
   imports: [
@@ -24,14 +26,20 @@ import { PipesModule } from '@app/pipes/pipes.module';
     LoadingModule,
     AppRoutingModule,
     FabFloatBtnModule,
-    PipesModule
+    PipesModule,
+    ReactiveFormsModule,
+    FormsModule
   ],
   declarations: [
     AppComponent,
     SidenavComponent,
     ScrollLockDirective,
     HeaderComponent,
-    AgentComponent
+    AgentComponent,
+    EditAgentDialogComponent
+  ],
+  entryComponents: [
+    EditAgentDialogComponent
   ],
   providers: [
   ],

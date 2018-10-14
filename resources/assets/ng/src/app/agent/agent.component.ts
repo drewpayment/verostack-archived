@@ -10,6 +10,7 @@ import { AddAgentDialogComponent } from '@app/core/agents/dialogs/add-agent.comp
 import { FloatBtnService } from '@app/fab-float-btn/float-btn.service';
 import { map } from 'rxjs/operators';
 import { FormGroup, FormBuilder } from '@angular/forms';
+import { EditAgentDialogComponent } from '@app/agent/edit-agent-dialog/edit-agent-dialog.component';
 
 interface DataStore {
     users:IUser[],
@@ -116,6 +117,21 @@ export class AgentComponent implements OnInit {
         }
 
         return input.substr(start, end) + calculatedReplacement + input.substr(end, calculatedReplacement.length);
+    }
+
+    editAgent(user:IUser):void {
+        this.dialog.open(EditAgentDialogComponent, {
+            width: '600px',
+            data: {
+                user: this.user,
+                agent: user,
+                managers: this.store.managers
+            }
+        })
+        .afterClosed()
+        .subscribe(result => {
+            console.dir(result);
+        });    
     }
 
 }

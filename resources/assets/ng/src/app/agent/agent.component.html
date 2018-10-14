@@ -2,8 +2,8 @@
 <div class="container">
     <div class="row">
         <div class="col-md-6 py-2" *ngFor="let user of users | async">
-            <div class="card">
-                <div class="card-header bg-vs-primary text-white">
+            <div class="card hoverable">
+                <div class="card-header bg-vs-primary text-white d-flex align-items-end justify-content-between">
                     <ul class="nav nav-tabs card-header-tabs">
                         <li class="nav-item">
                             <button mat-button class="nav-link" [class.active]="user.display === 0" (click)="user.display = 0">Summary</button>
@@ -12,6 +12,9 @@
                             <button mat-button class="nav-link" [class.active]="user.display === 1" (click)="user.display = 1">Detail</button>
                         </li>
                     </ul>
+                    <button class="p-0 hover-item" type="button" mat-icon-button (click)="editAgent(user)">
+                        <mat-icon color="accent">edit</mat-icon>
+                    </button>
                 </div>
                 <div class="card-body">
                     <ng-container *ngIf="user.display === 0">
@@ -21,8 +24,8 @@
                                 <i class="material-icons">account_box</i>
                                 {{user.username}}
                             </div>
-                            <p class="card-text" *ngIf="user.detail">Birthdate: {{user.detail.birthDate | date:'shortDate'}}</p>
-                            <p class="card-text">Anniversary: {{ user.createdAt | date:'shortDate' }}</p>
+                            <div class="card-text" *ngIf="user.detail">Birthdate: {{user.detail.birthDate | date:'shortDate'}}</div>
+                            <div class="card-text">Anniversary: {{ user.createdAt | date:'shortDate' }}</div>
                         </div>
                     </ng-container>
                     <ng-container *ngIf="user.display === 1">
