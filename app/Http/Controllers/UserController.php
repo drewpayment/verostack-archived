@@ -14,7 +14,6 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-
     protected $service;
     protected $agentService;
     protected $helper;
@@ -358,5 +357,19 @@ class UserController extends Controller
 		$users = User::isActiveByBool($activeOnly)->get();
 		return response()->json($this->helper->normalizeLaravelObject($users->toArray()));
 	}
+
+    
+    public function updateUserAgentDetailEntities(Request $request, $clientId, $userId)
+    {
+        $result = new ApiResource();
+
+        $this->service
+            ->updateUserAgentDetail($request, $clientId, $userId)
+            ->mergeInto($result);
+        
+        return $result
+            ->throwApiException()
+            ->getResponse();
+    }
 
 }

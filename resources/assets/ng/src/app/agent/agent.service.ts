@@ -29,7 +29,15 @@ export class AgentService {
         return this.http.get<IUser[]>(url)
             .pipe(
                 catchError(this.handleError)
-            )
+            );
+    }
+
+    updateUserWithRelationships(clientId:number, user:IUser):Observable<IUser> {
+        let url = `${this.api}/clients/${clientId}/users/${user.id}`;
+        return this.http.post<IUser>(url, user)
+            .pipe(
+                catchError(this.handleError)
+            );
     }
 
     private handleError(error:HttpErrorResponse) {

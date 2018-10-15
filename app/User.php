@@ -25,9 +25,9 @@ class User extends Authenticatable
 	 *
 	 * @var array
 	 */
-    protected $casts = [
-    	'active' => 'boolean'
-    ];
+    // protected $casts = [
+    // 	'active' => 'boolean'
+    // ];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -37,6 +37,16 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
 	];
+
+    public function getActiveAttribute($value)
+    {
+        return $value == 1;
+    }
+
+    public function setActiveAttribute($value)
+    {
+        $this->attributes['active'] = $value == true ? 1 : 0;
+    }
 	
 	public function detail() 
 	{

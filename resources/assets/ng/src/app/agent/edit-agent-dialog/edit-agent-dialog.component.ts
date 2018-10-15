@@ -44,6 +44,11 @@ export class EditAgentDialogComponent implements OnInit {
         this.ref.close();
     }
 
+    saveAgentChanges():void {
+        const updatedAgent = this.prepareModel();
+        this.ref.close(updatedAgent);
+    }
+
     /** Creates a form that has separate form groups for the user entity, user_detail entity and the agent entity. */
     private createForm():void {
         this.form = this.fb.group({
@@ -90,9 +95,9 @@ export class EditAgentDialogComponent implements OnInit {
                 city: this.form.value.detail.city,
                 state: this.form.value.detail.state,
                 zip: this.form.value.detail.zip,
-                ssn: this.form.value.detail.ssn,
+                ssn: +this.form.value.detail.ssn,
                 birthDate: this.form.value.detail.birthDate,
-                phone: this.form.value.detail.phone,
+                phone: +this.form.value.detail.phone,
                 bankRouting: this.form.value.detail.routing,
                 bankAccount: this.form.value.detail.account
             },

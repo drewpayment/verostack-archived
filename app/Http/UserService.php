@@ -181,4 +181,80 @@ class UserService
 
 		return $result->setData($d);
     }
+
+    /**
+     * Update a user and its relationships. 
+     * 
+     * @param Request $request
+     * @param int $clientId
+     * @param int $userId
+     * @return \App\Http\Resources\ApiResource
+     */
+    public function updateUserAgentDetail($request, $clientId, $userId)
+    {
+        $result = new ApiResource();
+
+        $result->checkAccessByClient($clientId, $userId)
+            ->mergeInto($result);
+
+        if($result->hasError)
+            return $result->throwApiException()->getResponse();
+
+        /** new user (nothing uses this yet) */
+        if($request->id == -1 || is_null($request->id))
+            $user = new User;
+        else /** updating user */
+            $user = User::userId($request->id)->first();
+
+        $user->first_name = $request->firstName;
+        $user->last_name = $request->lastName;
+        $user->email = $request->email;
+        $user->active = $request->active; 
+
+        /** Cast to an object for simplicity's sake */
+        $request->detail = (object) $request->detail;
+        if(is_null($user->detail))
+        {
+            $detail = new UserDetail;
+            $detail->user_id = $user->id;
+        }
+        else
+            $detail = $user->detail;
+
+        $detail->street = $request->detail->street;
+        $detail->street2 = $request->detail->street2;
+        $detail->city = $request->detail->city;
+        $detail->state = $request->detail->state;
+        $detail->zip = $request->detail->zip;
+        $detail->ssn = $request->detail->ssn;
+        $detail->phone = $request->detail->phone;
+        $detail->birthDate = $request->detail->birthDate;
+        $detail->bankRouting = $request->detail->bankRouting;
+        $detail->bankAccount = $request->detail->bankAccount;
+        $user->detail()->save($detail);
+
+        /** Cast to an object for simplicity's sake */
+        $request->agent = (object) $request->agent;
+        if(is_null($user->agent))
+        {
+            $agent = new Agent;
+            $agent->user_id = $user->id;
+        }
+        else 
+            $agent = $user->agent;
+        
+        $agent->first_name = $user->first_name;
+        $agent->last_name = $user->last_name;
+        $agent->manager_id = $request->agent->managerId;
+        $agent->is_manager = $request->agent->isManager;
+        $agent->is_active = $request->agent->isActive;
+        $user->agent()->save($agent);
+
+        $userSaved = $user->save();
+
+        if(!$userSaved)
+            return $result->setToFail();
+        else 
+            return $result->setData($user);
+    }
 }

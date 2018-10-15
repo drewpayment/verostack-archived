@@ -11,6 +11,7 @@ import { FloatBtnService } from '@app/fab-float-btn/float-btn.service';
 import { map } from 'rxjs/operators';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { EditAgentDialogComponent } from '@app/agent/edit-agent-dialog/edit-agent-dialog.component';
+import { UserService } from '@app/user-features/user.service';
 
 interface DataStore {
     users:IUser[],
@@ -45,8 +46,7 @@ export class AgentComponent implements OnInit {
         private service:AgentService,
         private session:SessionService,
         private dialog:MatDialog,
-        private floatBtnService:FloatBtnService,
-        private fb:FormBuilder
+        private floatBtnService:FloatBtnService
     ) {
         this.floatOpen$ = this.floatBtnService.opened$.asObservable();
         this.users = this.users$.asObservable();
@@ -119,7 +119,9 @@ export class AgentComponent implements OnInit {
         return input.substr(start, end) + calculatedReplacement + input.substr(end, calculatedReplacement.length);
     }
 
-    editAgent(user:IUser):void {
+    editAgent(user:UserView):void {
+        let displayType = user.display;
+
         this.dialog.open(EditAgentDialogComponent, {
             width: '600px',
             data: {
@@ -130,7 +132,22 @@ export class AgentComponent implements OnInit {
         })
         .afterClosed()
         .subscribe(result => {
-            console.dir(result);
+            if(result == null) return; /** If the result is undefined, the user canceled the changes. */
+
+            this.session.showLoader();            
+            this.service.updateUserWithRelationships(this.user.selectedClient.clientId, result)
+                .subscribe((user:UserView) => {
+                    const idx = _.findIndex(this.store.users, {id:user.id});
+                    if(idx < 0) {
+                        // this will be for a new user
+                    } else {
+                        user.display = displayType || AgentDisplay.Summary;
+                        this.store.users[idx] = user;
+                        this.users$.next(this.store.users as UserView[]);
+                        this.setManagers(this.store.users);
+                        this.session.hideLoader();
+                    }
+                })
         });    
     }
 

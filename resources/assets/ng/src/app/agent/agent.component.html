@@ -42,7 +42,7 @@
                             <span class="font-weight-bold">Phone: </span>
                             <span class="font-weight-light">{{user.detail.phone | phone}}</span>
                         </div>
-                        <div *ngIf="user.detail && user.detail.ssn != null">
+                        <div *ngIf="user.detail && user.detail.ssn != null && user.detail.ssn > 0">
                             <span class="font-weight-bold">SSN: </span>
                             <span class="font-weight-light">{{replaceCharAt(user.detail.ssn, 0, 4, 'X')}}</span>
                         </div>
