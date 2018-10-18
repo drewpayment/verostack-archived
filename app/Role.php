@@ -16,6 +16,11 @@ class Role extends Model
 		return $this->belongsTo(User::class);
 	}
 
+    public function scopeByRoleId($query, $id)
+    {
+        return $query->where('id', $id);
+    }
+
 	public function scopeUserId($query, $userId)
 	{
 		return $query->where('user_id', $userId);

@@ -96,3 +96,9 @@ Route::get('agents/{agentId}/campaigns/{campaignId}/issue-dates/{issueDate}', 'I
 //	Route::post('/', 'InvoiceController@saveInvoice');
 //
 //});
+
+Route::middleware(['auth:api'])->group(function() {
+
+    Route::get('role-types', 'RoleTypeController@getRoleTypes');
+
+});

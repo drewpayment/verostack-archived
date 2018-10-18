@@ -30,7 +30,12 @@
                     </ng-container>
                     <ng-container *ngIf="user.display === 1">
                         <p class="font-weight-light font-italic text-muted">{{user.firstName}} {{user.lastName}}</p>
-                        <div *ngIf="user.detail">
+                        <p *ngIf="user.detail.street == null && user.detail.phone == null">
+                            <button type="button" class="btn btn-link" (click)="editAgent(user)">
+                                Add Details
+                            </button>
+                        </p>
+                        <div *ngIf="user.detail && user.detail.street != null">
                             <span class="font-weight-bold">Address: </span>
                             <address class="font-weight-light">
                                 {{user.detail.street}}
@@ -38,7 +43,7 @@
                                 {{user.detail.city}} {{user.detail.state}} {{user.detail.zip}}
                             </address>
                         </div>
-                        <div *ngIf="user.detail">
+                        <div *ngIf="user.detail && user.detail.phone != null">
                             <span class="font-weight-bold">Phone: </span>
                             <span class="font-weight-light">{{user.detail.phone | phone}}</span>
                         </div>

@@ -1,7 +1,7 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 import {IUser, IUserDetail, IAgent} from '@app/models';
-import {FormGroup, FormBuilder, Validators} from '@angular/forms';
+import {FormGroup, FormBuilder, Validators, FormControl} from '@angular/forms';
 import {IState, States} from '@app/shared/models/state.model';
 import {MessageService} from '@app/message.service';
 import {AgentsService} from '@app/core/agents/agents.service';
@@ -10,6 +10,7 @@ import * as _ from 'lodash';
 import {UserService} from '@app/user-features/user.service';
 import {SessionService} from '@app/session.service';
 import { catchError } from 'rxjs/operators';
+import { RoleType } from '@app/models/role.model';
 
 interface IKeyValue {
     key: string | number;
@@ -34,9 +35,11 @@ export class AddAgentDialogComponent implements OnInit {
     userForm: FormGroup;
     detailForm: FormGroup;
     agentForm: FormGroup;
+    roleType:FormControl;
 
     verifyAccount: number = null;
     managers: IAgent[];
+    roleTypes:RoleType[];
 
     constructor(
         public ref: MatDialogRef<AddAgentDialogComponent>,
@@ -52,9 +55,13 @@ export class AddAgentDialogComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.agentService.getRoleTypes(true)
+            .subscribe(roleTypes => this.roleTypes = roleTypes);
+
         this.createUserForm();
         this.createDetailForm();
         this.createAgentForm();
+        this.createRoleTypeForm();
 
         // DO SOME MORE STUFF
         this.agentService
@@ -101,8 +108,10 @@ export class AddAgentDialogComponent implements OnInit {
             isManager: this.agentForm.value.isManager
         };
 
+        let role = this.roleType.value;
+
         this.userService
-            .saveNewUserAgentEntity(this.userEntity, this.agentEntity, this.detailEntity, this.user.selectedClient.clientId)
+            .saveNewUserAgentEntity(this.userEntity, this.agentEntity, this.detailEntity, this.user.selectedClient.clientId, role)
             .pipe(
                 catchError(this.msg.showObserverError)
             )
@@ -191,7 +200,7 @@ export class AddAgentDialogComponent implements OnInit {
     }
 
     test(): void {
-        console.dir(this.detailForm);
+        // console.dir(this.detailForm);
     }
 
     validateVerifyAccount(): void {
@@ -240,5 +249,9 @@ export class AddAgentDialogComponent implements OnInit {
             managerId: this.fb.control('', [Validators.required]),
             isManager: this.fb.control('', [])
         });
+    }
+
+    private createRoleTypeForm():void {
+        this.roleType = this.fb.control('', [Validators.required]);
     }
 }

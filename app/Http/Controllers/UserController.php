@@ -11,18 +11,21 @@ use App\UserDetail;
 use App\User;
 use App\Http\UserService;
 use Illuminate\Http\Request;
+use App\Http\RoleService;
 
 class UserController extends Controller
 {
     protected $service;
     protected $agentService;
     protected $helper;
+    protected $roleService;
 
-    public function __construct(UserService $_service, Helpers $_helper, AgentService $agent_service)
+    public function __construct(UserService $_service, Helpers $_helper, AgentService $agent_service, RoleService $role_service)
     {
         $this->service = $_service;
         $this->helper = $_helper;
         $this->agentService = $agent_service;
+        $this->roleService = $role_service;
     }
 
 	/**
@@ -213,6 +216,11 @@ class UserController extends Controller
 		$this->service->saveUser($u, $d, $clientId)
 		              ->mergeInto($result);
 
+        $role = $this->roleService
+            ->saveRole($u, $r->role)
+            ->mergeInto($result)
+            ->getData();
+
 		if($result->hasError)
 			return $result->throwApiException()->getResponse();
 
@@ -221,7 +229,7 @@ class UserController extends Controller
 		$this->agentService->saveNewAgentEntity($a)->mergeInto($result);
 
 		return $result
-			->setData(true)
+			->setData(User::with(['detail', 'agent', 'role'])->userId($u->id)->first())
 			->throwApiException()
 			->getResponse();
     }

@@ -1,3 +1,4 @@
+import { Moment } from '@app/shared/moment-extensions';
 
 export interface IUserRole {
   id: number,
@@ -10,6 +11,14 @@ export interface IRole {
   user_id: number,
   created_at: number,
   updated_at: number
+}
+
+export interface RoleType {
+    id:number,
+    type:string,
+    active:boolean,
+    createdAt?:Date | Moment | string,
+    updatedAt?:Date | Moment | string
 }
 
 export enum UserRole {

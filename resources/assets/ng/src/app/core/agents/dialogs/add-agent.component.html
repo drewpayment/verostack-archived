@@ -1,5 +1,5 @@
 
-<mat-horizontal-stepper linear="true" #addAgent>
+<mat-horizontal-stepper  #addAgent>
   <mat-step [stepControl]="userForm">
     <form [formGroup]="userForm">
       <ng-template matStepLabel>User Login Info</ng-template>
@@ -135,8 +135,19 @@
     <form [formGroup]="agentForm">
       <ng-template matStepLabel>Permissions</ng-template>
 
-      <mat-form-field class="py-3">
-        <mat-select placeholder="Select Manager" formControlName="managerId" required>
+      <mat-form-field class="pt-3">
+          <mat-select placeholder="User Role" [formControl]="roleType" required>
+              <mat-option *ngFor="let type of roleTypes" [value]="type.id">
+                  {{type.type | titlecase}}
+              </mat-option>
+          </mat-select>
+          <mat-error *ngIf="roleType.hasError('required')">
+              Please select a role for the new user.
+          </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-select placeholder="Manager" formControlName="managerId" required>
           <mat-option *ngFor="let m of managers" [value]="m.agentId">
             {{m.firstName}} {{m.lastName}}
           </mat-option>

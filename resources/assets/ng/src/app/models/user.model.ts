@@ -54,8 +54,3 @@ export class User implements IUser {
   updatedAt: Date;
   clients: IClient[];
 }
-
-export interface IUserWithDetails {
-  user: IUser,
-  detail: IUserDetail
-}

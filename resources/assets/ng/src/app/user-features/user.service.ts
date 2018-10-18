@@ -235,8 +235,8 @@ export class UserService {
       });
   }
 
-  saveNewUserAgentEntity(user:IUser, agent:IAgent, detail:IUserDetail, clientId:number):Observable<boolean> {
-    let dto = { user: user, agent: agent, detail: detail };
+  saveNewUserAgentEntity(user:IUser, agent:IAgent, detail:IUserDetail, clientId:number, role:number):Observable<boolean> {
+    let dto = { user: user, agent: agent, detail: detail, role: role };
     return this.http.post<boolean>(`${this.apiUrl}api/users/clients/${clientId}/new-user-agent`, dto);
   }
 

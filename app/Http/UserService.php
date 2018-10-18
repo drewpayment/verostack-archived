@@ -255,6 +255,7 @@ class UserService
         if(!$userSaved)
             return $result->setToFail();
         else 
-            return $result->setData($user);
+            return $result
+                ->setData(User::with(['detail', 'agent'])->userId($user->id)->first());
     }
 }

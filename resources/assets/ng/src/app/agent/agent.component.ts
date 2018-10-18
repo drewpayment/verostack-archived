@@ -84,6 +84,24 @@ export class AgentComponent implements OnInit {
             .pipe(map(this.setMoments))
             .subscribe(users => {
                 _.remove(users, u => u.agent == null);
+
+                users.forEach((u:IUser, i:number) => {
+                    if(u.detail == null) 
+                        users[i].detail = {
+                            userId: u.id,
+                            street: null, 
+                            street2: null,
+                            city: null,
+                            state: null,
+                            zip: null,
+                            phone: null,
+                            birthDate: null,
+                            ssn: null,
+                            bankRouting: null,
+                            bankAccount: null
+                        }
+                });
+
                 this.store.users = users;
                 this.users$.next(users);
                 this.setManagers(users);

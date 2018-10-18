@@ -6,6 +6,7 @@ import { environment } from 'environments/environment';
 import { ISalesPairing } from '@app/models/sales-pairings.model';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { IRole, RoleType } from '@app/models/role.model';
 
 @Injectable({
   providedIn: 'root'
@@ -91,6 +92,10 @@ export class AgentsService {
     return this.http.delete(this.api + 'sales-pairings/' + pairingId)
       .toPromise()
       .then(() => { return; });
+  }
+
+  getRoleTypes(includeInactive:boolean = false):Observable<RoleType[]> {
+      return this.http.get<RoleType[]>(`${this.api}role-types?inactive=${includeInactive}`);
   }
 
   private handleError(error:HttpErrorResponse) {

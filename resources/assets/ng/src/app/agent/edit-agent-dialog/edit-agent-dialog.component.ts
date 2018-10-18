@@ -3,6 +3,7 @@ import {IUser} from '@app/models';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { IState, States } from '@app/shared/models/state.model';
+import { map } from 'rxjs/operators';
 
 interface DialogData {
     user: IUser, // the current logged in user
