@@ -129,6 +129,11 @@ button:focus {
     background-color: $primary-filter;
 }
 
+.bg-vs-muted {
+    background-color: $bg-muted;
+    color: $white;
+}
+
 .mat-dialog-container {
     padding: 1.5rem !important;
 }

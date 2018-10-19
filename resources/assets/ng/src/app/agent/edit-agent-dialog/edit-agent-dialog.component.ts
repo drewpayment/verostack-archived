@@ -66,7 +66,7 @@ export class EditAgentDialogComponent implements OnInit {
                 city: this.fb.control(this.agent.detail.city, [Validators.required]),
                 state: this.fb.control(this.agent.detail.state, [Validators.required]),
                 zip: this.fb.control(this.agent.detail.zip, [Validators.required, Validators.pattern('[0-9]+')]),
-                ssn: this.fb.control(this.agent.detail.ssn),
+                ssn: this.fb.control(this.agent.detail.ssn || ''),
                 birthDate: this.fb.control(this.agent.detail.birthDate, [Validators.required]),
                 phone: this.fb.control(this.agent.detail.phone, [Validators.required, Validators.pattern('[0-9]+')]),
                 routing: this.fb.control(this.agent.detail.bankRouting),

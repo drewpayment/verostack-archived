@@ -1,7 +1,7 @@
-import {Component, Inject, OnInit} from '@angular/core';
-import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
+import {Component, Inject, OnInit, ViewChildren, QueryList, AfterContentInit, AfterContentChecked, AfterViewChecked} from '@angular/core';
+import {MatDialogRef, MAT_DIALOG_DATA, MatInput} from '@angular/material';
 import {IUser, IUserDetail, IAgent} from '@app/models';
-import {FormGroup, FormBuilder, Validators, FormControl} from '@angular/forms';
+import {FormGroup, FormBuilder, Validators, FormControl, NgControl} from '@angular/forms';
 import {IState, States} from '@app/shared/models/state.model';
 import {MessageService} from '@app/message.service';
 import {AgentsService} from '@app/core/agents/agents.service';
@@ -11,6 +11,7 @@ import {UserService} from '@app/user-features/user.service';
 import {SessionService} from '@app/session.service';
 import { catchError } from 'rxjs/operators';
 import { RoleType } from '@app/models/role.model';
+import { AgentService } from '@app/agent/agent.service';
 
 interface IKeyValue {
     key: string | number;
@@ -40,13 +41,18 @@ export class AddAgentDialogComponent implements OnInit {
     verifyAccount: number = null;
     managers: IAgent[];
     roleTypes:RoleType[];
+    usernameTaken:boolean = false;
+    suggestedUsername:string;
+
+    @ViewChildren(MatInput) inputs:QueryList<MatInput>;
 
     constructor(
         public ref: MatDialogRef<AddAgentDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: DataDialog,
         private fb: FormBuilder,
         private msg: MessageService,
-        private agentService: AgentsService,
+        private service:AgentService,
+        private agentsService: AgentsService,
         private userService: UserService,
         private session: SessionService
     ) {
@@ -55,7 +61,7 @@ export class AddAgentDialogComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.agentService.getRoleTypes(true)
+        this.agentsService.getRoleTypes(true)
             .subscribe(roleTypes => this.roleTypes = roleTypes);
 
         this.createUserForm();
@@ -64,7 +70,7 @@ export class AddAgentDialogComponent implements OnInit {
         this.createRoleTypeForm();
 
         // DO SOME MORE STUFF
-        this.agentService
+        this.agentsService
             .getAgents()
             .then(agents => {
                 this.managers = _.filter(agents, (a: IAgent) => {
@@ -232,6 +238,34 @@ export class AddAgentDialogComponent implements OnInit {
                 event.preventDefault();
             }
         }
+    }
+
+    checkUsernameAvailability():void {
+        let usernameInput = _.find(this.inputs.toArray(), (input:MatInput) => {
+            return input.ngControl.name === 'username';
+        }) as MatInput;
+
+        const username:string = usernameInput.value;
+
+        if(this.userForm.controls.username.errors != null && this.userForm.controls.username.errors.unavailable) {
+            this.userForm.patchValue({ username: username });
+        } else {
+            this.service.checkUsernameAvailability(username)
+                .subscribe(available => {
+                    this.usernameTaken = !available;
+
+                    if(!available) {
+                        this.userForm.get('username').setErrors({ unavailable: true });
+
+                        let lastSection = this.userForm.value.firstName.substr(0, 2).toLowerCase();
+                        this.suggestedUsername = this.userForm.value.lastName.substr(0, 5).toLowerCase() + lastSection;
+
+                        usernameInput.focus();
+                        usernameInput.value = this.suggestedUsername;
+                    }
+                });
+        }
+        
     }
 
     private createAgentForm(): void {

@@ -9,11 +9,11 @@ use App\User;
 class RoleService 
 {
 
-    public function saveRole(User $user, $roleId) 
+    public function saveRole($user, $roleId) 
     {
         $result = new ApiResource();
 
-        $curr = Role::byRoleId($roleId)->first();
+        $curr = Role::userId($user->id)->first();
 
         if(is_null($curr)) 
         {

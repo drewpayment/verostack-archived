@@ -11,7 +11,10 @@
         <input matInput type="text" placeholder="Last Name" formControlName="lastName" required />
       </mat-form-field>
       <mat-form-field>
-        <input matInput type="text" placeholder="Username" formControlName="username" required />
+        <input matInput type="text" placeholder="Username" formControlName="username" required (blur)="checkUsernameAvailability()" />
+        <mat-error *ngIf="userForm.get('username').hasError('unavailable')">
+            Sorry, that username is unavailable. What about <strong>{{suggestedUsername}}</strong>? 
+        </mat-error>
       </mat-form-field>
       <mat-form-field>
         <input matInput type="text" placeholder="Email" formControlName="email" required />

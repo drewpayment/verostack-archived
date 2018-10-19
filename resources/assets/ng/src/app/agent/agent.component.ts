@@ -42,6 +42,10 @@ export class AgentComponent implements OnInit {
     floatOpen$:Observable<boolean>;
     form:FormGroup;
 
+    searchContext:string;
+    showSearchContextChip:boolean = false;
+    searchChipValue:string;
+
     constructor(
         private service:AgentService,
         private session:SessionService,
@@ -167,6 +171,29 @@ export class AgentComponent implements OnInit {
                     }
                 })
         });    
+    }
+
+    searchAgents(event) {
+        this.searchContext = event.target.value;
+
+        let agentsResult = _.filter(this.store.users, (u:IUser) => {
+            return u.firstName.concat(u.lastName).toLowerCase().trim().includes(this.searchContext);
+        });
+
+        this.users$.next(agentsResult as UserView[]);
+    }
+
+    handleSearchContext() {
+        if(this.searchContext != null) {
+            this.searchChipValue = this.searchContext;
+            this.searchContext = null;
+            this.showSearchContextChip = true;
+        }            
+    }
+
+    removeSearchChip() {
+        this.searchChipValue = null;
+        this.showSearchContextChip = false;
     }
 
 }

@@ -41,4 +41,6 @@ Route::middleware(['auth:api'])->group(function() {
 
 	Route::post('clients/{clientId}/users/{userId}', 'UserController@updateUserAgentDetailEntities');
 
+    Route::get('usernames', 'UserController@checkUsernameAvailability');
+
 });

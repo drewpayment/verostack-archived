@@ -40,6 +40,13 @@ export class AgentService {
             );
     }
 
+    checkUsernameAvailability(username:string):Observable<boolean> {
+        return this.http.get<boolean>(`${this.api}/usernames?u=${username}`)
+            .pipe(
+                catchError(this.handleError)
+            );
+    }
+
     private handleError(error:HttpErrorResponse) {
         if(error.error instanceof ErrorEvent) {
             console.log('Error occurred: ', error.error.message || error.message);

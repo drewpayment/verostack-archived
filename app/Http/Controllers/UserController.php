@@ -216,20 +216,22 @@ class UserController extends Controller
 		$this->service->saveUser($u, $d, $clientId)
 		              ->mergeInto($result);
 
+        $savedUser = (object)$result->getData();
+
         $role = $this->roleService
-            ->saveRole($u, $r->role)
+            ->saveRole((object)$savedUser, $r->role)
             ->mergeInto($result)
             ->getData();
 
 		if($result->hasError)
 			return $result->throwApiException()->getResponse();
 
-		$a['userId'] = $result->getData()['id'];
+		$a['userId'] = $savedUser->id;
 
 		$this->agentService->saveNewAgentEntity($a)->mergeInto($result);
 
 		return $result
-			->setData(User::with(['detail', 'agent', 'role'])->userId($u->id)->first())
+			->setData(User::with(['detail', 'agent', 'role'])->userId($savedUser->id)->first())
 			->throwApiException()
 			->getResponse();
     }
@@ -376,6 +378,18 @@ class UserController extends Controller
             ->mergeInto($result);
         
         return $result
+            ->throwApiException()
+            ->getResponse();
+    }
+
+    public function checkUsernameAvailability(Request $request)
+    {
+        $result = new ApiResource();
+
+        $existing = User::username($request->u)->first();
+
+        return $result
+            ->setData(is_null($existing))
             ->throwApiException()
             ->getResponse();
     }
