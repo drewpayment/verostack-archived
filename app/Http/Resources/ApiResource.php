@@ -84,6 +84,22 @@ class ApiResource {
 		return !is_null($this->data);
 	}
 
+    /**
+     * Sets the ApiResource to success/fail based on the truthy value 
+     * passed into the method.
+     *
+     * @param [boolean] $status
+     * @return ApiResource
+     */
+    public function setStatus($status)
+    {
+        if($status)
+            $this->setToSuccess();
+        else
+            $this->setToFail();
+        return $this;
+    }
+
 	/**
 	 * Sets the resource to success and updates the response.
 	 *

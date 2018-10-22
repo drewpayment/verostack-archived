@@ -67,7 +67,7 @@ class AgentService {
 	{
 		$result = new ApiResource();
 
-		$agents = Client::with(['users.agent', 'users.detail'])
+		$agents = Client::with(['users.agent', 'users.detail', 'users.agent.pairings'])
 	                    ->clientId($clientId)
 						->first()
 						->users;

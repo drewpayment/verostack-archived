@@ -10,10 +10,12 @@ import { catchError } from 'rxjs/operators';
 })
 export class CampaignService {
   private apiUrl:string;
+  private api:string;
   campaign:ICampaign;
 
   constructor(private http:HttpClient, private auth:AuthService) {
     this.apiUrl = this.auth.apiUrl + 'api/' || '';
+    this.api = this.auth.apiUrl + 'api';
   }
 
   // TODO: do I even use this anywhere?
@@ -31,6 +33,13 @@ export class CampaignService {
       ? `${this.apiUrl}campaigns/clients/${clientId}/active`
       : `${this.apiUrl}campaigns/clients/${clientId}/active/${activeOnly}`;
     return this.http.get<ICampaign[]>(url).toPromise();
+  }
+
+  getCampaignsByClient(clientId:number):Observable<ICampaign[]> {
+      return this.http.get<ICampaign[]>(`${this.api}/campaigns/clients/${clientId}`)
+        .pipe(
+            catchError(this.handleError)
+        );
   }
 
   /**

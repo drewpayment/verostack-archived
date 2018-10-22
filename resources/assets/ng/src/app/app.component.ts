@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild, ChangeDetectorRef, AfterViewChecked, AfterViewInit} from '@angular/core';
+import {Component, OnInit, ViewChild, ChangeDetectorRef, AfterViewChecked, AfterViewInit, AfterContentInit} from '@angular/core';
 import {Observable, Subscription, of} from 'rxjs';
 import {SessionService} from './session.service';
 import {MatSidenav} from '@angular/material';
@@ -13,9 +13,9 @@ import { Router } from '@angular/router';
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit, AfterViewChecked {
+export class AppComponent implements OnInit, AfterViewChecked, AfterContentInit {
     title = 'app';
-    // loading:boolean = true;
+    loading:boolean = true;
     loggedInStatus: Observable<boolean>;
     loading$: Observable<boolean>;
     opened$: Observable<boolean>;
@@ -37,6 +37,10 @@ export class AppComponent implements OnInit, AfterViewChecked {
         // wire up our extension methods
         MomentExtensions.init();
         this.session.loading$.subscribe(next => {
+            // dev only bug -
+            // https://stackoverflow.com/questions/39787038/how-to-manage-angular2-expression-has-changed-after-it-was-checked-exception-w
+            if (!environment.production) this.cd.detectChanges();
+
             if(next == null) return;
             this.loading$ = of(next);
             this._loading = next;
@@ -54,13 +58,15 @@ export class AppComponent implements OnInit, AfterViewChecked {
         this.session.loadUserStorageItem();
     }
 
-    ngAfterViewChecked() {
-        // initialize our sidenav service
-        this.sidenavService.setSidenav(this.sidenav);
-
+    ngAfterContentInit() {
         //Called after ngOnInit when the component's or directive's content has been initialized.
         //Add 'implements AfterContentInit' to the class.
         // this.loading = this.session.loadingState;
+    }
+
+    ngAfterViewChecked() {
+        // initialize our sidenav service
+        this.sidenavService.setSidenav(this.sidenav);
 
         // dev only bug -
         // https://stackoverflow.com/questions/39787038/how-to-manage-angular2-expression-has-changed-after-it-was-checked-exception-w

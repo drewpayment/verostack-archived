@@ -15,6 +15,7 @@ import { FabFloatBtnModule } from '@app/fab-float-btn/fab-float-btn.module';
 import { PipesModule } from '@app/pipes/pipes.module';
 import { EditAgentDialogComponent } from './agent/edit-agent-dialog/edit-agent-dialog.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { PublicHomeComponent } from './public-home/public-home.component';
 
 @NgModule({
   imports: [
@@ -36,7 +37,8 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
     ScrollLockDirective,
     HeaderComponent,
     AgentComponent,
-    EditAgentDialogComponent
+    EditAgentDialogComponent,
+    PublicHomeComponent
   ],
   entryComponents: [
     EditAgentDialogComponent

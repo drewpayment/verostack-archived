@@ -13,9 +13,11 @@ import { CampaignsComponent } from '@app/campaigns/campaigns.component';
 import { DailySaleTrackerComponent } from '@app/daily-sale-tracker/daily-sale-tracker.component';
 import { environment } from '@env/environment';
 import { AgentComponent } from '@app/agent/agent.component';
+import { PublicHomeComponent } from '@app/public-home/public-home.component';
 
 const routes: Routes = [
-    { path: '', redirectTo: 'login', pathMatch: 'full' },
+    { path: '', redirectTo: 'home', pathMatch: 'full' },
+    { path: 'home', component: PublicHomeComponent },
     { path: 'login', component: LoginComponent },
     { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
     { path: 'my-information', component: MyInformationComponent, canActivate: [AuthGuard] },
@@ -24,7 +26,7 @@ const routes: Routes = [
     { path: 'payroll-tools', component: PayrollComponent, canActivate: [AuthGuard] },
     { path: 'agents', component: AgentComponent, canActivate: [AuthGuard] },
     { path: 'daily-tracker', component: DailySaleTrackerComponent, canActivate: [AuthGuard] },
-    // { path: '**', component: AppComponent }
+    { path: '**', redirectTo: 'home' }
 ]
 
 @NgModule({

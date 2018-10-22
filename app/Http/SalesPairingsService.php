@@ -90,22 +90,32 @@ class SalesPairingsService {
 
 		foreach($pairings as $pairing)
 		{
-			$model = !is_null($pairing['salesPairingsId'])
-				? SalesPairing::salesPairings($pairing['salesPairingsId'])->first()
-				: new SalesPairing;
-
-			$model->agent_id = $pairing['agentId'];
-			$model->campaign_id = $pairing['campaignId'];
-			$model->sales_id = $pairing['salesId'];
-			$model->client_id = $pairing['clientId'];
-
-			$success = $model->save();
-			if(!$success) return $result->setToFail();
-			$resultPairings[] = $this->helper->normalizeLaravelObject($model->toArray());
+			$resultPairings[] = $this->helper->normalizeLaravelObject($this->saveSalesPairing($pairing));
 		}
 
 		return $result->setData($resultPairings);
 	}
+
+    /**
+     * @param $pairing
+     * @return ApiResource
+     */
+    public function saveSalesPairing($pairing)
+    {
+        $result = new ApiResource();
+        $model = SalesPairing::salesPairings($pairing['salesPairingsId'])->first();
+        if(is_null($model))
+            $model = new SalesPairing;
+
+        $model->agent_id = $pairing['agentId'];
+        $model->campaign_id = $pairing['campaignId'];
+        $model->sales_id = $pairing['salesId'];
+        $model->client_id = $pairing['clientId'];
+
+        $success = $model->save();
+        if(!$success) return $result->setToFail();
+        return $result->setData($model);
+    }
 
 	/**
 	 * Delete an existing sales pairings entity by id.

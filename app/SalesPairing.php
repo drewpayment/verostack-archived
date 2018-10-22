@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Agent;
 use Illuminate\Database\Eloquent\Model;
 
 class SalesPairing extends Model
@@ -19,6 +20,12 @@ class SalesPairing extends Model
 	protected $table = 'sales_pairings';
 
 	protected $primaryKey = 'sales_pairings_id';
+
+    
+    public function agent()
+    {
+        return $this->belongsTo(Agent::class, 'agent_id');
+    }
 
 	/**
 	 * @param $query \Illuminate\Database\Eloquent\Builder

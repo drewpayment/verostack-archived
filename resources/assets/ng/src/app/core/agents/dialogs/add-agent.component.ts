@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit, ViewChildren, QueryList, AfterContentInit, AfterContentChecked, AfterViewChecked} from '@angular/core';
+import {Component, Inject, OnInit, ViewChildren, QueryList, AfterContentInit, AfterContentChecked, AfterViewChecked, ViewChild, ElementRef} from '@angular/core';
 import {MatDialogRef, MAT_DIALOG_DATA, MatInput} from '@angular/material';
 import {IUser, IUserDetail, IAgent} from '@app/models';
 import {FormGroup, FormBuilder, Validators, FormControl, NgControl} from '@angular/forms';
@@ -12,6 +12,9 @@ import {SessionService} from '@app/session.service';
 import { catchError } from 'rxjs/operators';
 import { RoleType } from '@app/models/role.model';
 import { AgentService } from '@app/agent/agent.service';
+import { Observable, of } from 'rxjs';
+import { ValidatorError, ValidatorErrorDetail, LaravelErrorResponse } from '@app/models/validator-error.model';
+import { HttpErrorResponse } from '@angular/common/http';
 
 interface IKeyValue {
     key: string | number;
@@ -42,6 +45,7 @@ export class AddAgentDialogComponent implements OnInit {
     managers: IAgent[];
     roleTypes:RoleType[];
     usernameTaken:boolean = false;
+    attemptedUsername:string;
     suggestedUsername:string;
 
     @ViewChildren(MatInput) inputs:QueryList<MatInput>;
@@ -119,7 +123,25 @@ export class AddAgentDialogComponent implements OnInit {
         this.userService
             .saveNewUserAgentEntity(this.userEntity, this.agentEntity, this.detailEntity, this.user.selectedClient.clientId, role)
             .pipe(
-                catchError(this.msg.showObserverError)
+                catchError((resp:LaravelErrorResponse, caught:Observable<boolean>) => {
+                    let keys = Object.keys(resp.error.errors);
+                    let errorDisplaymsg:string = 'Errors: ';
+
+                    keys.forEach(key => {
+                        let propErrors:string[] = resp.error.errors[key];
+                        if(!_.isArray(propErrors)) return;
+                        propErrors.forEach((pe:string, i:number) => {
+                            errorDisplaymsg += `(${i + 1}) ${pe}`;
+                        });
+
+                        if(key == 'email') 
+                            this.userForm.controls.email.setErrors({ notUnique: true });
+                    });
+
+                    this.msg.addMessage(errorDisplaymsg, 'dismiss');
+
+                    return of(false);
+                })
             )
             .subscribe(result => {
                 if(!result) return;
@@ -246,6 +268,8 @@ export class AddAgentDialogComponent implements OnInit {
         }) as MatInput;
 
         const username:string = usernameInput.value;
+        this.attemptedUsername = username;
+        if(username.length < 1) return;
 
         if(this.userForm.controls.username.errors != null && this.userForm.controls.username.errors.unavailable) {
             this.userForm.patchValue({ username: username });

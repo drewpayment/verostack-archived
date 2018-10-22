@@ -7,14 +7,19 @@
     </span>
     <span routerLink="/">{{menuTitle | async}}</span>
     <span class="toolbar-spacer"></span>
-    <button mat-icon-button [matMenuTriggerFor]="menu">
+    <button mat-icon-button [matMenuTriggerFor]="menu" *ngIf="(loggedInStatus | async); else loggedOut">
       <mat-icon>more_vert</mat-icon>
     </button>
     <mat-menu #menu="matMenu" class="mat-menu">
       <button mat-menu-item *ngIf="(loggedInStatus | async) && showClientSelector" (click)="openDialog()">Change Client</button>
       <!-- <button mat-menu-item *ngIf="isAdmin"></button> -->
-      <button mat-menu-item (click)="onLogout()" *ngIf="(loggedInStatus | async); let loggedIn; else loggedOut;">Logout</button>
-      <ng-template #loggedOut><button mat-menu-item routerLink="/login"> Login </button></ng-template>
+      <button mat-menu-item (click)="onLogout()" *ngIf="(loggedInStatus | async)">Logout</button>
+      <!-- <ng-template #loggedOut><button mat-menu-item routerLink="/login"> Login </button></ng-template> -->
     </mat-menu>
+    <ng-template #loggedOut>
+        <button type="button" mat-icon-button [routerLink]="['/login']">
+            <mat-icon>exit_to_app</mat-icon>
+        </button>
+    </ng-template>
   </mat-toolbar-row>
 </mat-toolbar>

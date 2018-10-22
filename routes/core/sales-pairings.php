@@ -23,5 +23,5 @@ Route::group(['prefix' => 'sales-pairings', 'middleware' => 'auth:api'], functio
 
 Route::get('clients/{clientId}/agents/{agentId}/sales-pairings', 'SalesPairingsController@getSalesPairings');
 
-Route::post('agents/{agentId}/sales-pairings', 'SalesPairingsController@saveAgentSalesPairings');
+Route::post('agents/{agentId}/sales-pairings/{salesPairingId?}', 'SalesPairingsController@saveSalesPairing');
 

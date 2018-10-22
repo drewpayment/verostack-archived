@@ -107,6 +107,20 @@ class SalesPairingsController extends Controller
 			->getResponse();
 	}
 
+    /**
+     * @param Request $request
+     * @return mixed
+     */
+    public function saveSalesPairing(Request $request, $agentId, $salesPairingsId = null)
+    {
+        $result = new ApiResource();
+        return $this->service
+            ->saveSalesPairing($request)
+            ->mergeInto($result)
+            ->throwApiException()
+            ->getResponse();
+    }
+
 
 	/**
 	 * @param Request $r

@@ -23,6 +23,7 @@ include('core/invoices.php');
 include('core/sales-status.php');
 include('core/daily-sale.php');
 include('core/agents.php');
+include('core/contacts.php');
 
 //Route::middleware('auth:api')->get('/user', function (Request $request) {
 //    return $request->user();

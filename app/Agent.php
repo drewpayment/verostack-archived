@@ -106,6 +106,11 @@ class Agent extends Model
 		return $this->hasMany(SalesPairing::class);
 	}
 
+    public function pairings()
+    {
+        return $this->hasMany(SalesPairing::class, 'agent_id');
+    }
+
 	/**
 	 * Agent has one user record.
 	 *

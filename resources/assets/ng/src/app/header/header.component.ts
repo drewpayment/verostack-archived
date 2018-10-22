@@ -15,7 +15,7 @@ import { SidenavService } from '@app/sidenav/sidenav.service';
     styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit, AfterViewInit {
-    private defaultTitle: string = 'Verostack Development';
+    private defaultTitle: string = 'Verostack Dynamics';
 
     isLoggedIn: boolean;
     user: IUser;

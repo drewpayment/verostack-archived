@@ -12,7 +12,13 @@ export class MessageService {
 
     constructor(private bar: MatSnackBar, private session: SessionService) {}
 
-    addMessage(message: string, action?: string, duration?: number): void {
+    /**
+     * @param message string
+     * @param action string @default 'dismiss'
+     * @param duration number @default null Results in message that will not disappear until 
+     * explicitly closed by the user. 
+     */
+    addMessage(message: string, action:string = 'dismiss', duration:number = null): void {
         let options = duration > 0 ? {duration: duration} : {};
         this.openBar = this.bar.open(message, action, options);
         this.session.hideLoader();

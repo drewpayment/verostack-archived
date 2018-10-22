@@ -51,6 +51,20 @@ class CampaignController extends Controller
 			->getResponse();
 	}
 
+    /**
+     * Get campaigns by client.
+     * 
+     * @param $clientId
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getCampaignsByClient($clientId)
+    {
+        $result = new ApiResource();
+        return $result->setData(Campaign::byClientId($clientId)->get())
+            ->throwApiException()
+            ->getResponse();
+    }
+
 	/**
 	 * @param $clientId
 	 * @param $agentId

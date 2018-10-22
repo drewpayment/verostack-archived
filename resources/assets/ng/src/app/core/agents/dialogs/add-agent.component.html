@@ -13,11 +13,17 @@
       <mat-form-field>
         <input matInput type="text" placeholder="Username" formControlName="username" required (blur)="checkUsernameAvailability()" />
         <mat-error *ngIf="userForm.get('username').hasError('unavailable')">
-            Sorry, that username is unavailable. What about <strong>{{suggestedUsername}}</strong>? 
+            Sorry, that username is unavailable. 
+            <ng-container *ngIf="suggestedUsername.length && suggestedUsername != attemptedUsername">
+                What about <strong>{{suggestedUsername}}</strong>?
+            </ng-container> 
         </mat-error>
       </mat-form-field>
       <mat-form-field>
-        <input matInput type="text" placeholder="Email" formControlName="email" required />
+        <input matInput type="text" placeholder="Email" formControlName="email" required #emailInput />
+        <mat-error *ngIf="userForm.get('email').hasError('notUnique')">
+            Users cannot share email addresses. This one has already been used. Please try again. 
+        </mat-error>
       </mat-form-field>
       <mat-form-field class="clickable" (click)="copyPasswordText(userForm.value.password)">
         <input matInput

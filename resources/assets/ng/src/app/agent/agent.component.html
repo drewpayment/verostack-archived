@@ -3,20 +3,12 @@
     <div class="row">
         <div class="col-md-12 d-flex align-items-baseline">
             <mat-form-field>
-                <!-- <input matInput type="text" placeholder="Search Agents" (keyup)="searchAgents($event)" [value]="searchContext" (blur)="handleSearchContext()" /> -->
                 <input matInput type="text" placeholder="Search Agents" (keyup)="searchAgents($event)" />
             </mat-form-field>
-            <!-- <ng-container *ngIf="showSearchContextChip">
-                <mat-chip-list>
-                    <mat-chip 
-                        removable="true" 
-                        selectable="false" 
-                        (removed)="removeSearchChip()"
-                    >
-                        {{searchChipValue}} <mat-icon matChipRemove>cancel</mat-icon>
-                    </mat-chip>
-                </mat-chip-list>
-            </ng-container> -->
+            <button type="button" class="mx-3" mat-icon-button (click)="toggleSortUsers()">
+                <mat-icon>sort_by_alpha</mat-icon>
+                <mat-icon>{{sortAscending ? 'arrow_drop_up' : 'arrow_drop_down'}}</mat-icon>
+            </button>
         </div>
     </div>
     <div class="row">
@@ -33,15 +25,18 @@
                         <li class="nav-item" *ngIf="user.detail != null">
                             <button mat-button class="nav-link" [class.active]="user.display === 1" (click)="user.display = 1">Detail</button>
                         </li>
+                        <li class="nav-item">
+                            <button mat-button class="nav-link" [class.active]="user.display === 2" (click)="user.display = 2">Sales</button>
+                        </li>
                     </ul>
                     <button class="p-0 hover-item" type="button" mat-icon-button (click)="editAgent(user)">
                         <mat-icon color="accent">edit</mat-icon>
                     </button>
                 </div>
-                <div class="card-body">
+                <div class="card-body" [class.card-body-auto]="user.display === 2">
                     <ng-container *ngIf="user.display === 0">
                         <div class="d-flex flex-column justify-content-center align-items-center" style="width:100%;height:100%;">
-                            <h3 class="card-title" [class.text-danger]="!user.agent.isActive">
+                            <h3 class="card-title" [class.text-muted]="!user.agent.isActive">
                                 {{user.firstName}} {{user.lastName}} <small *ngIf="!user.agent.isActive">(Inactive)</small>
                             </h3>
                             <div class="d-flex align-items-center text-muted">
@@ -83,6 +78,75 @@
                             <span class="font-weight-bold">Account: </span>
                             <span class="font-weight-light">{{user.detail.bankAccount}}</span>
                         </div>
+                    </ng-container>
+                    <ng-container *ngIf="user.display === 2" [formGroup]="user.pairingsForm">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <p class="font-weight-light font-italic text-muted">
+                                {{user.firstName}} {{user.lastName}}
+                            </p>
+                            <button type="button" 
+                                mat-button 
+                                class="float-right" 
+                                (click)="addEmptyPairing(user.pairingsForm.controls['array'], user.agent.pairings)"
+                                [disabled]="disableAddPairingBtn"
+                            >
+                                <mat-icon>add</mat-icon> Pairing
+                            </button>
+                        </div>
+                        
+                        <div formArrayName="array" *ngIf="user.agent.pairings.length; else noPairings">
+                            <mat-card *ngFor="let pairing of user.agent.pairings; let i=index">
+                                <mat-card-content [formGroupName]="i" class="mb-0">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <mat-form-field>
+                                                <mat-select placeholder="Campaign" formControlName="campaignId" required>
+                                                    <mat-option *ngFor="let campaign of campaigns" [value]="campaign.campaignId">
+                                                        {{campaign.name}}
+                                                    </mat-option>
+                                                </mat-select>
+                                                <mat-error *ngIf="user.pairingsForm.controls['array'].controls[i].hasError('required')">
+                                                    Please select a campaign.
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-md-6 d-flex">
+                                            <mat-form-field class="flex-grow-1">
+                                                <input matInput type="text" placeholder="Code" formControlName="salesId" required #pairingRows />
+                                                <mat-icon matSuffix
+                                                    color="primary"
+                                                    class="clickable"
+                                                    *ngIf="user.pairingsForm.controls['array'].controls[i].value.salesPairingsId > 0 && user.pairingsForm.controls['array'].controls[i].dirty"
+                                                    (click)="savePairingUpdate(user.pairingsForm.controls['array'].controls[i], user)"
+                                                >save</mat-icon>
+                                                <mat-error *ngIf="user.pairingsForm.controls['array'].controls[i].hasError('required')">
+                                                    Please enter a sales ID.
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                </mat-card-content>
+                                <mat-card-actions class="d-flex" *ngIf="pairing.salesPairingsId == null || pairing.salesPairingsId < 1">
+                                    <button type="button" mat-button 
+                                        *ngIf="user.pairingsForm.controls['array'].controls[i].touched" 
+                                        (click)="cancelNewPairing(user.pairingsForm.controls['array'].controls[i], user, i)"
+                                    >
+                                        <mat-icon>clear</mat-icon> Cancel
+                                    </button>
+                                    <button type="button" mat-button color="primary" 
+                                        [disabled]="user.pairingsForm.invalid" 
+                                        (click)="saveNewPairing(user.pairingsForm.controls['array'].controls[i], user)"
+                                    >
+                                        <mat-icon>save</mat-icon> Save
+                                    </button>
+                                </mat-card-actions>
+                            </mat-card>
+                        </div>
+                        <ng-template #noPairings>
+                            <h5 class="text-muted">
+                                Click the <span class="font-italic">+ Pairings</span> button to get started.
+                            </h5>
+                        </ng-template>
                     </ng-container>
                 </div>
             </div>

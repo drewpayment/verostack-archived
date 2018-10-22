@@ -5,7 +5,8 @@ import {
   OnChanges,
   OnDestroy,
   OnInit,
-  SimpleChanges
+  SimpleChanges,
+  ChangeDetectorRef
 } from '@angular/core';
 
 @Directive({
@@ -18,7 +19,7 @@ export class ScrollLockDirective implements OnInit, OnChanges, OnDestroy {
 
   private element:HTMLElement;
 
-  constructor(elementRef:ElementRef, private zone:NgZone) {
+  constructor(elementRef:ElementRef, private zone:NgZone, private cd:ChangeDetectorRef) {
     this.element = elementRef.nativeElement;
   }
 
@@ -30,6 +31,8 @@ export class ScrollLockDirective implements OnInit, OnChanges, OnDestroy {
     } else {
       this.element.removeAttribute('tabIndex');
     }
+
+    this.cd.detectChanges();
   }
 
   ngOnDestroy():void {

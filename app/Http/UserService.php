@@ -256,6 +256,6 @@ class UserService
             return $result->setToFail();
         else 
             return $result
-                ->setData(User::with(['detail', 'agent'])->userId($user->id)->first());
+                ->setData(User::with(['detail', 'agent', 'agent.pairings'])->userId($user->id)->first());
     }
 }

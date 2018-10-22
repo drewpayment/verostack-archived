@@ -12,6 +12,7 @@ use App\User;
 use App\Http\UserService;
 use Illuminate\Http\Request;
 use App\Http\RoleService;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -208,6 +209,13 @@ class UserController extends Controller
     public function saveNewUserAgentEntity(Request $r, $clientId)
     {
     	$result = new ApiResource();
+
+        Validator::make($r->user, [
+            'username' => 'required|unique:users',
+            'email' => 'required|unique:users',
+            'firstName' => 'required',
+            'lastName' => 'required'
+        ])->validate();
 
     	$u = $r->user;
     	$a = $r->agent;
