@@ -38,7 +38,38 @@ class ContactController extends Controller
             ->getResponse();
     }
 
+    /**
+     * Save a new contact entity.
+     *
+     * @param Request $request
+     * @param [int] $clientId
+     * @return JsonResponse
+     */
     public function newContact(Request $request, $clientId)
+    {
+        $result = new ApiResource();
+
+        $result
+			->checkAccessByClient($clientId, Auth::user()->id)
+			->mergeInto($result);
+
+        $this->service->saveContact($request)
+            ->mergeInto($result);
+
+        return $result
+            ->throwApiException()
+            ->getResponse();
+    }
+
+    /**
+     * Update an existing Contact entity. 
+     *
+     * @param Request $request
+     * @param [int] $clientId
+     * @param [int] $contactId
+     * @return JsonResponse
+     */
+    public function updateContact(Request $request, $clientId, $contactId)
     {
         $result = new ApiResource();
 

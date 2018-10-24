@@ -1,99 +1,106 @@
-<mat-toolbar color="primary" *ngIf="(user | async) != null">
-  <mat-toolbar-row>
-    <i class="material-icons md-48 mt-3">account_circle</i>
-    <span class="fill-remaining-space"></span>
-    <button mat-button (click)="toggleSidenav()" class="sidenav-close">
-        <i class="material-icons">close</i>
-    </button>
-  </mat-toolbar-row>
-  <mat-toolbar-row class="d-flex flex-column align-items-start mb-2 mt-3">
-    {{(user | async).firstName}} {{(user | async).lastName}}
-    <small>{{(user | async).email}}</small>
-  </mat-toolbar-row>
+<mat-toolbar color="primary" *ngIf="user != null">
+    <mat-toolbar-row>
+        <i class="material-icons md-48 mt-3">account_circle</i>
+        <span class="fill-remaining-space"></span>
+        <button mat-button (click)="toggleSidenav()" class="sidenav-close">
+            <i class="material-icons">close</i>
+        </button>
+    </mat-toolbar-row>
+    <mat-toolbar-row class="d-flex flex-column align-items-start mb-2 mt-3">
+        {{user.firstName}} {{user.lastName}}
+        <small>{{user.email}}</small>
+    </mat-toolbar-row>
 </mat-toolbar>
 
-<mat-nav-list *ngIf="(user|async) != null">
-  <!-- all users -->
-  <a mat-list-item routerLink="dashboard" routerLinkActive="mat-router-link-active">
-    <i class="material-icons px-1">pie_chart</i>
-    <span>My Work</span>
-  </a>
-  <a mat-list-item routerLink="my-information" routerLinkActive="mat-router-link-active">
-    <i class="material-icons px-1">info_outline</i>
-    <span>My Information</span>
-  </a>
+<mat-nav-list *ngIf="user != null">
+    <!-- all users -->
+    <a mat-list-item routerLink="dashboard" routerLinkActive="mat-router-link-active">
+        <i class="material-icons px-1">pie_chart</i>
+        <span>My Work</span>
+    </a>
+    <a mat-list-item routerLink="my-information" routerLinkActive="mat-router-link-active">
+        <i class="material-icons px-1">info_outline</i>
+        <span>My Information</span>
+    </a>
+    <a mat-list-item 
+        routerLink="daily-tracker" 
+        routerLinkActive="mat-router-link-active"
+        *ngIf="user.role.role < roleType.supervisor && user.role.isSalesAdmin"
+    >
+        <i class="material-icons px-1">ballot</i>
+        <span>Daily Tracker</span>
+    </a>
 
-  <!-- agents only -->
-  <ng-template *ngIf="(user|async).role.role < roleType.companyAdmin">
-    <a mat-list-item class="hide">
-      <i class="material-icons px-1">monetization_on</i>
-      <span>My Pay</span>
-    </a>
-    <a mat-list-item class="hide">
-      <i class="material-icons px-1">library_books</i>
-      <span>My Documents</span>
-    </a>
-    <a mat-list-item class="hide">
-      <i class="material-icons px-1">chat_bubble</i>
-      <span>Messages</span>
-    </a>
-  </ng-template>
+    <!-- agents only -->
+    <ng-template *ngIf="user.role.role < roleType.companyAdmin">
+        <a mat-list-item class="hide">
+            <i class="material-icons px-1">monetization_on</i>
+            <span>My Pay</span>
+        </a>
+        <a mat-list-item class="hide">
+            <i class="material-icons px-1">library_books</i>
+            <span>My Documents</span>
+        </a>
+        <a mat-list-item class="hide">
+            <i class="material-icons px-1">chat_bubble</i>
+            <span>Messages</span>
+        </a>
+    </ng-template>
 
-  <!-- do we have hr level links? -->
+    <!-- do we have hr level links? -->
 
-  <!-- company admin+ -->
-  <ng-container *ngIf="(user|async).role.role >= roleType.companyAdmin">
-    <a mat-list-item routerLink="daily-tracker" routerLinkActive="mat-router-link-active">
-      <i class="material-icons px-1">ballot</i>
-      <span>Daily Tracker</span>
-    </a>
-    <a mat-list-item routerLink="client-information" routerLinkActive="mat-router-link-active">
-      <i class="material-icons px-1">business</i>
-      <span>Client Information</span>
-    </a>
-    <a mat-list-item class="hide">
-      <i class="material-icons px-1">payment</i>
-      <span>Paystubs</span>
-    </a>
-    <a mat-list-item class="hide">
-      <i class="material-icons px-1">dashboard</i>
-      <span>Blog</span>
-    </a>
-    <a mat-list-item routerLink="agents" routerLinkActive="mat-router-link-active">
-      <i class="material-icons px-1">person</i>
-      <span>Agents</span>
-    </a>
-    <a mat-list-item class="hide">
-      <i class="material-icons px-1">monetization_on</i>
-      <span>Pay Status</span>
-    </a>
-    <!-- <a mat-list-item routerLink="payroll-tools" routerLinkActive="mat-router-link-active">
+    <!-- company admin+ -->
+    <ng-container *ngIf="user.role.role >= roleType.companyAdmin">
+        <a mat-list-item routerLink="daily-tracker" routerLinkActive="mat-router-link-active">
+            <i class="material-icons px-1">ballot</i>
+            <span>Daily Tracker</span>
+        </a>
+        <a mat-list-item routerLink="client-information" routerLinkActive="mat-router-link-active">
+            <i class="material-icons px-1">business</i>
+            <span>Client Information</span>
+        </a>
+        <a mat-list-item class="hide">
+            <i class="material-icons px-1">payment</i>
+            <span>Paystubs</span>
+        </a>
+        <a mat-list-item class="hide">
+            <i class="material-icons px-1">dashboard</i>
+            <span>Blog</span>
+        </a>
+        <a mat-list-item routerLink="agents" routerLinkActive="mat-router-link-active">
+            <i class="material-icons px-1">person</i>
+            <span>Agents</span>
+        </a>
+        <a mat-list-item class="hide">
+            <i class="material-icons px-1">monetization_on</i>
+            <span>Pay Status</span>
+        </a>
+        <!-- <a mat-list-item routerLink="payroll-tools" routerLinkActive="mat-router-link-active">
       <i class="material-icons px-1">build</i>
       <span>Payroll Entry</span>
     </a> -->
-    <a mat-list-item class="hide">
-      <i class="material-icons px-1">assignment_ind</i>
-      <span>Overrides</span>
-    </a>
-    <a mat-list-item routerLink="campaigns" routerLinkActive="mat-router-link-active">
-      <i class="material-icons px-1">assignment</i>
-      <span>Campaigns</span>
-    </a>
-    <a mat-list-item class="hide">
-      <i class="material-icons px-1">library_books</i>
-      <span>Documents</span>
-    </a>
-    <a mat-list-item class="hide">
-      <i class="material-icons px-1">face</i>
-      <span>Customers</span>
-    </a>
-    <!-- end of admin links -->
-  </ng-container>
+        <a mat-list-item class="hide">
+            <i class="material-icons px-1">assignment_ind</i>
+            <span>Overrides</span>
+        </a>
+        <a mat-list-item routerLink="campaigns" routerLinkActive="mat-router-link-active">
+            <i class="material-icons px-1">assignment</i>
+            <span>Campaigns</span>
+        </a>
+        <a mat-list-item class="hide">
+            <i class="material-icons px-1">library_books</i>
+            <span>Documents</span>
+        </a>
+        <a mat-list-item class="hide">
+            <i class="material-icons px-1">face</i>
+            <span>Customers</span>
+        </a>
+        <!-- end of admin links -->
+    </ng-container>
 
-  <!-- all users -->
-  <a mat-list-item class="hide">
-    <i class="material-icons px-1">info_outline</i>
-    <span>About</span>
-  </a>
+    <!-- all users -->
+    <a mat-list-item class="hide">
+        <i class="material-icons px-1">info_outline</i>
+        <span>About</span>
+    </a>
 </mat-nav-list>
-

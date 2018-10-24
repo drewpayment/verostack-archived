@@ -20,6 +20,7 @@ import { MessageService } from '@app/message.service';
 import { PortalOutlet, TemplatePortal } from '@angular/cdk/portal';
 import { CdkAccordionItem } from '@angular/cdk/accordion';
 import { map } from 'rxjs/operators';
+import { AgentService } from '@app/agent/agent.service';
 
 interface DataStore {
     user: IUser,
@@ -66,14 +67,15 @@ export class DashboardComponent implements OnInit, AfterContentInit {
 
     constructor(
         private session: SessionService,
-        private agentService: AgentsService,
+        private agentsService: AgentsService, /** we are going to deprecate this soon... 10/22/18 */
         private dialog: MatDialog,
         private campaignService: CampaignService,
         private clientService: ClientService,
         private dailySaleService: DailySaleTrackerService,
         public breakpoints: BreakpointObserver,
         private msg:MessageService,
-        private rend:Renderer2
+        private rend:Renderer2,
+        private agentService:AgentService
     ) {
         breakpoints.observe([
             Breakpoints.HandsetLandscape, 
@@ -95,43 +97,67 @@ export class DashboardComponent implements OnInit, AfterContentInit {
             this.store.user = u;
             this.user = of(u);
 
-            if (u.role.role > this.roleType.companyAdmin) {
-                this.agentService.getAgentsByClient(u.selectedClient.clientId)
+            if (u.role.role >= this.roleType.companyAdmin) {
+                this.agentsService.getAgentsByClient(u.selectedClient.clientId)
                     .subscribe((users:IUser[]) => {
                         this.store.users = users;
                         this.store.agents = this.mapUserToAgent(users);
                         this.agents = of(this.store.agents);
                         this.selectedAgent = this.store.agents[0];
-                        this.campaignService
-                            .getCampaignsByAgent(u.selectedClient.clientId, this.selectedAgent.agentId)
-                            .subscribe(campaigns => {
-                                this.store.campaigns = campaigns;
-                                this.campaigns = of(campaigns);
-                            });
-
-                        this.dailySaleService
-                            .getDailySalesByAgent(
-                                u.selectedClient.clientId,
-                                this.selectedAgent.agentId,
-                                this.startDate.toDateString(),
-                                this.endDate.toDateString()
-                            )
-                            .subscribe(sales => {
-                                this.store.sales = _.orderBy(sales, ['saleDate'], ['desc']);
-                                this.sales = of(this.store.sales);
-
-                                this.clientService.getSaleStatuses(u.selectedClient.clientId).subscribe(statuses => {
-                                    this.store.statuses = statuses;
-
-                                    // creates new chartjs object
-                                    this.createChart(sales);
-                                });
-                            });
+                        
+                        this.loadSales();
                     });
+            } else if (u.role.role == this.roleType.manager || u.role.role == this.roleType.supervisor) {
+
+                /** TODO: FIGURE OUT WHAT NEEDS TO HAPPEN HERE... HOW DO I GET JUST AGENTS FOR THIS USER */
+
+            } else {
+
+                if(this.store.user.agent == null) {
+                    this.agentService.getAgentByUser(this.store.user.selectedClient.clientId, this.store.user.id)
+                        .subscribe(agent => {
+                            this.selectedAgent = agent;
+                            
+                            /** After we've gotten a selected agent, let's load the sales */
+                            this.loadSales();
+                        });
+                } else {
+                    this.loadSales();
+                }
+
             }
+
         });
 
         
+    }
+
+    /**
+     * This is our beef cake, work horse method right here that does all the heavy lifting.
+     * 
+     * Make sure the user is set and selected agent is set before calling this. 
+     */
+    private loadSales():void {
+        this.campaignService.getCampaignsByAgent(this.store.user.selectedClient.clientId, this.selectedAgent.agentId)
+            .subscribe(campaigns => {
+                this.store.campaigns = campaigns;
+                this.campaigns = of(campaigns);
+            });
+
+        this.dailySaleService.getDailySalesByAgent(
+            this.store.user.selectedClient.clientId,
+            this.selectedAgent.agentId,
+            this.startDate.toDateString(),
+            this.endDate.toDateString()
+        ).subscribe(sales => {
+            this.store.sales = _.orderBy(sales, ['saleDate'], ['desc']);
+            this.sales = of(this.store.sales);
+
+            this.clientService.getSaleStatuses(this.store.user.selectedClient.clientId).subscribe(statuses => {
+                this.store.statuses = statuses;
+                this.createChart(sales);
+            });
+        })
     }
 
     ngAfterContentInit() {
@@ -378,6 +404,8 @@ export class DashboardComponent implements OnInit, AfterContentInit {
                         let existing = _.findIndex(this.store.sales, {dailySaleId: sale.dailySaleId});
 
                         if (existing == null) {
+                            if(this.store.sales == null) 
+                                this.store.sales = [];
                             this.store.sales.push(sale);
                             this.store.sales = _.orderBy(this.store.sales, ['saleDate'], ['desc']);
                         } else {

@@ -6,4 +6,6 @@ Route::middleware(['auth:api'])->group(function() {
 
     Route::post('clients/{$clientId}/contacts', 'ContactController@newContact');
 
+    Route::post('clients/{$clientId}/contacts/{$contactId}', 'ContactController@updateContact');
+
 });

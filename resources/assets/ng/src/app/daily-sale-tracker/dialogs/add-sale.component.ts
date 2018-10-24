@@ -66,7 +66,7 @@ export class AddSaleDialog implements OnInit {
     this.selectedCampaign = this.data.selectedCampaign;
     this.user = this.data.user;
 
-    if (this.isExistingSale) {
+    if (this.isExistingSale && this.data.campaigns == null) {
       this.campaignService.getCampaigns(this.user.selectedClient.clientId, false)
         .then(results => {
           this.campaigns = results;

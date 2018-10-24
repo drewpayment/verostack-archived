@@ -161,7 +161,7 @@
     </mat-card-actions>
   </form>
 </mat-card>
-<mat-card *ngIf="client.clientId !== null && client.clientId > 0 && user.selectedClient.options.hasOnboarding">
+<mat-card *ngIf="client.clientId !== null && client.clientId > 0 && hasOnboarding">
   <form #onboardingForm="ngForm" (ngSubmit)="saveOnboarding(onboardingForm)">
     <mat-card-header class="justify-content-between">
       <mat-card-title>

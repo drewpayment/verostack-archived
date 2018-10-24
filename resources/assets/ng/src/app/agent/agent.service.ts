@@ -33,6 +33,13 @@ export class AgentService {
             );
     }
 
+    getAgentByUser(clientId:number, userId:number):Observable<IUser> {
+        return this.http.get<IUser>(`${this.api}/clients/${clientId}/users/${userId}/agents`)
+            .pipe(
+                catchError(this.handleError)
+            );
+    }
+
     updateUserWithRelationships(clientId:number, user:IUser):Observable<IUser> {
         let url = `${this.api}/clients/${clientId}/users/${user.id}`;
         return this.http.post<IUser>(url, user)

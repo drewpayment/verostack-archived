@@ -95,30 +95,42 @@ class Helpers
                     ->with('sessionUser')
                     ->username($username)->first();
 
-	    $c = $user->sessionUser->client;
-
-	    $selectedClient = [
-		    'clientId' => $c->client_id,
-		    'name' => $c->name,
-		    'street' => $c->street,
-		    'city' => $c->city,
-		    'state' => $c->state,
-		    'zip' => $c->zip,
-		    'phone' => $c->phone,
-		    'taxid' => $c->taxid,
-		    'active' => ($c->active == 1),
-		    'options' => $this->normalizeLaravelObject($user->sessionUser->client->clientOption->toArray()),
-		    'modifiedBy' => $c->modified_by,
-		    'deletedAt' => $c->deleted_at,
-		    'createdAt' => $c->created_at,
-		    'updatedAt' => $c->updated_at
-	    ];
+        if(!is_null($user->sessionUser))
+        {
+            $c = $user->sessionUser->client;
+            $selectedClient = [
+                'clientId' => $c->client_id,
+                'name' => $c->name,
+                'street' => $c->street,
+                'city' => $c->city,
+                'state' => $c->state,
+                'zip' => $c->zip,
+                'phone' => $c->phone,
+                'active' => ($c->active == 1),
+                'options' => $this->normalizeLaravelObject($user->sessionUser->client->clientOption->toArray()),
+                'modifiedBy' => $c->modified_by,
+                'deletedAt' => $c->deleted_at,
+                'createdAt' => $c->created_at,
+                'updatedAt' => $c->updated_at
+            ];
+        }
+        else 
+        {
+            $client = (object)$user->clients->all()[0];
+            $selectedClient = [
+                'clientId' => $client->client_id,
+                'name' => $client->name,
+                'street' => $client->street,
+                'city' => $client->city,
+                'state' => $client->state,
+                'zip' => $client->zip,
+                'phone' => $client->phone,
+                'active' => ($client->active == 1),
+                'options' => null
+            ];
+        }
 
         $user['selectedClient'] = $selectedClient;
-
-//        $role = Role::userId($user['id'])->first();
-//
-//        $user['role'] = $this->normalizeLaravelObject($role->toArray());;
 
         $user = $this->normalizeLaravelObject($user->toArray());
 

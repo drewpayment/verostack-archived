@@ -13,6 +13,7 @@ import { LoadingSpinnerService } from '../loading-spinner/loading-spinner.servic
 import { CampaignService } from '../campaigns/campaign.service';
 import { SessionService } from '../session.service';
 import { Observable } from 'rxjs';
+import { UserRole } from '@app/models/role.model';
 
 @Component({
   selector: 'my-information',
@@ -31,7 +32,7 @@ export class MyInformationComponent implements OnInit {
   editDetails: boolean;
   joinDate: string;
   welcome: string;
-  hasOnboarding: boolean;
+  hasOnboarding: boolean = false;
   onboarding: IOnboarding;
 
   client: IClient = <IClient>{};
@@ -57,7 +58,11 @@ export class MyInformationComponent implements OnInit {
     this.session.showLoader();
     this.user$.subscribe(user => {
       this.user = user;
-      this.hasOnboarding = user.selectedClient.options.hasOnboarding;
+
+      /** set onboarding options */
+      this.hasOnboarding = user.selectedClient.options != null && user.role.role >= UserRole.companyAdmin 
+        ? user.selectedClient.options.hasOnboarding : false;
+
       this.client = user.selectedClient;
       this.welcome = user.firstName;
       this.joinDate = moment(user.createdAt.date).format('MMMM Do, YYYY');
@@ -69,21 +74,6 @@ export class MyInformationComponent implements OnInit {
         })
         .catch(this.msg.showWebApiError);
     });
-    // this.session.userItem.subscribe((user:IUser) => {
-    //   this.user = user;
-    //   this.hasOnboarding = this.user.selectedClient.options.hasOnboarding;
-    //   this.client = this.user.selectedClient;
-
-    //   this.welcome = this.user.firstName;
-    //   this.joinDate = moment(this.user.createdAt.date).format('MMMM Do, YYYY');
-
-    //   this.campaignService.getCampaigns(this.user.selectedClient.clientId)
-    //     .then((campaigns:ICampaign[]) => {
-    //       this.allCampaigns = campaigns;
-    //       this.session.hideLoader();
-    //     })
-    //     .catch(this.msg.showWebApiError);
-    // });
 
     // gets user's location from the browser
     navigator.geolocation.getCurrentPosition(pos => {

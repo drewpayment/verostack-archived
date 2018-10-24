@@ -287,12 +287,19 @@ export class DailySaleTrackerComponent implements OnInit {
 
         let dto = this.store.sales[index];
 
+        let campaign:ICampaign;
+        if(this.selectedCampaign.campaignId < 1) {
+            campaign = _.find(this.campaigns, {campaignId: dto.campaignId});
+        } else {
+            campaign = this.selectedCampaign;
+        }
+
         this.dialog
             .open(AddSaleDialog, {
                 width: '800px',
                 data: {
                     agents: this.agents,
-                    selectedCampaign: this.selectedCampaign,
+                    selectedCampaign: campaign,
                     sale: dto,
                     statuses: this.store.statuses,
                     campaigns: this.campaigns,

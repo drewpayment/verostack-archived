@@ -8,8 +8,18 @@ class Role extends Model
 {
 
 	protected $fillable = [
-		'user_id', 'role'
+		'user_id', 'role', 'is_sales_admin'
 	];
+
+    public function getIsSalesAdminAttribute($value)
+    {
+        return $value == 1;
+    }
+
+    public function setIsSalesAdminAttribute($value)
+    {
+        $this->attributes['is_sales_admin'] = $value ? 1 : 0;
+    }
 
 	public function user()
 	{

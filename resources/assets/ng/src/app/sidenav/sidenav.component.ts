@@ -23,19 +23,19 @@ export class SidenavComponent implements OnInit {
     user: 1
   }
 
-  user:Observable<IUser>;
+  user:IUser;
   role:any;
 
   constructor(
     private session:SessionService,
     private navService:SidenavService
-  ) {}
+  ) {
+    this.session.getUserItem().subscribe(u => this.user = u);
+  }
 
   ngOnInit() {
-    this.user = this.session.getUserItem();
-    // this.userService.user.subscribe((next: IUser) => {
-    //   if(next != null) this.user = next;
-    // }, err => this.msg.showWebApiError);
+    // this.session.getUserItem().subscribe(u => this.user = u);
+
 
     /**
      * Subscribe to router events, so that anytime the user clicks a

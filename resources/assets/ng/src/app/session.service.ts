@@ -109,7 +109,7 @@ export class SessionService {
         this.clearStorage();
         this.isLoginSubject.next(false);
         this.hasTokenSubject.next(false);
-        window.location.href = this.router.url;
+        window.location.href = rootUrl + '/#/login';
     }
 
     getUserItem(): Observable<IUser> {

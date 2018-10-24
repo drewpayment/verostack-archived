@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
 use App\Agent;
-use App\Http\AgentService;
 use App\Http\Helpers;
-use App\Http\Resources\ApiResource;
+use App\Http\AgentService;
 use Illuminate\Http\Request;
+use App\Http\Resources\ApiResource;
 use Illuminate\Support\Facades\Auth;
 
 class AgentController extends Controller
@@ -122,13 +123,25 @@ class AgentController extends Controller
 	 *
 	 * @return \Illuminate\Http\JsonResponse
 	 */
-	public function getAgentByUserId($userId)
+	public function getAgentByUser($clientId, $userId)
 	{
-		$agents = Agent::userId($userId)->get();
+        $result = new ApiResource();
 
-		$agents = $this->helpers->normalizeLaravelObject($agents->toArray());
+        $result
+            ->checkAccessByClient($clientId, Auth::user()->id)
+            ->mergeInto($result);
 
-		return response()->json($agents);
+        if($result->hasError)
+            return $result;
+
+        $agent = User::with('agent')->userId($userId)->first()->agent;
+
+        if($agent == null)
+            return $result->setToFail()->throwApiException()->getResponse();
+
+        return $result->setData($agent)
+            ->throwApiException()
+            ->getResponse();
 	}
 
 }
