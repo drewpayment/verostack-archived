@@ -13,8 +13,7 @@
     <base href="/">
 
     <link rel="icon" type="image/x-icon" href="favicon.ico">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">   
-    <link href="{{ asset('dist/styles.css') }}" rel="stylesheet"> 
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script>
         // https://github.com/angular/angular-cli/issues/9920
         // global shim was removed with release of Angular 6, but we still need shim for non-ng pkgs
