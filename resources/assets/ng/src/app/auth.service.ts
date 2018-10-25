@@ -1,21 +1,19 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable ,  Subscription } from 'rxjs';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { BehaviorSubject } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { SessionService } from './session.service';
 import { MessageService } from './message.service';
-
-import { IToken } from './models/token.model';
-import { HttpErrorResponse } from './models/http-error.model';
-import { IUser, User, IClient } from './models';
+import { IClient } from './models';
 import { IUserRole } from './models/role.model';
 import { UserService } from './user-features/user.service';
+import { environment } from 'environments/environment';
 
 @Injectable({
     providedIn: 'root'
 })
 export class AuthService {
-  apiUrl:string = 'http://verostack:8888/';
+  apiUrl:string = environment.apiUrl;
   roles: IUserRole[];
   redirectUrl: string = '/';
   private selectedClient: BehaviorSubject<IClient> = new BehaviorSubject<IClient>(null);
