@@ -12,7 +12,7 @@
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
             "outputPath": "../../../public/dist",
-            "index": "src/index.html",
+            "index": "../../../resources/views/layouts/app.blade.php",
             "main": "src/main.ts",
             "tsConfig": "src/tsconfig.app.json",
             "polyfills": "src/polyfills.ts",
@@ -39,6 +39,7 @@
           },
           "configurations": {
             "production": {
+              "deployUrl": "dist/",
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
