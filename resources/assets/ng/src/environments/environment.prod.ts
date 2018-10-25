@@ -1,3 +1,5 @@
 export const environment = {
-  production: true
+  production: true,
+  rootUrl: 'https://verostack.io',
+  apiUrl: 'https://verostack.io/'
 };
