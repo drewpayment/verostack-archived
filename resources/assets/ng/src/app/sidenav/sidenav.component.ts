@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { MatSidenav } from '@angular/material';
-import { IUser } from '../models';
+import { User } from '../models';
 import { Observable } from 'rxjs';
 import { SessionService } from '@app/session.service';
 import { SidenavService } from '@app/sidenav/sidenav.service';
@@ -23,7 +23,7 @@ export class SidenavComponent implements OnInit {
     user: 1
   }
 
-  user:IUser;
+  user:User;
   role:any;
 
   constructor(

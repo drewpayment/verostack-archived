@@ -3,7 +3,7 @@
   <h2 mat-dialog-title>Current Client</h2>
   <mat-dialog-content>
     <mat-form-field>
-      <mat-select [(ngModel)]="user.selectedClient.clientId">
+      <mat-select [(ngModel)]="user.sessionUser.sessionClient">
         <mat-option *ngFor="let c of data.clients" [value]="c.clientId">{{c.name}}</mat-option>
       </mat-select>
       <mat-error *ngIf="clientControl.hasError('required')">Please choose a client.</mat-error>

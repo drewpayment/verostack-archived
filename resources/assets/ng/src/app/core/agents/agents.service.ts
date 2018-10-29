@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { IAgent, User, IUser } from '@app/models';
+import { IAgent, User } from '@app/models';
 
 import { environment } from 'environments/environment';
 import { ISalesPairing } from '@app/models/sales-pairings.model';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { IRole, RoleType } from '@app/models/role.model';
+import { RoleType } from '@app/models/role.model';
 
 @Injectable({
   providedIn: 'root'
@@ -39,9 +39,9 @@ export class AgentsService {
    * 
    * @param clientId 
    */
-  getAgentsByClient(clientId:number):Observable<IUser[]> {
+  getAgentsByClient(clientId:number):Observable<User[]> {
     const url = `${this.api}clients/${clientId}/agents`;
-    return this.http.get<IUser[]>(url)
+    return this.http.get<User[]>(url)
       .pipe(
         catchError(this.handleError)
       );

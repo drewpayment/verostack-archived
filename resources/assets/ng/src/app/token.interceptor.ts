@@ -7,18 +7,18 @@ import {
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { SessionService } from './session.service';
-import { IUser } from './models';
+import { User } from './models';
 import { AuthService } from './auth.service';
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
 
-  user:IUser;
+  user:User;
   apiUrl:string;
   userLoggedIn:boolean;
 
   constructor(private session:SessionService, private auth:AuthService) {
-    this.session.userItem.subscribe((next:IUser) => { this.user = next; });
+    this.session.userItem.subscribe((next:User) => { this.user = next; });
     this.apiUrl = this.auth.apiUrl;
 
     // get user authenticated status from the session service.

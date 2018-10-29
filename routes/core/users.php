@@ -44,3 +44,5 @@ Route::middleware(['auth:api'])->group(function() {
     Route::get('usernames', 'UserController@checkUsernameAvailability');
 
 });
+
+Route::post('authenticate', 'AuthController@login');

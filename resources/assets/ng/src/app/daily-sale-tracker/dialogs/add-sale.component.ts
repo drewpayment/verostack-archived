@@ -67,7 +67,7 @@ export class AddSaleDialog implements OnInit {
     this.user = this.data.user;
 
     if (this.isExistingSale && this.data.campaigns == null) {
-      this.campaignService.getCampaigns(this.user.selectedClient.clientId, false)
+      this.campaignService.getCampaigns(this.user.sessionUser.sessionClient, false)
         .then(results => {
           this.campaigns = results;
         });
@@ -201,7 +201,7 @@ export class AddSaleDialog implements OnInit {
       dailySaleId: this.existingSale.dailySaleId || null,
       agentId: this.form.value.agent,
       campaignId: this.form.value.campaign,
-      clientId: this.user.selectedClient.clientId,
+      clientId: this.user.sessionUser.sessionClient,
       firstName: this.form.value.firstName,
       lastName: this.form.value.lastName,
       street: this.form.value.address,

@@ -1,8 +1,10 @@
+import { IClient } from '@app/models/client.model';
 
 export interface SessionUser {
-  id: number,
-  user_id: number,
-  session_client: number,
-  created_at: string,
-  updated_at: string
+  id:number,
+  userId:number,
+  sessionClient:number,
+  createdAt?:string,
+  updatedAt?:string,
+  client?:IClient
 }

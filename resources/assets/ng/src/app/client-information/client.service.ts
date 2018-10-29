@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 
-import { IUser, IClient, IClientOption, ICampaign, SaleStatus } from '../models';
+import { User, IClient, IClientOption, ICampaign, SaleStatus } from '../models';
 import { MessageService } from '../message.service';
 import { AuthService } from '../auth.service';
 import { UserService } from '../user-features/user.service';
@@ -27,7 +27,7 @@ export class ClientService {
   campaigns: Observable<ICampaign[]>;
   private campaigns$: BehaviorSubject<ICampaign[]>;
 
-  private user: IUser;
+  private user: User;
 
   dataStore: DataStore = {
     client: <IClient>{},
@@ -51,16 +51,16 @@ export class ClientService {
     this.options = this.options$.asObservable();
     this.campaigns = this.campaigns$.asObservable();
 
-    this.userService.user.subscribe((next: IUser) => {
+    this.userService.user.subscribe((next: User) => {
       if(next == null) return;
       this.user = next;
 
       // store client
-      this.dataStore.client = next.selectedClient;
+      this.dataStore.client = next.sessionUser.client;
       this.client$.next(this.dataStore.client);
 
       // store client options
-      this.dataStore.options = next.selectedClient.options;
+      this.dataStore.options = next.sessionUser.client.options;
       this.options$.next(this.dataStore.options);
 
       // this.loadCampaigns();
@@ -78,7 +78,7 @@ export class ClientService {
   }
 
   loadClientOptions(): void {
-    this.http.get(this.url + 'api/clients/' + this.user.selectedClient.clientId)
+    this.http.get(this.url + 'api/clients/' + this.user.sessionUser.sessionClient)
       .subscribe((options: IClientOption) => {
         this.dataStore.options = options;
         this.options$.next(this.dataStore.options);
@@ -94,7 +94,7 @@ export class ClientService {
         this.dataStore.client.options = this.dataStore.options;
         this.options$.next(this.dataStore.options);
         this.client$.next(this.dataStore.client);
-        this.user.selectedClient = this.dataStore.client;
+        this.user.sessionUser.client = this.dataStore.client;
         this.userService.cacheUser(this.user);
       },
       err => console.dir(err)
@@ -102,7 +102,7 @@ export class ClientService {
   }
 
   loadCampaigns(): void {
-    this.http.get(this.url + 'api/clients/' + this.user.selectedClient.clientId + '/campaigns')
+    this.http.get(this.url + 'api/clients/' + this.user.sessionUser.sessionClient + '/campaigns')
       .subscribe((next: ICampaign[]) => {
         this.dataStore.campaigns = next;
         this.campaigns$.next(this.dataStore.campaigns);

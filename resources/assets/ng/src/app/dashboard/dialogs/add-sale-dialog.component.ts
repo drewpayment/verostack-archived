@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject } from "@angular/core";
-import { IAgent, ICampaign, DailySale, IUser, SaleStatus, PaidStatusType } from "@app/models";
+import { IAgent, ICampaign, DailySale, User, SaleStatus, PaidStatusType } from "@app/models";
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import * as moment from 'moment';
@@ -9,7 +9,7 @@ import { DailySaleTrackerService } from '@app/daily-sale-tracker/daily-sale-trac
 import { MessageService } from '@app/message.service';
 
 interface DialogData {
-    user:IUser,
+    user:User,
     agent:IAgent,
     campaigns:ICampaign[],
     statuses:SaleStatus[]
@@ -21,7 +21,7 @@ interface DialogData {
     styleUrls: ['./add-sale-dialog.component.scss']
 })
 export class AgentAddSaleDialog implements OnInit {
-    user:IUser;
+    user:User;
     form:FormGroup;
     agent:IAgent;
     campaigns:ICampaign[];
@@ -39,7 +39,7 @@ export class AgentAddSaleDialog implements OnInit {
     ngOnInit() {
         this.agent = this.data.agent || {} as IAgent;
         this.campaigns = this.data.campaigns || [];
-        this.user = this.data.user || {} as IUser;
+        this.user = this.data.user || {} as User;
         this.statuses = this.data.statuses || [];
 
         this.createForm();
@@ -91,7 +91,7 @@ export class AgentAddSaleDialog implements OnInit {
             dailySaleId: null,
             agentId: this.form.value.agentId,
             campaignId: this.form.value.campaignId,
-            clientId: this.user.selectedClient.clientId,
+            clientId: this.user.sessionUser.sessionClient,
             firstName: this.form.value.firstName,
             lastName: this.form.value.lastName,
             street: this.form.value.street,

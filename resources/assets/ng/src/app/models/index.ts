@@ -19,3 +19,4 @@ export * from './local-storage.model';
 export * from './daily-sale.model';
 export * from './sale-status.model';
 export * from './remark.model';
+export * from './auth-response.model';

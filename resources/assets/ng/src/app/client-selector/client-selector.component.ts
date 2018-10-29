@@ -5,7 +5,7 @@ import {
   MAT_DIALOG_DATA
 } from '@angular/material';
 import { AuthService } from '../auth.service';
-import { IUser, IClient } from '../models/index';
+import { User, IClient } from '../models/index';
 import { Observable ,  BehaviorSubject } from 'rxjs';
 import { UserService } from '../user-features/user.service';
 
@@ -15,18 +15,18 @@ import { UserService } from '../user-features/user.service';
   styleUrls: ['./client-selector.component.css']
 })
 export class ClientSelectorComponent implements OnInit {
-  user: IUser;
+  user: User;
   clientControl: FormControl = new FormControl('', [Validators.required]);
 
   constructor(
     public dialogRef: MatDialogRef<ClientSelectorComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: IUser,
+    @Inject(MAT_DIALOG_DATA) public data: User,
     public auth: AuthService,
     public userService: UserService
   ) {}
 
   ngOnInit() {
-    this.userService.user.subscribe((next: IUser) => {
+    this.userService.user.subscribe((next: User) => {
       this.user = next;
     });
   }

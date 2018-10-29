@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 
-import { IUser, IUserDetail, IWeather, IOnboarding, IClient, ICampaign } from '../models';
+import { User, IUserDetail, IWeather, IOnboarding, IClient, ICampaign } from '../models';
 
 import * as moment from 'moment';
 
@@ -21,8 +21,8 @@ import { UserRole } from '@app/models/role.model';
   styleUrls: ['./my-information.component.scss']
 })
 export class MyInformationComponent implements OnInit {
-  user: IUser;
-  user$:Observable<IUser>;
+  user: User;
+  user$:Observable<User>;
   detail$:Observable<IUserDetail>;
   detail: IUserDetail = <IUserDetail>{};
   weather: IWeather;
@@ -60,14 +60,14 @@ export class MyInformationComponent implements OnInit {
       this.user = user;
 
       /** set onboarding options */
-      this.hasOnboarding = user.selectedClient.options != null && user.role.role >= UserRole.companyAdmin 
-        ? user.selectedClient.options.hasOnboarding : false;
+      this.hasOnboarding = user.sessionUser.client.options != null && user.role.role >= UserRole.companyAdmin 
+        ? user.sessionUser.client.options.hasOnboarding : false;
 
-      this.client = user.selectedClient;
+      this.client = user.sessionUser.client;
       this.welcome = user.firstName;
       this.joinDate = moment(user.createdAt.date).format('MMMM Do, YYYY');
 
-      this.campaignService.getCampaigns(this.user.selectedClient.clientId)
+      this.campaignService.getCampaigns(this.user.sessionUser.sessionClient)
         .then((campaigns:ICampaign[]) => {
           this.allCampaigns = campaigns;
           this.session.hideLoader();

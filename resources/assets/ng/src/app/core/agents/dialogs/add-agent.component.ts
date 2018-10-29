@@ -1,6 +1,6 @@
 import {Component, Inject, OnInit, ViewChildren, QueryList, AfterContentInit, AfterContentChecked, AfterViewChecked, ViewChild, ElementRef} from '@angular/core';
 import {MatDialogRef, MAT_DIALOG_DATA, MatInput} from '@angular/material';
-import {IUser, IUserDetail, IAgent} from '@app/models';
+import {User, IUserDetail, IAgent} from '@app/models';
 import {FormGroup, FormBuilder, Validators, FormControl, NgControl} from '@angular/forms';
 import {IState, States} from '@app/shared/models/state.model';
 import {MessageService} from '@app/message.service';
@@ -22,7 +22,7 @@ interface IKeyValue {
 }
 
 interface DataDialog {
-    user: IUser;
+    user: User;
 }
 
 @Component({
@@ -31,9 +31,9 @@ interface DataDialog {
     styleUrls: ['./add-agent.component.scss']
 })
 export class AddAgentDialogComponent implements OnInit {
-    user: IUser;
+    user: User;
     states: IState[];
-    userEntity: IUser;
+    userEntity: User;
     detailEntity: IUserDetail;
     agentEntity: IAgent;
     userForm: FormGroup;
@@ -121,7 +121,7 @@ export class AddAgentDialogComponent implements OnInit {
         let role = this.roleType.value;
 
         this.userService
-            .saveNewUserAgentEntity(this.userEntity, this.agentEntity, this.detailEntity, this.user.selectedClient.clientId, role)
+            .saveNewUserAgentEntity(this.userEntity, this.agentEntity, this.detailEntity, this.user.sessionUser.sessionClient, role)
             .pipe(
                 catchError((resp:LaravelErrorResponse, caught:Observable<boolean>) => {
                     let keys = Object.keys(resp.error.errors);
@@ -295,7 +295,7 @@ export class AddAgentDialogComponent implements OnInit {
     private createAgentForm(): void {
         this.userEntity =
             this.userEntity == null
-                ? <IUser>{
+                ? <User>{
                       firstName: null,
                       lastName: null
                   }

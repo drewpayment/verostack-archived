@@ -1,11 +1,11 @@
 import {Component, OnInit, ViewChildren, QueryList, ElementRef, AfterViewInit, OnDestroy, ContentChildren, AfterContentInit, AfterContentChecked, AfterViewChecked, ChangeDetectorRef} from '@angular/core';
 import {AgentService} from '@app/agent/agent.service';
-import { IAgent, IUser, ICampaign } from '@app/models';
+import { IAgent, User, ICampaign } from '@app/models';
 import { Subject, Observable, Subscription } from 'rxjs';
 import { SessionService } from '@app/session.service';
 import * as _ from 'lodash';
 import * as moment from 'moment';
-import { MatDialog, MatInput, MatSelect, MatFormField, MatCard } from '@angular/material';
+import { MatDialog, MatInput, MatSelect, MatFormField, MatCard, MatSlideToggleChange } from '@angular/material';
 import { AddAgentDialogComponent } from '@app/core/agents/dialogs/add-agent.component';
 import { FloatBtnService } from '@app/fab-float-btn/float-btn.service';
 import { map } from 'rxjs/operators';
@@ -17,8 +17,8 @@ import { CampaignService } from '@app/campaigns/campaign.service';
 import { MessageService } from '@app/message.service';
 
 interface DataStore {
-    users:IUser[],
-    managers:IUser[]
+    users:User[],
+    managers:IAgent[]
 }
 
 enum AgentDisplay {
@@ -26,7 +26,7 @@ enum AgentDisplay {
     Detail
 }
 
-interface UserView extends IUser {
+interface UserView extends User {
     display:AgentDisplay,
     pairingsForm:FormGroup
 }
@@ -40,9 +40,9 @@ const PAIRING_KEYS:string[] = ['agentId', 'campaignId', 'clientId', 'salesId', '
     providers: [FloatBtnService]
 })
 export class AgentComponent implements OnInit, AfterViewChecked, OnDestroy {
-    user:IUser;
+    user:User;
     store:DataStore = {} as DataStore;
-    filteredUsers:IUser[];
+    filteredUsers:User[];
     users:Observable<UserView[]>;
     users$:Subject<UserView[]> = new Subject<UserView[]>();
     managers$:Subject<IAgent[]> = new Subject<IAgent[]>();
@@ -63,6 +63,8 @@ export class AgentComponent implements OnInit, AfterViewChecked, OnDestroy {
     disableAddPairingBtn:boolean = false;
     @ViewChildren('pairingRows') pairingRows:QueryList<ElementRef>;
     private _pairingRowsSub:Subscription;
+
+    showInactive:boolean = true;
 
     constructor(
         private service:AgentService,
@@ -87,7 +89,7 @@ export class AgentComponent implements OnInit, AfterViewChecked, OnDestroy {
             this.user = user;
             this.refreshAgents();
 
-            this.campaignService.getCampaignsByClient(this.user.selectedClient.clientId)
+            this.campaignService.getCampaignsByClient(this.user.sessionUser.sessionClient)
                 .subscribe(campaigns => {
                     this._campaigns = campaigns;
                     this.campaigns$.next(this._campaigns);
@@ -170,6 +172,22 @@ export class AgentComponent implements OnInit, AfterViewChecked, OnDestroy {
             });
     }
 
+    toggleAgents(event:MatSlideToggleChange):void {
+        const showAll:boolean = event.checked;
+
+        if(showAll) {
+            this.users$.next(this.store.users as UserView[]);
+            this.showInactive = true;
+        } else {
+            let filtered:UserView[] = this.store.users.filter(u => {
+                return u.agent.isActive == true;
+            }) as UserView[];
+            this.users$.next(filtered);
+            this.showInactive = false;
+        }
+
+    }
+
     private resetPairingFormGroup(form:FormGroup, pairing:ISalesPairing):void {
         form.reset();
         form.patchValue({
@@ -219,7 +237,7 @@ export class AgentComponent implements OnInit, AfterViewChecked, OnDestroy {
         return {
             salesPairingsId: form.value.salesPairingsId || 0,
             agentId: form.value.agentId,
-            clientId: form.value.clientId || this.user.selectedClient.clientId,
+            clientId: form.value.clientId || this.user.sessionUser.sessionClient,
             campaignId: form.value.campaignId,
             salesId: form.value.salesId
         };
@@ -248,12 +266,12 @@ export class AgentComponent implements OnInit, AfterViewChecked, OnDestroy {
     }
 
     private refreshAgents():void {
-        this.service.getAgentsByClient(this.user.selectedClient.clientId)
+        this.service.getAgentsByClient(this.user.sessionUser.sessionClient)
             .pipe(map(this.setMoments))
             .subscribe(users => {
                 _.remove(users, u => u.agent == null);
 
-                users.forEach((u:IUser, i:number) => {
+                users.forEach((u:User, i:number) => {
                     if(u.detail == null) 
                         users[i].detail = {
                             userId: u.id,
@@ -293,7 +311,7 @@ export class AgentComponent implements OnInit, AfterViewChecked, OnDestroy {
         return users;
     }
 
-    private setManagers(users:IUser[]):void {
+    private setManagers(users:User[]):void {
         this.store.managers = _.filter(users, user => {
             return user.agent.isManager;
         }) as IAgent[];
@@ -326,7 +344,7 @@ export class AgentComponent implements OnInit, AfterViewChecked, OnDestroy {
             if(result == null) return; /** If the result is undefined, the user canceled the changes. */
 
             this.session.showLoader();            
-            this.service.updateUserWithRelationships(this.user.selectedClient.clientId, result)
+            this.service.updateUserWithRelationships(this.user.sessionUser.sessionClient, result)
                 .subscribe((user:UserView) => {
                     const idx = _.findIndex(this.store.users, {id:user.id});
                     if(idx < 0) {
@@ -351,7 +369,7 @@ export class AgentComponent implements OnInit, AfterViewChecked, OnDestroy {
     searchAgents(event) {
         this.searchContext = event.target.value;
 
-        let agentsResult = _.filter(this.store.users, (u:IUser) => {
+        let agentsResult = _.filter(this.store.users, (u:User) => {
             return u.firstName.concat(u.lastName).toLowerCase().trim().includes(this.searchContext);
         });
 

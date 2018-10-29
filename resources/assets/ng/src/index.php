@@ -22,7 +22,8 @@
             var global = window;
         }
     </script>
-<link rel="stylesheet" href="dist/styles.5ee54ca51282db99fbab.css"><link rel="stylesheet" href="dist/styles.5ee54ca51282db99fbab.css"></head>
+
+</head>
 <body>
 
     <app-root>

@@ -1,5 +1,5 @@
 import {Injectable, OnInit} from '@angular/core';
-import {IUser} from './models/user.model';
+import {User} from './models/user.model';
 import {Observable, BehaviorSubject, Subject, ReplaySubject} from 'rxjs';
 import {MatSidenav} from '@angular/material';
 import {LocalStorage, JSONSchema} from '@ngx-pwa/local-storage';
@@ -30,12 +30,12 @@ const schema: JSONSchema = {
 export class SessionService {
     static defaultUserUrl = 'my-information';
 
-    sessionUser: Observable<IUser>;
+    sessionUser: Observable<User>;
     private sidenav: MatSidenav;
     private navOpened: boolean;
     opened$: Subject<boolean> = new Subject<boolean>();
 
-    dataStore: {user: IUser; token: IToken} = {
+    dataStore: {user: User; token: IToken} = {
         user: null,
         token: null
     };
@@ -49,8 +49,8 @@ export class SessionService {
     private storageItem$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
     storageItem: Observable<any>;
 
-    private userItem$: Subject<IUser> = new ReplaySubject<IUser>(1);
-    userItem: Observable<IUser>;
+    private userItem$: Subject<User> = new ReplaySubject<User>(1);
+    userItem: Observable<User>;
 
     private tokenItem$: Subject<IToken> = new ReplaySubject<IToken>(1);
     tokenItem: Observable<IToken>;
@@ -112,7 +112,7 @@ export class SessionService {
         window.location.href = rootUrl + '/#/login';
     }
 
-    getUserItem(): Observable<IUser> {
+    getUserItem(): Observable<User> {
         return this.userItem$.asObservable();
     }
 
@@ -167,7 +167,7 @@ export class SessionService {
      *
      * @param user
      */
-    setUser(user: IUser) {
+    setUser(user: User) {
         this.userItem$.next(user);
     }
 
@@ -219,7 +219,7 @@ export class SessionService {
                 this.hasTokenSubject.next(true);
                 this.isLoginSubject.next(true);
                 this.dataStore.user = next.data;
-                this.userItem$.next(<IUser>next.data);
+                this.userItem$.next(<User>next.data);
             } else if (itemName === 'token') {
                 this.hasTokenSubject.next(true);
                 this.isLoginSubject.next(true);
@@ -233,7 +233,7 @@ export class SessionService {
     /**
      * Exposes our localstorage user via the session service.
      */
-    isUserAuthenticated(): Observable<ILocalStorage<IUser>> {
+    isUserAuthenticated(): Observable<ILocalStorage<User>> {
         return this.localStorage.getItem('user');
     }
 
@@ -242,7 +242,7 @@ export class SessionService {
      *
      */
     loadUserStorageItem(): void {
-        this.localStorage.getItem('user').subscribe((item: ILocalStorage<IUser>) => {
+        this.localStorage.getItem('user').subscribe((item: ILocalStorage<User>) => {
             if (item == null) {
                 this.userLoggedIn = false;
                 return;
@@ -303,9 +303,9 @@ export class SessionService {
     /**
      * Returns a promise with the user from local storage.
      */
-    getUserAuthenticationStatus(): Promise<IUser> {
-        return new Promise<IUser>((resolve, reject) => {
-            this.localStorage.getItem('user').subscribe((item: ILocalStorage<IUser>) => {
+    getUserAuthenticationStatus(): Promise<User> {
+        return new Promise<User>((resolve, reject) => {
+            this.localStorage.getItem('user').subscribe((item: ILocalStorage<User>) => {
                 if (item == null) reject('Not logged in.');
                 if (item.expires <= Date.now()) {
                     this.removeItem('user');
@@ -355,20 +355,7 @@ export class SessionService {
 
     clearStorage(): void {
         this.localStorage.clearSubscribe();
-        this.userItem$.next({
-            id: 0,
-            username: null,
-            email: null,
-            firstName: null,
-            lastName: null,
-            hasOnboarding: false,
-            role: <IRole>{role: null},
-            selectedClient: <IClient>{clientId: null},
-            clients: [],
-            createdAt: null,
-            session: null,
-            updatedAt: null
-        });
+        this.userItem$.next(null);
         this.tokenItem$.next(null);
     }
 

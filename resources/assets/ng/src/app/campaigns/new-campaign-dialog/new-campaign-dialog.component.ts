@@ -2,13 +2,13 @@ import {Component, OnInit, Inject, ViewChild, OnChanges} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 import {CampaignService} from '@app/campaigns/campaign.service';
-import {IUser, ICampaign} from '@app/models';
+import {User, ICampaign} from '@app/models';
 import {SessionService} from '@app/session.service';
 import {MessageService} from '@app/message.service';
 import { QuillEditorComponent } from 'ngx-quill';
 
 interface DialogData {
-    user:IUser,
+    user:User,
     campaign:ICampaign
 }
 
@@ -18,7 +18,7 @@ interface DialogData {
     styleUrls: ['./new-campaign-dialog.component.scss']
 })
 export class NewCampaignDialogComponent implements OnInit {
-    user: IUser;
+    user: User;
     campaign: ICampaign;
     form: FormGroup;
     @ViewChild('editor') editor: QuillEditorComponent
@@ -80,7 +80,7 @@ export class NewCampaignDialogComponent implements OnInit {
             this.campaign = this.prepareCampaign();
 
             this.service
-                .saveCampaign(this.user.selectedClient.clientId, this.campaign.campaignId, this.campaign)
+                .saveCampaign(this.user.sessionUser.sessionClient, this.campaign.campaignId, this.campaign)
                 .then((updated: ICampaign) => {
                     this.diagRef.close(updated);
                 })
@@ -98,7 +98,7 @@ export class NewCampaignDialogComponent implements OnInit {
 
                     // FINISH THE METHOD HERE TO SAVE THE NEW CAMPAIGN
                     this.service
-                        .saveCampaign(this.user.selectedClient.clientId, null, this.campaign)
+                        .saveCampaign(this.user.sessionUser.sessionClient, null, this.campaign)
                         .then(campaign => {
                             this.diagRef.close(campaign);
                         })
@@ -122,7 +122,7 @@ export class NewCampaignDialogComponent implements OnInit {
         const form = this.form.value;
         return {
             campaignId: this.campaign.campaignId || null,
-            clientId: this.user.selectedClient.clientId,
+            clientId: this.user.sessionUser.sessionClient,
             name: form.name,
             active: form.active,
             compensation: form.compensation,

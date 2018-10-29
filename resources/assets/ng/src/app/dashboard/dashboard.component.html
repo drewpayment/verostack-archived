@@ -1,11 +1,49 @@
 <div class="container">
     <div class="row mb-4">
         <div class="col-md-12">
-            <mat-toolbar color="primary">
+            <mat-card>
+                <mat-card-title>
+                    <div class="d-flex justify-content-between">
+                        <h4>Sales Analysis</h4>
+                        <button mat-button type="button" color="primary" (click)="showAddSaleDialog()">
+                            <mat-icon inline="true">add_circle</mat-icon> SALE
+                        </button>
+                    </div>
+                </mat-card-title>
+                <mat-card-content [class.justify-content-between]="isMobileLayout">
+                    <ng-container *ngIf="(user|async).role.role >= roleType.companyAdmin">
+                        <mat-form-field>
+                            <mat-select [value]="selectedAgent.agentId" (selectionChange)="handleAgentChange($event)" placeholder="Currently Viewing:">
+                                <mat-option *ngFor="let a of (agents|async)" [value]="a.agentId">
+                                    {{a.firstName}} {{a.lastName}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </ng-container>
+                    <!-- <span *ngIf="(user|async).role.role < roleType.companyAdmin; else adminWorkspace">Sales Analysis</span>
+                    <ng-template #adminWorkspace>
+                        <div class="h3">
+                            <mat-form-field class="vs-toolbar-select">
+                                <mat-select [value]="selectedAgent.agentId" (selectionChange)="handleAgentChange($event)">
+                                    <mat-option *ngFor="let a of (agents|async)" [value]="a.agentId">
+                                        {{a.firstName}} {{a.lastName}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <span *ngIf="!isMobileLayout">'s Sale Analysis</span>
+                        </div>
+                    </ng-template>
+                    <span class="flex-spacer" *ngIf="!isMobileLayout"></span>
+                    <button mat-raised-button type="button" class="vs-toolbar-icon" (click)="showAddSaleDialog()">
+                        <mat-icon inline="true">add_circle</mat-icon> SALE
+                    </button> -->
+                </mat-card-content>
+            </mat-card>
+            <!-- <mat-toolbar color="primary">
                 <mat-toolbar-row [class.justify-content-between]="isMobileLayout">
                     <span *ngIf="(user|async).role.role < roleType.companyAdmin; else adminWorkspace">Sales Analysis</span>
                     <ng-template #adminWorkspace>
-                        <!-- <span>{{(user|async).firstName}} {{(user|async).lastName}}'s Workspace</span> -->
+                        <span>{{(user|async).firstName}} {{(user|async).lastName}}'s Workspace</span>
                         <mat-form-field class="vs-toolbar-select">
                             <mat-select [value]="selectedAgent.agentId" (selectionChange)="handleAgentChange($event)">
                                 <mat-option *ngFor="let a of (agents|async)" [value]="a.agentId">
@@ -16,12 +54,12 @@
                         <span *ngIf="!isMobileLayout">'s Sale Analysis</span>
                     </ng-template>
                     <span class="flex-spacer" *ngIf="!isMobileLayout"></span>
-                    <!-- <mat-icon class="vs-toolbar-icon">add_circle</mat-icon> -->
+                    <mat-icon class="vs-toolbar-icon">add_circle</mat-icon>
                     <button mat-raised-button type="button" class="vs-toolbar-icon" (click)="showAddSaleDialog()">
                         <mat-icon inline="true">add_circle</mat-icon> SALE
                     </button>
                 </mat-toolbar-row>
-            </mat-toolbar>
+            </mat-toolbar> -->
         </div>
     </div>
     <div class="row">

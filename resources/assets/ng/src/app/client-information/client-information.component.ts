@@ -1,16 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { IUser, IClient, IClientOption, User, SaleStatus } from '../models/index';
-import { FormControl, Validators, NgForm, Form, FormGroup, FormBuilder, FormArray } from '@angular/forms';
-
-import { AuthService } from '../auth.service';
+import { User, IClient, IClientOption, SaleStatus } from '../models/index';
+import { Validators, NgForm, FormGroup, FormBuilder } from '@angular/forms';
 import { MessageService } from '../message.service';
 import { ClientService } from './client.service';
-import { HttpErrorResponse } from '@angular/common/http';
-import { BehaviorSubject, Observable, ReplaySubject, Subject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import * as _ from 'lodash';
 import { UserService } from '../user-features/user.service';
 import { SessionService } from '@app/session.service';
-import { catchError } from 'rxjs/operators';
 import { MatDialog } from '@angular/material';
 import { AddSaleStatusDialog } from '@app/client-information/dialogs/add-sale-status.component';
 
@@ -20,7 +16,7 @@ import { AddSaleStatusDialog } from '@app/client-information/dialogs/add-sale-st
   styleUrls: ['./client-information.component.scss']
 })
 export class ClientInformationComponent implements OnInit {
-  user: IUser;
+  user: User;
   clients: IClient[];
   client: IClient;
   editMode: boolean;
@@ -38,7 +34,6 @@ export class ClientInformationComponent implements OnInit {
   states: string[] = ['AL', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'FL', 'GA', 'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 'ME', 'MD', 'MA', 'MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NH', 'NJ', 'NM', 'NY', 'NC', 'ND', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', 'VT', 'VA', 'WA', 'WV', 'WI', 'WY'];
 
   constructor(
-    private auth: AuthService,
     private msg: MessageService,
     private clientService: ClientService,
     private userService: UserService,
@@ -51,10 +46,10 @@ export class ClientInformationComponent implements OnInit {
 
   ngOnInit() {
     this.session.loadTokenStorageItem();
-    this.userService.user.subscribe((next:IUser) => {
+    this.userService.user.subscribe((next:User) => {
       if(next == null) return;
       this.user = next;
-      this.client = this.user.selectedClient;
+      this.client = this.user.sessionUser.client;
       this.clients = this.user.clients;
 
       this.clientService.getSaleStatuses(this.client.clientId)
@@ -99,7 +94,7 @@ export class ClientInformationComponent implements OnInit {
   }
 
   cancel(f: NgForm) {
-    this.client = this.user.selectedClient;
+    this.client = this.user.sessionUser.client;
     this.editMode = !this.editMode;
     f.reset();
   }
@@ -121,7 +116,7 @@ export class ClientInformationComponent implements OnInit {
   }
 
   saveOptions() {
-    this.clientService.updateClientOptions(this.user.selectedClient.options);
+    this.clientService.updateClientOptions(this.user.sessionUser.client.options);
   }
 
   updateActiveStatus(saleStatus:SaleStatus):void {
@@ -168,15 +163,6 @@ export class ClientInformationComponent implements OnInit {
       : false;
   }
 
-  private resetClientForm(f: NgForm, client: any) {
-    for(var k in f.value) {
-      if(!f.value.hasOwnProperty(k)) continue;
-      var obj = f.form.controls[k];
-      if(!obj.dirty) continue;
-      this.client[k] = client[k];
-      obj.markAsUntouched();
-    }
-  }
 
   private setEmptyClient():IClient {
     return {
@@ -223,15 +209,5 @@ export class ClientInformationComponent implements OnInit {
     });
   }
 
-  private subscribeSaleStatusForm() {
-    this.saleStatuses$.subscribe(statuses => {
-      let formArr:FormGroup[] = [];
-      statuses.forEach(s => {
-        formArr.push(this.createSaleFormGroup(s));
-      });
-      formArr.push(this.createSaleFormGroup());
-      this.saleStatusForm
-    });
-  }
 
 }

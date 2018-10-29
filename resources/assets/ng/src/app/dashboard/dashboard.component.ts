@@ -6,7 +6,7 @@ import {Moment} from '../shared/moment-extensions';
 import * as moment from 'moment';
 import * as _ from 'lodash';
 import {Observable, of, Subject} from 'rxjs';
-import {IUser, IAgent, ICampaign, SaleStatus, DailySale, PaidStatusType} from '@app/models';
+import {User, IAgent, ICampaign, SaleStatus, DailySale, PaidStatusType} from '@app/models';
 import {SessionService} from '@app/session.service';
 import {AgentsService} from '@app/core/agents/agents.service';
 import {MatDialog, MatSelectChange, MatDatepickerInputEvent, MatButtonToggleChange} from '@angular/material';
@@ -23,8 +23,8 @@ import { map } from 'rxjs/operators';
 import { AgentService } from '@app/agent/agent.service';
 
 interface DataStore {
-    user: IUser,
-    users:IUser[],
+    user: User,
+    users:User[],
     agents: IAgent[],
     statuses: SaleStatus[],
     sales: DailySale[],
@@ -48,13 +48,14 @@ export class DashboardComponent implements OnInit, AfterContentInit {
         supervisor: 2,
         user: 1
     };
-    user: Observable<IUser>;
+    user: Observable<User>;
     startDate: Moment;
     endDate: Moment;
     selectedAgent: IAgent;
     agents: Observable<IAgent[]>;
     campaigns: Observable<ICampaign[]>;
     store: DataStore = {} as DataStore;
+    sales$:Subject<DailySale[]> = new Subject<DailySale[]>();
     sales: Observable<DailySale[]>;
 
     messages: any[];
@@ -83,6 +84,8 @@ export class DashboardComponent implements OnInit, AfterContentInit {
         ]).subscribe(result => {
             this.isMobileLayout = result.matches;
         });
+
+        this.sales = this.sales$.asObservable();
     }
 
     ngOnInit() {
@@ -98,8 +101,8 @@ export class DashboardComponent implements OnInit, AfterContentInit {
             this.user = of(u);
 
             if (u.role.role >= this.roleType.companyAdmin) {
-                this.agentsService.getAgentsByClient(u.selectedClient.clientId)
-                    .subscribe((users:IUser[]) => {
+                this.agentsService.getAgentsByClient(u.sessionUser.sessionClient)
+                    .subscribe((users:User[]) => {
                         this.store.users = users;
                         this.store.agents = this.mapUserToAgent(users);
                         this.agents = of(this.store.agents);
@@ -114,7 +117,7 @@ export class DashboardComponent implements OnInit, AfterContentInit {
             } else {
 
                 if(this.store.user.agent == null) {
-                    this.agentService.getAgentByUser(this.store.user.selectedClient.clientId, this.store.user.id)
+                    this.agentService.getAgentByUser(this.store.user.sessionUser.sessionClient, this.store.user.id)
                         .subscribe(agent => {
                             this.selectedAgent = agent;
                             
@@ -138,22 +141,22 @@ export class DashboardComponent implements OnInit, AfterContentInit {
      * Make sure the user is set and selected agent is set before calling this. 
      */
     private loadSales():void {
-        this.campaignService.getCampaignsByAgent(this.store.user.selectedClient.clientId, this.selectedAgent.agentId)
+        this.campaignService.getCampaignsByAgent(this.store.user.sessionUser.sessionClient, this.selectedAgent.agentId)
             .subscribe(campaigns => {
                 this.store.campaigns = campaigns;
                 this.campaigns = of(campaigns);
             });
 
         this.dailySaleService.getDailySalesByAgent(
-            this.store.user.selectedClient.clientId,
+            this.store.user.sessionUser.sessionClient,
             this.selectedAgent.agentId,
             this.startDate.toDateString(),
             this.endDate.toDateString()
         ).subscribe(sales => {
             this.store.sales = _.orderBy(sales, ['saleDate'], ['desc']);
-            this.sales = of(this.store.sales);
+            this.sales$.next(this.store.sales);
 
-            this.clientService.getSaleStatuses(this.store.user.selectedClient.clientId).subscribe(statuses => {
+            this.clientService.getSaleStatuses(this.store.user.sessionUser.sessionClient).subscribe(statuses => {
                 this.store.statuses = statuses;
                 this.createChart(sales);
             });
@@ -171,7 +174,7 @@ export class DashboardComponent implements OnInit, AfterContentInit {
         
     }
 
-    mapUserToAgent(users:IUser[]):IUser[] {
+    mapUserToAgent(users:User[]):IAgent[] {
         let result:IAgent[] = [];
         for(let i = 0; i < users.length; i++) {
             if(users[i].agent == null) continue;
@@ -356,10 +359,12 @@ export class DashboardComponent implements OnInit, AfterContentInit {
 
     updateDashboard(event: MatDatepickerInputEvent<Moment> = null, isStart: boolean = true): void {
         
-        if (isStart) {
-            this.startDate = moment(event.value).hours(0).minutes(0).seconds(0);
-        } else {
-            this.endDate = moment(event.value).hours(11).minutes(0).seconds(0);
+        if(event != null && event.value != null) {
+            if (isStart) {
+                this.startDate = moment(event.value).hours(0).minutes(0).seconds(0);
+            } else {
+                this.endDate = moment(event.value).hours(11).minutes(0).seconds(0);
+            }
         }
 
         const startDate:string = (<Moment>this.startDate.clone()).toDateString();
@@ -398,14 +403,17 @@ export class DashboardComponent implements OnInit, AfterContentInit {
             .subscribe((result:DailySale) => {
                 if (result == null) return;
 
+                const newSale:boolean = result.dailySaleId == null || result.dailySaleId < 1;
+                
                 this.dailySaleService
-                    .createDailySale(this.store.user.selectedClient.clientId, result)
+                    .createDailySale(this.store.user.sessionUser.sessionClient, result)
                     .subscribe(sale => {
                         let existing = _.findIndex(this.store.sales, {dailySaleId: sale.dailySaleId});
 
-                        if (existing == null) {
-                            if(this.store.sales == null) 
-                                this.store.sales = [];
+                        if (newSale) {
+                            /** If the array in the store isn't instaniated */
+                            if(this.store.sales == null) this.store.sales = [];
+
                             this.store.sales.push(sale);
                             this.store.sales = _.orderBy(this.store.sales, ['saleDate'], ['desc']);
                         } else {
@@ -422,14 +430,14 @@ export class DashboardComponent implements OnInit, AfterContentInit {
 
         if(this.selectedFilter == -1) {
             this.updateChartDatasets(this.store.sales);
-            this.sales = of(this.store.sales);
+            this.sales$.next(this.store.sales);
         } else {
             let filteredSales = _.filter(this.store.sales, (sale:DailySale) => {
                 return sale.paidStatus == this.selectedFilter;
             });
 
             this.updateChartDatasets(filteredSales);
-            this.sales = of(filteredSales);
+            this.sales$.next(this.store.sales);
         }
     }
 

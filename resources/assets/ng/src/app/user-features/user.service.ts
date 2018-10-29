@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { IUser, IUserDetail, IAgent, ILocalStorage } from '../models/index';
+import { User, IUserDetail, IAgent, ILocalStorage } from '../models/index';
 import { Observable, ReplaySubject, Subject } from 'rxjs';
 
 import { SessionService } from '../session.service';
@@ -11,8 +11,8 @@ import { environment } from '@env/environment';
 import { IUserDetailInfo } from '@app/models/user-detail-info.model';
 
 interface DataStore {
-  user: IUser,
-  users: IUser[],
+  user: User,
+  users: User[],
   detail: IUserDetail,
   agents: IAgent[]
 }
@@ -29,10 +29,10 @@ export class UserService {
     agents: null
   }
 
-  user: Observable<IUser>;
-  user$:Subject<IUser> = new ReplaySubject<IUser>(1);
-  users: Observable<IUser[]>;
-  private users$:Subject<IUser[]> = new ReplaySubject<IUser[]>(1);
+  user: Observable<User>;
+  user$:Subject<User> = new ReplaySubject<User>(1);
+  users: Observable<User[]>;
+  private users$:Subject<User[]> = new ReplaySubject<User[]>(1);
   agents: Observable<IAgent[]>;
   private agents$:Subject<IAgent[]> = new ReplaySubject<IAgent[]>(1);
   userDetail: Observable<IUserDetail>;
@@ -44,7 +44,7 @@ export class UserService {
     this.userDetail = this.userDetail$.asObservable();
     this.agents = this.agents$.asObservable();
 
-    this.session.userItem.subscribe((user:IUser) => {
+    this.session.userItem.subscribe((user:User) => {
       this.user$.next(user);
       this.dataStore.user = user;
       this.dataStore.detail = user.detail;
@@ -56,7 +56,7 @@ export class UserService {
     this.session.getItem('user');
   }
 
-  setUser(user:IUser):void {
+  setUser(user:User):void {
     this.user$.next(user);
   }
 
@@ -118,7 +118,7 @@ export class UserService {
 
   loadUsersByActiveState(activeOnly: boolean = true): void {
     this.http.get(this.apiUrl + 'api/users/all/statuses/' + activeOnly)
-      .subscribe((data: IUser[]) => {
+      .subscribe((data: User[]) => {
         this.dataStore.users = data;
         this.users$.next(this.dataStore.users);
       });
@@ -179,10 +179,10 @@ export class UserService {
    *
    * @param userId
    */
-  getUser(userId:number):Promise<IUser> {
+  getUser(userId:number):Promise<User> {
     return this.http.get(this.apiUrl + 'api/users/' + userId)
       .toPromise()
-      .then((user:IUser) => {
+      .then((user:User) => {
         return user;
       });
   }
@@ -195,7 +195,7 @@ export class UserService {
    */
   loadUser(username: string): void {
     this.http.get(this.apiUrl + 'api/users/' + username + '/session')
-      .subscribe((data: IUser) => {
+      .subscribe((data: User) => {
         this.dataStore.detail = data.detail;
         this.userDetail$.next(data.detail);
 
@@ -206,7 +206,17 @@ export class UserService {
       });
   }
 
-  updateUser(user: IUser, detail: IUserDetail): void {
+  storeNgUser(user:User):void {
+      this.dataStore.detail = user.detail;
+      this.userDetail$.next(user.detail);
+
+      this.dataStore.user = user;
+      this.session.setUser(this.dataStore.user);
+      this.user$.next(this.dataStore.user);
+      this.setLocalStorageUser(this.dataStore.user);
+  }
+
+  updateUser(user: User, detail: IUserDetail): void {
     this.http.post(this.apiUrl + 'api/users/' + user.id, { user: user, detail: detail })
       .subscribe((data: any) => {
         if(data.user) {
@@ -227,15 +237,15 @@ export class UserService {
     );
   }
 
-  updateUserEntity(user:IUser):Promise<IUser> {
+  updateUserEntity(user:User):Promise<User> {
     return this.http.post(this.apiUrl + 'api/users/' + user.id, user)
       .toPromise()
-      .then((user:IUser) => {
+      .then((user:User) => {
         return user;
       });
   }
 
-  saveNewUserAgentEntity(user:IUser, agent:IAgent, detail:IUserDetail, clientId:number, role:number):Observable<boolean> {
+  saveNewUserAgentEntity(user:User, agent:IAgent, detail:IUserDetail, clientId:number, role:number):Observable<boolean> {
     let dto = { user: user, agent: agent, detail: detail, role: role };
     return this.http.post<boolean>(`${this.apiUrl}api/users/clients/${clientId}/new-user-agent`, dto);
   }
@@ -249,7 +259,7 @@ export class UserService {
    * @param user
    * @return void
    */
-  cacheUser(user: IUser): void {
+  cacheUser(user: User): void {
     this.dataStore.user = user;
     this.user$.next(this.dataStore.user);
     this.setLocalStorageUser(this.dataStore.user);
@@ -331,8 +341,8 @@ export class UserService {
    *
    * @param user
    */
-  private setLocalStorageUser(user: IUser): void {
-    let data: ILocalStorage<IUser> = <ILocalStorage<IUser>>{
+  private setLocalStorageUser(user: User): void {
+    let data: ILocalStorage<User> = <ILocalStorage<User>>{
       expires: moment().valueOf() + (1000 * (60 * 24 * 3)),
       data: user
     };

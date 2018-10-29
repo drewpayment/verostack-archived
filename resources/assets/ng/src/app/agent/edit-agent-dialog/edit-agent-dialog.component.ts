@@ -1,14 +1,14 @@
 import {Component, OnInit, Inject} from '@angular/core';
-import {IUser} from '@app/models';
+import {User} from '@app/models';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { IState, States } from '@app/shared/models/state.model';
 import { map } from 'rxjs/operators';
 
 interface DialogData {
-    user: IUser, // the current logged in user
-    agent: IUser, // the agent we are going to be editing
-    managers:IUser[] 
+    user: User, // the current logged in user
+    agent: User, // the agent we are going to be editing
+    managers:User[] 
 }
 
 @Component({
@@ -19,8 +19,8 @@ interface DialogData {
 export class EditAgentDialogComponent implements OnInit {
 
     form:FormGroup;
-    agent:IUser;
-    managers:IUser[];
+    agent:User;
+    managers:User[];
     states:IState[] = States.$get();
 
     constructor(
@@ -36,7 +36,7 @@ export class EditAgentDialogComponent implements OnInit {
             id: -1,
             firstName: 'No',
             lastName: 'Manager'
-        } as IUser);
+        } as User);
 
         this.createForm();
     }
@@ -80,7 +80,7 @@ export class EditAgentDialogComponent implements OnInit {
         })
     }
 
-    private prepareModel():IUser {
+    private prepareModel():User {
         return {
             id: this.agent.id,
             firstName: this.form.value.user.firstName,

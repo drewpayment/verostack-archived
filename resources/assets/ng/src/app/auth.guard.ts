@@ -3,7 +3,7 @@ import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, Router, RouterSt
 import { AuthService } from './auth.service'
 import { Observable ,  BehaviorSubject, of, Observer } from 'rxjs';
 import { UserService } from './user-features/user.service';
-import { IUser, ILocalStorage } from './models';
+import { User, ILocalStorage } from './models';
 import { SessionService } from './session.service';
 import * as moment from 'moment';
 
@@ -14,7 +14,7 @@ import * as moment from 'moment';
  */
 @Injectable()
 export class AuthGuard implements CanActivate {
-  private user:IUser;
+  private user:User;
   private authenticated: boolean;
 
   constructor(
@@ -28,7 +28,7 @@ export class AuthGuard implements CanActivate {
     const url:string = state.url;
     return Observable.create((observer:Observer<boolean>) => this.session.isUserAuthenticated()
       .toPromise()
-      .then((store:ILocalStorage<IUser>) => {
+      .then((store:ILocalStorage<User>) => {
         if (store != null && store.expires > moment().valueOf()) {
           observer.next(true);
           observer.complete();

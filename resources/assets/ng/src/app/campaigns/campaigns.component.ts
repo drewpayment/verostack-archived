@@ -5,7 +5,7 @@ import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 import {NewCampaignDialogComponent} from '@app/campaigns/new-campaign-dialog/new-campaign-dialog.component';
 import {EventEmitter} from 'events';
 import {BehaviorSubject, Observable, Subject} from 'rxjs';
-import {IUser, ICampaign} from '@app/models';
+import {User, ICampaign} from '@app/models';
 import {SessionService} from '@app/session.service';
 import {CampaignService} from '@app/campaigns/campaign.service';
 import {MessageService} from '@app/message.service';
@@ -46,7 +46,7 @@ export class CampaignsComponent implements OnInit {
     floatBtnIsOpen$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
     floatIsOpen: Observable<boolean>;
 
-    user: IUser;
+    user: User;
 
     constructor(
         private dialog: MatDialog,
@@ -60,7 +60,7 @@ export class CampaignsComponent implements OnInit {
 
     ngOnInit() {
         this.session.showLoader();
-        this.session.userItem.subscribe((next: IUser) => {
+        this.session.userItem.subscribe((next: User) => {
             if (next == null) return;
             this.user = next;
 
@@ -72,7 +72,7 @@ export class CampaignsComponent implements OnInit {
                 });
 
             this.service
-                .getCampaigns(this.user.selectedClient.clientId, false)
+                .getCampaigns(this.user.sessionUser.sessionClient, false)
                 .then((campaigns: ICampaign[]) => {
                     this.store.campaigns = campaigns;
                     this.campaigns.next(campaigns);
@@ -96,7 +96,7 @@ export class CampaignsComponent implements OnInit {
 
         pendingCampaign.active = !pendingCampaign.active;
 
-        this.service.saveCampaign(this.user.selectedClient.clientId, pendingCampaign.campaignId, pendingCampaign)
+        this.service.saveCampaign(this.user.sessionUser.sessionClient, pendingCampaign.campaignId, pendingCampaign)
             .then(updated => {
                 this.session.hideLoader();
                 this.store.campaigns.map(c => c.campaignId === item.campaignId ? updated : c);

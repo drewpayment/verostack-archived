@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {DailySale, IAgent, SaleStatus, User, IUser, ICampaign, Remark, PaidStatusType} from '@app/models';
+import {DailySale, IAgent, SaleStatus, User, ICampaign, Remark, PaidStatusType} from '@app/models';
 
 import * as moment from 'moment';
 import * as _ from 'lodash';
@@ -68,7 +68,7 @@ export class DailySaleTrackerComponent implements OnInit {
         sales: null
     };
 
-    userInfo: IUser;
+    userInfo: User;
     dataSource$: BehaviorSubject<DailySale[]> = new BehaviorSubject<DailySale[]>(null);
     sales: Observable<DailySale[]>;
     agents: IAgent[];
@@ -108,16 +108,16 @@ export class DailySaleTrackerComponent implements OnInit {
 
         this.userService.user.subscribe(u => {
             this.userInfo = u;
-            this.clientService.getSaleStatuses(this.userInfo.selectedClient.clientId).subscribe(statuses => {
+            this.clientService.getSaleStatuses(this.userInfo.sessionUser.sessionClient).subscribe(statuses => {
                 this.store.statuses = statuses;
                 this.statuses.next(statuses);
             });
 
-            this.campaignService.getCampaigns(this.userInfo.selectedClient.clientId).then(campaigns => {
+            this.campaignService.getCampaigns(this.userInfo.sessionUser.sessionClient).then(campaigns => {
                 this.campaigns = _.sortBy(campaigns, ['name']);
                 this.campaigns.unshift({
                     campaignId: 0,
-                    clientId: this.userInfo.selectedClient.clientId,
+                    clientId: this.userInfo.sessionUser.sessionClient,
                     name: 'All Campaigns',
                     active: true
                 });
@@ -187,7 +187,7 @@ export class DailySaleTrackerComponent implements OnInit {
                 this.floatBtnService.close();
                 if (result == null) return;
                 let dto: DailySale = result;
-                dto.clientId = this.userInfo.selectedClient.clientId;
+                dto.clientId = this.userInfo.sessionUser.sessionClient;
                 dto.saleDate = this.formatSqlDate(dto.saleDate as Moment, true);
 
                 this.trackerService.createDailySale(dto.clientId, dto).subscribe(() => {
@@ -222,7 +222,7 @@ export class DailySaleTrackerComponent implements OnInit {
             .get(name) as FormControl;
     }
 
-    updateExistingSalesRow(index: number, event: MatDatepickerInputEvent<Moment> = null): void {
+    updateExistingSalesRow(index: number): void {
         const sale: FormGroup = this.form.get('sales').get(index + '') as FormGroup;
 
         // if the user chose a paid status of "unpaid", let's call the method to handle this
@@ -310,7 +310,7 @@ export class DailySaleTrackerComponent implements OnInit {
             .subscribe(dto => {
                 if (dto == null) return;
 
-                this.trackerService.updateDailySale(this.userInfo.selectedClient.clientId, dto).subscribe(sale => {
+                this.trackerService.updateDailySale(this.userInfo.sessionUser.sessionClient, dto).subscribe(sale => {
                     this.store.sales[index] = sale;
                     // this.patchFormSaleValue(sale, index);
                     this.refreshDailySales(this.startDate, this.endDate);
@@ -334,7 +334,7 @@ export class DailySaleTrackerComponent implements OnInit {
                 const dto: DailySale = this.prepareModel(sale);
                 if (dto.dailySaleId < 1) return;
                 this.trackerService
-                    .deleteDailySale(this.userInfo.selectedClient.clientId, dto.dailySaleId)
+                    .deleteDailySale(this.userInfo.sessionUser.sessionClient, dto.dailySaleId)
                     .subscribe(() => {
                         this.msg.addMessage('Successfully deleted sale.', 'dismiss', 3000);
                         this.refreshDailySales(this.startDate, this.endDate);
@@ -363,7 +363,7 @@ export class DailySaleTrackerComponent implements OnInit {
 
         this.trackerService
             .getDailySalesByDate(
-                this.userInfo.selectedClient.clientId,
+                this.userInfo.sessionUser.sessionClient,
                 this.selectedCampaign.campaignId,
                 this.formatSqlDate(startRange),
                 this.formatSqlDate(endRange)
@@ -484,7 +484,7 @@ export class DailySaleTrackerComponent implements OnInit {
             dailySaleId: form.value.dailySaleId,
             agentId: form.value.agent,
             campaignId: this.resolveClientId(index),
-            clientId: this.userInfo.selectedClient.clientId,
+            clientId: this.userInfo.sessionUser.sessionClient,
             firstName: form.value.firstName,
             lastName: form.value.lastName,
             street: form.value.street,
@@ -523,41 +523,4 @@ export class DailySaleTrackerComponent implements OnInit {
     }
 }
 
-class CreateDataSource extends DataSource<any> {
-    data: any;
 
-    constructor(data: any) {
-        super();
-
-        if (data.length < 1) data.push(this.addEmptyRow());
-
-        this.data = data;
-    }
-
-    connect(): Observable<DailySale[]> {
-        return of(this.data);
-    }
-
-    disconnect() {}
-
-    private addEmptyRow(): DailySale {
-        return {
-            dailySaleId: null,
-            agentId: null,
-            clientId: null,
-            campaignId: null,
-            podAccount: null,
-            firstName: null,
-            lastName: null,
-            street: null,
-            street2: null,
-            city: null,
-            state: null,
-            zip: null,
-            status: null,
-            paidStatus: null,
-            saleDate: null,
-            remarks: []
-        };
-    }
-}

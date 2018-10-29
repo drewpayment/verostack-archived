@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { SessionService } from './session.service';
@@ -8,6 +8,7 @@ import { IClient } from './models';
 import { IUserRole } from './models/role.model';
 import { UserService } from './user-features/user.service';
 import { environment } from 'environments/environment';
+import { OAuthResponse } from '@app/models/auth-response.model';
 
 @Injectable({
     providedIn: 'root'
@@ -40,6 +41,10 @@ export class AuthService {
     const url = this.apiUrl + 'oauth/token';
 
     return this.http.post(url, data).toPromise();
+  }
+
+  ngLogin(data:{email:string, password:string}):Observable<OAuthResponse> {
+      return this.http.post<OAuthResponse>(`${this.apiUrl}api/authenticate`, data);
   }
 
   /**

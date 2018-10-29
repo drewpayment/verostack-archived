@@ -5,11 +5,13 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build --prod",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "build:prod": "npm run build && node ./prod-build.js"
+    "build": "ng build --configuration=development && node ./prod-build.js",
+    "build:watch": "node ./prod-build.js && ng build --configuration=development --watch",
+    "build:prod": "ng build --prod && node ./prod-build.js",
+    "bust-cache": "node ./prod-build.js"
   },
   "private": true,
   "dependencies": {

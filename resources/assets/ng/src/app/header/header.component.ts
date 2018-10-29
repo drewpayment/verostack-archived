@@ -2,7 +2,7 @@ import {Component, OnInit, Input, AfterViewInit} from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {AuthService} from '../auth.service';
 import {SessionService} from '../session.service';
-import {IUser} from '../models/user.model';
+import {User} from '../models/user.model';
 import {MatSidenav, MatDialog} from '@angular/material';
 import {ClientSelectorComponent} from '../client-selector/client-selector.component';
 import {Router} from '@angular/router';
@@ -18,7 +18,7 @@ export class HeaderComponent implements OnInit, AfterViewInit {
     private defaultTitle: string = 'Verostack Dynamics';
 
     isLoggedIn: boolean;
-    user: IUser;
+    user: User;
     isAdmin: boolean;
     menuTitle: BehaviorSubject<string> = new BehaviorSubject<string>(this.defaultTitle);
     showClientSelector: boolean;
@@ -39,9 +39,9 @@ export class HeaderComponent implements OnInit, AfterViewInit {
                 this.menuTitle.next(this.defaultTitle);
             }
         });
-        this.session.userItem.subscribe((next: IUser) => {
+        this.session.userItem.subscribe((next: User) => {
             this.user = next;
-            this.menuTitle.next(this.user.selectedClient.name);
+            this.menuTitle.next(this.user.sessionUser.client.name);
             if (this.user.clients.length > 1) this.showClientSelector = true;
             this.isAdmin = this.user.role.role > 6;
         });

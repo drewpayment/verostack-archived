@@ -1,11 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, FormControl, NgForm, ValidationErrors, FormArray } from '@angular/forms';
-import { IUser, User, ICampaign, IPayrollMap, IAgent, IOverride, IAgentSale, IUserDetail, InvoiceDto } from '../models';
+import { FormGroup, FormBuilder, Validators, FormControl, NgForm, FormArray } from '@angular/forms';
+import { User, ICampaign, IPayrollMap, IAgent, IOverride, IAgentSale, IUserDetail, InvoiceDto } from '../models';
 import { FileSelectDirective, FileUploader } from 'ng2-file-upload';
-import { mapTo } from 'rxjs/operators';
 
 import { MessageService } from '@app/message.service';
-import { AuthService } from '../auth.service';
 import { CampaignService } from '../campaigns/campaign.service';
 import { UserService } from '../user-features/user.service';
 import { PayrollService } from './payroll.service';
@@ -13,17 +11,13 @@ import { PayrollService } from './payroll.service';
 // import * as XLSX from 'xlsx';
 import * as moment from 'moment';
 import * as _ from 'lodash';
-import * as XLSX from 'xlsx';
 import {
   MatDatepickerInputEvent,
   MatDialog
 } from '@angular/material';
 import { RejectNoteDialogComponent } from './dialogs/reject-note.component';
-import { SalesMappingComponent } from './dialogs/sales-mapping.component';
 import { BehaviorSubject ,  Observable } from 'rxjs';
 import { IExpense } from '../models/expense.model';
-import { ChangeAgentDialogComponent } from './dialogs/change-agent.component';
-import { SelectMapperComponent } from '../select-mapper/select-mapper.component';
 import { States, IState } from '@app/shared/models/state.model';
 
 interface IPayrollInvoice {
@@ -69,8 +63,8 @@ export class PayrollComponent implements OnInit {
   overrideAgents: IAgent[];
 
   states:IState[] = States.$get();
-  user: IUser = new User();
-  user$:Observable<IUser>;
+  user:User;
+  user$:Observable<User>;
   agent: IAgent; // currently selected agent
   agents:IAgent[];
   agents$:Observable<IAgent[]>;
@@ -84,8 +78,8 @@ export class PayrollComponent implements OnInit {
 
   newFileUpload: boolean;
   mapped: IPayrollMap;
-  users: IUser[];
-  users$:Observable<IUser[]>;
+  users: User[];
+  users$:Observable<User[]>;
   selectedOverrideAgent = new FormControl('', []);
 
   selectedAgentId:number;
@@ -102,7 +96,6 @@ export class PayrollComponent implements OnInit {
   disableOverrides:boolean = true;
 
   constructor(
-    private auth: AuthService,
     private campaignApi: CampaignService,
     private msg: MessageService,
     private userService: UserService,
@@ -126,9 +119,9 @@ export class PayrollComponent implements OnInit {
 
   ngOnInit() {
     this.agents$.subscribe((agents:IAgent[]) => { this.agents = agents; });
-    this.user$.subscribe((user:IUser) => {
+    this.user$.subscribe((user:User) => {
       this.user = user;
-      this.campaignApi.getCampaigns(user.selectedClient.clientId)
+      this.campaignApi.getCampaigns(user.sessionUser.sessionClient)
         .then((campaigns:ICampaign[]) => {
           this.campaigns = campaigns;
         })
@@ -229,29 +222,7 @@ export class PayrollComponent implements OnInit {
     return formGroups;
   }
 
-  private resetForm():void {
-    this.form.reset({
-      agentId: this.selectedAgentId,
-      campaignId: this.selectedCampaignId,
-      issueDate: this.issueDate,
-      weekEnding: this.weekEnding,
-      sales: this.dataSource$.getValue(),
-      overrides: this.overrideDataSource$.getValue(),
-      expenses: this.expenseDataSource$.getValue()
-    });
-  }
 
-  private prepareSaveModel():IPayrollInvoice {
-    return {
-      agentId: this.selectedAgentId,
-      campaignId: this.selectedCampaignId,
-      issueDate: this.issueDate,
-      weekEnding: this.weekEnding,
-      sales: this.dataSource$.getValue(),
-      overrides: this.overrideDataSource$.getValue(),
-      expenses: this.expenseDataSource$.getValue()
-    };
-  }
 
   clickFileUploader():void {
     document.getElementById('file-uploader').click();
@@ -380,7 +351,7 @@ export class PayrollComponent implements OnInit {
       });
   }
 
-  updateSelectedAgent(f:FormGroup):void {
+  updateSelectedAgent():void {
     if(this.overrideAgents == null
       || this.overrideAgents.length == 0) {
         this.userService.refreshAgents()
@@ -436,7 +407,7 @@ export class PayrollComponent implements OnInit {
     this[destinationDataSource].next(dataSource);
   }
 
-  removeEmptyOverride(f:NgForm, i:number):void {
+  removeEmptyOverride(i:number):void {
     let data = this.overrideDataSource$.getValue();
 
     if(!_.isEmpty(data[i])) return;
@@ -445,7 +416,7 @@ export class PayrollComponent implements OnInit {
     this.overrideDataSource$.next(data);
   }
 
-  removeEmptyExpense(f:NgForm, i:number):void {
+  removeEmptyExpense(i:number):void {
     let data = this.expenseDataSource$.getValue();
 
     if(!_.isEmpty(data[i])) return;
@@ -485,7 +456,7 @@ export class PayrollComponent implements OnInit {
     console.dir(data);
 
     this.payrollService
-      .saveNewInvoice(this.user.selectedClient.clientId, this.agent.agentId, data)
+      .saveNewInvoice(this.user.sessionUser.sessionClient, this.agent.agentId, data)
       .subscribe(result => {
         console.dir(result);
       });
@@ -575,66 +546,9 @@ export class PayrollComponent implements OnInit {
     }
   }
 
-  private isValidSource(source: any[], form: FormGroup): boolean {
-    for(let i = 0; i < source.length; i++) {
-      for(let prop in source[i]) {
-        let attr = prop + '_' + i;
-        if(form.controls[attr].invalid) return false;
-      }
-    }
-    return true;
-  }
 
-  private isInvoiceHeadersValid(form: FormGroup): any {
-    if(form.controls.agent.invalid ||
-      form.controls.campaign.invalid ||
-      form.controls.issueDate.invalid ||
-      form.controls.weekEnding.invalid) return false;
-    return true;
-  }
 
-  /**
-   * list of properties that should be ignored during validation
-   *
-   * @param column string
-   */
-  private escapeValidation(column: string): boolean {
-    return column === '$invalid' ||
-      column === 'note' ||
-      column === 'agentSalesId' ||
-      column === 'agentName' ||
-      column === 'invoiceId' ||
-      column === 'agentId' ||
-      column === 'createdAt' ||
-      column === 'updatedAt' ||
-      column === 'overrideId' ||
-      column === 'expenseId';
-  }
 
-  /**
-   * Checks the array for empty rows and removes them.
-   *
-   * @param source string value of the variable name
-   */
-  private removeEmptyRows(source: string): any[] {
-    let data = _.cloneDeep(this[source].data);
-    let hasEmptyRow: boolean = false;
-    let hasDataInRow: boolean = false;
-    for(var i = 0; i < data.length; i++) {
-      let row = data[i];
-      for(let r in row) {
-        if(r === '$invalid') continue;
-        if(hasDataInRow) {
-          hasDataInRow = false;
-          break;
-        }
-        hasDataInRow = row[r] !== null;
-        hasEmptyRow = !hasDataInRow;
-      }
-      if(hasEmptyRow) data.splice(i, 1);
-    }
-    return data;
-  }
 
   private insertPayrollRow(): IAgentSale {
     return {
@@ -681,27 +595,6 @@ export class PayrollComponent implements OnInit {
     }
   }
 
-  /**
-   * Sets all datasources with empty data sets and attaches validation properties.
-   */
-  private initializeDataSources(): void {
-
-    // this.payrollService.sales.subscribe((next: IAgentSale[]) => {
-    //   this.dataSource$.next(next);
-    //   this.invoice.sales = next;
-    // });
-    this.payrollService.overrides.subscribe((next: IOverride[]) => {
-      this.overrideDataSource$.next(next);
-      this.invoice.overrides = next;
-    });
-    this.payrollService.expenses.subscribe((next: IExpense[]) => {
-      this.expenseDataSource$.next(next);
-      this.invoice.expenses = next;
-    });
-
-    // add validity rows to initial data sets
-    // this.attachInvalidDataAttributes();
-  }
 
 }
 
