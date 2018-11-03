@@ -8,10 +8,16 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "build": "ng build --configuration=development && node ./prod-build.js",
-    "build:watch": "node ./prod-build.js && ng build --configuration=development --watch",
-    "build:prod": "ng build --prod && node ./prod-build.js",
-    "bust-cache": "node ./prod-build.js"
+    "build": "ng build --configuration=development",
+    "build:watch": "npm-watch build:development",
+    "build:prod": "ng build --prod",
+    "postbuild": "node ./prod-build.js",
+    "build:development": "ng build --configuration=development && npm run postbuild",
+    "watch": "nodemon -e ts,php,html,scss --ignore 'node_modules/**' ng build --configuration=development && npm run postbuild"
+  },
+  "nodemonConfig": {
+      "ignore": ["*/node_modules/**"],
+      "delay": "1000"
   },
   "private": true,
   "dependencies": {
@@ -46,6 +52,7 @@
     "ngx-loading": "^1.0.14",
     "ngx-quill": "^3.6.0",
     "node-sass": "^4.9.0",
+    "nodemon": "^1.18.5",
     "popper.js": "^1.14.4",
     "quill": "^1.3.6",
     "rxjs": "^6.1.0",

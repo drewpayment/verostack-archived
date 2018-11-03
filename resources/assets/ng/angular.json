@@ -12,6 +12,7 @@
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
             "outputPath": "../../../public/dist",
+            "deployUrl": "dist/",
             "index": "src/index.php",
             "main": "src/main.ts",
             "tsConfig": "src/tsconfig.app.json",
@@ -66,7 +67,11 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "verofront:build"
+            "browserTarget": "verofront:build",
+            "ssl": true,
+            "baseHref": "verostack",
+            "servePath": "../../../public",
+            "publicHost": "verostack"
           },
           "configurations": {
             "production": {
