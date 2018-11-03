@@ -19,7 +19,7 @@ interface DataStore {
 
 @Injectable()
 export class UserService {
-  private apiUrl : string = 'http://verostack:8888/';
+  private apiUrl:string = environment.apiUrl;
   private api = environment.apiUrl + 'api/';
 
   dataStore: DataStore = {
