@@ -53,7 +53,7 @@
             "@php artisan key:generate"
         ],
         "post-autoload-dump": [
-            "@php artisan package:discover"
+            "php artisan package:discover"
         ]
     },
     "config": {
