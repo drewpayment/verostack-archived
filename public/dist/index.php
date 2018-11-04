@@ -24,7 +24,7 @@
         }
     </script>
 
-<link rel="stylesheet" href="dist/styles.59e26dcbcf5c63c17e60.css"></head>
+<link rel="stylesheet" href="dist/styles.5537d6b56bf8365256bf.css"></head>
 <body>
 
     <app-root>
