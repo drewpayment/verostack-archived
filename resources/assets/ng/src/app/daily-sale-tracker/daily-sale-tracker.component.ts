@@ -331,7 +331,7 @@ export class DailySaleTrackerComponent implements OnInit {
             .afterClosed()
             .subscribe(result => {
                 if (result == null) return;
-                const dto: DailySale = this.prepareModel(sale);
+                const dto: DailySale = this.prepareModel(sale, index);
                 if (dto.dailySaleId < 1) return;
                 this.trackerService
                     .deleteDailySale(this.userInfo.sessionUser.sessionClient, dto.dailySaleId)
