@@ -1,11 +1,11 @@
-<mat-toolbar color="primary" class="mb-4">
+<mat-toolbar color="primary" class="app-header-bar">
   <mat-toolbar-row>
     <span *ngIf="(loggedInStatus | async)">
       <button mat-icon-button (click)="toggleSidenav()">
         <mat-icon>{{(navOpen|async) ? 'arrow_back_ios' : 'menu'}}</mat-icon>
       </button>
     </span>
-    <span routerLink="/">{{menuTitle | async}}</span>
+    <span routerLink="/" class="font-weight-light h1 mb-0">{{menuTitle | async}}</span>
     <span class="toolbar-spacer"></span>
     <button mat-icon-button [matMenuTriggerFor]="menu" *ngIf="(loggedInStatus | async); else loggedOut">
       <mat-icon>more_vert</mat-icon>
