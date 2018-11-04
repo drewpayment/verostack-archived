@@ -1,11 +1,11 @@
 <?php
 
-$url = getenv();
+// $url = getenv();
 
 // $strArray = explode('/', $url["JAWSDB_URL"]);
 // $connArray = explode('/', env('JAWSDB_URL', $url['JAWSDB_URL']));
 
-$db = $strArray[count($strArray) - 1];
+// $db = $strArray[count($strArray) - 1];
 
 return [
 
