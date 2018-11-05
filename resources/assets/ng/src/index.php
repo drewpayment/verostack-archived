@@ -49,6 +49,6 @@
     <!-- Scripts -->
 
 
-
+    <small class="text-muted font-weight-light text-center legal-footer">Payment Group, Inc. &#xa9;2018</small>
 </body>
 </html>
