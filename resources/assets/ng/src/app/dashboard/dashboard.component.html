@@ -1,16 +1,28 @@
 <div class="container">
     <div class="row mb-4">
         <div class="col-md-12">
-            <mat-card>
-                <mat-card-title>
+            <mat-card class="page-header-accent">
+                <mat-card-content *ngIf="!isMobileLayout">
                     <div class="d-flex justify-content-between">
-                        <h4>Sales Analysis</h4>
-                        <button mat-button type="button" color="primary" (click)="showAddSaleDialog()">
-                            <mat-icon inline="true">add_circle</mat-icon> SALE
-                        </button>
+                        <h3 class="m-0">Sales Analysis</h3>
+                        <div class="d-flex">
+                            <ng-container *ngIf="(user|async).role.role >= roleType.companyAdmin && !isMobileLayout">
+                                <mat-form-field class="mr-2">
+                                    <mat-label>Viewing:</mat-label>
+                                    <mat-select [value]="selectedAgent.agentId" (selectionChange)="handleAgentChange($event)">
+                                        <mat-option *ngFor="let a of (agents|async)" [value]="a.agentId">
+                                            {{a.firstName}} {{a.lastName}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </ng-container>
+                            <button mat-button type="button" color="primary" (click)="showAddSaleDialog()">
+                                <mat-icon inline="true">add_circle</mat-icon> SALE
+                            </button>
+                        </div>
                     </div>
-                </mat-card-title>
-                <mat-card-content [class.justify-content-between]="isMobileLayout">
+                </mat-card-content>
+                <mat-card-content [class.justify-content-between]="isMobileLayout" *ngIf="isMobileLayout">
                     <ng-container *ngIf="(user|async).role.role >= roleType.companyAdmin">
                         <mat-form-field>
                             <mat-select [value]="selectedAgent.agentId" (selectionChange)="handleAgentChange($event)" placeholder="Currently Viewing:">
@@ -20,46 +32,8 @@
                             </mat-select>
                         </mat-form-field>
                     </ng-container>
-                    <!-- <span *ngIf="(user|async).role.role < roleType.companyAdmin; else adminWorkspace">Sales Analysis</span>
-                    <ng-template #adminWorkspace>
-                        <div class="h3">
-                            <mat-form-field class="vs-toolbar-select">
-                                <mat-select [value]="selectedAgent.agentId" (selectionChange)="handleAgentChange($event)">
-                                    <mat-option *ngFor="let a of (agents|async)" [value]="a.agentId">
-                                        {{a.firstName}} {{a.lastName}}
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                            <span *ngIf="!isMobileLayout">'s Sale Analysis</span>
-                        </div>
-                    </ng-template>
-                    <span class="flex-spacer" *ngIf="!isMobileLayout"></span>
-                    <button mat-raised-button type="button" class="vs-toolbar-icon" (click)="showAddSaleDialog()">
-                        <mat-icon inline="true">add_circle</mat-icon> SALE
-                    </button> -->
                 </mat-card-content>
             </mat-card>
-            <!-- <mat-toolbar color="primary">
-                <mat-toolbar-row [class.justify-content-between]="isMobileLayout">
-                    <span *ngIf="(user|async).role.role < roleType.companyAdmin; else adminWorkspace">Sales Analysis</span>
-                    <ng-template #adminWorkspace>
-                        <span>{{(user|async).firstName}} {{(user|async).lastName}}'s Workspace</span>
-                        <mat-form-field class="vs-toolbar-select">
-                            <mat-select [value]="selectedAgent.agentId" (selectionChange)="handleAgentChange($event)">
-                                <mat-option *ngFor="let a of (agents|async)" [value]="a.agentId">
-                                    {{a.firstName}} {{a.lastName}}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                        <span *ngIf="!isMobileLayout">'s Sale Analysis</span>
-                    </ng-template>
-                    <span class="flex-spacer" *ngIf="!isMobileLayout"></span>
-                    <mat-icon class="vs-toolbar-icon">add_circle</mat-icon>
-                    <button mat-raised-button type="button" class="vs-toolbar-icon" (click)="showAddSaleDialog()">
-                        <mat-icon inline="true">add_circle</mat-icon> SALE
-                    </button>
-                </mat-toolbar-row>
-            </mat-toolbar> -->
         </div>
     </div>
     <div class="row">

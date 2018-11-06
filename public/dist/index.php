@@ -15,6 +15,7 @@
 
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://cdn.materialdesignicons.com/3.0.39/css/materialdesignicons.min.css" rel="stylesheet">
     <script>
         // https://github.com/angular/angular-cli/issues/9920
         // global shim was removed with release of Angular 6, but we still need shim for non-ng pkgs
@@ -24,7 +25,7 @@
         }
     </script>
 
-<link rel="stylesheet" href="dist/styles.a08c0b249b029e082086.css"></head>
+<link rel="stylesheet" href="dist/styles.c6b68daf14ecdd738df2.css"></head>
 <body>
 
     <app-root>
@@ -50,5 +51,5 @@
 
 
     <small class="text-muted font-weight-light text-center legal-footer">Payment Group, Inc. &#xa9;2018</small>
-<script type="text/javascript" src="dist/runtime.90050927e0c994a937e4.js"></script><script type="text/javascript" src="dist/polyfills.6f97a6de716e35ce02b2.js"></script><script type="text/javascript" src="dist/vend.lib.917d066848c5f8907f85.js"></script><script type="text/javascript" src="dist/main.34c04d846627d92c5091.js"></script></body>
+<script type="text/javascript" src="dist/runtime.90050927e0c994a937e4.js"></script><script type="text/javascript" src="dist/polyfills.6f97a6de716e35ce02b2.js"></script><script type="text/javascript" src="dist/vend.lib.917d066848c5f8907f85.js"></script><script type="text/javascript" src="dist/main.041079028f7affed73d1.js"></script></body>
 </html>

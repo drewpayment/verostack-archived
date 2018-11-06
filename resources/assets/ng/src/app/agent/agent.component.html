@@ -1,17 +1,25 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-md-12 d-flex align-items-baseline">
-            <mat-form-field>
-                <input matInput type="text" placeholder="Search Agents" (keyup)="searchAgents($event)" />
-            </mat-form-field>
-            <button type="button" class="mx-3" mat-icon-button (click)="toggleSortUsers()">
-                <mat-icon>sort_by_alpha</mat-icon>
-                <mat-icon>{{sortAscending ? 'arrow_drop_up' : 'arrow_drop_down'}}</mat-icon>
-            </button>
-            <mat-slide-toggle (change)="toggleAgents($event)" [checked]="true">
-                {{ showInactive ? 'Hide Inactive' : 'Show Inactive' }}
-            </mat-slide-toggle>
+        <div class="col-md-12">
+            <mat-card class="page-header-accent">
+                <mat-card-content class="d-flex justify-content-between">
+                    <h3>Agents</h3>
+                    <div>
+                        <mat-form-field>
+                            <input matInput type="text" placeholder="Search Agents" (keyup)="searchAgents($event)" />
+                            <i class="mdi mdi-magnify" matSuffix></i>
+                        </mat-form-field>
+                        <button type="button" class="mx-3" mat-icon-button (click)="toggleSortUsers()">
+                            <mat-icon>sort_by_alpha</mat-icon>
+                            <mat-icon>{{sortAscending ? 'arrow_drop_up' : 'arrow_drop_down'}}</mat-icon>
+                        </button>
+                        <mat-slide-toggle (change)="toggleAgents($event)" [checked]="true">
+                            {{ showInactive ? 'Hide Inactive' : 'Show Inactive' }}
+                        </mat-slide-toggle>
+                    </div>
+                </mat-card-content>
+            </mat-card>
         </div>
     </div>
     <div class="row">
@@ -32,9 +40,27 @@
                             <button mat-button class="nav-link" [class.active]="user.display === 2" (click)="user.display = 2">Sales</button>
                         </li>
                     </ul>
-                    <button class="p-0 hover-item" type="button" mat-icon-button (click)="editAgent(user)">
-                        <mat-icon color="accent">edit</mat-icon>
-                    </button>
+                    <div>
+                        <button class="p-0 hover-item" type="button" mat-icon-button [matMenuTriggerFor]="agentMenu">
+                            <i class="mdi mdi-dots-vertical-circle-outline"></i>
+                        </button>
+                        <mat-menu #agentMenu="matMenu">
+                            <button mat-menu-item>
+                                <mat-icon>vpn_key</mat-icon>
+                                <span>Rules</span>
+                            </button>
+                            <button mat-menu-item (click)="editAgent(user)">
+                                <mat-icon>edit</mat-icon>
+                                <span>Edit</span> 
+                            </button>
+                        </mat-menu>
+                        <!-- <button class="p-0 hover-item" type="button" mat-icon-button>
+                            <i class="mdi mdi-security-lock mat-accent"></i>
+                        </button>
+                        <button class="p-0 hover-item" type="button" mat-icon-button (click)="editAgent(user)">
+                            <mat-icon color="accent">edit</mat-icon>
+                        </button> -->
+                    </div>
                 </div>
                 <div class="card-body" [class.card-body-auto]="user.display === 2">
                     <ng-container *ngIf="user.display === 0">
