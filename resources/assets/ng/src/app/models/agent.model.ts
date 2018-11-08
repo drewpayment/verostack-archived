@@ -1,5 +1,6 @@
 import { Moment } from "moment";
 import { ISalesPairing } from '@app/models/sales-pairings.model';
+import { IRole } from '@app/models/role.model';
 
 export interface IAgent {
   agentId?:number,
@@ -10,5 +11,6 @@ export interface IAgent {
   isManager?:boolean,
   isActive?:boolean,
   createdAt?:Date | Moment,
-  pairings?:ISalesPairing[]
+  pairings?:ISalesPairing[],
+  role?:IRole
 }

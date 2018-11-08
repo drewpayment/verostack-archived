@@ -45,7 +45,7 @@
                             <i class="mdi mdi-dots-vertical-circle-outline"></i>
                         </button>
                         <mat-menu #agentMenu="matMenu">
-                            <button mat-menu-item>
+                            <button mat-menu-item (click)="showEditRulesDialog(user)">
                                 <mat-icon>vpn_key</mat-icon>
                                 <span>Rules</span>
                             </button>

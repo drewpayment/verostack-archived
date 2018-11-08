@@ -7,11 +7,11 @@ export interface IUserRole {
 }
 
 export interface IRole {
-    user_id: number;
-    role: number;
+    userId:number;
+    role:RoleType | number;
     isSalesAdmin:boolean,
-    created_at: number;
-    updated_at: number;
+    createdAt?:number;
+    updatedAt?:number;
 }
 
 export interface RoleType {

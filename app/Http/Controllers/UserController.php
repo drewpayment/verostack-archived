@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Agent;
-use App\Http\AgentService;
-use App\Http\Helpers;
-use App\Http\Resources\ApiResource;
-use App\SessionUser;
-use App\UserDetail;
+use App\Role;
 use App\User;
-use App\Http\UserService;
-use Illuminate\Http\Request;
+use App\Agent;
+use App\UserDetail;
+use App\SessionUser;
+use App\Http\Helpers;
 use App\Http\RoleService;
+use App\Http\UserService;
+use App\Http\AgentService;
+use Illuminate\Http\Request;
+use App\Http\Resources\ApiResource;
 use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
@@ -399,6 +400,34 @@ class UserController extends Controller
         return $result
             ->setData(is_null($existing))
             ->throwApiException()
+            ->getResponse();
+    }
+
+    public function saveUserRole(Request $request, $userId)
+    {
+        $result = new ApiResource();
+
+        $role = Role::userId($userId)->first();
+
+        $isNew = is_null($role);
+
+        if($isNew)
+        {
+            $role = new Role;
+            $role->userId = $userId;
+            $role->role = $request->role;
+
+            $savedStatus = $role->save();
+        }
+        else 
+        {
+            $role->role = $request->role;
+            $role->isSalesAdmin = $request->isSalesAdmin;
+
+            $savedStatus = $role->save();
+        }                
+        
+        return $result->throwApiException()
             ->getResponse();
     }
 

@@ -31,6 +31,8 @@ Route::group(['prefix' => 'users', 'middleware' => 'auth:api'], function() {
 
 	Route::get('{userId}/roles/{roleId}', 'ApiController@getUsersByUserRole');
 
+    Route::post('{userId}/roles', 'UserController@saveUserRole');
+
 	Route::post('{userId}/client-selector/{clientId}', 'ApiController@setSelectedClient');
 
 	Route::post('clients/{clientId}/new-user-agent', 'UserController@saveNewUserAgentEntity');

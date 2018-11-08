@@ -15,6 +15,7 @@ import { UserService } from '@app/user-features/user.service';
 import { ISalesPairing } from '@app/models/sales-pairings.model';
 import { CampaignService } from '@app/campaigns/campaign.service';
 import { MessageService } from '@app/message.service';
+import { AgentRulesDialogComponent } from '@app/agent/agent-rules-dialog/agent-rules-dialog.component';
 
 interface DataStore {
     users:User[],
@@ -74,7 +75,8 @@ export class AgentComponent implements OnInit, AfterViewChecked, OnDestroy {
         private campaignService:CampaignService,
         private fb:FormBuilder,
         private msg:MessageService,
-        private changeDetector:ChangeDetectorRef
+        private changeDetector:ChangeDetectorRef,
+        private userService:UserService
     ) {
         this.floatOpen$ = this.floatBtnService.opened$.asObservable();
         this.users = this.users$.asObservable();
@@ -123,6 +125,30 @@ export class AgentComponent implements OnInit, AfterViewChecked, OnDestroy {
             this.floatBtnService.close();
             if(result == null || !result) return;
             this.refreshAgents();
+        });
+    }
+
+    showEditRulesDialog(user:User):void {
+        this.dialog.open(AgentRulesDialogComponent, {
+            width: '400px',
+            data: {
+                user: user
+            },
+            autoFocus: false
+        })
+        .afterClosed()
+        .subscribe(result => {
+            if(result == null) return;
+            this.session.showLoader();
+            this.userService.saveUserRoleEntity(result)
+                .subscribe(role => {
+                    this.session.hideLoader();
+                    this.store.users.forEach((u, i, a) => {
+                        if(u.id != role.userId) return;
+                        a[i].role = role;
+                    });
+
+                });
         });
     }
 

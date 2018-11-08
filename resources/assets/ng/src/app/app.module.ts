@@ -16,6 +16,7 @@ import { PipesModule } from '@app/pipes/pipes.module';
 import { EditAgentDialogComponent } from './agent/edit-agent-dialog/edit-agent-dialog.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { PublicHomeComponent } from './public-home/public-home.component';
+import { AgentRulesDialogComponent } from './agent/agent-rules-dialog/agent-rules-dialog.component';
 
 @NgModule({
   imports: [
@@ -38,10 +39,12 @@ import { PublicHomeComponent } from './public-home/public-home.component';
     HeaderComponent,
     AgentComponent,
     EditAgentDialogComponent,
-    PublicHomeComponent
+    PublicHomeComponent,
+    AgentRulesDialogComponent
   ],
   entryComponents: [
-    EditAgentDialogComponent
+    EditAgentDialogComponent,
+    AgentRulesDialogComponent
   ],
   providers: [
   ],

@@ -1,0 +1,33 @@
+
+<div mat-dialog-title class="d-flex justify-content-between align-items-center">
+    <h4 class="mb-0">Permissions & Rules</h4>
+    <button mat-icon-button mat-dialog-close>
+        <mat-icon>clear</mat-icon>
+    </button>
+</div>
+
+<mat-dialog-content class="mat-typography">
+    <p>
+        The following are permissions that allow users specific actions that are not governed
+        by their overarching user role and they will be able to access each rule if enabled, regardless 
+        of what user role is selected. 
+    </p>
+    <hr />
+
+    <form [formGroup]="form">
+        <mat-checkbox formControlName="isSalesAdmin">
+            <span class="font-weight-bold">Sales Entry Admin</span>
+        </mat-checkbox>
+         - User can access and has read/write permissions on the 
+        sales tracker. This also means that they're able to see all campaigns and can assign sales to all users. 
+    </form>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+    <button type="button" mat-button (click)="onNoClick()">
+        Cancel
+    </button>
+    <button type="button" mat-button color="primary" (click)="saveForm()">
+        Save
+    </button>
+</mat-dialog-actions>
