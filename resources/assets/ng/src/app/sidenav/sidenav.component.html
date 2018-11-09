@@ -25,7 +25,7 @@
     <a mat-list-item 
         routerLink="daily-tracker" 
         routerLinkActive="mat-router-link-active"
-        *ngIf="user.role.role < roleType.supervisor && user.role.isSalesAdmin"
+        *ngIf="user.role.role < roleType.companyAdmin && user.role.isSalesAdmin"
     >
         <i class="material-icons px-1">ballot</i>
         <span>Daily Tracker</span>

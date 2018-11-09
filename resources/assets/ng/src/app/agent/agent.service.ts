@@ -5,6 +5,7 @@ import { Observable, throwError } from 'rxjs';
 import { AuthService } from '@app/auth.service';
 import { catchError } from 'rxjs/operators';
 import { ISalesPairing } from '@app/models/sales-pairings.model';
+import { RoleType } from '@app/models/role.model';
 
 interface DataStore {
     agents: IAgent[];
@@ -103,6 +104,10 @@ export class AgentService {
             .pipe(
                 catchError(this.handleError)
             );
+    }
+
+    getRoleTypes(includeInactive:boolean = false):Observable<RoleType[]> {
+        return this.http.get<RoleType[]>(`${this.api}/role-types?inactive=${includeInactive}`);
     }
 
     private handleError(error:HttpErrorResponse) {

@@ -40,8 +40,12 @@
                             <button mat-button class="nav-link" [class.active]="user.display === 2" (click)="user.display = 2">Sales</button>
                         </li>
                     </ul>
-                    <div>
-                        <button class="p-0 hover-item" type="button" mat-icon-button [matMenuTriggerFor]="agentMenu">
+                    <div style="min-height:40px;">
+                        <button class="p-0 hover-item"
+                            type="button" mat-icon-button 
+                            [matMenuTriggerFor]="agentMenu"
+                            *ngIf="user.agent.isActive"
+                        >
                             <i class="mdi mdi-dots-vertical-circle-outline"></i>
                         </button>
                         <mat-menu #agentMenu="matMenu">
@@ -118,6 +122,7 @@
                                 class="float-right" 
                                 (click)="addEmptyPairing(user.pairingsForm.controls['array'], user.agent.pairings)"
                                 [disabled]="disableAddPairingBtn"
+                                *ngIf="user.agent.isActive"
                             >
                                 <mat-icon>add</mat-icon> Pairing
                             </button>
@@ -172,7 +177,7 @@
                             </mat-card>
                         </div>
                         <ng-template #noPairings>
-                            <h5 class="text-muted">
+                            <h5 class="text-muted" *ngIf="user.agent.isActive">
                                 Click the <span class="font-italic">+ Pairings</span> button to get started.
                             </h5>
                         </ng-template>

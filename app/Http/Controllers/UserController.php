@@ -414,20 +414,27 @@ class UserController extends Controller
         if($isNew)
         {
             $role = new Role;
-            $role->userId = $userId;
-            $role->role = $request->role;
-
-            $savedStatus = $role->save();
+            $role->user_id = $userId;
+            $role->role = $request['role'];
         }
         else 
         {
-            $role->role = $request->role;
-            $role->isSalesAdmin = $request->isSalesAdmin;
+            $role->role = $request['role'];
+            $role->isSalesAdmin = $request['isSalesAdmin'];
+        }             
 
-            $savedStatus = $role->save();
-        }                
+        $saved = $role->save();   
+
+        $role = Role::userId($userId)->first();
+
+        if(!$saved)
+            return $result->setToFail()
+                ->throwApiException()
+                ->getResponse();
         
-        return $result->throwApiException()
+        return $result
+            ->setData($role)
+            ->throwApiException()
             ->getResponse();
     }
 
