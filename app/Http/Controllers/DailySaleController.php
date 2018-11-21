@@ -47,6 +47,31 @@ class DailySaleController extends Controller
 			->getResponse();
 	}
 
+    /**
+     * Get daily sales entities scoped to client, campaign and pay cycle. 
+     *
+     * @param $clientId int
+     * @param $payCycleId int
+     * @param $campaignId int
+     * @return ApiResource
+     */
+    public function getSalesByPayCycle($clientId, $campaignId, $payCycleId = null)
+    {
+        $result = new ApiResource();
+
+        $result
+            ->checkAccessByClient($clientId, Auth::user()->id)
+            ->mergeInto($result);
+
+        if($result->hasError)
+            return $result->throwApiException()->getResponse();
+
+        return $this->service->getSalesByPayCycle($clientId, $payCycleId, $campaignId)
+            ->mergeInto($result)
+            ->throwApiException()
+            ->getResponse();
+    }
+
 	/**
 	 * @param $clientId
 	 * @param $agentId

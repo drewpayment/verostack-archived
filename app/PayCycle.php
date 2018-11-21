@@ -1,0 +1,76 @@
+<?php
+
+namespace App;
+
+use App\DailySale;
+use Illuminate\Database\Eloquent\Model;
+
+class PayCycle extends Model
+{
+    
+    protected $table = 'pay_cycle';
+
+    protected $primaryKey = 'pay_cycle_id';
+
+    public function getIsPendingAttribute($value)
+    {
+        return $value == 1;
+    }
+
+    public function setIsPendingAttribute($value)
+    {
+        $this->attributes['is_pending'] = $value == true ? 1 : 0;
+    }
+
+    public function getIsClosedAttribute($value)
+    {
+        return $value == 1;
+    }
+
+    public function setIsClosedAttribute($value)
+    {
+        $this->attributes['is_closed'] = $value == true ? 1 : 0;
+    }
+
+    /**
+     * Get a list of related daily sales. 
+     *
+     * @return Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function dailySales()
+    {
+        return $this->hasMany(DailySale::class, 'pay_cycle_id');
+    }
+
+
+
+    /** QUERY HELPERS */
+
+    /**
+     * Filters return from sql by pay_cycle_id column.
+     *
+     * @param Illuminate\Database\Eloquent\Builder $query
+     * @param int $id
+     * @return Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeByPayCycle($query, $id)
+    {
+        return $query->where('pay_cycle_id', $id);
+    }
+
+    /**
+     * Scope to include/exclude closed cycles.
+     * 
+     * @param $query \Illuminate\Database\Eloquent\Builder
+     * @param $incluce boolean
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeIncludeClosed($query, $include = false)
+    {
+        if($include)
+            return $query;
+        else
+            return $query->where('is_closed', false);
+    }
+
+}

@@ -279,7 +279,7 @@ export class DailySaleTrackerComponent implements OnInit {
         });
     }
 
-    editExistingSale(index: number): void {
+    showEditSaleDialog(index: number): void {
         // this was checking form validity when we were completing the entire form right in the table
         // but don't think i need this anymore
         // const sale:FormGroup = this.form.get('sales').get(index+'') as FormGroup;

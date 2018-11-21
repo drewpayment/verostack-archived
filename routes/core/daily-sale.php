@@ -20,4 +20,6 @@ Route::middleware(['auth:api'])->group(function() {
 	Route::get('/pods/{pod}', 'DailySaleController@checkUniquePodAccount')
 		->where(['pod' => '[0-9]+']);
 
+    Route::get('/clients/{clientId}/campaigns/{campaignId}/daily-sales/pay-cycles/{payCycleId}', 'DailySaleController@getSalesByPayCycle');
+
 });

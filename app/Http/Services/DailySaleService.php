@@ -44,9 +44,30 @@ class DailySaleService {
 			->setData(DailySale::byClient($clientId)
 				->byCampaign($campaignId)
                 ->byDateRange($startDate, $endDate)
+                ->filterPaid()
 				->with(['remarks', 'remarks.user'])
 	            ->get());
 	}
+
+    /**
+     * Get daily sales entities scoped to client, campaign and pay cycle. 
+     *
+     * @param $clientId int
+     * @param $payCycleId int
+     * @param $campaignId int
+     * @return ApiResource
+     */
+    public function getSalesByPayCycle($clientId, $payCycleId, $campaignId)
+    {
+        $result = new ApiResource();
+        return $result->setData(
+            DailySale::with('payCycle')
+                ->byClient($clientId)
+                ->byCampaign($campaignId)
+                ->byPayCycle($payCycleId)
+                ->get()
+        );
+    }
 
 	/**
 	 * @param $agentId
@@ -62,6 +83,7 @@ class DailySaleService {
 		$endDate = Carbon::createFromFormat('Y-m-d', $endDate)->toDateString();
 		return $result->setData(DailySale::byAgentId($agentId)
 			->byDateRange($startDate, $endDate)
+            ->filterPaid()
 			->with(['remarks', 'remarks.user'])
 			->get());
 	}
@@ -198,6 +220,7 @@ class DailySaleService {
 		return $result->setData(
 			DailySale::with('remarks.user')
 			         ->byDailySale($sale->dailySaleId)
+                     ->filterPaid()
 			         ->first());
 	}
 

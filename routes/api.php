@@ -24,6 +24,7 @@ include('core/sales-status.php');
 include('core/daily-sale.php');
 include('core/agents.php');
 include('core/contacts.php');
+include('core/pay-cycle.php');
 
 //Route::middleware('auth:api')->get('/user', function (Request $request) {
 //    return $request->user();

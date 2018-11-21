@@ -135,7 +135,7 @@
                         <th mat-header-cell *matHeaderCellDef>&nbsp;</th>
                         <td mat-cell *matCellDef="let item; let i=dataIndex">
                             <div class="table-shrink" class="hover-item">
-                                <button mat-icon-button (click)="editExistingSale(i)">
+                                <button mat-icon-button (click)="showEditSaleDialog(i)">
                                     <mat-icon>edit</mat-icon>
                                 </button>
                                 <button mat-icon-button color="warn" (click)="deleteSale(i)">

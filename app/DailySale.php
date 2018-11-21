@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\PayCycle;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
@@ -53,6 +54,27 @@ class DailySale extends Model
 			'daily_sale_id',
 			'remark_id'
 		);
+    }
+
+    public function payCycle()
+    {
+        return $this->belongsTo(PayCycle::class, 'pay_cycle_id');
+    }
+
+    /**
+	 * Filter entities by pay cycle id. This query also returns sales that have a null
+     * pay cycle id. Primarily used to build a list of sales for selection attaching new sales to 
+     * an existing pay cycle.
+	 *
+	 * @param $query \Illuminate\Database\Eloquent\Builder
+	 * @param $payCycleId
+	 *
+	 * @return mixed \Illuminate\Database\Eloquent\Builder
+	 */
+    public function scopeByPayCycleWithNulls($query, $payCycleId)
+    {
+        return $query->where('pay_cycle_id', $payCycleId)
+            ->orWhere('pay_cycle_id', null);
     }
 
 	/**
@@ -127,6 +149,29 @@ class DailySale extends Model
 	public function scopeByAccount($query, $pod)
     {
     	return $query->where('pod_account', $pod);
+    }
+
+    /**
+     * Filters out the sales that have been associated with a pay cycle. 
+     * 
+     * @param $query \Illuminate\Database\Eloquent\Builder
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeFilterPaid($query)
+    {
+        return $query->where('pay_cycle_id', null);
+    }
+
+    /**
+     * Filters by given pay cycle.
+     * 
+     * @param $query \Illuminate\Database\Eloquent\Builder
+     * @param $id int
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeByPayCycle($query, $id)
+    {
+        return $query->where('pay_cycle_id', $id);
     }
 
 }

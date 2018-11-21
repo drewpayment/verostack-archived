@@ -17,6 +17,8 @@ import { EditAgentDialogComponent } from './agent/edit-agent-dialog/edit-agent-d
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { PublicHomeComponent } from './public-home/public-home.component';
 import { AgentRulesDialogComponent } from './agent/agent-rules-dialog/agent-rules-dialog.component';
+import { PayCycleComponent } from './pay-cycle/pay-cycle.component';
+import { EditPayCycleComponent } from './pay-cycle/components/edit-pay-cycle/edit-pay-cycle.component';
 
 @NgModule({
   imports: [
@@ -40,7 +42,9 @@ import { AgentRulesDialogComponent } from './agent/agent-rules-dialog/agent-rule
     AgentComponent,
     EditAgentDialogComponent,
     PublicHomeComponent,
-    AgentRulesDialogComponent
+    AgentRulesDialogComponent,
+    PayCycleComponent,
+    EditPayCycleComponent
   ],
   entryComponents: [
     EditAgentDialogComponent,

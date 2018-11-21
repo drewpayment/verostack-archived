@@ -14,10 +14,7 @@
 
 <mat-nav-list *ngIf="user != null">
     <!-- all users -->
-    <a mat-list-item routerLink="dashboard" routerLinkActive="mat-router-link-active">
-        <i class="material-icons px-1">pie_chart</i>
-        <span>My Work</span>
-    </a>
+    
     <a mat-list-item routerLink="my-information" routerLinkActive="mat-router-link-active">
         <i class="material-icons px-1">info_outline</i>
         <span>My Information</span>
@@ -33,6 +30,10 @@
 
     <!-- agents only -->
     <ng-template *ngIf="user.role.role < roleType.companyAdmin">
+        <a mat-list-item routerLink="dashboard" routerLinkActive="mat-router-link-active">
+            <i class="material-icons px-1">pie_chart</i>
+            <span>My Work</span>
+        </a>
         <a mat-list-item class="hide">
             <i class="material-icons px-1">monetization_on</i>
             <span>My Pay</span>
@@ -51,17 +52,21 @@
 
     <!-- company admin+ -->
     <ng-container *ngIf="user.role.role >= roleType.companyAdmin">
+        <a mat-list-item routerLink="dashboard" routerLinkActive="mat-router-link-active">
+            <i class="material-icons px-1">pie_chart</i>
+            <span>Analyze</span>
+        </a>
         <a mat-list-item routerLink="daily-tracker" routerLinkActive="mat-router-link-active">
             <i class="material-icons px-1">ballot</i>
-            <span>Daily Tracker</span>
+            <span>Sales</span>
         </a>
         <a mat-list-item routerLink="client-information" routerLinkActive="mat-router-link-active">
             <i class="material-icons px-1">business</i>
-            <span>Client Information</span>
+            <span>Organization</span>
         </a>
-        <a mat-list-item class="hide">
+        <a mat-list-item routerLink="admin/pay" routerLinkActive="mat-router-link-active">
             <i class="material-icons px-1">payment</i>
-            <span>Paystubs</span>
+            <span>Pay Admin</span>
         </a>
         <a mat-list-item class="hide">
             <i class="material-icons px-1">dashboard</i>

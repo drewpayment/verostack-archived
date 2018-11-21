@@ -1,0 +1,49 @@
+
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <mat-card class="page-header-accent">
+                <mat-card-content>
+                    <h3>Payroll Administration</h3>
+                </mat-card-content>
+            </mat-card>
+        </div>
+    </div>
+
+    <div class="row" *ngFor="let cycle of cycles">
+        <div class="col-md-12">
+            <mat-card class="left-border-primary">
+                <mat-card-title class="d-flex justify-content-between">
+                    <div>
+                        <span class="font-weight-bold">Status:</span>
+                        {{getCycleStatus(cycle)}}
+                    </div>
+                    <button type="button" mat-button 
+                        color="primary" 
+                        *ngIf="!cycle.isPending && !cycle.isClosed"
+                        (click)="editPayCycle(cycle)"
+                    >
+                        <mat-icon>play_arrow</mat-icon>
+                        <span>Start</span>
+                    </button>
+                    <button
+                        type="button" mat-button
+                        color="primary"
+                        *ngIf="cycle.isPending && !cycle.isClosed"
+                        (click)="editPayCycle(cycle)"
+                    >
+                        <mat-icon>redo</mat-icon>
+                        <span>Continue</span>
+                    </button>
+                    <!-- <button type="button" mat-icon-button color="primary" (click)="editPayCycle(cycle)">
+                        <mat-icon>edit</mat-icon>
+                    </button> -->
+                </mat-card-title>
+                <mat-card-content>
+                    <span class="font-weight-bold">Dates:</span> 
+                    {{cycle.startDate | date:'shortDate'}} - {{cycle.endDate | date:'shortDate'}}
+                </mat-card-content>
+            </mat-card>
+        </div>
+    </div>
+</div>

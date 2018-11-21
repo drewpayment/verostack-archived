@@ -130,7 +130,7 @@ export class AgentComponent implements OnInit, AfterViewChecked, OnDestroy {
 
     showEditRulesDialog(user:User):void {
         this.dialog.open(AgentRulesDialogComponent, {
-            width: '400px',
+            width: '500px',
             data: {
                 user: user
             },

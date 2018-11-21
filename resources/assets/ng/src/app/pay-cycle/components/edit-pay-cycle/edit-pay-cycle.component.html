@@ -1,0 +1,77 @@
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <mat-card class="page-header-accent">
+                <mat-card-header>
+                    <div mat-card-avatar>
+                        <mat-icon class="md-36">assignment</mat-icon>
+                    </div>
+                    <mat-card-title class="d-flex justify-content-between">
+                        <h4>
+                            Edit Open Payroll Cycle
+                            <ng-container *ngIf="salesLoaded">
+                                [{{_cycle.startDate | date:'shortDate'}} - {{_cycle.endDate | date:'shortDate'}}]
+                            </ng-container>
+                        </h4>
+                        <!-- <button type="button" mat-icon-button>
+                            <mat-icon>clear</mat-icon>
+                        </button> -->
+                    </mat-card-title>
+                    <mat-card-subtitle>
+                        Select sales that you would like included in this payroll cycle. We have pre-selected all sales by sale date that 
+                        qualify and are within the payroll cycle's start and end dates. You may de-select sales you would like to exclude. 
+                        If a sale is missing, you may want to ensure it hasn't been paid and is on the <a [routerLink]="['/daily-tracker']">Sales Tracker</a>.
+                    </mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content>
+                    <div class="row">
+                        <h5 class="col-md-4">
+                            Select Sales
+                        </h5>
+                        <div class="col-md-8 d-flex justify-content-end align-items-baseline">
+                            <mat-button-toggle class="mr-2" (change)="toggleSelectAll($event)">Select All</mat-button-toggle>
+                            <mat-form-field>
+                                <mat-label>Filter by Agent</mat-label>
+                                <mat-select (selectionChange)="filterSalesByAgent($event)">
+                                    <mat-option value="" class="text-muted">Show All</mat-option>
+                                    <mat-option *ngFor="let a of agentsFilter" [value]="a">
+                                        {{a.firstName}} {{a.lastName}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <button type="button" mat-button color="primary">
+                                <mat-icon>save</mat-icon> Save
+                            </button>
+                        </div>
+                    </div>
+                    <mat-selection-list #sales> 
+                        <mat-list-option 
+                            #option
+                            *ngFor="let asale of sales$|async"
+                            [selected]="asale.payCycleId != null"
+                            [value]="asale"
+                            [class.hide]="hideSelectedOptions && option.selected"
+                        >
+                            <div matLine class="font-weight-bold">
+                                {{asale.firstName}} {{asale.lastName}}
+                            </div>
+                            <div matLine class="text-muted">
+                                <address>
+                                    {{asale.street}} {{asale.street2}}
+                                    {{asale.city}} {{asale.state}} {{asale.zip}}
+                                </address>
+                            </div>
+                            <div matLine class="font-italic">
+                                Date: {{asale.saleDate | date:'shortDate'}}
+                            </div>
+                            <div matLine class="text-muted">
+                                Agent: {{asale.agent.firstName}} {{asale.agent.lastName}}
+                            </div>
+                        </mat-list-option>
+                    </mat-selection-list>
+                </mat-card-content>
+            </mat-card>
+        </div>
+    </div>
+</div>

@@ -1,5 +1,5 @@
 import { Moment } from "moment";
-import { Remark } from "@app/models";
+import { Remark, IAgent } from "@app/models";
 
 export enum PaidStatusType {
   unpaid,
@@ -29,5 +29,6 @@ export interface DailySale {
   repaidDate?:Date | string | Moment,
   lastTouchDate?:Date | string | Moment,
   notes?:string
-  remarks:Remark[]
+  remarks:Remark[],
+  agent?:IAgent
 }
