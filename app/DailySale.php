@@ -174,4 +174,17 @@ class DailySale extends Model
         return $query->where('pay_cycle_id', $id);
     }
 
+    /**
+     * @param $query \Illuminate\Database\Eloquent\Builder
+     * @param $status int
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeByPaidStatus($query, $status)
+    {
+        if(is_array($status)) 
+            return $query->whereIn('paid_status', $status);
+            
+        return $query->where('paid_status', $status);
+    }
+
 }

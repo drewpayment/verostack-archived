@@ -51,6 +51,22 @@ class CampaignController extends Controller
 			->getResponse();
 	}
 
+    public function getCampaignDetail($clientId, $campaignId)
+    {
+        $result = new ApiResource();
+
+        $result->checkAccessByClient($clientId, Auth::user()->id)
+			->mergeInto($result);
+
+        if($result->hasError)
+            return $result->throwApiException()
+                ->getResponse();
+
+        return $result->setData(Campaign::byCampaign($campaignId)->first())
+            ->throwApiException()
+            ->getResponse();
+    }
+
     /**
      * Get campaigns by client.
      * 

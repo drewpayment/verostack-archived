@@ -23,6 +23,7 @@ export interface DailySale {
   zip:number,
   status:number,
   paidStatus:number,
+  payCycleId?:number,
   saleDate:Date | string | Moment,
   paidDate?:Date | string | Moment,
   chargeDate?:Date | string | Moment,

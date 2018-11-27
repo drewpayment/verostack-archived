@@ -49,6 +49,20 @@ export class PayCycleService {
         });
     }
 
+    updatePayCycle(clientId:number, payCycleId:number, dto:PayCycle):Observable<PayCycle> {
+        const url = `${this.api}api/clients/${clientId}/pay-cycles/${payCycleId}`;
+        return this.http.post<PayCycle>(url, {
+            cycle: dto
+        });
+    }
+
+    updateDailySaleWithPayCycle(clientId:number, payCycleId:number, sales:DailySale[]):Observable<DailySale[]> {
+        const url = `${this.api}api/clients/${clientId}/pay-cycles/${payCycleId}/sales`;
+        return this.http.post<DailySale[]>(url, {
+            sales: sales
+        });
+    }
+
     /** INTERNAL API CALLS */
 
     /** GETTER & SETTERS */

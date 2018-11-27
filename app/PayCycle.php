@@ -68,9 +68,10 @@ class PayCycle extends Model
     public function scopeIncludeClosed($query, $include = false)
     {
         if($include)
-            return $query;
+            return $query->where('is_closed', 1)
+                ->orWhere('is_closed', 0);
         else
-            return $query->where('is_closed', false);
+            return $query->where('is_closed', 0);
     }
 
 }

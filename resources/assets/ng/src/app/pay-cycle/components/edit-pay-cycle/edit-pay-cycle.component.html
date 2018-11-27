@@ -30,7 +30,9 @@
                             Select Sales
                         </h5>
                         <div class="col-md-8 d-flex justify-content-end align-items-baseline">
-                            <mat-button-toggle class="mr-2" (change)="toggleSelectAll($event)">Select All</mat-button-toggle>
+                            <mat-button-toggle #toggle class="mr-2" (change)="toggleSelectAll($event)">
+                                {{toggle.checked ? 'Deselect All' : 'Select All'}}
+                            </mat-button-toggle>
                             <mat-form-field>
                                 <mat-label>Filter by Agent</mat-label>
                                 <mat-select (selectionChange)="filterSalesByAgent($event)">
@@ -40,7 +42,7 @@
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>
-                            <button type="button" mat-button color="primary">
+                            <button type="button" mat-button color="primary" (click)="saveSalesList()">
                                 <mat-icon>save</mat-icon> Save
                             </button>
                         </div>
@@ -53,8 +55,11 @@
                             [value]="asale"
                             [class.hide]="hideSelectedOptions && option.selected"
                         >
-                            <div matLine class="font-weight-bold">
-                                {{asale.firstName}} {{asale.lastName}}
+                            <div matLine class="d-flex justify-content-between">
+                                <div class="font-weight-bold">
+                                    {{asale.firstName}} {{asale.lastName}}
+                                </div>
+                                <span class="font-italic text-muted">{{salePaidStatusDisplayText(asale)}}</span>
                             </div>
                             <div matLine class="text-muted">
                                 <address>

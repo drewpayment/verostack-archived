@@ -35,6 +35,11 @@ export class CampaignService {
     return this.http.get<ICampaign[]>(url).toPromise();
   }
 
+  getCampaign(clientId:number, campaignId:number):Observable<ICampaign> {
+      const url = `${this.apiUrl}clients/${clientId}/campaigns/${campaignId}`;
+      return this.http.get<ICampaign>(url);
+  }
+
   getCampaignsByClient(clientId:number):Observable<ICampaign[]> {
       return this.http.get<ICampaign[]>(`${this.api}/campaigns/clients/${clientId}`)
         .pipe(

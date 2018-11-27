@@ -9,4 +9,8 @@ Route::middleware(['auth:api'])->group(function() {
 
     Route::get('clients/{clientId}/pay-cycles/{payCycleId}', 'PayCycleController@getPayCycleSales');
 
+    Route::post('clients/{clientId}/pay-cycles/{payCycleId}', 'PayCycleController@updatePayCycle');
+
+    Route::post('clients/{clientId}/pay-cycles/{payCycleId}/sales', 'PayCycleController@attachSales');
+
 });

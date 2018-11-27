@@ -9,6 +9,7 @@ import { MessageService } from '@app/message.service';
 import { PayCycleService } from '@app/pay-cycle/pay-cycle.service';
 import { PayCycle } from '@app/models/pay-cycle.model';
 import { Router } from '@angular/router';
+import { Subject, BehaviorSubject } from 'rxjs';
 
 @Component({
     selector: 'vs-pay-cycle',
@@ -19,7 +20,9 @@ export class PayCycleComponent implements OnInit {
 
     user:User;
     campaigns:ICampaign[];
-    cycles:PayCycle[];
+    private _cycles:PayCycle[];
+    displayCycles:BehaviorSubject<PayCycle[]> = new BehaviorSubject<PayCycle[]>([]);
+    showClosed:boolean = false;
 
     constructor(
         private session:SessionService,
@@ -39,21 +42,30 @@ export class PayCycleComponent implements OnInit {
             this.campaignService.getCampaignsByClient(this.user.sessionUser.sessionClient)
                 .subscribe(campaigns => this.campaigns = campaigns);
 
-            this.payCycleService.getPayCycles(this.user.sessionUser.sessionClient)
+            this.payCycleService.getPayCycles(this.user.sessionUser.sessionClient, true)
                 .subscribe(cycles => {
-                    this.cycles = cycles;
+                    this._cycles = cycles;
+                    this.getActive();
                 });
         });
+    }
+
+    private getActive():void {
+        this.displayCycles.next(this._cycles.filter(c => !c.isClosed));
+    }
+
+    private getArchived():void {
+        this.displayCycles.next(this._cycles.filter(c => c.isClosed));
     }
 
     getCycleStatus(cycle:PayCycle):string {
         let message = '';
         if(!cycle.isPending && !cycle.isClosed) {
-            message = 'The payroll has been created, but not started. Get it started now.';
+            message = 'The payroll has been created. Get it started now.';
         } else if (cycle.isPending && !cycle.isClosed) {
-            message = 'The payroll has been started, but needs to be completed.';
+            message = 'The payroll has been started. Needs to be closed.';
         } else if (cycle.isClosed) {
-            message = 'The payroll has been completed. :)';
+            message = 'Closed.';
         }
         return message;
     }
@@ -61,5 +73,47 @@ export class PayCycleComponent implements OnInit {
     editPayCycle(cycle:PayCycle):void {
         this.payCycleService.cycle = cycle;
         this.router.navigate(['admin/pay/edit', cycle.payCycleId]);
+    }
+
+    closePayCycle(cycle:PayCycle):void {
+        this.session.showLoader();
+
+        cycle.isPending = false;
+        cycle.isClosed = true;
+
+        this.updatePayCycle(cycle);
+    }
+
+    openPayCycle(cycle:PayCycle):void {
+        this.session.showLoader();
+
+        cycle.isPending = true;
+        cycle.isClosed = false;
+
+        this.updatePayCycle(cycle);
+    }
+
+    private updatePayCycle(cycle:PayCycle):void {
+        this.payCycleService.updatePayCycle(this.user.sessionUser.sessionClient, cycle.payCycleId, cycle)
+            .subscribe(payCycle => {
+                this.session.hideLoader();
+                this._cycles.forEach((c, i, a) => {
+                    if(payCycle.payCycleId != c.payCycleId) return;
+                    a[i] = payCycle;
+                });
+
+                if(this.showClosed)
+                    this.getArchived();
+                else
+                    this.getActive();
+            });
+    }
+
+    switchDisplay():void {
+        this.showClosed = !this.showClosed;
+        if(this.showClosed)
+            this.getArchived();
+        else
+            this.getActive();
     }
 }

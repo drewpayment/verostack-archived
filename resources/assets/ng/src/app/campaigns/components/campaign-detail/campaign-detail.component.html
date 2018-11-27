@@ -1,0 +1,81 @@
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <mat-card class="page-header-accent" *ngIf="campaign|async as campaign">
+                <h3 mat-card-title>{{campaign.name}}</h3>
+                <mat-card-subtitle>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a routerLink="/campaigns">Campaigns</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Detail</li>
+                        </ol>
+                    </nav>
+                </mat-card-subtitle>
+                <mat-card-content>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div [formGroup]="form">
+                                <mat-accordion>
+                                    <mat-expansion-panel expanded="true">
+                                        <mat-expansion-panel-header>
+                                            <mat-panel-title>
+                                                Detail and Info
+                                            </mat-panel-title>
+                                        </mat-expansion-panel-header>
+
+                                        <p class="font-italic text-muted">
+                                            This is some brief information that describes the campaign and gives pertinent information to employees.
+                                        </p>
+                                        <quill-editor 
+                                            [style]="{height: '200px'}" 
+                                            formControlName="mdDetails" 
+                                            (onContentChanged)="quillContentChanged($event)"
+                                            [modules]="modules"
+                                        ></quill-editor>
+                                    </mat-expansion-panel>
+
+                                    <mat-expansion-panel>
+                                        <mat-expansion-panel-header>
+                                            <mat-panel-title>
+                                                How we get started
+                                            </mat-panel-title>
+                                        </mat-expansion-panel-header>
+
+                                        <p class="font-italic text-muted">
+                                            Onboarding. No problem. Let's tell the employees how to get it done. 
+                                        </p>
+                                        <quill-editor 
+                                            [style]="{height: '200px'}" 
+                                            formControlName="mdOnboarding" 
+                                            (onContentChanged)="quillContentChanged($event)"
+                                            [modules]="modules"
+                                        ></quill-editor>
+                                    </mat-expansion-panel>
+
+                                    <mat-expansion-panel>
+                                        <mat-expansion-panel-header>
+                                            <mat-panel-title>
+                                                Additional Info
+                                            </mat-panel-title>
+                                        </mat-expansion-panel-header>
+
+                                        <p class="font-italic text-muted">
+                                            Is there additional information you need to share about this campaign? (Restrictions, permit necessities, etc)
+                                        </p>
+                                        <quill-editor 
+                                            [style]="{height: '200px'}" 
+                                            formControlName="mdOther" 
+                                            (onContentChanged)="quillContentChanged($event)"
+                                            [modules]="modules"
+                                        ></quill-editor>
+                                    </mat-expansion-panel>
+                                </mat-accordion>
+                            </div>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+    </div>
+</div>

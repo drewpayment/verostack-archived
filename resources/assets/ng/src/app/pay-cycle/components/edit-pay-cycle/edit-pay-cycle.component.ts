@@ -4,12 +4,13 @@ import {PayCycle} from '@app/models/pay-cycle.model';
 import {PayCycleService} from '@app/pay-cycle/pay-cycle.service';
 import {FormGroup, FormBuilder} from '@angular/forms';
 import { SessionService } from '@app/session.service';
-import { User, DailySale, IAgent } from '@app/models';
+import { User, DailySale, IAgent, PaidStatusType } from '@app/models';
 import { Subject, Observable } from 'rxjs';
 import { Moment } from 'moment';
 import * as moment from 'moment';
-import { MatSelectionList, MatListOption, MatSelectionListChange, MatSelectChange, MatButtonToggleChange } from '@angular/material';
+import { MatSelectionList, MatListOption, MatSelectionListChange, MatSelectChange, MatButtonToggleChange, MatDialog } from '@angular/material';
 import * as _ from 'lodash';
+import { ConfirmUnpaidSelectionDialogComponent } from '@app/pay-cycle/components/confirm-unpaid-selection-dialog/confirm-unpaid-selection-dialog.component';
 
 @Component({
     selector: 'vs-edit-pay-cycle',
@@ -33,7 +34,8 @@ export class EditPayCycleComponent implements OnInit {
         private session:SessionService, 
         private service: PayCycleService, 
         private fb: FormBuilder,
-        private router:Router
+        private router:Router,
+        private dialog:MatDialog
     ) {}
 
     ngOnInit() {
@@ -92,6 +94,21 @@ export class EditPayCycleComponent implements OnInit {
         });
     }
 
+    private confirmUnpaidSelection(sales:DailySale[]):void {
+        this.dialog.open(ConfirmUnpaidSelectionDialogComponent, {
+            autoFocus: false,
+            width: '30vw',
+            data: {
+                sales: sales
+            }
+        })
+        .afterClosed()
+        .subscribe((confirmed:boolean) => {
+            if(confirmed)
+                this.handleConfirmedSave(sales);
+        });
+    }
+
     private buildAgentFilter() {
         let agents:IAgent[] = [];
         this._sales.forEach((s, i, a) => {
@@ -102,7 +119,7 @@ export class EditPayCycleComponent implements OnInit {
     }
 
     filterSalesByAgent(event:MatSelectChange):void {
-        if(event.value == null || event.value == "") {
+        if(event == null || event.value == null || event.value == "") {
             this.sales$.next(this._sales);
             return;
         }
@@ -110,5 +127,45 @@ export class EditPayCycleComponent implements OnInit {
             return s.agentId == (<IAgent>event.value).agentId;
         });
         this.sales$.next(filteredSales);
+    }
+
+    salePaidStatusDisplayText(sale:DailySale):string {
+        if(sale.paidStatus == PaidStatusType.unpaid)
+            return 'Sale is unpaid.';
+        if(sale.paidStatus == PaidStatusType.paid)
+            return 'Sale has been paid.';
+        if(sale.paidStatus == PaidStatusType.chargeback)
+            return 'Sale has been reversed and charged back.';
+        if(sale.paidStatus == PaidStatusType.repaid)
+            return 'Sale has been repaid.';
+    }
+
+    saveSalesList() {
+        this.filterSalesByAgent(null);
+
+        const sales = this.salesList.selectedOptions.selected.map(val => val.value);
+        const needsConfirmation:DailySale[] = sales.filter((s:DailySale) => s.paidStatus == PaidStatusType.unpaid || s.paidStatus == PaidStatusType.chargeback);
+
+        if(needsConfirmation.length)
+            this.confirmUnpaidSelection(sales);
+        else 
+            this.handleConfirmedSave(sales);
+    }
+
+    handleConfirmedSave(sales:DailySale[]) {
+        const salesIds = sales.map(s => s.dailySaleId);
+
+        this._sales.forEach((s, i, a) => {
+            if(salesIds.includes(s.dailySaleId))
+                a[i].payCycleId = this._cycle.payCycleId;
+        });
+
+        this.service.updateDailySaleWithPayCycle(this.user.sessionUser.sessionClient, this._cycle.payCycleId, this._sales)
+            .subscribe(sales => {
+                console.dir(sales);
+                // this._sales = sales;
+                // this.sales$.next(this._sales);
+                // this.router.navigate(['admin/pay']);
+            });
     }
 }

@@ -16,6 +16,7 @@ import { AgentComponent } from '@app/agent/agent.component';
 import { PublicHomeComponent } from '@app/public-home/public-home.component';
 import { PayCycleComponent } from '@app/pay-cycle/pay-cycle.component';
 import { EditPayCycleComponent } from '@app/pay-cycle/components/edit-pay-cycle/edit-pay-cycle.component';
+import { CampaignDetailComponent } from '@app/campaigns/components/campaign-detail/campaign-detail.component';
 
 const routes: Routes = [
     { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -25,6 +26,7 @@ const routes: Routes = [
     { path: 'my-information', component: MyInformationComponent, canActivate: [AuthGuard] },
     { path: 'client-information', component: ClientInformationComponent, canActivate: [AuthGuard] },
     { path: 'campaigns', component: CampaignsComponent, canActivate: [AuthGuard] },
+    { path: 'campaigns/:campaignId', component: CampaignDetailComponent, canActivate: [AuthGuard] },
     { path: 'payroll-tools', component: PayrollComponent, canActivate: [AuthGuard] },
     { 
         path: 'admin', 

@@ -52,6 +52,9 @@
                             </button>
                             <mat-menu #menu>
                                 <button mat-menu-item (click)="editCampaign(c)" *ngIf="c.active">Edit</button>
+                                <button mat-menu-item *ngIf="c.active" [routerLink]="'/campaigns/'+c.campaignId">
+                                    Detail
+                                </button>
                                 <button mat-menu-item (click)="switchActiveStatus(c, i)">{{c.active ? 'Deactivate' : 'Activate'}}</button>
                             </mat-menu>
                         </div>

@@ -132,14 +132,21 @@ class ApiResource {
 	 *
 	 * @return $this|\Illuminate\Http\JsonResponse
 	 */
-	public function throwApiException()
+	public function throwApiException($exceptionMsg = null)
 	{
 		if($this->hasError)
 		{
 			$this->status = Response::HTTP_INTERNAL_SERVER_ERROR;
-			$this->response = $this->buildResponse([
-				'message' => 'A fatal exception occurred. Please try again later.'
-			]);
+
+            if(is_null($exceptionMsg)) {
+                $this->response = $this->buildResponse([
+                    'message' => 'A fatal exception occurred. Please try again later.'
+                ]);
+            } else {
+                $this->response = $this->buildResponse([
+                    'message' => $exceptionMsg
+                ]);
+            }
 		}
 
 		return $this;

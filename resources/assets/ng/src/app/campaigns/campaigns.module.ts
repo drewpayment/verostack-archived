@@ -8,10 +8,13 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FabFloatBtnModule } from '@app/fab-float-btn/fab-float-btn.module';
 import { QuillModule } from 'ngx-quill';
 import { CampaignFilterDialogComponent } from './campaign-filter-dialog/campaign-filter-dialog.component';
+import { CampaignDetailComponent } from './components/campaign-detail/campaign-detail.component';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   imports: [
     CommonModule,
+    RouterModule,
     MaterialModule,
     ReactiveFormsModule,
     BrowserModule,
@@ -21,7 +24,8 @@ import { CampaignFilterDialogComponent } from './campaign-filter-dialog/campaign
   declarations: [
     CampaignsComponent,
     NewCampaignDialogComponent,
-    CampaignFilterDialogComponent
+    CampaignFilterDialogComponent,
+    CampaignDetailComponent
   ],
   entryComponents: [
     NewCampaignDialogComponent,

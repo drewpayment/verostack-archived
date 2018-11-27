@@ -19,6 +19,7 @@ import { PublicHomeComponent } from './public-home/public-home.component';
 import { AgentRulesDialogComponent } from './agent/agent-rules-dialog/agent-rules-dialog.component';
 import { PayCycleComponent } from './pay-cycle/pay-cycle.component';
 import { EditPayCycleComponent } from './pay-cycle/components/edit-pay-cycle/edit-pay-cycle.component';
+import { ConfirmUnpaidSelectionDialogComponent } from './pay-cycle/components/confirm-unpaid-selection-dialog/confirm-unpaid-selection-dialog.component';
 
 @NgModule({
   imports: [
@@ -44,11 +45,13 @@ import { EditPayCycleComponent } from './pay-cycle/components/edit-pay-cycle/edi
     PublicHomeComponent,
     AgentRulesDialogComponent,
     PayCycleComponent,
-    EditPayCycleComponent
+    EditPayCycleComponent,
+    ConfirmUnpaidSelectionDialogComponent
   ],
   entryComponents: [
     EditAgentDialogComponent,
-    AgentRulesDialogComponent
+    AgentRulesDialogComponent,
+    ConfirmUnpaidSelectionDialogComponent
   ],
   providers: [
   ],
