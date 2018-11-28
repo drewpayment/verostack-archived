@@ -1,9 +1,9 @@
 
 <div class="container">
-    <div class="row">
+    <div class="row mb-4">
         <div class="col-md-12">
-            <mat-card class="page-header-accent" *ngIf="campaign|async as campaign">
-                <h3 mat-card-title>{{campaign.name}}</h3>
+            <mat-card class="page-header-accent">
+                <h3 mat-card-title>Campaign Detail</h3>
                 <mat-card-subtitle>
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
@@ -12,12 +12,33 @@
                         </ol>
                     </nav>
                 </mat-card-subtitle>
+            </mat-card>
+        </div>
+    </div>
+    <div class="row" *ngIf="campaign|async as campaign">
+        <div class="col-md-12">
+            <mat-card>
+                <h4 mat-card-title>{{campaign.name}}</h4>
                 <mat-card-content>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div [formGroup]="form">
+                    <div [formGroup]="form">
+                        <div class="row mb-4">
+                            <div class="col-md-12">
+                                <div class="my-1">
+                                    <span class="font-weight-bold" [class.text-muted]="!campaign.active">Status: </span>
+                                    {{ campaign.active ? 'Active' : 'Inactive' }}
+                                </div>
+                                <div class="my-1">
+                                    <mat-form-field>
+                                        <input matInput placeholder="Compensation" formControlName="compensation" />
+                                        <span matPrefix>$&nbsp;</span>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
                                 <mat-accordion>
-                                    <mat-expansion-panel expanded="true">
+                                    <mat-expansion-panel>
                                         <mat-expansion-panel-header>
                                             <mat-panel-title>
                                                 Detail and Info

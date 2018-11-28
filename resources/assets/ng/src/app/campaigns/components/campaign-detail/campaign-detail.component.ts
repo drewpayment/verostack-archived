@@ -56,7 +56,8 @@ export class CampaignDetailComponent implements OnInit {
         this.form = this.fb.group({
             mdDetails: this.fb.control(''),
             mdOnboarding: this.fb.control(''),
-            mdOther: this.fb.control('')
+            mdOther: this.fb.control(''),
+            compensation: this.fb.control('')
         });
     }
 
@@ -64,7 +65,8 @@ export class CampaignDetailComponent implements OnInit {
         this.form.patchValue({
             mdDetails: this._campaign.mdDetails,
             mdOnboarding: this._campaign.mdOnboarding,
-            mdOther: this._campaign.mdOther
+            mdOther: this._campaign.mdOther,
+            compensation: this._campaign.compensation
         });
     }
 

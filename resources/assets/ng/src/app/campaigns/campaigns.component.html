@@ -60,7 +60,7 @@
                         </div>
                     </div>
                     
-                    <div 
+                    <!-- <div 
                         class="card-text my-2" 
                         *ngIf="c.mdDetails != null; else noDetail" 
                         [innerHTML]="sanitize(c.mdDetails)"
@@ -71,6 +71,10 @@
                             class="card-text font-italic text-muted my-2"
                             [class.campaign-body]="c.mdDetails != null"
                         >No details saved.</div>
+                    </ng-template> -->
+
+                    <ng-template>
+                        WE ARE GOING TO INCLUDE SOME UTILITY INFORMATION FOR EACH CAMPAIGN HERE
                     </ng-template>
 
                 </div>
