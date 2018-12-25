@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {CampaignService} from '@app/campaigns/campaign.service';
-import { ICampaign, User } from '@app/models';
-import { ActivatedRoute } from '@angular/router';
+import { ICampaign, User, Utility } from '@app/models';
+import { ActivatedRoute, Router } from '@angular/router';
 import { SessionService } from '@app/session.service';
 import { BehaviorSubject } from 'rxjs';
 import { QuillConfig } from '@app/shared/quill-config';
@@ -26,7 +26,8 @@ export class CampaignDetailComponent implements OnInit {
         private route:ActivatedRoute, 
         private service: CampaignService, 
         private session:SessionService,
-        private fb:FormBuilder
+        private fb:FormBuilder,
+        private router:Router
     ) {
         this.route.params.subscribe(params => {
             this.campaignId = params.campaignId;
@@ -52,12 +53,28 @@ export class CampaignDetailComponent implements OnInit {
         console.dir(event);
     }
 
+    editUtility(utility:Utility) {
+        this.service.utility = utility;
+        this.service.campaign = this._campaign;
+        this.router.navigate(['/utilities', utility.utilityId]);
+    }
+
+    addUtility():void {
+        this.service.campaign = this._campaign;
+        this.router.navigate(['/add-utility']);
+    }
+
+    isEven(value):boolean {
+        return value % 2 == 0;
+    }
+
     private createForm() {
         this.form = this.fb.group({
             mdDetails: this.fb.control(''),
             mdOnboarding: this.fb.control(''),
             mdOther: this.fb.control(''),
-            compensation: this.fb.control('')
+            compensation: this.fb.control(''),
+            utilities: this.fb.array([])
         });
     }
 
@@ -66,7 +83,8 @@ export class CampaignDetailComponent implements OnInit {
             mdDetails: this._campaign.mdDetails,
             mdOnboarding: this._campaign.mdOnboarding,
             mdOther: this._campaign.mdOther,
-            compensation: this._campaign.compensation
+            compensation: this._campaign.compensation,
+            utilities: this._campaign.utilities
         });
     }
 

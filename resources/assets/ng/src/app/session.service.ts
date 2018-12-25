@@ -1,28 +1,19 @@
-import {Injectable, OnInit} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {User} from './models/user.model';
 import {Observable, BehaviorSubject, Subject, ReplaySubject} from 'rxjs';
 import {MatSidenav} from '@angular/material';
 import {LocalStorage, JSONSchema} from '@ngx-pwa/local-storage';
-import {ILocalStorage, IToken, IClient} from './models';
+import {ILocalStorage, IToken} from './models';
 import {HttpRequest} from '@angular/common/http';
 import {Router} from '@angular/router';
-import {IRole} from '@app/models/role.model';
 import {environment} from '../environments/environment';
 
 import * as moment from 'moment';
-import {map} from 'rxjs/operators';
 
 declare var window: any;
 
 const rootUrl = environment.rootUrl;
 
-const schema: JSONSchema = {
-    properties: {
-        expires: {type: 'integer'},
-        data: {type: 'object'}
-    },
-    required: ['expires', 'data']
-};
 
 @Injectable({
     providedIn: 'root'
@@ -32,7 +23,6 @@ export class SessionService {
 
     sessionUser: Observable<User>;
     private sidenav: MatSidenav;
-    private navOpened: boolean;
     opened$: Subject<boolean> = new Subject<boolean>();
 
     dataStore: {user: User; token: IToken} = {
@@ -44,9 +34,6 @@ export class SessionService {
     loggedInService: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
     private userLoggedIn: boolean;
 
-    // FIXME: This doesn't work... If we subscribe to this for multiple types it will update everytime and the child files
-    // will try to change the data type
-    private storageItem$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
     storageItem: Observable<any>;
 
     private userItem$: Subject<User> = new ReplaySubject<User>(1);
@@ -234,7 +221,7 @@ export class SessionService {
      * Exposes our localstorage user via the session service.
      */
     isUserAuthenticated(): Observable<ILocalStorage<User>> {
-        return this.localStorage.getItem('user');
+        return this.localStorage.getItem('user') as Observable<ILocalStorage<User>>;
     }
 
     /**

@@ -1,4 +1,5 @@
 import {Moment} from 'moment';
+import { Utility } from './utility.model';
 
 export interface ICampaign {
     campaignId: number;
@@ -11,4 +12,5 @@ export interface ICampaign {
     mdDetails?: string;
     mdOnboarding?: string;
     mdOther?: string;
+    utilities?:Utility[]
 }

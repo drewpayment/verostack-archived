@@ -17,6 +17,8 @@ import { PublicHomeComponent } from '@app/public-home/public-home.component';
 import { PayCycleComponent } from '@app/pay-cycle/pay-cycle.component';
 import { EditPayCycleComponent } from '@app/pay-cycle/components/edit-pay-cycle/edit-pay-cycle.component';
 import { CampaignDetailComponent } from '@app/campaigns/components/campaign-detail/campaign-detail.component';
+import { UtilityDetailComponent } from './campaigns/components/utility-detail/utility-detail.component';
+import { NewSaleComponent } from './daily-sale-tracker/components/new-sale/new-sale.component';
 
 const routes: Routes = [
     { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -27,6 +29,8 @@ const routes: Routes = [
     { path: 'client-information', component: ClientInformationComponent, canActivate: [AuthGuard] },
     { path: 'campaigns', component: CampaignsComponent, canActivate: [AuthGuard] },
     { path: 'campaigns/:campaignId', component: CampaignDetailComponent, canActivate: [AuthGuard] },
+    { path: 'utilities/:utilityId', component: UtilityDetailComponent, canActivate: [AuthGuard] },
+    { path: 'add-utility', component: UtilityDetailComponent, canActivate: [AuthGuard] }, 
     { path: 'payroll-tools', component: PayrollComponent, canActivate: [AuthGuard] },
     { 
         path: 'admin', 
@@ -37,6 +41,7 @@ const routes: Routes = [
     },
     { path: 'agents', component: AgentComponent, canActivate: [AuthGuard] },
     { path: 'daily-tracker', component: DailySaleTrackerComponent, canActivate: [AuthGuard] },
+    { path: 'new-sale-contact', component: NewSaleComponent, canActivate: [AuthGuard] },
     { path: '**', redirectTo: 'home' }
 ]
 

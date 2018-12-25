@@ -154,6 +154,13 @@ button:focus {
     margin-bottom: 1rem;
 }
 
+.mat-card-border-primary {
+    padding: 0.75rem 1.5rem 0.5rem;
+    border-top: 5px solid $mat-primary;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
 .left-border-primary {
     padding: 0.75rem 1.5rem 0.5rem;
     border-left: 5px solid $vs-info;

@@ -46,7 +46,7 @@ class CampaignController extends Controller
 			return $result->setToFail()->getResponse();
 
 		return $result
-			->setData(Campaign::active($activeOnly)->byClientId($clientId)->get())
+			->setData(Campaign::with(['utilities', 'utilities.user'])->active($activeOnly)->byClientId($clientId)->get())
 			->throwApiException()
 			->getResponse();
 	}
@@ -62,7 +62,7 @@ class CampaignController extends Controller
             return $result->throwApiException()
                 ->getResponse();
 
-        return $result->setData(Campaign::byCampaign($campaignId)->first())
+        return $result->setData(Campaign::with(['utilities', 'utilities.user'])->byCampaign($campaignId)->first())
             ->throwApiException()
             ->getResponse();
     }
@@ -76,7 +76,7 @@ class CampaignController extends Controller
     public function getCampaignsByClient($clientId)
     {
         $result = new ApiResource();
-        return $result->setData(Campaign::byClientId($clientId)->get())
+        return $result->setData(Campaign::with(['utilities'])->byClientId($clientId)->get())
             ->throwApiException()
             ->getResponse();
     }

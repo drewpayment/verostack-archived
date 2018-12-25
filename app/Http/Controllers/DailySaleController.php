@@ -4,20 +4,23 @@ namespace App\Http\Controllers;
 
 use App\DailySale;
 use App\Http\Helpers;
-use App\Http\Resources\ApiResource;
-use App\Http\Services\DailySaleService;
 use Illuminate\Http\Request;
+use App\Http\Resources\ApiResource;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Services\ContactService;
+use App\Http\Services\DailySaleService;
 
 class DailySaleController extends Controller
 {
 	protected $helper;
 	protected $service;
+    protected $contactService;
 
-	public function __construct(Helpers $_helper, DailySaleService $_service)
+	public function __construct(Helpers $_helper, DailySaleService $_service, ContactService $_contactService)
 	{
 		$this->helper = $_helper;
 		$this->service = $_service;
+        $this->contactService = $_contactService;
 	}
 
 	/**
@@ -193,5 +196,57 @@ class DailySaleController extends Controller
 			->throwApiException()
 			->getResponse();
 	}
+
+    public function saveDailySaleWithContact(Request $request, $clientId, $campaignId)
+    {
+        $result = new ApiResource();
+
+        $result
+			->checkAccessByClient($clientId, Auth::user()->id)
+			->mergeInto($result);
+
+		if($result->hasError)
+			return $result->throwApiException()->getResponse();
+
+        $contact = null;
+
+        if(is_null($request['contact']['contactId']) || $request['contact']['contactId'] == 0) {
+            /** save/update our contact before we can do anything with the save because contact id is a dependency */
+            $contactResult = $this->contactService->saveContact($request['contact']);
+
+            if($contactResult->hasError)
+                return $result
+                    ->setToFail()
+                    ->throwApiException()
+                    ->getResponse();
+
+            $res = $contactResult->getData();
+
+            /** not entirely sure why, but the primary key seems to be defaulting to "id" instead of "contact_id"... */
+            $request['contactId'] = $res['id'];
+            $contact = $contactResult->getData();
+        } else {
+            $request['contactId'] = $request['contact']['contactId'];
+            $contact = $request['contact'];
+        }
+
+        if(!is_null($request['dailySaleId']) && $request['dailySaleId'] > 0)
+            $dailySaleRequest = $this->service->updateDailySale($request);
+        else
+            $dailySaleRequest = $this->service->saveNewDailySale($request);
+
+        if($dailySaleRequest->hasError)
+            return $result
+                ->setToFail()
+                ->throwApiException()
+                ->getResponse();
+
+        $sale = $dailySaleRequest->getData();
+        $sale['contact'] = $contact;
+
+        return $result->setData($sale)
+            ->throwApiException()
+            ->getResponse();
+    }
 
 }

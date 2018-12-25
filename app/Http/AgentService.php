@@ -63,7 +63,7 @@ class AgentService {
 	 *
 	 * @return ApiResource
 	 */
-	public function getAgentsByClient($clientId)
+	public function getUserAgentsByClient($clientId)
 	{
 		$result = new ApiResource();
 
@@ -71,8 +71,6 @@ class AgentService {
 	                    ->clientId($clientId)
 						->first()
 						->users;
-
-
 
 		return $result->setData($agents);
 	}

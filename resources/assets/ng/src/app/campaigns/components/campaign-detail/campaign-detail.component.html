@@ -3,7 +3,7 @@
     <div class="row mb-4">
         <div class="col-md-12">
             <mat-card class="page-header-accent">
-                <h3 mat-card-title>Campaign Detail</h3>
+                <h3 mat-card-title>Campaign Details</h3>
                 <mat-card-subtitle>
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
@@ -15,12 +15,12 @@
             </mat-card>
         </div>
     </div>
-    <div class="row" *ngIf="campaign|async as campaign">
-        <div class="col-md-12">
-            <mat-card>
-                <h4 mat-card-title>{{campaign.name}}</h4>
-                <mat-card-content>
-                    <div [formGroup]="form">
+    <ng-container *ngIf="campaign|async as campaign" [formGroup]="form">
+        <div class="row">
+            <div class="col-md-12">
+                <mat-card>
+                    <h4 mat-card-title>General Information - {{campaign.name}}</h4>
+                    <mat-card-content>
                         <div class="row mb-4">
                             <div class="col-md-12">
                                 <div class="my-1">
@@ -59,7 +59,7 @@
                                     <mat-expansion-panel>
                                         <mat-expansion-panel-header>
                                             <mat-panel-title>
-                                                How we get started
+                                                Onboarding.
                                             </mat-panel-title>
                                         </mat-expansion-panel-header>
 
@@ -94,9 +94,58 @@
                                 </mat-accordion>
                             </div>
                         </div>
-                    </div>
-                </mat-card-content>
-            </mat-card>
+                    </mat-card-content>
+                </mat-card>
+            </div>
         </div>
-    </div>
+        <div class="row my-2">
+            <div class="col-md-12">
+                <mat-card>
+                    <h4 mat-card-title>Utilities</h4>
+                    <mat-card-subtitle>
+                        Information about the utilities available for 
+                        <span class="font-weight-bold">{{campaign.name}}. </span>
+                        The accuracy of this information is extremely important as it is used to generate reporting sent 
+                        to the EDI and Utility company. 
+                    </mat-card-subtitle>
+                    <mat-card-content>
+                        <div class="row" *ngIf="campaign.utilities != null">
+                            <ng-container *ngFor="let u of campaign.utilities; let i = index">
+                                <div class="col-md-6">
+                                    <mat-card class="mat-card-border-primary">
+                                        <mat-card-header>
+                                            <mat-icon mat-card-avatar>domain</mat-icon>
+                                            <h5 mat-card-title>{{u.utilityName}}</h5>
+                                            <mat-card-subtitle>Commodity: {{u.commodity}}</mat-card-subtitle>
+                                            <div class="flex-grow-1">
+                                                <button type="button" 
+                                                    mat-button 
+                                                    color="primary" 
+                                                    class="float-right" 
+                                                    (click)="editUtility(u)"
+                                                >
+                                                    <mat-icon inline="true">edit</mat-icon> Edit
+                                                </button>
+                                            </div>
+                                        </mat-card-header>
+                                        <mat-card-content>
+                                            <p>Status: {{u.isActive ? 'Active' : 'Inactive'}}</p>
+                                        </mat-card-content>
+                                    </mat-card>
+                                </div>
+                            </ng-container>
+                        </div>
+                       
+                        <div class="row row-top-border-primary">
+                            <div class="col-md-12 d-flex justify-content-center">
+                                <button type="button" mat-button color="primary" (click)="addUtility()">
+                                    <mat-icon inline="true">add</mat-icon> Utility
+                                </button>
+                            </div>
+                        </div>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+        </div>
+    </ng-container>
 </div>

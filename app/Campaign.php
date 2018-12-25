@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Utility;
 use Illuminate\Database\Eloquent\Model;
 
 class Campaign extends Model
@@ -34,6 +35,11 @@ class Campaign extends Model
 	public function setActiveAttribute($value)
     {
     	$this->attributes['active'] = $value ? 1 : 0;
+    }
+
+    public function utilities()
+    {
+        return $this->hasMany(Utility::class, 'campaign_id');
     }
 
 	/**

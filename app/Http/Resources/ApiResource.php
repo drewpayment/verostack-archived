@@ -74,6 +74,18 @@ class ApiResource {
 		return $this->hasData() ? $this->setToSuccess() : $this->setToFail();
 	}
 
+    /**
+     * Sets data without doing any integrity checks. Use at your own risk! 
+     *
+     * @param any
+     * @return ApiResource
+     */
+    public function overrideData($data)
+    {
+        $this->data = $data;
+        return $this->hasData() ? $this->setToSuccess() : $this->setToFail();
+    }
+
 	/**
 	 * Determines if the resource has data.
 	 *

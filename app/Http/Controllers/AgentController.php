@@ -41,13 +41,13 @@ class AgentController extends Controller
 	}
 
 	/**
-	 * Get a list of agents by associated client.
+	 * Get a list of users (with associated agent entity) by associated client.
 	 *
 	 * @param $clientId
 	 *
 	 * @return mixed
 	 */
-	public function getAgentsByClient($clientId)
+	public function getUserAgentsByClient($clientId)
 	{
 		$result = new ApiResource();
 
@@ -59,13 +59,41 @@ class AgentController extends Controller
 			return $result->throwApiException()
 				->getResponse();
 
-		$this->service->getAgentsByClient($clientId)
+		$this->service->getUserAgentsByClient($clientId)
 			->mergeInto($result);
 
 		return $result
 			->throwApiException()
 			->getResponse();
 	}
+
+    public function getAgentsByClient($clientId)
+    {
+        $result = new ApiResource();
+
+        $result
+			->checkAccessByClient($clientId, Auth::user()->id)
+			->mergeInto($result);
+
+		if($result->hasError)
+			return $result->throwApiException()
+				->getResponse();
+
+        $users = $this->service->getUserAgentsByClient($clientId)->getData();
+
+        $resultAgents = [];
+        $agents = array_filter(array_map(function(array $arr) {
+            return $arr['agent'];
+        }, $users), function($agent) { return !is_null($agent); });
+
+        foreach($agents as $a) {
+            $resultAgents[] = $a;
+        }
+
+        return $result->overrideData($resultAgents)
+            ->throwApiException()
+            ->getResponse();
+    }
 
 
 	/**

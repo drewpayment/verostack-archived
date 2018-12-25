@@ -8,7 +8,8 @@ export interface IUserRole {
 
 export interface IRole {
     userId:number;
-    role:RoleType | number;
+    // role:number|RoleType;
+    role:number,
     isSalesAdmin:boolean,
     createdAt?:number;
     updatedAt?:number;

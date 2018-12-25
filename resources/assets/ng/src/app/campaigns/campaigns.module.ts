@@ -10,6 +10,7 @@ import { QuillModule } from 'ngx-quill';
 import { CampaignFilterDialogComponent } from './campaign-filter-dialog/campaign-filter-dialog.component';
 import { CampaignDetailComponent } from './components/campaign-detail/campaign-detail.component';
 import { RouterModule } from '@angular/router';
+import { UtilityDetailComponent } from './components/utility-detail/utility-detail.component';
 
 @NgModule({
   imports: [
@@ -25,7 +26,8 @@ import { RouterModule } from '@angular/router';
     CampaignsComponent,
     NewCampaignDialogComponent,
     CampaignFilterDialogComponent,
-    CampaignDetailComponent
+    CampaignDetailComponent,
+    UtilityDetailComponent
   ],
   entryComponents: [
     NewCampaignDialogComponent,

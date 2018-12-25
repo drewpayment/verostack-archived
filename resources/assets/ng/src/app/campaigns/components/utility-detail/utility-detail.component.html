@@ -1,0 +1,64 @@
+
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <mat-card class="page-header-accent">
+                <h3 mat-card-title>Edit Utility</h3>
+            </mat-card>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-10 offset-md-1">
+            <mat-card>
+                <mat-card-title>
+                    Please fill out all required fields.
+                </mat-card-title>
+                <mat-card-content>
+                    <div [formGroup]="form" class="d-flex flex-column">
+                        <mat-form-field>
+                            <input matInput type="text" placeholder="Utility" formControlName="utilityName" required />
+                            <mat-hint>Name of the utility how you'd like on the reporting.</mat-hint>
+                            <mat-error *ngIf="form.get('utilityName').hasError('required')">
+                                Please enter a utility name.
+                            </mat-error>
+                        </mat-form-field>
+                        <mat-form-field>
+                            <input matInput type="text" placeholder="Agent Company" formControlName="agentCompanyName" required />
+                            <mat-hint>Name you'd like to show for agent company on reporting.</mat-hint>
+                            <mat-error *ngIf="form.get('agentCompanyName').hasError('required')">
+                                Please enter a company name.
+                            </mat-error>
+                        </mat-form-field>
+                        <mat-form-field>
+                            <input matInput type="text" placeholder="Agent Company ID" formControlName="agentCompanyId" />
+                        </mat-form-field>
+                        <mat-form-field>
+                            <input matInput type="text" placeholder="Commodity" formControlName="commodity" />
+                        </mat-form-field>
+                        <mat-form-field>
+                            <input matInput type="text" placeholder="Meter Number" formControlName="meterNumber" />
+                        </mat-form-field>
+                        <mat-form-field>
+                            <input matInput type="text" placeholder="Classification" formControlName="classification" />
+                        </mat-form-field>
+                        <mat-form-field>
+                            <input matInput type="text" placeholder="Price" formControlName="price" />
+                            <mat-hint>Price of the utility per Unit of Measure (not compensation to agent).</mat-hint>
+                        </mat-form-field>
+                        <mat-form-field>
+                            <input matInput type="text" placeholder="Unit of Measure" formControlName="unitOfMeasure" />
+                        </mat-form-field>
+                        <mat-form-field>
+                            <input matInput type="text" placeholder="Term" formControlName="term" />
+                        </mat-form-field>
+                        <mat-checkbox formControlName="isActive">Active</mat-checkbox>
+                    </div>
+                </mat-card-content>
+                <mat-card-actions>
+                    <button type="button" mat-button (click)="cancel()">Cancel</button>
+                    <button type="button" mat-button color="primary" (click)="saveUtility()">Save</button>
+                </mat-card-actions>
+            </mat-card>
+        </div>
+    </div>
+</div>

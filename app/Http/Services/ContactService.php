@@ -32,6 +32,7 @@ class ContactService
         else
             $dto = Contact::byContact($c->contactId)->first();
 
+        $dto->client_id = $c->clientId;
         $dto->first_name = $c->firstName;
         $dto->last_name = $c->lastName;
         if(!is_null($c->middleName))

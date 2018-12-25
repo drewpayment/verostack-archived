@@ -292,7 +292,7 @@ export class AgentComponent implements OnInit, AfterViewChecked, OnDestroy {
     }
 
     private refreshAgents():void {
-        this.service.getAgentsByClient(this.user.sessionUser.sessionClient)
+        this.service.getUserAgentsByClient(this.user.sessionUser.sessionClient)
             .pipe(map(this.setMoments))
             .subscribe(users => {
                 _.remove(users, u => u.agent == null);

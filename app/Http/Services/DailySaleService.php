@@ -107,18 +107,23 @@ class DailySaleService {
 				->status;
 		}
 
+        if(!is_object($sale))
+            $sale = (object)$sale;
+
 		$s = new DailySale;
 		$s->agent_id = $sale->agentId;
 		$s->client_id = $sale->clientId;
 		$s->campaign_id = $sale->campaignId;
+        $s->utility_id = $sale->utilityId;
+        $s->contact_id = $sale->contactId;
 		$s->pod_account = $sale->podAccount;
-		$s->first_name = $sale->firstName;
-		$s->last_name = $sale->lastName;
-		$s->street = $sale->street;
-		$s->street2 = $sale->street2;
-		$s->city = $sale->city;
-		$s->state = $sale->state;
-		$s->zip = $sale->zip;
+		// $s->first_name = $sale->firstName;
+		// $s->last_name = $sale->lastName;
+		// $s->street = $sale->street;
+		// $s->street2 = $sale->street2;
+		// $s->city = $sale->city;
+		// $s->state = $sale->state;
+		// $s->zip = $sale->zip;
 		$s->status = $sale->status;
 		$s->paid_status = $sale->paidStatus;
 		$s->paid_date = $sale->paidDate;
@@ -187,15 +192,16 @@ class DailySaleService {
 			return $result->setToFail();
 
 		$c->agent_id = $sale->agentId;
+        $c->client_id = $sale->clientId;
 		$c->campaign_id = $sale->campaignId;
 		$c->pod_account = $sale->podAccount;
-		$c->first_name = $sale->firstName;
-		$c->last_name = $sale->lastName;
-		$c->street = $sale->street;
-		$c->street2 = $sale->street2;
-		$c->city = $sale->city;
-		$c->state = $sale->state;
-		$c->zip = $sale->zip;
+		// $c->first_name = $sale->firstName;
+		// $c->last_name = $sale->lastName;
+		// $c->street = $sale->street;
+		// $c->street2 = $sale->street2;
+		// $c->city = $sale->city;
+		// $c->state = $sale->state;
+		// $c->zip = $sale->zip;
 		$c->status = $sale->status;
 		$c->paid_status = $sale->paidStatus;
 		$c->paid_date = $sale->paidDate;

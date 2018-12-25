@@ -20,6 +20,7 @@ import { AgentRulesDialogComponent } from './agent/agent-rules-dialog/agent-rule
 import { PayCycleComponent } from './pay-cycle/pay-cycle.component';
 import { EditPayCycleComponent } from './pay-cycle/components/edit-pay-cycle/edit-pay-cycle.component';
 import { ConfirmUnpaidSelectionDialogComponent } from './pay-cycle/components/confirm-unpaid-selection-dialog/confirm-unpaid-selection-dialog.component';
+import { NewSaleComponent } from './daily-sale-tracker/components/new-sale/new-sale.component';
 
 @NgModule({
   imports: [
@@ -46,7 +47,8 @@ import { ConfirmUnpaidSelectionDialogComponent } from './pay-cycle/components/co
     AgentRulesDialogComponent,
     PayCycleComponent,
     EditPayCycleComponent,
-    ConfirmUnpaidSelectionDialogComponent
+    ConfirmUnpaidSelectionDialogComponent,
+    NewSaleComponent
   ],
   entryComponents: [
     EditAgentDialogComponent,

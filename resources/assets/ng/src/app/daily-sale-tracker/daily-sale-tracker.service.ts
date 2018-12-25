@@ -58,6 +58,11 @@ export class DailySaleTrackerService {
       )
   }
 
+  saveSaleWithContactInfo(clientId:number, campaignId:number, saleWithContact:DailySale):Observable<DailySale> {
+      const url = `${this.url}/clients/${clientId}/campaigns/${campaignId}/daily-sales`;
+      return this.http.post<DailySale>(url, saleWithContact);
+  }
+
   private handleError(error:HttpErrorResponse) {
     if(error.error instanceof ErrorEvent) {
       // client side network error

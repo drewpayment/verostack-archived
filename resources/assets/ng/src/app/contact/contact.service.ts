@@ -4,7 +4,7 @@ import { Contact } from '@app/models/contact.model';
 import { Observable } from 'rxjs';
 import { SessionService } from '@app/session.service';
 import { AuthService } from '@app/auth.service';
-import { catchError } from 'rxjs/operators';
+import { catchError, tap } from 'rxjs/operators';
 import { LaravelErrorResponse } from '@app/models/validator-error.model';
 import { MessageService } from '@app/message.service';
 import * as _ from 'lodash';
@@ -14,13 +14,14 @@ import * as _ from 'lodash';
 })
 export class ContactService {
     private api:string;
+    _contacts:Contact[];
     constructor(
         private http: HttpClient, 
         private session:SessionService,
         private auth:AuthService,
         private msg:MessageService
     ) {
-        this.api = `${this.auth.apiUrl}/api`;
+        this.api = `${this.auth.apiUrl}api`;
     }
 
     /**
@@ -31,6 +32,7 @@ export class ContactService {
     getContactsByClient(clientId:number):Observable<Contact[]> {
         return this.http.get<Contact[]>(`${this.api}/clients/${clientId}/contacts`)
             .pipe(
+                tap(next => this._contacts = next),
                 catchError(this.handleError)
             );
     }

@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Contact;
 use Illuminate\Http\Request;
 use App\Http\Resources\ApiResource;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Services\ContactService;
 
 class ContactController extends Controller

@@ -22,4 +22,6 @@ Route::middleware(['auth:api'])->group(function() {
 
     Route::get('/clients/{clientId}/campaigns/{campaignId}/daily-sales/pay-cycles/{payCycleId}', 'DailySaleController@getSalesByPayCycle');
 
+    Route::post('clients/{clientId}/campaigns/{campaignId}/daily-sales', 'DailySaleController@saveDailySaleWithContact');
+
 });

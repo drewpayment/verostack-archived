@@ -73,9 +73,14 @@
                         >No details saved.</div>
                     </ng-template> -->
 
-                    <ng-template>
-                        WE ARE GOING TO INCLUDE SOME UTILITY INFORMATION FOR EACH CAMPAIGN HERE
-                    </ng-template>
+                    <div class="card-text my-2" *ngIf="c.utilities != null && c.utilities.length">
+                        <h5 class="font-weight-bold">Available Utilities</h5>
+                        <ul>
+                            <li *ngFor="let util of c.utilities">
+                                {{util.utilityName}}
+                            </li>
+                        </ul>
+                    </div>
 
                 </div>
                 <div class="card-footer d-flex bg-light" [ngClass]="c.compensation != null ? 'justify-content-between' : 'justify-content-end'">

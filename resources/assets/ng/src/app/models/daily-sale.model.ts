@@ -1,5 +1,6 @@
 import { Moment } from "moment";
 import { Remark, IAgent } from "@app/models";
+import { Contact } from './contact.model';
 
 export enum PaidStatusType {
   unpaid,
@@ -13,14 +14,16 @@ export interface DailySale {
   agentId:number,
   clientId:number,
   campaignId:number,
+  utilityId?:number,
+  contactId?:number,
   podAccount:number,
-  firstName:string,
-  lastName:string,
-  street:string,
-  street2:string,
-  city:string,
-  state:string,
-  zip:number,
+  firstName?:string, // remove when contact is fully implemented
+  lastName?:string, // remove when contact is fully implemented
+  street?:string, // remove when contact is fully implemented
+  street2?:string, // remove when contact is fully implemented
+  city?:string, // remove when contact is fully implemented
+  state?:string, // remove when contact is fully implemented
+  zip?:number, // remove when contact is fully implemented
   status:number,
   paidStatus:number,
   payCycleId?:number,
@@ -31,5 +34,6 @@ export interface DailySale {
   lastTouchDate?:Date | string | Moment,
   notes?:string
   remarks:Remark[],
-  agent?:IAgent
+  agent?:IAgent,
+  contact?:Contact
 }
