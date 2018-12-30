@@ -6,7 +6,7 @@
         <i class="material-icons" (click)="onNoClick()">clear</i>
     </span>
 </div>
-<div class="modal-body">
+<div class="modal-body" *ngIf="!showEditContactForm">
     <p class="text-muted">
         All fields denoted with * are required.
     </p>
@@ -116,80 +116,54 @@
             </div>
         </div>
 
-        <div class="row my-4">
-            <div class="col-md-12">
-                <span>Customer Information</span>
-                <mat-divider></mat-divider>
+        <ng-container *ngIf="existingSale?.contact != null; else addContactInfoLink">
+            <div class="row my-4">
+                <div class="col-md-12">
+                    <span>Customer Information</span>
+                    <mat-divider></mat-divider>
+                </div>
             </div>
-        </div>
 
-        <!-- CUSTOMER NAME -->
-        <div class="row">
-            <div class="col-md-6">
-                <mat-form-field>
-                    <input matInput placeholder="First Name" formControlName="firstName" required />
-                    <mat-error *ngIf="form.get('firstName').hasError('required') && (form.get('firstName').touched || submitted)">
-                        Please enter a first name
-                    </mat-error>
-                </mat-form-field>
+            <div class="row" *ngIf="existingSale.contact != null">
+                <div class="col-md-12 d-flex justify-content-between">
+                    <div>
+                        <span class="font-weight-bold">
+                            {{existingSale.contact.firstName}} {{existingSale.contact.lastName}}
+                        </span>
+                        <address>
+                            {{existingSale.contact.street}} <br />
+                            <ng-container *ngIf="existingSale.contact.street2 != null">
+                                {{existingSale.contact.street2}} <br />
+                            </ng-container>
+                            {{existingSale.contact.city}} {{existingSale.contact.state}} {{existingSale.contact.zip}}
+                            <br /><br />
+                            <span class="font-weight-bold">
+                                Date of Birth
+                            </span>
+                            <br />
+                            {{existingSale.contact.dob | date:'mediumDate'}}
+                            <br /><br />
+                            <span class="font-weight-bold">Email</span>
+                            <br />
+                            {{existingSale.contact.email}}
+                        </address>
+                    </div>
+                    <div>
+                        <button type="button" mat-button (click)="editContact(existingSale.contact)">
+                            <mat-icon inline="true">edit</mat-icon>
+                            <span>Edit</span>
+                        </button>
+                    </div>
+                </div>
             </div>
-            <div class="col-md-6">
-                <mat-form-field>
-                    <input matInput placeholder="Last Name" formControlName="lastName" required />
-                    <mat-error *ngIf="form.get('lastName').hasError('required') && (form.get('lastName').touched || submitted)">
-                        Please enter a last name
-                    </mat-error>
-                </mat-form-field>
+        </ng-container>
+        <ng-template #addContactInfoLink>
+            <div class="row my-4">
+                <div class="col-md-12">
+                    <span (click)="navigateToSaleDetail()">Click here</span> to add contact info.
+                </div>
             </div>
-        </div>
-
-        <!-- CUSTOMER ADDRESS -->
-        <div class="row">
-            <div class="col-md-8">
-                <mat-form-field>
-                    <input matInput placeholder="Address" formControlName="address" required />
-                    <mat-error *ngIf="form.get('address').hasError('required') && (form.get('address').touched || submitted)">
-                        Please enter a street address
-                    </mat-error>
-                </mat-form-field>
-            </div>
-            <div class="col-md-4">
-                <mat-form-field>
-                    <input matInput placeholder="Apt/Suite/Unit" formControlName="address2" />
-                    <mat-hint>Optional</mat-hint>
-                </mat-form-field>
-            </div>
-        </div>
-
-        <!-- CUSTOMER ADDRESS CONT'D -->
-        <div class="row">
-            <div class="col-md-7">
-                <mat-form-field>
-                    <input matInput placeholder="City" formControlName="city" required />
-                    <mat-error *ngIf="form.get('city').hasError('required') && (form.get('city').touched || submitted)">
-                        Please enter a city
-                    </mat-error>
-                </mat-form-field>
-            </div>
-            <div class="col-md-2">
-                <mat-form-field>
-                    <mat-select formControlName="state" placeholder="State" required>
-                        <mat-option *ngFor="let s of states" [value]="s.abbreviation">{{s.name}}</mat-option>
-                    </mat-select>
-                    <mat-error *ngIf="form.get('state').hasError('required') && (form.get('state').touched || submitted)">
-                        Select a State
-                    </mat-error>
-                </mat-form-field>
-            </div>
-            <div class="col-md-3">
-                <mat-form-field>
-                    <input matInput placeholder="Zip" formControlName="zip" required />
-                    <mat-error *ngIf="form.get('zip').hasError('required') && (form.get('zip').touched || submitted)">
-                        Please enter a zip code
-                    </mat-error>
-                </mat-form-field>
-            </div>
-        </div>
+        </ng-template>
 
         <div class="row">
             <div class="col-12">
@@ -235,5 +209,114 @@
     <div class="float-right">
         <button mat-button (click)="onNoClick()">Cancel</button>
         <button mat-raised-button (click)="saveDialog()" color="primary" [disabled]="form.invalid">Save</button>
+    </div>
+</div>
+<div class="modal-body" *ngIf="showEditContactForm">
+    <div [formGroup]="contactForm">
+        <div class="row">
+            <div class="col-md-5">
+                <mat-form-field class="w-100 mr-1">
+                    <input matInput type="text" formControlName="firstName" placeholder="First Name" required />
+                    <mat-error *ngIf="contactForm.get('firstName').hasError('required')">
+                        Please enter contact first name.
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="col-md-7">
+                <mat-form-field class="w-100 ml-1">
+                    <input matInput type="text" formControlName="lastName" placeholder="Last Name" required />
+                    <mat-error *ngIf="contactForm.get('lastName').hasError('required')">
+                        Please enter a contact last name.
+                    </mat-error>
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8">
+                <mat-form-field class="w-100 mr-1">
+                    <input matInput type="text" formControlName="street" placeholder="Street Address" required />
+                    <mat-error *ngIf="contactForm.get('street').hasError('required')">
+                        Please enter a street address.
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="col-md-4">
+                <mat-form-field class="w-100 ml-1">
+                    <input matInput type="text" formControlName="street2" placeholder="Apt/Unit" />
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <mat-form-field class="w-100 mr-1">
+                    <input matInput type="text" formControlName="city" placeholder="City" required />
+                    <mat-error *ngIf="contactForm.get('city').hasError('required')">
+                        Please enter a city.
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="col-md-2">
+                <mat-form-field class="w-100 mx-1">
+                    <mat-select placeholder="State" formControlName="state" required>
+                        <mat-option *ngFor="let s of states" [value]="s.abbreviation">
+                            {{s.name}}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="contactForm.get('state').hasError('required')">
+                        Please select a state.
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="col-md-4">
+                <mat-form-field class="w-100 ml-1">
+                    <input matInput type="text" formControlName="zip" placeholder="Zip" required />
+                    <mat-error *ngIf="contactForm.get('zip').hasError('required')">
+                        Please enter a zip code.
+                    </mat-error>
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <mat-form-field class="w-100 mr-1">
+                    <input matInput type="text" formControlName="phone" placeholder="Phone" required/>
+                    <mat-error *ngIf="contactForm.get('phone').hasError('required')">
+                        Please enter a phone number.
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="col-md-5">
+                <mat-form-field class="w-100 mx-1">
+                    <input matInput type="text" formControlName="email" placeholder="Email" required />
+                    <mat-error *ngIf="contactForm.get('email').hasError('required')">
+                        Please enter an email address.
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="col-md-3">
+                <mat-form-field class="w-100 ml-1">
+                    <input matInput [matDatepicker]="dobPicker" formControlName="dob" placeholder="Date of Birth" required />
+                    <mat-datepicker-toggle [for]="dobPicker" matSuffix>
+                        <mat-icon>date_range</mat-icon>
+                    </mat-datepicker-toggle>
+                    <mat-datepicker #dobPicker></mat-datepicker>
+                    <mat-error *ngIf="contactForm.get('dob').hasError('required')">
+                        Please pick a date of birth.
+                    </mat-error>
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 d-flex justify-content-between">
+                <button type="button" mat-button (click)="cancelContactForm()">
+                    <mat-icon inline="true">reply</mat-icon>
+                    <span>Go Back</span>
+                </button>
+                <button type="button" mat-button color="primary" (click)="saveContactForm()">
+                    <mat-icon inline="true">save</mat-icon>
+                    <span>Save</span>
+                </button>
+            </div>
+        </div>
     </div>
 </div>

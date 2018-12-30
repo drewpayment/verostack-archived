@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Contact;
 use App\PayCycle;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
@@ -17,6 +18,7 @@ class DailySale extends Model
 	    'agent_id',
 	    'client_id',
 	    'campaign_id',
+        'contact_id',
 	    'pod_account',
 	    'first_name',
 	    'last_name',
@@ -54,6 +56,11 @@ class DailySale extends Model
 			'daily_sale_id',
 			'remark_id'
 		);
+    }
+
+    public function contact()
+    {
+        return $this->belongsTo(Contact::class, 'contact_id', 'contact_id');
     }
 
     public function payCycle()

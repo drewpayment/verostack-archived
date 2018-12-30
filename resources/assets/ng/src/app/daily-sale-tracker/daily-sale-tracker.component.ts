@@ -5,7 +5,7 @@ import * as moment from 'moment';
 import * as _ from 'lodash';
 import {AgentsService} from '@app/core/agents/agents.service';
 import {MessageService} from '@app/message.service';
-import {Observable, of, BehaviorSubject} from 'rxjs';
+import {Observable, of, BehaviorSubject, zip, forkJoin} from 'rxjs';
 import {DataSource} from '@angular/cdk/table';
 import {ClientService} from '@app/client-information/client.service';
 import {UserService} from '@app/user-features/user.service';
@@ -94,6 +94,7 @@ export class DailySaleTrackerComponent implements OnInit {
         private fb: FormBuilder,
         private floatBtnService: FloatBtnService
     ) {
+        /** why are we doing this? why not just use an observable w/async pipe to dataSource$? */
         this.dataSource$.subscribe(next => {
             if (next == null) return;
             this.sales = of(next);
@@ -108,12 +109,14 @@ export class DailySaleTrackerComponent implements OnInit {
 
         this.userService.user.subscribe(u => {
             this.userInfo = u;
-            this.clientService.getSaleStatuses(this.userInfo.sessionUser.sessionClient).subscribe(statuses => {
-                this.store.statuses = statuses;
-                this.statuses.next(statuses);
-            });
 
-            this.campaignService.getCampaigns(this.userInfo.sessionUser.sessionClient).then(campaigns => {
+            forkJoin(
+                this.clientService.getSaleStatuses(this.userInfo.sessionUser.sessionClient),
+                this.campaignService.getCampaigns(this.userInfo.sessionUser.sessionClient)
+            ).subscribe(([saleStatuses, campaigns]) => {
+                this.store.statuses = saleStatuses;
+                this.statuses.next(saleStatuses);
+
                 this.campaigns = _.sortBy(campaigns, ['name']);
                 this.campaigns.unshift({
                     campaignId: 0,
@@ -122,7 +125,7 @@ export class DailySaleTrackerComponent implements OnInit {
                     active: true
                 });
 
-                if (this.campaigns.length > 0) {
+                if(this.campaigns.length) {
                     this.selectedCampaign = this.campaigns[0];
                 } else {
                     this.selectedCampaign = {
@@ -130,7 +133,7 @@ export class DailySaleTrackerComponent implements OnInit {
                         clientId: null,
                         name: null,
                         active: false
-                    };
+                    }
                 }
 
                 this.refreshDailySales(this.startDate, this.endDate);

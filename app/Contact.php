@@ -32,6 +32,11 @@ class Contact extends Model
         'fax'
     ];
 
+    public function sales()
+    {
+        return $this->hasMany(DailySale::class, 'contact_id');
+    }
+
     /**
      * @param $query \Illuminate\Database\Eloquent\Builder
      * @param $contactId

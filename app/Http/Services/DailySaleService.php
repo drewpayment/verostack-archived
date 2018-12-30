@@ -41,7 +41,8 @@ class DailySaleService {
 		$startDate = Carbon::createFromFormat('Y-m-d', $startDate)->toDateString();
 		$endDate = Carbon::createFromFormat('Y-m-d', $endDate)->toDateString();
 		return $result
-			->setData(DailySale::byClient($clientId)
+			->setData(DailySale::with('contact')
+                ->byClient($clientId)
 				->byCampaign($campaignId)
                 ->byDateRange($startDate, $endDate)
                 ->filterPaid()
