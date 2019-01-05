@@ -30,9 +30,11 @@
                             Select Sales
                         </h5>
                         <div class="col-md-8 d-flex justify-content-end align-items-baseline">
-                            <mat-button-toggle #toggle class="mr-2" (change)="toggleSelectAll($event)">
-                                {{toggle.checked ? 'Deselect All' : 'Select All'}}
-                            </mat-button-toggle>
+                            <div class="mr-2">
+                                <mat-button-toggle #toggle (change)="toggleSelectAll($event)">
+                                    {{toggle.checked ? 'Deselect All' : 'Select All'}}
+                                </mat-button-toggle>
+                            </div>
                             <mat-form-field>
                                 <mat-label>Filter by Agent</mat-label>
                                 <mat-select (selectionChange)="filterSalesByAgent($event)">
@@ -56,9 +58,14 @@
                             [class.hide]="hideSelectedOptions && option.selected"
                         >
                             <div matLine class="d-flex justify-content-between">
-                                <div class="font-weight-bold">
-                                    {{asale.firstName}} {{asale.lastName}}
+                                <div class="font-weight-bold" *ngIf="asale.contact != null; else noContact">
+                                    {{asale?.contact.firstName}} {{asale?.contact.lastName}}
                                 </div>
+                                <ng-template #noContact>
+                                    <div class="text-muted">
+                                        Looks like this sale might be missing some contact info.
+                                    </div>
+                                </ng-template>
                                 <span class="font-italic text-muted">{{salePaidStatusDisplayText(asale)}}</span>
                             </div>
                             <div matLine class="text-muted">

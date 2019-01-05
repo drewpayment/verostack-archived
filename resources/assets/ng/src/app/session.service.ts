@@ -5,10 +5,11 @@ import {MatSidenav} from '@angular/material';
 import {LocalStorage, JSONSchema} from '@ngx-pwa/local-storage';
 import {ILocalStorage, IToken} from './models';
 import {HttpRequest} from '@angular/common/http';
-import {Router} from '@angular/router';
+import {Router, NavigationEnd} from '@angular/router';
 import {environment} from '../environments/environment';
 
 import * as moment from 'moment';
+import { filter } from 'rxjs/operators';
 
 declare var window: any;
 
@@ -48,6 +49,9 @@ export class SessionService {
     private hasTokenSubject = new ReplaySubject<boolean>(1);
     isLoginSubject = new BehaviorSubject<boolean>(this.hasToken());
 
+    previousUrl:string = '';
+    currentUrl:string = '';
+
     constructor(private localStorage: LocalStorage, private router: Router) {
         // make sure we're removing expired cookies on app boot
         this.pruneExpiredStorage();
@@ -58,6 +62,13 @@ export class SessionService {
         this.userItem = this.userItem$.asObservable();
         this.tokenItem = this.tokenItem$.asObservable();
         this.loadingState = this.loading$.asObservable();
+
+        this.router.events.pipe(
+            filter(event => event instanceof NavigationEnd)
+        ).subscribe((e:any) => {
+            this.previousUrl = this.currentUrl;
+            this.currentUrl = e.url;
+        });
     }
 
     get isUserLoggedIn(): boolean {

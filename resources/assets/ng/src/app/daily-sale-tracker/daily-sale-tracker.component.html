@@ -24,8 +24,12 @@
                 </mat-option>
             </mat-select>
         </mat-form-field>
-        <button type="button" mat-button color="primary" class="mx-4" (click)="showAddSaleDialog()">
+        <!-- <button type="button" mat-button color="primary" class="mx-4" (click)="showAddSaleDialog()">
             Add Sale
+        </button> -->
+        <button type="button" mat-button color="primary" class="mx-4" [routerLink]="['/new-sale-contact']">
+            <mat-icon inline="true">add</mat-icon>
+            <span>Sale</span>
         </button>
     </mat-card-subtitle>
 </mat-card>

@@ -32,6 +32,38 @@ class PayCycleController extends Controller
             ->getresponse();
     }
 
+    public function newPayCycle(Request $request, $clientId)
+    {
+        $result = new ApiResource();
+
+        $result
+            ->checkAccessByClient($clientId, Auth::user()->id)
+            ->mergeInto($result);
+
+        if($result->hasError)
+            return $result->throwApiException()->getResponse();
+
+        $dto = (object)$request;
+        $cycle = new PayCycle;
+        $cycle->start_date = $dto->startDate;
+        $cycle->end_date = $dto->endDate;
+        $cycle->is_pending = $dto->isPending;
+        $cycle->is_closed = $dto->isClosed;
+        $cycle->created_at = date_create()->format('Y-m-d H:i:s');
+        $cycle->updated_at = date_create()->format('Y-m-d H:i:s');
+
+        $res = $cycle->save();
+
+        if(!$res)
+            return $result->setToFail()
+                ->throwApiException()
+                ->getResponse();
+        
+        return $result->setData($cycle)
+            ->throwApiException()
+            ->getResponse();
+    }
+
     public function updatePayCycle(Request $request, $clientId, $payCycleId)
     {
         $result = new ApiResource();
@@ -100,7 +132,7 @@ class PayCycleController extends Controller
         if($result->hasError)
             return $result->throwApiException()->getResponse();
 
-        $sales = DailySale::with('agent')
+        $sales = DailySale::with('agent', 'contact')
             ->byPayCycleWithNulls($payCycleId)
             ->byDateRange($request->start, $request->end)
             ->get();
@@ -129,18 +161,32 @@ class PayCycleController extends Controller
         $dailySales = DailySale::whereIn('daily_sale_id', $ids)->get();
 
         try {
+            $exception = false;
             foreach($request['sales'] as $s) {
 
                 foreach($dailySales as $d) {
                     if($d->daily_sale_id != $s['dailySaleId']) continue;
                     $d->pay_cycle_id = $s['payCycleId'];
-                    $d->save();
+                    $dRes = $d->save();
+                    if(!$dRes)
+                        $exception = true;
+                    if($exception) break;
                 }
 
+                if($exception) break;
             }
 
+            if($exception)
+                throw new Exception('Failed to update all sales.');
+
+            $cycle = PayCycle::byPayCycle($payCycleId)->first();
+            $cycle->is_pending = true;
+            $cycleRes = $cycle->save();
+
+            if(!$cycleRes)
+                throw new Exception('Failed to update the payroll cycle.');
+
             return $result->setData($dailySales)
-                ->setToSuccess()
                 ->throwApiException()
                 ->getResponse();
 
@@ -150,6 +196,24 @@ class PayCycleController extends Controller
                 ->throwApiException($ex->getMessage())
                 ->getResponse();
         }
+    }
+
+    public function getLastPaycycle($clientId)
+    {
+        $result = new ApiResource();
+
+        $result
+            ->checkAccessByClient($clientId, Auth::user()->id)
+            ->mergeInto($result);
+
+        if($result->hasError)
+            return $result->throwApiException()->getResponse();
+
+        $cycle = PayCycle::orderBy('end_date', 'desc')->take(1)->first();
+
+        return $result->setData($cycle)
+            ->throwApiException()
+            ->getResponse();
     }
 
 }

@@ -10,6 +10,7 @@ import { PayCycleService } from '@app/pay-cycle/pay-cycle.service';
 import { PayCycle } from '@app/models/pay-cycle.model';
 import { Router } from '@angular/router';
 import { Subject, BehaviorSubject } from 'rxjs';
+import { PayCycleDialogComponent } from './components/pay-cycle-dialog/pay-cycle-dialog.component';
 
 @Component({
     selector: 'vs-pay-cycle',
@@ -46,6 +47,22 @@ export class PayCycleComponent implements OnInit {
                 .subscribe(cycles => {
                     this._cycles = cycles;
                     this.getActive();
+                });
+        });
+    }
+
+    addPayCycle() {
+        this.dialog.open(PayCycleDialogComponent, {
+            width: '50vw'
+        })
+        .afterClosed()
+        .subscribe(result => {
+            if(result == null) return;
+            this.payCycleService.savePayCycle(this.user.sessionUser.sessionClient, result)
+                .subscribe(cycle => {
+                    this.msg.addMessage('Successfully created pay cycle!', 'dismiss', 5000);
+                    this._cycles.push(cycle);
+                    this.displayCycles.next(this._cycles);
                 });
         });
     }

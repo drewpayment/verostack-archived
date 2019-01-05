@@ -3,7 +3,6 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import { Observable, Subject } from 'rxjs';
 import { PayCycle } from '@app/models/pay-cycle.model';
 import { environment } from '@env/environment';
-import { Moment } from 'moment';
 import { DailySale } from '@app/models';
 
 @Injectable({
@@ -61,6 +60,16 @@ export class PayCycleService {
         return this.http.post<DailySale[]>(url, {
             sales: sales
         });
+    }
+
+    getLastPayCycle(clientId:number):Observable<PayCycle> {
+        const url = `${this.api}api/clients/${clientId}/pay-cycles/last`;
+        return this.http.get<PayCycle>(url);
+    }
+
+    savePayCycle(clientId:number, dto:PayCycle):Observable<PayCycle> {
+        const url = `${this.api}api/clients/${clientId}/pay-cycles`;
+        return this.http.post<PayCycle>(url, dto);
     }
 
     /** INTERNAL API CALLS */

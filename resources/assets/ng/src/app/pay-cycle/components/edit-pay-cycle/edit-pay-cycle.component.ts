@@ -11,6 +11,7 @@ import * as moment from 'moment';
 import { MatSelectionList, MatListOption, MatSelectionListChange, MatSelectChange, MatButtonToggleChange, MatDialog } from '@angular/material';
 import * as _ from 'lodash';
 import { ConfirmUnpaidSelectionDialogComponent } from '@app/pay-cycle/components/confirm-unpaid-selection-dialog/confirm-unpaid-selection-dialog.component';
+import { MessageService } from '@app/message.service';
 
 @Component({
     selector: 'vs-edit-pay-cycle',
@@ -35,7 +36,8 @@ export class EditPayCycleComponent implements OnInit {
         private service: PayCycleService, 
         private fb: FormBuilder,
         private router:Router,
-        private dialog:MatDialog
+        private dialog:MatDialog,
+        private msg:MessageService
     ) {}
 
     ngOnInit() {
@@ -66,19 +68,18 @@ export class EditPayCycleComponent implements OnInit {
         this.session.getUserItem().subscribe(u => {
             this.user = u;
             this.service.getPayCycleSales(
-                    this.user.sessionUser.sessionClient, 
-                    <string>this._cycle.startDate, 
-                    <string>this._cycle.endDate,
-                    this._cycle.payCycleId
-                )
-                .subscribe(sales => {
-                    this._sales = sales;
-                    this.sales$.next(sales);
-                    this.salesLoaded = true;
+                this.user.sessionUser.sessionClient, 
+                <string>this._cycle.startDate, 
+                <string>this._cycle.endDate,
+                this._cycle.payCycleId
+            ).subscribe(sales => {
+                this._sales = sales;
+                this.sales$.next(sales);
+                this.salesLoaded = true;
 
-                    this.handleSelectionChanges();
-                    this.buildAgentFilter();
-                });
+                this.handleSelectionChanges();
+                this.buildAgentFilter();
+            });
         })
     }
 
@@ -162,10 +163,8 @@ export class EditPayCycleComponent implements OnInit {
 
         this.service.updateDailySaleWithPayCycle(this.user.sessionUser.sessionClient, this._cycle.payCycleId, this._sales)
             .subscribe(sales => {
-                console.dir(sales);
-                // this._sales = sales;
-                // this.sales$.next(this._sales);
-                // this.router.navigate(['admin/pay']);
+                this.msg.addMessage('Saved successfully!', 'dismiss', 1500);
+                setTimeout(() => this.router.navigate(['admin/pay']), 1500);
             });
     }
 }

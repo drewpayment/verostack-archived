@@ -12,6 +12,7 @@ import { States, IState } from '@app/shared/models/state.model';
 import { ClientService } from '@app/client-information/client.service';
 import { DailySaleTrackerService } from '@app/daily-sale-tracker/daily-sale-tracker.service';
 import { MessageService } from '@app/message.service';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'vs-new-sale',
@@ -41,6 +42,7 @@ export class NewSaleComponent implements OnInit {
     utilities:BehaviorSubject<Utility[]> = new BehaviorSubject<Utility[]>([]);
 
     states:IState[] = States.$get();
+    returnUrl:string = '';
 
     constructor(
         private fb:FormBuilder, 
@@ -50,10 +52,12 @@ export class NewSaleComponent implements OnInit {
         private campaignService:CampaignService,
         private clientService:ClientService,
         private saleService:DailySaleTrackerService,
-        private message:MessageService
+        private message:MessageService,
+        private router:Router
     ) {}
 
     ngOnInit() {
+        this.returnUrl = this.session.previousUrl;
         this.session.getUserItem().subscribe(u => {
             this.user = u;
 
@@ -200,13 +204,11 @@ export class NewSaleComponent implements OnInit {
 
         const model = this.prepareModel();
 
-        console.dir(model);
-
         /** WRITE THE SERVICE CALL TO DAILY SALE CONTROLLER */
         this.saleService.saveSaleWithContactInfo(this.user.sessionUser.sessionClient, model.campaignId, model)
             .subscribe(sale => {
                 this.message.addMessage('Sale saved!', 'dismiss', 5000);
-                console.dir(sale);
+                setTimeout(() => this.router.navigate(['/daily-tracker']), 2500);
             }, err => {
                 console.error(err);
             });
@@ -214,6 +216,7 @@ export class NewSaleComponent implements OnInit {
 
     clearForm():void {
         this.form.reset();
+        this.router.navigate([this.returnUrl]);
     }
 
     validateContactInput(event:any) {

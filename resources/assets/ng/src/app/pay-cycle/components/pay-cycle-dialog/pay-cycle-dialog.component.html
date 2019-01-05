@@ -1,0 +1,46 @@
+
+<h2 mat-dialog-title>Create Payroll Cycle</h2>
+<div mat-dialog-content [formGroup]="form">
+    <div class="row">
+        <div class="col-md-6">
+            <mat-form-field>
+                <input type="text" 
+                    matInput 
+                    [matDatepicker]="startDatepicker" 
+                    formControlName="startDate" 
+                    [min]="minimumDate"
+                    placeholder="Start Date"
+                    required
+                />
+                <mat-datepicker-toggle [for]="startDatepicker" matSuffix></mat-datepicker-toggle>
+                <mat-datepicker #startDatepicker></mat-datepicker>
+                <mat-error *ngIf="form.get('startDate').hasError('required')">
+                    Please select a start date.
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <div class="col-md-6">
+            <mat-form-field>
+                <input type="text" 
+                    matInput 
+                    [matDatepicker]="endDatepicker" 
+                    formControlName="endDate"
+                    placeholder="End Date"
+                    required
+                />
+                <mat-datepicker-toggle [for]="endDatepicker" matSuffix></mat-datepicker-toggle>
+                <mat-datepicker #endDatepicker></mat-datepicker>
+                <mat-error *ngIf="form.get('endDate').hasError('required')">
+                    Please select an end date.
+                </mat-error>
+            </mat-form-field>
+        </div>
+    </div>
+</div>
+<div mat-dialog-actions class="d-flex justify-content-between">
+    <button type="button" mat-button (click)="onNoClick()">Cancel</button>
+    <button type="button" mat-button color="primary" (click)="saveForm()">
+        <mat-icon inline="true">save</mat-icon>
+        <span>Save</span>
+    </button>
+</div>
