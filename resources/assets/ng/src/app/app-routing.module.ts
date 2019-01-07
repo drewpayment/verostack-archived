@@ -4,7 +4,7 @@ import { LoginComponent } from './login/login.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { MyInformationComponent } from './my-information/my-information.component';
 import { ClientInformationComponent } from './client-information/client-information.component';
-import { PayrollComponent } from './payroll/payroll.component';
+// import { PayrollComponent } from './payroll/payroll.component';
 import { AppComponent } from './app.component';
 
 import { AuthGuard } from './auth.guard';
@@ -31,7 +31,7 @@ const routes: Routes = [
     { path: 'campaigns/:campaignId', component: CampaignDetailComponent, canActivate: [AuthGuard] },
     { path: 'utilities/:utilityId', component: UtilityDetailComponent, canActivate: [AuthGuard] },
     { path: 'add-utility', component: UtilityDetailComponent, canActivate: [AuthGuard] }, 
-    { path: 'payroll-tools', component: PayrollComponent, canActivate: [AuthGuard] },
+    // { path: 'payroll-tools', component: PayrollComponent, canActivate: [AuthGuard] },
     { 
         path: 'admin', 
         children: [

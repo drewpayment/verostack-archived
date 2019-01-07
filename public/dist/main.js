@@ -1135,18 +1135,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _dashboard_dashboard_component__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./dashboard/dashboard.component */ "./src/app/dashboard/dashboard.component.ts");
 /* harmony import */ var _my_information_my_information_component__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./my-information/my-information.component */ "./src/app/my-information/my-information.component.ts");
 /* harmony import */ var _client_information_client_information_component__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./client-information/client-information.component */ "./src/app/client-information/client-information.component.ts");
-/* harmony import */ var _payroll_payroll_component__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./payroll/payroll.component */ "./src/app/payroll/payroll.component.ts");
-/* harmony import */ var _auth_guard__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./auth.guard */ "./src/app/auth.guard.ts");
-/* harmony import */ var _app_campaigns_campaigns_component__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @app/campaigns/campaigns.component */ "./src/app/campaigns/campaigns.component.ts");
-/* harmony import */ var _app_daily_sale_tracker_daily_sale_tracker_component__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @app/daily-sale-tracker/daily-sale-tracker.component */ "./src/app/daily-sale-tracker/daily-sale-tracker.component.ts");
-/* harmony import */ var _app_agent_agent_component__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @app/agent/agent.component */ "./src/app/agent/agent.component.ts");
-/* harmony import */ var _app_public_home_public_home_component__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @app/public-home/public-home.component */ "./src/app/public-home/public-home.component.ts");
-/* harmony import */ var _app_pay_cycle_pay_cycle_component__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @app/pay-cycle/pay-cycle.component */ "./src/app/pay-cycle/pay-cycle.component.ts");
-/* harmony import */ var _app_pay_cycle_components_edit_pay_cycle_edit_pay_cycle_component__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! @app/pay-cycle/components/edit-pay-cycle/edit-pay-cycle.component */ "./src/app/pay-cycle/components/edit-pay-cycle/edit-pay-cycle.component.ts");
-/* harmony import */ var _app_campaigns_components_campaign_detail_campaign_detail_component__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! @app/campaigns/components/campaign-detail/campaign-detail.component */ "./src/app/campaigns/components/campaign-detail/campaign-detail.component.ts");
-/* harmony import */ var _campaigns_components_utility_detail_utility_detail_component__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./campaigns/components/utility-detail/utility-detail.component */ "./src/app/campaigns/components/utility-detail/utility-detail.component.ts");
-/* harmony import */ var _daily_sale_tracker_components_new_sale_new_sale_component__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./daily-sale-tracker/components/new-sale/new-sale.component */ "./src/app/daily-sale-tracker/components/new-sale/new-sale.component.ts");
-
+/* harmony import */ var _auth_guard__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./auth.guard */ "./src/app/auth.guard.ts");
+/* harmony import */ var _app_campaigns_campaigns_component__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @app/campaigns/campaigns.component */ "./src/app/campaigns/campaigns.component.ts");
+/* harmony import */ var _app_daily_sale_tracker_daily_sale_tracker_component__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @app/daily-sale-tracker/daily-sale-tracker.component */ "./src/app/daily-sale-tracker/daily-sale-tracker.component.ts");
+/* harmony import */ var _app_agent_agent_component__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @app/agent/agent.component */ "./src/app/agent/agent.component.ts");
+/* harmony import */ var _app_public_home_public_home_component__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @app/public-home/public-home.component */ "./src/app/public-home/public-home.component.ts");
+/* harmony import */ var _app_pay_cycle_pay_cycle_component__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @app/pay-cycle/pay-cycle.component */ "./src/app/pay-cycle/pay-cycle.component.ts");
+/* harmony import */ var _app_pay_cycle_components_edit_pay_cycle_edit_pay_cycle_component__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @app/pay-cycle/components/edit-pay-cycle/edit-pay-cycle.component */ "./src/app/pay-cycle/components/edit-pay-cycle/edit-pay-cycle.component.ts");
+/* harmony import */ var _app_campaigns_components_campaign_detail_campaign_detail_component__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! @app/campaigns/components/campaign-detail/campaign-detail.component */ "./src/app/campaigns/components/campaign-detail/campaign-detail.component.ts");
+/* harmony import */ var _campaigns_components_utility_detail_utility_detail_component__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./campaigns/components/utility-detail/utility-detail.component */ "./src/app/campaigns/components/utility-detail/utility-detail.component.ts");
+/* harmony import */ var _daily_sale_tracker_components_new_sale_new_sale_component__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./daily-sale-tracker/components/new-sale/new-sale.component */ "./src/app/daily-sale-tracker/components/new-sale/new-sale.component.ts");
 
 
 
@@ -1166,26 +1164,26 @@ __webpack_require__.r(__webpack_exports__);
 
 var routes = [
     { path: '', redirectTo: 'home', pathMatch: 'full' },
-    { path: 'home', component: _app_public_home_public_home_component__WEBPACK_IMPORTED_MODULE_12__["PublicHomeComponent"] },
+    { path: 'home', component: _app_public_home_public_home_component__WEBPACK_IMPORTED_MODULE_11__["PublicHomeComponent"] },
     { path: 'login', component: _login_login_component__WEBPACK_IMPORTED_MODULE_3__["LoginComponent"] },
-    { path: 'dashboard', component: _dashboard_dashboard_component__WEBPACK_IMPORTED_MODULE_4__["DashboardComponent"], canActivate: [_auth_guard__WEBPACK_IMPORTED_MODULE_8__["AuthGuard"]] },
-    { path: 'my-information', component: _my_information_my_information_component__WEBPACK_IMPORTED_MODULE_5__["MyInformationComponent"], canActivate: [_auth_guard__WEBPACK_IMPORTED_MODULE_8__["AuthGuard"]] },
-    { path: 'client-information', component: _client_information_client_information_component__WEBPACK_IMPORTED_MODULE_6__["ClientInformationComponent"], canActivate: [_auth_guard__WEBPACK_IMPORTED_MODULE_8__["AuthGuard"]] },
-    { path: 'campaigns', component: _app_campaigns_campaigns_component__WEBPACK_IMPORTED_MODULE_9__["CampaignsComponent"], canActivate: [_auth_guard__WEBPACK_IMPORTED_MODULE_8__["AuthGuard"]] },
-    { path: 'campaigns/:campaignId', component: _app_campaigns_components_campaign_detail_campaign_detail_component__WEBPACK_IMPORTED_MODULE_15__["CampaignDetailComponent"], canActivate: [_auth_guard__WEBPACK_IMPORTED_MODULE_8__["AuthGuard"]] },
-    { path: 'utilities/:utilityId', component: _campaigns_components_utility_detail_utility_detail_component__WEBPACK_IMPORTED_MODULE_16__["UtilityDetailComponent"], canActivate: [_auth_guard__WEBPACK_IMPORTED_MODULE_8__["AuthGuard"]] },
-    { path: 'add-utility', component: _campaigns_components_utility_detail_utility_detail_component__WEBPACK_IMPORTED_MODULE_16__["UtilityDetailComponent"], canActivate: [_auth_guard__WEBPACK_IMPORTED_MODULE_8__["AuthGuard"]] },
-    { path: 'payroll-tools', component: _payroll_payroll_component__WEBPACK_IMPORTED_MODULE_7__["PayrollComponent"], canActivate: [_auth_guard__WEBPACK_IMPORTED_MODULE_8__["AuthGuard"]] },
+    { path: 'dashboard', component: _dashboard_dashboard_component__WEBPACK_IMPORTED_MODULE_4__["DashboardComponent"], canActivate: [_auth_guard__WEBPACK_IMPORTED_MODULE_7__["AuthGuard"]] },
+    { path: 'my-information', component: _my_information_my_information_component__WEBPACK_IMPORTED_MODULE_5__["MyInformationComponent"], canActivate: [_auth_guard__WEBPACK_IMPORTED_MODULE_7__["AuthGuard"]] },
+    { path: 'client-information', component: _client_information_client_information_component__WEBPACK_IMPORTED_MODULE_6__["ClientInformationComponent"], canActivate: [_auth_guard__WEBPACK_IMPORTED_MODULE_7__["AuthGuard"]] },
+    { path: 'campaigns', component: _app_campaigns_campaigns_component__WEBPACK_IMPORTED_MODULE_8__["CampaignsComponent"], canActivate: [_auth_guard__WEBPACK_IMPORTED_MODULE_7__["AuthGuard"]] },
+    { path: 'campaigns/:campaignId', component: _app_campaigns_components_campaign_detail_campaign_detail_component__WEBPACK_IMPORTED_MODULE_14__["CampaignDetailComponent"], canActivate: [_auth_guard__WEBPACK_IMPORTED_MODULE_7__["AuthGuard"]] },
+    { path: 'utilities/:utilityId', component: _campaigns_components_utility_detail_utility_detail_component__WEBPACK_IMPORTED_MODULE_15__["UtilityDetailComponent"], canActivate: [_auth_guard__WEBPACK_IMPORTED_MODULE_7__["AuthGuard"]] },
+    { path: 'add-utility', component: _campaigns_components_utility_detail_utility_detail_component__WEBPACK_IMPORTED_MODULE_15__["UtilityDetailComponent"], canActivate: [_auth_guard__WEBPACK_IMPORTED_MODULE_7__["AuthGuard"]] },
+    // { path: 'payroll-tools', component: PayrollComponent, canActivate: [AuthGuard] },
     {
         path: 'admin',
         children: [
-            { path: 'pay', component: _app_pay_cycle_pay_cycle_component__WEBPACK_IMPORTED_MODULE_13__["PayCycleComponent"], canActivate: [_auth_guard__WEBPACK_IMPORTED_MODULE_8__["AuthGuard"]] },
-            { path: 'pay/edit/:payCycleId', component: _app_pay_cycle_components_edit_pay_cycle_edit_pay_cycle_component__WEBPACK_IMPORTED_MODULE_14__["EditPayCycleComponent"], canActivate: [_auth_guard__WEBPACK_IMPORTED_MODULE_8__["AuthGuard"]] }
+            { path: 'pay', component: _app_pay_cycle_pay_cycle_component__WEBPACK_IMPORTED_MODULE_12__["PayCycleComponent"], canActivate: [_auth_guard__WEBPACK_IMPORTED_MODULE_7__["AuthGuard"]] },
+            { path: 'pay/edit/:payCycleId', component: _app_pay_cycle_components_edit_pay_cycle_edit_pay_cycle_component__WEBPACK_IMPORTED_MODULE_13__["EditPayCycleComponent"], canActivate: [_auth_guard__WEBPACK_IMPORTED_MODULE_7__["AuthGuard"]] }
         ]
     },
-    { path: 'agents', component: _app_agent_agent_component__WEBPACK_IMPORTED_MODULE_11__["AgentComponent"], canActivate: [_auth_guard__WEBPACK_IMPORTED_MODULE_8__["AuthGuard"]] },
-    { path: 'daily-tracker', component: _app_daily_sale_tracker_daily_sale_tracker_component__WEBPACK_IMPORTED_MODULE_10__["DailySaleTrackerComponent"], canActivate: [_auth_guard__WEBPACK_IMPORTED_MODULE_8__["AuthGuard"]] },
-    { path: 'new-sale-contact', component: _daily_sale_tracker_components_new_sale_new_sale_component__WEBPACK_IMPORTED_MODULE_17__["NewSaleComponent"], canActivate: [_auth_guard__WEBPACK_IMPORTED_MODULE_8__["AuthGuard"]] },
+    { path: 'agents', component: _app_agent_agent_component__WEBPACK_IMPORTED_MODULE_10__["AgentComponent"], canActivate: [_auth_guard__WEBPACK_IMPORTED_MODULE_7__["AuthGuard"]] },
+    { path: 'daily-tracker', component: _app_daily_sale_tracker_daily_sale_tracker_component__WEBPACK_IMPORTED_MODULE_9__["DailySaleTrackerComponent"], canActivate: [_auth_guard__WEBPACK_IMPORTED_MODULE_7__["AuthGuard"]] },
+    { path: 'new-sale-contact', component: _daily_sale_tracker_components_new_sale_new_sale_component__WEBPACK_IMPORTED_MODULE_16__["NewSaleComponent"], canActivate: [_auth_guard__WEBPACK_IMPORTED_MODULE_7__["AuthGuard"]] },
     { path: '**', redirectTo: 'home' }
 ];
 var AppRoutingModule = /** @class */ (function () {
@@ -1390,6 +1388,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _pay_cycle_components_confirm_unpaid_selection_dialog_confirm_unpaid_selection_dialog_component__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ./pay-cycle/components/confirm-unpaid-selection-dialog/confirm-unpaid-selection-dialog.component */ "./src/app/pay-cycle/components/confirm-unpaid-selection-dialog/confirm-unpaid-selection-dialog.component.ts");
 /* harmony import */ var _daily_sale_tracker_components_new_sale_new_sale_component__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ./daily-sale-tracker/components/new-sale/new-sale.component */ "./src/app/daily-sale-tracker/components/new-sale/new-sale.component.ts");
 /* harmony import */ var _pay_cycle_components_pay_cycle_dialog_pay_cycle_dialog_component__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ./pay-cycle/components/pay-cycle-dialog/pay-cycle-dialog.component */ "./src/app/pay-cycle/components/pay-cycle-dialog/pay-cycle-dialog.component.ts");
+/* harmony import */ var _payroll_payroll_dialog_payroll_dialog_component__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ./payroll/payroll-dialog/payroll-dialog.component */ "./src/app/payroll/payroll-dialog/payroll-dialog.component.ts");
+
 
 
 
@@ -1446,13 +1446,15 @@ var AppModule = /** @class */ (function () {
                 _pay_cycle_components_edit_pay_cycle_edit_pay_cycle_component__WEBPACK_IMPORTED_MODULE_21__["EditPayCycleComponent"],
                 _pay_cycle_components_confirm_unpaid_selection_dialog_confirm_unpaid_selection_dialog_component__WEBPACK_IMPORTED_MODULE_22__["ConfirmUnpaidSelectionDialogComponent"],
                 _daily_sale_tracker_components_new_sale_new_sale_component__WEBPACK_IMPORTED_MODULE_23__["NewSaleComponent"],
-                _pay_cycle_components_pay_cycle_dialog_pay_cycle_dialog_component__WEBPACK_IMPORTED_MODULE_24__["PayCycleDialogComponent"]
+                _pay_cycle_components_pay_cycle_dialog_pay_cycle_dialog_component__WEBPACK_IMPORTED_MODULE_24__["PayCycleDialogComponent"],
+                _payroll_payroll_dialog_payroll_dialog_component__WEBPACK_IMPORTED_MODULE_25__["PayrollDialogComponent"]
             ],
             entryComponents: [
                 _agent_edit_agent_dialog_edit_agent_dialog_component__WEBPACK_IMPORTED_MODULE_16__["EditAgentDialogComponent"],
                 _agent_agent_rules_dialog_agent_rules_dialog_component__WEBPACK_IMPORTED_MODULE_19__["AgentRulesDialogComponent"],
                 _pay_cycle_components_confirm_unpaid_selection_dialog_confirm_unpaid_selection_dialog_component__WEBPACK_IMPORTED_MODULE_22__["ConfirmUnpaidSelectionDialogComponent"],
-                _pay_cycle_components_pay_cycle_dialog_pay_cycle_dialog_component__WEBPACK_IMPORTED_MODULE_24__["PayCycleDialogComponent"]
+                _pay_cycle_components_pay_cycle_dialog_pay_cycle_dialog_component__WEBPACK_IMPORTED_MODULE_24__["PayCycleDialogComponent"],
+                _payroll_payroll_dialog_payroll_dialog_component__WEBPACK_IMPORTED_MODULE_25__["PayrollDialogComponent"]
             ],
             providers: [],
             bootstrap: [_app_component__WEBPACK_IMPORTED_MODULE_5__["AppComponent"]]
@@ -7606,7 +7608,7 @@ var PayCycleDialogComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n<div class=\"container\">\n    <div class=\"row mb-4\">\n        <div class=\"col-md-12\">\n            <mat-card class=\"page-header-accent\">\n                <mat-card-content class=\"d-flex justify-content-between\">\n                    <h3>\n                        <span>Payroll Administration</span>\n                    </h3>\n                    <div>\n                        <mat-slide-toggle \n                            [checked]=\"showClosed\" \n                            (change)=\"switchDisplay()\"\n                            class=\"my-0 mr-2\"\n                        >\n                            Show Closed\n                        </mat-slide-toggle>\n                        <button type=\"button\" mat-button color=\"primary\" (click)=\"addPayCycle()\">\n                            <mat-icon inline=\"true\">add</mat-icon>\n                            <span>Payroll</span>\n                        </button>\n                    </div>\n                </mat-card-content>\n            </mat-card>\n        </div>\n    </div>\n\n    <ng-container *ngIf=\"displayCycles != null && (displayCycles|async).length; else noCycles\">\n        <div class=\"row\" *ngFor=\"let cycle of displayCycles|async as cycles\">\n            <div class=\"col-md-12\">\n                <mat-card class=\"left-border-primary\">\n                    <mat-card-title class=\"d-flex justify-content-between\">\n                        <div>\n                            <span class=\"font-weight-bold\">Status:</span>\n                            {{getCycleStatus(cycle)}}\n                        </div>\n                        <div class=\"d-flex justify-content-end\">\n                            <button type=\"button\" mat-button \n                                color=\"primary\" \n                                *ngIf=\"!cycle.isPending && !cycle.isClosed\"\n                                (click)=\"editPayCycle(cycle)\"\n                            >\n                                <mat-icon>play_arrow</mat-icon>\n                                <span>Start</span>\n                            </button>\n                            <button\n                                type=\"button\" mat-button\n                                color=\"primary\"\n                                *ngIf=\"cycle.isPending && !cycle.isClosed\"\n                                (click)=\"editPayCycle(cycle)\"\n                            >\n                                <mat-icon>redo</mat-icon>\n                                <span>Continue</span>\n                            </button>\n                            <button\n                                type=\"button\" mat-button\n                                color=\"accent\"\n                                *ngIf=\"cycle.isPending && !cycle.isClosed\"\n                                (click)=\"closePayCycle(cycle)\"\n                            >\n                                <mat-icon>check_circle</mat-icon>\n                                <span>Close</span>\n                            </button>\n                            <button\n                                type=\"button\" mat-button\n                                color=\"primary\"\n                                *ngIf=\"cycle.isClosed\"\n                                (click)=\"openPayCycle(cycle)\"\n                            >\n                                <mat-icon>cached</mat-icon>\n                                <span>Re-Open</span>\n                            </button>\n                        </div>\n                        <!-- <button type=\"button\" mat-icon-button color=\"primary\" (click)=\"editPayCycle(cycle)\">\n                            <mat-icon>edit</mat-icon>\n                        </button> -->\n                    </mat-card-title>\n                    <mat-card-content>\n                        <span class=\"font-weight-bold\">Dates:</span> \n                        {{cycle.startDate | date:'shortDate'}} - {{cycle.endDate | date:'shortDate'}}\n                    </mat-card-content>\n                </mat-card>\n            </div>\n        </div>\n    </ng-container>\n    <ng-template #noCycles>\n        <div class=\"row\">\n            <div class=\"col-md-12\">\n                <h5 class=\"text-center text-muted font-italic\">No Payroll Cycles to display.</h5>\n            </div>\n        </div>\n    </ng-template>\n    \n</div>"
+module.exports = "\n<div class=\"container\">\n    <div class=\"row mb-4\">\n        <div class=\"col-md-12\">\n            <mat-card class=\"page-header-accent\">\n                <mat-card-content class=\"d-flex justify-content-between\">\n                    <h3>\n                        <span>Payroll Administration</span>\n                    </h3>\n                    <div>\n                        <mat-slide-toggle \n                            [checked]=\"showClosed\" \n                            (change)=\"switchDisplay()\"\n                            class=\"my-0 mr-2\"\n                        >\n                            Show Closed\n                        </mat-slide-toggle>\n                        <button type=\"button\" mat-stroked-button color=\"primary\" (click)=\"addPayCycle()\">\n                            <mat-icon inline=\"true\">add</mat-icon>\n                            <span>Payroll</span>\n                        </button>\n                    </div>\n                </mat-card-content>\n            </mat-card>\n        </div>\n    </div>\n\n    <ng-container *ngIf=\"displayCycles != null && (displayCycles|async).length; else noCycles\">\n        <div class=\"row\" *ngFor=\"let cycle of displayCycles|async as cycles\">\n            <div class=\"col-md-12\">\n                <mat-card class=\"left-border-primary\">\n                    <mat-card-title class=\"d-flex justify-content-between\">\n                        <div>\n                            <span class=\"font-weight-bold\">Status:</span>\n                            {{getCycleStatus(cycle)}}\n                        </div>\n                        <div class=\"d-flex justify-content-end\">\n                            <button type=\"button\" mat-button \n                                color=\"primary\" \n                                *ngIf=\"!cycle.isPending && !cycle.isClosed\"\n                                (click)=\"editPayCycle(cycle)\"\n                            >\n                                <mat-icon>play_arrow</mat-icon>\n                                <span>Start</span>\n                            </button>\n                            <ng-container *ngIf=\"!isBeforeEndDate(cycle); else payrollReadyToRun\">\n                                <button\n                                    type=\"button\" mat-button\n                                    color=\"primary\"\n                                    *ngIf=\"cycle.isPending && !cycle.isClosed\"\n                                    (click)=\"editPayCycle(cycle)\"\n                                >\n                                    <mat-icon>redo</mat-icon>\n                                    <span>Continue</span>\n                                </button>\n                                <button\n                                    type=\"button\" mat-button\n                                    color=\"accent\"\n                                    *ngIf=\"cycle.isPending && !cycle.isClosed\"\n                                    (click)=\"closePayCycle(cycle)\"\n                                >\n                                    <mat-icon>check_circle</mat-icon>\n                                    <span>Close</span>\n                                </button>\n                                <button\n                                    type=\"button\" mat-button\n                                    color=\"primary\"\n                                    *ngIf=\"cycle.isClosed\"\n                                    (click)=\"openPayCycle(cycle)\"\n                                >\n                                    <mat-icon>cached</mat-icon>\n                                    <span>Re-Open</span>\n                                </button>\n                            </ng-container>\n                            <ng-template #payrollReadyToRun>\n                                <button type=\"button\"\n                                    mat-button\n                                    color=\"primary\"\n                                    *ngIf=\"cycle.isPending && !cycle.isClosed\"\n                                    (click)=\"editPayCycle(cycle)\"\n                                >\n                                    <mat-icon>create</mat-icon>\n                                    <span>Edit</span>\n                                </button>\n                                <button type=\"button\"\n                                    mat-button\n                                    color=\"accent\"\n                                    *ngIf=\"cycle.isPending && !cycle.isClosed\"\n                                    (click)=\"processPayroll(cycle)\"\n                                >\n                                    <mat-icon>sync</mat-icon>\n                                    <span>Process</span>\n                                </button>\n                            </ng-template>\n                        </div>\n                        <!-- <button type=\"button\" mat-icon-button color=\"primary\" (click)=\"editPayCycle(cycle)\">\n                            <mat-icon>edit</mat-icon>\n                        </button> -->\n                    </mat-card-title>\n                    <mat-card-content>\n                        <span class=\"font-weight-bold\">Dates:</span> \n                        {{cycle.startDate | date:'shortDate'}} - {{cycle.endDate | date:'shortDate'}}\n                    </mat-card-content>\n                </mat-card>\n            </div>\n        </div>\n    </ng-container>\n    <ng-template #noCycles>\n        <div class=\"row\">\n            <div class=\"col-md-12\">\n                <h5 class=\"text-center text-muted font-italic\">No Payroll Cycles to display.</h5>\n            </div>\n        </div>\n    </ng-template>\n    \n</div>"
 
 /***/ }),
 
@@ -7642,6 +7644,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
 /* harmony import */ var _components_pay_cycle_dialog_pay_cycle_dialog_component__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./components/pay-cycle-dialog/pay-cycle-dialog.component */ "./src/app/pay-cycle/components/pay-cycle-dialog/pay-cycle-dialog.component.ts");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_11__);
+/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
+/* harmony import */ var _app_payroll_payroll_service__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @app/payroll/payroll.service */ "./src/app/payroll/payroll.service.ts");
+
+
+
 
 
 
@@ -7654,14 +7663,16 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var PayCycleComponent = /** @class */ (function () {
-    function PayCycleComponent(session, payCycleService, dialog, campaignService, fb, msg, router) {
+    function PayCycleComponent(session, payCycleService, payrollService, dialog, campaignService, fb, msg, router) {
         this.session = session;
         this.payCycleService = payCycleService;
+        this.payrollService = payrollService;
         this.dialog = dialog;
         this.campaignService = campaignService;
         this.fb = fb;
         this.msg = msg;
         this.router = router;
+        this.today = moment__WEBPACK_IMPORTED_MODULE_11__();
         this.displayCycles = new rxjs__WEBPACK_IMPORTED_MODULE_9__["BehaviorSubject"]([]);
         this.showClosed = false;
     }
@@ -7732,6 +7743,74 @@ var PayCycleComponent = /** @class */ (function () {
         cycle.isClosed = false;
         this.updatePayCycle(cycle);
     };
+    PayCycleComponent.prototype.isBeforeEndDate = function (cycle) {
+        return moment__WEBPACK_IMPORTED_MODULE_11__(cycle.endDate).isBefore(this.today);
+    };
+    /**
+     * Begins the workflow of processing payroll. Opens the dialog to allow user to select a "pay date"
+     * and then creates the relationship to the this cycle, calculates total information for users,
+     * and finally closes the cycle.
+     *
+     * @param cycle
+     */
+    PayCycleComponent.prototype.processPayroll = function (cycle) {
+        this.createPayrollsByCampaign(cycle);
+    };
+    PayCycleComponent.prototype.createPayrollsByCampaign = function (cycle) {
+        var _this = this;
+        this.payCycleService.getPayCycleSales(this.user.sessionUser.sessionClient, cycle.startDate, cycle.endDate, cycle.payCycleId).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_12__["map"])(function (sales) {
+            var campaigns = sales.map(function (s) { return s.campaignId; }).filter(function (s, i, a) { return a.indexOf(s) === i; });
+            var payrollResults = [];
+            campaigns.forEach(function (c) {
+                var campaign = _this.campaigns.find(function (camp) { return camp.campaignId === c; });
+                var filteredSales = sales.filter(function (s) { return s.campaignId == c; });
+                var payroll = {
+                    payrollId: null,
+                    payCycleId: cycle.payCycleId,
+                    campaignId: c,
+                    utilityId: 0,
+                    weekEnding: cycle.endDate,
+                    isAutomated: false,
+                    isReleased: false,
+                    details: []
+                };
+                var uniqueAgents = filteredSales.map(function (fs) { return fs.agentId; }).filter(function (fs, i, a) { return a.indexOf(fs) === i; });
+                console.dir(uniqueAgents);
+                uniqueAgents.forEach(function (ua) {
+                    var agentSales = filteredSales.filter(function (fs) { return fs.agentId == ua; });
+                    var grossTotal = agentSales.length * (campaign.compensation || 0);
+                    /**
+                     * how do we figure this out? this might need to be a server side calc if
+                     * the company has "taxes" turned on?
+                     */
+                    var taxes = 0;
+                    var netTotal = grossTotal - taxes;
+                    /** push our payroll detail to the details property on the current payroll we're creating */
+                    payroll.details.push({
+                        payrollDetailsId: null,
+                        payrollId: null,
+                        agentId: ua,
+                        sales: agentSales.length,
+                        grossTotal: grossTotal,
+                        taxes: taxes,
+                        netTotal: netTotal,
+                        modifiedBy: _this.user.id,
+                        createdAt: moment__WEBPACK_IMPORTED_MODULE_11__(),
+                        updatedAt: moment__WEBPACK_IMPORTED_MODULE_11__()
+                    });
+                });
+                payrollResults.push(payroll);
+            });
+            return payrollResults;
+        }))
+            .subscribe(function (sales) {
+            _this.payrollService.savePayrollList(_this.user.sessionUser.sessionClient, sales)
+                .subscribe(function (payrolls) {
+                _this.msg.addMessage('Successfully process payroll.');
+                console.dir(payrolls);
+            });
+        });
+    };
     PayCycleComponent.prototype.updatePayCycle = function (cycle) {
         var _this = this;
         this.payCycleService.updatePayCycle(this.user.sessionUser.sessionClient, cycle.payCycleId, cycle)
@@ -7763,6 +7842,7 @@ var PayCycleComponent = /** @class */ (function () {
         }),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_app_session_service__WEBPACK_IMPORTED_MODULE_2__["SessionService"],
             _app_pay_cycle_pay_cycle_service__WEBPACK_IMPORTED_MODULE_7__["PayCycleService"],
+            _app_payroll_payroll_service__WEBPACK_IMPORTED_MODULE_13__["PayrollService"],
             _angular_material__WEBPACK_IMPORTED_MODULE_3__["MatDialog"],
             _app_campaigns_campaign_service__WEBPACK_IMPORTED_MODULE_4__["CampaignService"],
             _angular_forms__WEBPACK_IMPORTED_MODULE_5__["FormBuilder"],
@@ -7878,1048 +7958,58 @@ var PayCycleService = /** @class */ (function () {
 
 /***/ }),
 
-/***/ "./src/app/payroll/dialogs/change-agent.component.html":
-/*!*************************************************************!*\
-  !*** ./src/app/payroll/dialogs/change-agent.component.html ***!
-  \*************************************************************/
+/***/ "./src/app/payroll/payroll-dialog/payroll-dialog.component.html":
+/*!**********************************************************************!*\
+  !*** ./src/app/payroll/payroll-dialog/payroll-dialog.component.html ***!
+  \**********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n<div class=\"row\">\n  <div class=\"col-md-12\">\n    <p>Would you like to clear the current sales?</p>\n  </div>\n</div>\n<div class=\"d-flex justify-content-between\">\n  <button type=\"button\" mat-button (click)=\"closeDialog()\">No</button>\n  <button type=\"button\" mat-raised-button color=\"primary\" (click)=\"clearSales()\">Yes</button>\n</div>\n"
+module.exports = "<p>\n  payroll-dialog works!\n</p>\n"
 
 /***/ }),
 
-/***/ "./src/app/payroll/dialogs/change-agent.component.scss":
-/*!*************************************************************!*\
-  !*** ./src/app/payroll/dialogs/change-agent.component.scss ***!
-  \*************************************************************/
+/***/ "./src/app/payroll/payroll-dialog/payroll-dialog.component.scss":
+/*!**********************************************************************!*\
+  !*** ./src/app/payroll/payroll-dialog/payroll-dialog.component.scss ***!
+  \**********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzcmMvYXBwL3BheXJvbGwvZGlhbG9ncy9jaGFuZ2UtYWdlbnQuY29tcG9uZW50LnNjc3MifQ== */"
+module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzcmMvYXBwL3BheXJvbGwvcGF5cm9sbC1kaWFsb2cvcGF5cm9sbC1kaWFsb2cuY29tcG9uZW50LnNjc3MifQ== */"
 
 /***/ }),
 
-/***/ "./src/app/payroll/dialogs/change-agent.component.ts":
-/*!***********************************************************!*\
-  !*** ./src/app/payroll/dialogs/change-agent.component.ts ***!
-  \***********************************************************/
-/*! exports provided: ChangeAgentDialogComponent */
+/***/ "./src/app/payroll/payroll-dialog/payroll-dialog.component.ts":
+/*!********************************************************************!*\
+  !*** ./src/app/payroll/payroll-dialog/payroll-dialog.component.ts ***!
+  \********************************************************************/
+/*! exports provided: PayrollDialogComponent */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ChangeAgentDialogComponent", function() { return ChangeAgentDialogComponent; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PayrollDialogComponent", function() { return PayrollDialogComponent; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/material */ "./node_modules/@angular/material/esm5/material.es5.js");
 
 
-
-var ChangeAgentDialogComponent = /** @class */ (function () {
-    function ChangeAgentDialogComponent(dialogRef, data) {
-        this.dialogRef = dialogRef;
-        this.data = data;
+var PayrollDialogComponent = /** @class */ (function () {
+    function PayrollDialogComponent() {
     }
-    ChangeAgentDialogComponent.prototype.clearSales = function () {
-        this.dialogRef.close(true);
+    PayrollDialogComponent.prototype.ngOnInit = function () {
     };
-    ChangeAgentDialogComponent.prototype.closeDialog = function () {
-        this.dialogRef.close(false);
-    };
-    ChangeAgentDialogComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    PayrollDialogComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
-            selector: 'changeAgentDialog',
-            template: __webpack_require__(/*! ./change-agent.component.html */ "./src/app/payroll/dialogs/change-agent.component.html"),
-            styles: [__webpack_require__(/*! ./change-agent.component.scss */ "./src/app/payroll/dialogs/change-agent.component.scss")]
+            selector: 'vs-payroll-dialog',
+            template: __webpack_require__(/*! ./payroll-dialog.component.html */ "./src/app/payroll/payroll-dialog/payroll-dialog.component.html"),
+            styles: [__webpack_require__(/*! ./payroll-dialog.component.scss */ "./src/app/payroll/payroll-dialog/payroll-dialog.component.scss")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__param"](1, Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Inject"])(_angular_material__WEBPACK_IMPORTED_MODULE_2__["MAT_DIALOG_DATA"])),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_material__WEBPACK_IMPORTED_MODULE_2__["MatDialogRef"], Object])
-    ], ChangeAgentDialogComponent);
-    return ChangeAgentDialogComponent;
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [])
+    ], PayrollDialogComponent);
+    return PayrollDialogComponent;
 }());
 
-
-
-/***/ }),
-
-/***/ "./src/app/payroll/dialogs/reject-note.component.html":
-/*!************************************************************!*\
-  !*** ./src/app/payroll/dialogs/reject-note.component.html ***!
-  \************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = "\n<h2 mat-dailog-title>Reject Notes</h2>\n<mat-dialog-content>\n  <mat-form-field class=\"reject-note\">\n    <textarea matInput placeholder=\"Why was the sale rejected?\" [(ngModel)]=\"item.note\"></textarea>\n  </mat-form-field>\n</mat-dialog-content>\n<mat-dialog-actions class=\"d-flex justify-content-between\">\n  <button mat-button mat-dialog-close>Cancel</button>\n  <button mat-raised-button [mat-dialog-close]=\"item\" color=\"primary\">Save</button>\n</mat-dialog-actions>\n"
-
-/***/ }),
-
-/***/ "./src/app/payroll/dialogs/reject-note.component.scss":
-/*!************************************************************!*\
-  !*** ./src/app/payroll/dialogs/reject-note.component.scss ***!
-  \************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = ".reject-note {\n  min-width: 300px;\n  width: 100%; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy9kcmV3cGF5bWVudC9kZXYvdmVyb3N0YWNrL3Jlc291cmNlcy9hc3NldHMvbmcvc3JjL2FwcC9wYXlyb2xsL2RpYWxvZ3MvcmVqZWN0LW5vdGUuY29tcG9uZW50LnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQ0E7RUFDRSxpQkFBZ0I7RUFDaEIsWUFBVyxFQUNaIiwiZmlsZSI6InNyYy9hcHAvcGF5cm9sbC9kaWFsb2dzL3JlamVjdC1ub3RlLmNvbXBvbmVudC5zY3NzIiwic291cmNlc0NvbnRlbnQiOlsiXG4ucmVqZWN0LW5vdGUge1xuICBtaW4td2lkdGg6IDMwMHB4O1xuICB3aWR0aDogMTAwJTtcbn1cbiJdfQ== */"
-
-/***/ }),
-
-/***/ "./src/app/payroll/dialogs/reject-note.component.ts":
-/*!**********************************************************!*\
-  !*** ./src/app/payroll/dialogs/reject-note.component.ts ***!
-  \**********************************************************/
-/*! exports provided: RejectNoteDialogComponent */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RejectNoteDialogComponent", function() { return RejectNoteDialogComponent; });
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/material */ "./node_modules/@angular/material/esm5/material.es5.js");
-
-
-
-var RejectNoteDialogComponent = /** @class */ (function () {
-    function RejectNoteDialogComponent(dialogRef, data) {
-        this.dialogRef = dialogRef;
-        this.data = data;
-        this.item = data.item;
-        this.index = data.index;
-    }
-    RejectNoteDialogComponent.prototype.onNoClick = function () {
-        this.dialogRef.close({ item: this.item, index: this.index });
-    };
-    RejectNoteDialogComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
-            selector: 'reject-note-dialog',
-            template: __webpack_require__(/*! ./reject-note.component.html */ "./src/app/payroll/dialogs/reject-note.component.html"),
-            styles: [__webpack_require__(/*! ./reject-note.component.scss */ "./src/app/payroll/dialogs/reject-note.component.scss")]
-        }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__param"](1, Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Inject"])(_angular_material__WEBPACK_IMPORTED_MODULE_2__["MAT_DIALOG_DATA"])),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_material__WEBPACK_IMPORTED_MODULE_2__["MatDialogRef"], Object])
-    ], RejectNoteDialogComponent);
-    return RejectNoteDialogComponent;
-}());
-
-
-
-/***/ }),
-
-/***/ "./src/app/payroll/dialogs/sales-mapping.component.html":
-/*!**************************************************************!*\
-  !*** ./src/app/payroll/dialogs/sales-mapping.component.html ***!
-  \**************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = "\n<h2 mat-dialog-title>Map Columns</h2>\n<mat-dialog-content>\n  <div class=\"w-100 d-flex justify-content-between align-items-center\">\n    <p>Sales Agent <i class=\"material-icons md-18 mx-5\">arrow_forward</i></p>\n    <mat-form-field>\n      <mat-select placeholder=\"Select One\" [(value)]=\"mappings.agentName\">\n        <mat-option *ngFor=\"let opt of optionPairs\" [value]=\"opt.key\">\n          {{opt.value}}\n        </mat-option>\n      </mat-select>\n    </mat-form-field>\n  </div>\n  <div class=\"w-100 d-flex justify-content-between align-items-center\">\n    <p>Sale Date <i class=\"material-icons md-18 mx-5\">arrow_forward</i></p>\n    <mat-form-field>\n      <mat-select placeholder=\"Select One\" [(value)]=\"mappings.saleDate\">\n        <mat-option *ngFor=\"let opt of optionPairs\" [value]=\"opt.key\">\n          {{opt.value}}\n        </mat-option>\n      </mat-select>\n    </mat-form-field>\n  </div>\n  <div class=\"w-100 d-flex justify-content-between align-items-center\">\n    <p>Date Format <i class=\"material-icons md-18 mx-5\">arrow_forward</i></p>\n    <mat-form-field>\n      <mat-select placeholder=\"Select One\" [(value)]=\"dateFormat\">\n        <mat-option value=\"MM-DD-YYYY\">MM-DD-YYYY (01/01/2018)</mat-option>\n        <mat-option value=\"M-D-YYYY\">M-D-YYYY (1/1/2018)</mat-option>\n      </mat-select>\n    </mat-form-field>\n  </div>\n  <div class=\"w-100 d-flex justify-content-between align-items-center\">\n    <p>First Name <i class=\"material-icons md-18 mx-5\">arrow_forward</i></p>\n    <mat-form-field>\n      <mat-select placeholder=\"Select One\" [(value)]=\"mappings.firstName\">\n        <mat-option *ngFor=\"let opt of optionPairs\" [value]=\"opt.key\">\n          {{opt.value}}\n        </mat-option>\n      </mat-select>\n    </mat-form-field>\n  </div>\n  <div class=\"w-100 d-flex justify-content-between align-items-center\">\n    <p>Last Name <i class=\"material-icons md-18 mx-5\">arrow_forward</i></p>\n    <mat-form-field>\n      <mat-select placeholder=\"Select One\" [(value)]=\"mappings.lastName\">\n        <mat-option *ngFor=\"let opt of optionPairs\" [value]=\"opt.key\">\n          {{opt.value}}\n        </mat-option>\n      </mat-select>\n    </mat-form-field>\n  </div>\n  <div class=\"w-100 d-flex justify-content-between align-items-center\">\n    <p>Street <i class=\"material-icons md-18 mx-5\">arrow_forward</i></p>\n    <mat-form-field>\n      <mat-select placeholder=\"Select One\" [(value)]=\"mappings.street\">\n        <mat-option *ngFor=\"let opt of optionPairs\" [value]=\"opt.key\">\n          {{opt.value}}\n        </mat-option>\n      </mat-select>\n    </mat-form-field>\n  </div>\n  <div class=\"w-100 d-flex justify-content-between align-items-center\">\n    <p>City <i class=\"material-icons md-18 mx-5\">arrow_forward</i></p>\n    <mat-form-field>\n      <mat-select placeholder=\"Select One\" [(value)]=\"mappings.city\">\n        <mat-option *ngFor=\"let opt of optionPairs\" [value]=\"opt.key\">\n          {{opt.value}}\n        </mat-option>\n      </mat-select>\n    </mat-form-field>\n  </div>\n  <div class=\"w-100 d-flex justify-content-between align-items-center\">\n    <p>State <i class=\"material-icons md-18 mx-5\">arrow_forward</i></p>\n    <mat-form-field>\n      <mat-select placeholder=\"Select One\" [(value)]=\"mappings.state\">\n        <mat-option *ngFor=\"let opt of optionPairs\" [value]=\"opt.key\">\n          {{opt.value}}\n        </mat-option>\n      </mat-select>\n    </mat-form-field>\n  </div>\n  <div class=\"w-100 d-flex justify-content-between align-items-center\">\n    <p>Zip <i class=\"material-icons md-18 mx-5\">arrow_forward</i></p>\n    <mat-form-field>\n      <mat-select placeholder=\"Select One\" [(value)]=\"mappings.zip\">\n        <mat-option *ngFor=\"let opt of optionPairs\" [value]=\"opt.key\">\n          {{opt.value}}\n        </mat-option>\n      </mat-select>\n    </mat-form-field>\n  </div>\n  <div class=\"w-100 d-flex justify-content-between align-items-center\">\n    <p>Status <i class=\"material-icons md-18 mx-5\">arrow_forward</i></p>\n    <mat-form-field>\n      <mat-select placeholder=\"Select One\" [(value)]=\"mappings.status\">\n        <mat-option *ngFor=\"let opt of optionPairs\" [value]=\"opt.key\">\n          {{opt.value}}\n        </mat-option>\n      </mat-select>\n    </mat-form-field>\n  </div>\n  <div class=\"w-100 d-flex justify-content-between align-items-center\">\n    <p>Amount <i class=\"material-icons md-18 mx-5\">arrow_forward</i></p>\n    <mat-form-field>\n      <mat-select placeholder=\"Select One\" [(value)]=\"mappings.amount\">\n        <mat-option *ngFor=\"let opt of optionPairs\" [value]=\"opt.key\">\n          {{opt.value}}\n        </mat-option>\n      </mat-select>\n    </mat-form-field>\n  </div>\n</mat-dialog-content>\n<mat-dialog-actions class=\"d-flex justify-content-between\">\n  <button mat-button mat-dialog-close>Cancel</button>\n  <button mat-raised-button (click)=\"closeDialog()\" color=\"primary\">Save</button>\n</mat-dialog-actions>\n"
-
-/***/ }),
-
-/***/ "./src/app/payroll/dialogs/sales-mapping.component.scss":
-/*!**************************************************************!*\
-  !*** ./src/app/payroll/dialogs/sales-mapping.component.scss ***!
-  \**************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = ".mat-dialog-content {\n  font-size: .9rem; }\n\ndiv p {\n  margin: 0; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy9kcmV3cGF5bWVudC9kZXYvdmVyb3N0YWNrL3Jlc291cmNlcy9hc3NldHMvbmcvc3JjL2FwcC9wYXlyb2xsL2RpYWxvZ3Mvc2FsZXMtbWFwcGluZy5jb21wb25lbnQuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNFLGlCQUFnQixFQUNqQjs7QUFFRDtFQUVJLFVBQVMsRUFDViIsImZpbGUiOiJzcmMvYXBwL3BheXJvbGwvZGlhbG9ncy9zYWxlcy1tYXBwaW5nLmNvbXBvbmVudC5zY3NzIiwic291cmNlc0NvbnRlbnQiOlsiLm1hdC1kaWFsb2ctY29udGVudCB7XG4gIGZvbnQtc2l6ZTogLjlyZW07XG59XG5cbmRpdiB7XG4gIHAge1xuICAgIG1hcmdpbjogMDtcbiAgfVxufVxuIl19 */"
-
-/***/ }),
-
-/***/ "./src/app/payroll/dialogs/sales-mapping.component.ts":
-/*!************************************************************!*\
-  !*** ./src/app/payroll/dialogs/sales-mapping.component.ts ***!
-  \************************************************************/
-/*! exports provided: SalesMappingComponent */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SalesMappingComponent", function() { return SalesMappingComponent; });
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/material */ "./node_modules/@angular/material/esm5/material.es5.js");
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_4__);
-
-
-
-
-
-var SalesMappingComponent = /** @class */ (function () {
-    function SalesMappingComponent(dialogRef, data) {
-        var _this = this;
-        this.dialogRef = dialogRef;
-        this.data = data;
-        this.optionPairs = [];
-        this.dict = {};
-        this.result = [];
-        this.dateFormat = 'M-D-YYYY';
-        this.rows = data.rows;
-        this.mappedItem = {
-            agentId: null,
-            agentName: null,
-            entries: []
-        };
-        this.mappings = {
-            agentName: null,
-            saleDate: null,
-            firstName: null,
-            lastName: null,
-            street: null,
-            city: null,
-            state: null,
-            zip: null,
-            status: null,
-            amount: null
-        };
-        lodash__WEBPACK_IMPORTED_MODULE_3__["forEach"](data.headers, function (opt, idx) {
-            var key = opt.replace(/ /g, '');
-            var value = opt.substring(0, 1).toUpperCase() + opt.substring(1);
-            _this.optionPairs.push({ key: key, value: value, index: idx });
-        });
-        this.optionPairs.push({ key: null, value: '--- No Pairing ---', index: null });
-    }
-    SalesMappingComponent.prototype.closeDialog = function () {
-        var _this = this;
-        lodash__WEBPACK_IMPORTED_MODULE_3__["forEach"](this.rows, function (row, i) {
-            var obj = {
-                agentSalesId: null,
-                agentId: null,
-                invoiceId: null,
-                agentName: null,
-                saleDate: null,
-                firstName: null,
-                lastName: null,
-                address: null,
-                city: null,
-                state: null,
-                postalCode: null,
-                statusType: null,
-                amount: null
-            };
-            for (var h in _this.mappings) {
-                if (_this.mappings[h] !== null) {
-                    var mapIndex = lodash__WEBPACK_IMPORTED_MODULE_3__["find"](_this.optionPairs, { 'key': _this.mappings[h] }).index;
-                    if (h == 'status') {
-                        obj[h] = row[mapIndex].match(/accept/gi) !== null ? 'true' : 'false';
-                    }
-                    else if (h === 'saleDate') {
-                        obj[h] = moment__WEBPACK_IMPORTED_MODULE_4__(row[mapIndex], _this.dateFormat).format('YYYY-MM-DD');
-                    }
-                    else {
-                        obj[h] = row[mapIndex];
-                    }
-                }
-            }
-            if (Object.keys(obj).length > 0)
-                _this.result.push(obj);
-        });
-        this.mappedItem.entries = this.result;
-        this.dialogRef.close(this.mappedItem);
-    };
-    SalesMappingComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
-            selector: 'sales-mapping',
-            template: __webpack_require__(/*! ./sales-mapping.component.html */ "./src/app/payroll/dialogs/sales-mapping.component.html"),
-            styles: [__webpack_require__(/*! ./sales-mapping.component.scss */ "./src/app/payroll/dialogs/sales-mapping.component.scss")]
-        }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__param"](1, Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Inject"])(_angular_material__WEBPACK_IMPORTED_MODULE_2__["MAT_DIALOG_DATA"])),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_material__WEBPACK_IMPORTED_MODULE_2__["MatDialogRef"], Object])
-    ], SalesMappingComponent);
-    return SalesMappingComponent;
-}());
-
-
-
-/***/ }),
-
-/***/ "./src/app/payroll/paste.directive.ts":
-/*!********************************************!*\
-  !*** ./src/app/payroll/paste.directive.ts ***!
-  \********************************************/
-/*! exports provided: VsPasteDirective */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "VsPasteDirective", function() { return VsPasteDirective; });
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var _app_payroll_payroll_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @app/payroll/payroll.service */ "./src/app/payroll/payroll.service.ts");
-/* harmony import */ var _app_models__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @app/models */ "./src/app/models/index.ts");
-/* harmony import */ var _app_message_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @app/message.service */ "./src/app/message.service.ts");
-/* harmony import */ var _app_session_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @app/session.service */ "./src/app/session.service.ts");
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_6__);
-
-
-
-
-
-
-
-var VsPasteDirective = /** @class */ (function () {
-    function VsPasteDirective(el, renderer, service, msg, session) {
-        this.el = el;
-        this.renderer = renderer;
-        this.service = service;
-        this.msg = msg;
-        this.session = session;
-    }
-    VsPasteDirective.prototype.paste = function (event) {
-        event.preventDefault();
-        this.session.showLoader();
-        this.result = [];
-        var data = event.clipboardData.getData('text');
-        var rows = data.split(String.fromCharCode(13));
-        for (var i = 0; i < rows.length; i++) {
-            rows[i] = rows[i].split(String.fromCharCode(9));
-        }
-        for (var i = 0; i < rows.length; i++) {
-            var row = rows[i];
-            var agent = new _app_models__WEBPACK_IMPORTED_MODULE_3__["AgentSale"](row);
-            this.result.push(agent);
-        }
-        if (this.result.length < 2) {
-            var test = [];
-            for (var i = 0; i < this.result.length; i++) {
-                test = Object.values(this.result[i]).slice();
-            }
-            lodash__WEBPACK_IMPORTED_MODULE_6__["remove"](test, lodash__WEBPACK_IMPORTED_MODULE_6__["isNull"]);
-            if (lodash__WEBPACK_IMPORTED_MODULE_6__["isEmpty"](test)) {
-                this.session.hideLoader();
-                this.msg.addMessage('Oops, please check the format of your invoice.', 'dismiss', 6000);
-                return;
-            }
-        }
-        this.result.push(this.service.insertSalesRow());
-        this.service.sales$.next(this.result);
-        this.session.hideLoader();
-        this.msg.addMessage('We have imported your invoice. Please check for accuracy.', 'dismiss', 6000);
-    };
-    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["HostListener"])('document:paste', ['$event']),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Function),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [Object]),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:returntype", void 0)
-    ], VsPasteDirective.prototype, "paste", null);
-    VsPasteDirective = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Directive"])({
-            selector: "[vs-paste]"
-        }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_core__WEBPACK_IMPORTED_MODULE_1__["ElementRef"],
-            _angular_core__WEBPACK_IMPORTED_MODULE_1__["Renderer"],
-            _app_payroll_payroll_service__WEBPACK_IMPORTED_MODULE_2__["PayrollService"],
-            _app_message_service__WEBPACK_IMPORTED_MODULE_4__["MessageService"],
-            _app_session_service__WEBPACK_IMPORTED_MODULE_5__["SessionService"]])
-    ], VsPasteDirective);
-    return VsPasteDirective;
-}());
-
-
-
-/***/ }),
-
-/***/ "./src/app/payroll/payroll.component.html":
-/*!************************************************!*\
-  !*** ./src/app/payroll/payroll.component.html ***!
-  \************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = "<form [formGroup]=\"form\" vs-paste>\n  <div class=\"desktop-only\">\n    <mat-card class=\"d-flex align-items-center align-center header-card\">\n      <h3>Create a Paystub</h3>\n      <span class=\"toolbar-spacer\"></span>\n      <!-- <mat-icon\n        class=\"toolbar-icon clickable\"\n        *ngIf=\"invoice.agentId != null && invoice.campaignId != null\"\n        (click)=\"clickFileUploader()\"\n      >publish</mat-icon> -->\n    </mat-card>\n    <div class=\"d-flex justify-content-center card-container\">\n      <mat-card class=\"sales-card\">\n        <mat-card-header>\n          <!-- <mat-card-title>\n            Choose an Agent and Campaign to import your payfile.\n          </mat-card-title> -->\n        </mat-card-header>\n        <mat-card-content class=\"d-flex justify-content-between\">\n          <mat-form-field [hideRequiredMarker]=\"true\">\n            <mat-select\n              placeholder=\"Pick an Agent\"\n              formControlName=\"agentId\"\n              (selectionChange)=\"changeAgent()\"\n              required\n            >\n              <mat-option *ngFor=\"let a of agents\" [value]=\"a.agentId\">{{a.firstName}} {{a.lastName}}</mat-option>\n            </mat-select>\n            <mat-error *ngIf=\"form.get('agentId').touched && form.get('agentId').invalid\">Select an Agent</mat-error>\n          </mat-form-field>\n          <mat-form-field [hideRequiredMarker]=\"true\">\n            <mat-select\n              placeholder=\"Pick a Campaign\"\n              formControlName=\"campaignId\"\n              required\n            >\n              <mat-option *ngFor=\"let c of campaigns\" [value]=\"c.campaignId\">{{c.name}}</mat-option>\n            </mat-select>\n            <mat-error *ngIf=\"form.get('campaignId').touched && form.get('campaignId').invalid\">Select a Campaign</mat-error>\n          </mat-form-field>\n          <mat-form-field [hideRequiredMarker]=\"true\">\n            <input\n              matInput\n              [matDatepicker]=\"issueDate\"\n              placeholder=\"Issue Date\"\n              formControlName=\"issueDate\"\n              required\n            />\n            <mat-datepicker-toggle matSuffix [for]=\"issueDate\"></mat-datepicker-toggle>\n            <mat-datepicker #issueDate></mat-datepicker>\n            <mat-error *ngIf=\"form.get('issueDate').touched && form.get('issueDate').invalid\">Select an Issue Date</mat-error>\n          </mat-form-field>\n          <mat-form-field [hideRequiredMarker]=\"true\">\n            <input\n              matInput\n              [matDatepicker]=\"weekending\"\n              placeholder=\"Weekending\"\n              formControlName=\"weekEnding\"\n              required\n            />\n            <mat-datepicker-toggle matSuffix [for]=\"weekending\"></mat-datepicker-toggle>\n            <mat-datepicker #weekending></mat-datepicker>\n            <mat-error *ngIf=\"form.get('weekEnding').touched && form.get('weekEnding').invalid\">Select a Weekending Date</mat-error>\n          </mat-form-field>\n        </mat-card-content>\n      </mat-card>\n    </div>\n\n    <!-- SALES CARD  -->\n    <div class=\"d-flex justify-content-center card-container\">\n      <mat-card class=\"sales-card\">\n        <mat-card-header class=\"flex-column\">\n          <mat-card-title class=\"d-flex justify-content-between align-items-center\">\n            <h4>Sales Details</h4>\n            <!-- <input type=\"file\"\n              ng2FileSelect\n              [hidden]=\"true\"\n              id=\"file-uploader\"\n              [uploader]=\"uploader\"\n              (change)=\"chooseFile($event)\"\n              vs-paste\n            />\n            <label\n              for=\"file-uploader\"\n              class=\"mat-button mat-raised-button mat-primary\"\n              *ngIf=\"invoice.agentId != null && invoice.campaignId != null\"\n            >Import File</label> -->\n          </mat-card-title>\n        </mat-card-header>\n        <mat-card-content>\n          <mat-table #table [dataSource]=\"dataSource\" class=\"form-table sales-table\" formArrayName=\"sales\">\n            <mat-header-row *matHeaderRowDef=\"displayedColumns;sticky: true\"></mat-header-row>\n            <mat-row *matRowDef=\"let row; columns: displayedColumns; let idx = index\"></mat-row>\n\n            <ng-container matColumnDef=\"saleDate\">\n              <mat-header-cell *matHeaderCellDef>Date</mat-header-cell>\n              <mat-cell *matCellDef=\"let item; let i = index\" [formGroupName]=\"i\">\n                <mat-form-field class=\"max-width-90\">\n                  <input matInput\n                    [matDatepicker]=\"saleDatePicker\"\n                    [value]=\"item.saleDate\"\n                    (click)=\"saleDatePicker.open()\"\n                    (dateChange)=\"saleDateEvent(item, $event)\"\n                    formControlName=\"saleDate\"\n                    required\n                  >\n                  <mat-datepicker-toggle matSuffix [for]=\"saleDatePicker\"></mat-datepicker-toggle>\n                  <mat-datepicker #saleDatePicker></mat-datepicker>\n                </mat-form-field>\n              </mat-cell>\n            </ng-container>\n            <ng-container matColumnDef=\"firstName\">\n              <mat-header-cell *matHeaderCellDef>First Name</mat-header-cell>\n              <mat-cell *matCellDef=\"let item; let i = index\" [formGroupName]=\"i\">\n                <mat-form-field>\n                  <input matInput\n                    [value]=\"item.firstName\"\n                    (change)=\"handleRowEdit('firstName', item, $event, i)\"\n                    formControlName=\"firstName\"\n                    required\n                  >\n                </mat-form-field>\n              </mat-cell>\n            </ng-container>\n            <ng-container matColumnDef=\"lastName\">\n              <mat-header-cell *matHeaderCellDef>Last Name</mat-header-cell>\n              <mat-cell *matCellDef=\"let item; let i = index\" [formGroupName]=\"i\">\n                <mat-form-field>\n                  <input matInput\n                    [value]=\"item.lastName\"\n                    (change)=\"handleRowEdit('lastName', item, $event, i)\"\n                    formControlName=\"lastName\"\n                    required\n                  >\n                </mat-form-field>\n              </mat-cell>\n            </ng-container>\n            <ng-container matColumnDef=\"address\">\n              <mat-header-cell *matHeaderCellDef>Address</mat-header-cell>\n              <mat-cell *matCellDef=\"let item; let i = index\">\n                <mat-form-field class=\"custom-width w-140\" [formGroupName]=\"i\">\n                  <input matInput\n                    [value]=\"item.address\"\n                    (change)=\"handleRowEdit('address', item, $event, i)\"\n                    formControlName=\"address\"\n                    required\n                  >\n                </mat-form-field>\n              </mat-cell>\n            </ng-container>\n            <ng-container matColumnDef=\"city\">\n              <mat-header-cell *matHeaderCellDef>City</mat-header-cell>\n              <mat-cell *matCellDef=\"let item; let i = index\" [formGroupName]=\"i\">\n                <mat-form-field>\n                  <input matInput\n                    [value]=\"item.city\"\n                    (change)=\"handleRowEdit('city', item, $event, i)\"\n                    formControlName=\"city\"\n                    required\n                  >\n                </mat-form-field>\n              </mat-cell>\n            </ng-container>\n            <ng-container matColumnDef=\"state\">\n              <mat-header-cell *matHeaderCellDef>State</mat-header-cell>\n              <mat-cell *matCellDef=\"let item; let i = index\" [formGroupName]=\"i\">\n                <mat-form-field>\n                  <mat-select\n                    [value]=\"item.state\"\n                    (change)=\"handleRowEdit('state', item, $event, i)\"\n                    formControlName=\"state\"\n                    required\n                  >\n                    <mat-option *ngFor=\"let s of states\" [value]=\"s.abbreviation\">\n                      {{s.name}}\n                    </mat-option>\n                  </mat-select>\n                </mat-form-field>\n              </mat-cell>\n            </ng-container>\n            <ng-container matColumnDef=\"postalCode\">\n              <mat-header-cell *matHeaderCellDef>Postal Code</mat-header-cell>\n              <mat-cell *matCellDef=\"let item; let i = index\" [formGroupName]=\"i\">\n                <mat-form-field>\n                  <input matInput\n                    [value]=\"item.postalCode\"\n                    (change)=\"handleRowEdit('postalCode', item, $event, i)\"\n                    formControlName=\"postalCode\"\n                    required\n                  >\n                </mat-form-field>\n              </mat-cell>\n            </ng-container>\n            <ng-container matColumnDef=\"statusType\">\n              <mat-header-cell *matHeaderCellDef>Status</mat-header-cell>\n              <mat-cell *matCellDef=\"let item; let i = index\" [formGroupName]=\"i\">\n                <mat-form-field>\n                  <mat-select\n                    [value]=\"item.statusType\"\n                    (change)=\"handleRowEdit('statusType', item, $event, i)\"\n                    formControlName=\"statusType\"\n                    required\n                  >\n                    <mat-option value=\"true\">Accepted</mat-option>\n                    <mat-option value=\"false\">Rejected</mat-option>\n                  </mat-select>\n                </mat-form-field>\n              </mat-cell>\n            </ng-container>\n            <ng-container matColumnDef=\"amount\">\n              <mat-header-cell *matHeaderCellDef>Amount</mat-header-cell>\n              <mat-cell *matCellDef=\"let item; let i = index\" [formGroupName]=\"i\">\n                <mat-form-field>\n                  <input matInput\n                    [value]=\"item.amount\"\n                    (change)=\"handleRowEdit(item, $event, i)\"\n                    formControlName=\"amount\"\n                    required\n                  >\n                </mat-form-field>\n              </mat-cell>\n            </ng-container>\n            <ng-container matColumnDef=\"note\">\n              <mat-header-cell *matHeaderCellDef></mat-header-cell>\n              <mat-cell *matCellDef=\"let item; let i = index\">\n                <div class=\"d-flex justify-content-between\">\n                  <button mat-icon-button (click)=\"openRejectDialog(item, i)\" *ngIf=\"item.statusType == 'false'\">\n                    <mat-icon aria-label=\"Open reject note\" class=\"{ 'text-danger': item.note }\">note</mat-icon>\n                  </button>\n                  <button mat-icon-button (click)=\"removeRow('sales', i)\" *ngIf=\"dataSource$.getValue().length > 1 && i != (dataSource$.getValue().length - 1)\">\n                    <mat-icon aria-label=\"Delete the current row\" color=\"warn\">remove_circle</mat-icon>\n                  </button>\n                </div>\n              </mat-cell>\n            </ng-container>\n          </mat-table>\n        </mat-card-content>\n      </mat-card>\n    </div>\n\n    <!-- OVERRIDES AND EXPENSES -->\n    <div class=\"overrides-expenses-panel\">\n      <div class=\"d-flex justify-content-between py-3\">\n\n        <!-- OVERRIDES CARD -->\n        <mat-card class=\"widthp-50 mr-2\" *ngIf=\"!disableOverrides\">\n          <mat-card-header>\n            <mat-card-title class=\"d-flex justify-content-between w-100\">\n              <h3 *ngIf=\"!disableOverrides\">Overrides</h3>\n              <button mat-icon-button\n                type=\"button\"\n                class=\"float-right mx-1\"\n                (click)=\"addOverrideRow(true)\"\n                *ngIf=\"overrideDataSource$.getValue().length === 0 && !disableOverrides\"\n              >\n                <mat-icon aria-label=\"Add override\" color=\"accent\">add_circle</mat-icon>\n              </button>\n            </mat-card-title>\n          </mat-card-header>\n          <mat-card-content>\n            <mat-table #overrideTable\n              [dataSource]=\"overrideDataSource\"\n              class=\"form-table\"\n              *ngIf=\"overrideDataSource$.getValue().length > 0\"\n              formArrayName=\"overrides\"\n            >\n              <mat-header-row *matHeaderRowDef=\"overrideColumns; sticky: true\"></mat-header-row>\n              <mat-row *matRowDef=\"let row; columns: overrideColumns; let idx = index\"></mat-row>\n\n              <!-- AGENT ID -->\n              <ng-container matColumnDef=\"agentId\">\n                <mat-header-cell *matHeaderCellDef>Agent</mat-header-cell>\n                <mat-cell *matCellDef=\"let item; let i = index\" [formGroupName]=\"i\">\n                  <mat-form-field [hideRequiredMarker]=\"true\">\n                    <mat-select\n                      placeholder=\"Select an Agent\"\n                      (selectionChange)=\"overrideRowEdit('agentId', item, $event, i)\"\n                      formControlName=\"agentId\"\n                      [value]=\"item.agentId\"\n                      required\n                    >\n                      <mat-option *ngFor=\"let agent of overrideAgents\" [value]=\"agent.agentId\">\n                        {{agent.firstName}} {{agent.lastName}}\n                      </mat-option>\n                    </mat-select>\n                  </mat-form-field>\n                </mat-cell>\n              </ng-container>\n\n              <!-- NUMBER OF SALES -->\n              <ng-container matColumnDef=\"sales\">\n                <mat-header-cell *matHeaderCellDef>Sales</mat-header-cell>\n                <mat-cell *matCellDef=\"let item; let i = index\" [formGroupName]=\"i\">\n                  <mat-form-field>\n                    <input matInput\n                      (change)=\"overrideRowEdit('sales', item, $event, i)\"\n                      formControlName=\"sales\"\n                      [value]=\"item.sales\"\n                      required\n                    >\n                  </mat-form-field>\n                </mat-cell>\n              </ng-container>\n\n              <!-- COMMISSION -->\n              <ng-container matColumnDef=\"commission\">\n                <mat-header-cell *matHeaderCellDef>Commission</mat-header-cell>\n                <mat-cell *matCellDef=\"let item; let i = index\" [formGroupName]=\"i\">\n                  <mat-form-field>\n                    <input matInput\n                      (change)=\"overrideRowEdit('commission', item, $event, i)\"\n                      formControlName=\"commission\"\n                      [value]=\"item.commission\"\n                      required\n                    >\n                  </mat-form-field>\n                </mat-cell>\n              </ng-container>\n\n              <!-- TOTAL -->\n              <ng-container matColumnDef=\"total\">\n                <mat-header-cell *matHeaderCellDef>Total</mat-header-cell>\n                <mat-cell *matCellDef=\"let item; let i = index\" [formGroupName]=\"i\">\n                  <mat-form-field>\n                    <input matInput\n                      (change)=\"overrideRowEdit('total', item, $event, i)\"\n                      formControlName=\"total\"\n                      [value]=\"item.total\"\n                      required\n                    >\n                  </mat-form-field>\n                </mat-cell>\n              </ng-container>\n\n              <!-- DELETE -->\n              <ng-container matColumnDef=\"delete\">\n                <mat-header-cell *matHeaderCellDef>&nbsp;</mat-header-cell>\n                <mat-cell *matCellDef=\"let item; let i = index\">\n                  <button mat-icon-button (click)=\"removeRow('overrides', i)\" *ngIf=\"item.overrideId == null\">\n                    <mat-icon aria-label=\"Delete the current row\" color=\"warn\">remove_circle</mat-icon>\n                  </button>\n                </mat-cell>\n              </ng-container>\n            </mat-table>\n          </mat-card-content>\n        </mat-card>\n\n        <!-- EXPENSES CARD -->\n        <mat-card [ngClass]=\"{'widthp-50': !disableOverrides, 'ml-2': !disableOverrides, 'w-100': disableOverrides}\">\n          <mat-card-header>\n            <mat-card-title class=\"d-flex justify-content-between\">\n              <h3>Expenses</h3>\n              <button mat-icon-button\n                class=\"float-right mx-1\"\n                (click)=\"addExpenseRow()\"\n                *ngIf=\"expenseDataSource$.getValue().length === 0\"\n              >\n                <mat-icon aria-label=\"Add expense\" color=\"accent\">add_circle</mat-icon>\n              </button>\n            </mat-card-title>\n          </mat-card-header>\n          <mat-card-content>\n            <mat-table #expenseTable\n              [dataSource]=\"expenseDataSource\"\n              class=\"form-table\"\n              *ngIf=\"expenseDataSource$.getValue().length > 0\"\n              formArrayName=\"expenses\"\n            >\n              <!-- TITLE -->\n              <ng-container matColumnDef=\"title\">\n                <mat-header-cell *matHeaderCellDef>Title</mat-header-cell>\n                <mat-cell *matCellDef=\"let item; let i = index\" [formGroupName]=\"i\">\n                  <mat-form-field>\n                    <input matInput\n                      [value]=\"item.title\"\n                      (change)=\"expenseRowEdit('title', item, $event, i)\"\n                      formControlName=\"title\"\n                      required\n                    >\n                  </mat-form-field>\n                </mat-cell>\n              </ng-container>\n\n              <!-- AMOUNT -->\n              <ng-container matColumnDef=\"amount\">\n                <mat-header-cell *matHeaderCellDef>Amount</mat-header-cell>\n                <mat-cell *matCellDef=\"let item; let i = index\" [formGroupName]=\"i\">\n                  <mat-form-field>\n                    <input matInput\n                      [value]=\"item.amount\"\n                      (change)=\"expenseRowEdit('amount', item, $event, i)\"\n                      formControlName=\"amount\"\n                      required\n                    >\n                  </mat-form-field>\n                </mat-cell>\n              </ng-container>\n\n              <!-- DESCRIPTION -->\n              <ng-container matColumnDef=\"description\">\n                <mat-header-cell *matHeaderCellDef>Description</mat-header-cell>\n                <mat-cell *matCellDef=\"let item; let i = index\" [formGroupName]=\"i\">\n                  <mat-form-field>\n                    <input matInput\n                      [value]=\"item.description\"\n                      (change)=\"expenseRowEdit('description', item, $event, i)\"\n                      formControlName=\"description\"\n                      required\n                    >\n                  </mat-form-field>\n                </mat-cell>\n              </ng-container>\n\n              <!-- DELETE -->\n              <ng-container matColumnDef=\"delete\">\n                <mat-header-cell *matHeaderCellDef>&nbsp;</mat-header-cell>\n                <mat-cell *matCellDef=\"let item: let i = index\">\n                  <button mat-icon-button (click)=\"removeRow('expenses', i)\" *ngIf=\"item.expenseId == null\">\n                    <mat-icon aria-label=\"Delete the current row\" color=\"warn\">remove_circle</mat-icon>\n                  </button>\n                </mat-cell>\n              </ng-container>\n\n              <mat-header-row *matHeaderRowDef=\"expenseColumns; sticky:true\"></mat-header-row>\n              <mat-row *matRowDef=\"let row; columns: expenseColumns\"></mat-row>\n            </mat-table>\n          </mat-card-content>\n        </mat-card>\n      </div>\n      <div class=\"d-flex justify-content-between card-container\">\n        <button mat-button class=\"m-3 float-left\">Cancel</button>\n        <button mat-raised-button\n          color=\"accent\"\n          class=\"m-3 float-right\"\n          (click)=\"validateInvoice()\"\n        >Save</button>\n      </div>\n    </div>\n  </div>\n\n\n  <div class=\"d-flex justify-content-center mobile-warning\">\n    <mat-card>\n      <mat-card-header>\n        <h4 class=\"text-center\">\n          Sorry, but you can only enter sales and make edits from a computer.\n        </h4>\n      </mat-card-header>\n    </mat-card>\n  </div>\n</form>\n"
-
-/***/ }),
-
-/***/ "./src/app/payroll/payroll.component.scss":
-/*!************************************************!*\
-  !*** ./src/app/payroll/payroll.component.scss ***!
-  \************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = ".sales-card {\n  width: 100%;\n  max-width: 1150px; }\n\n.widthp-50 {\n  width: 50%; }\n\n@media screen and (max-width: 750px) {\n  .desktop-only {\n    display: none; } }\n\n@media screen and (min-width: 751px) {\n  .mobile-warning {\n    display: none !important; } }\n\n.mobile-warning mat-card {\n  max-width: 95%; }\n\n.max-width-90 {\n  max-width: 90px !important; }\n\n.form-table mat-cell {\n  margin: 0 1rem 0 0; }\n\n.form-table mat-form-field:not(.custom-width) {\n  width: 100%; }\n\n.custom-width .w-100 {\n  width: 100px !important; }\n\n.custom-width .w-40 {\n  width: 40px !important; }\n\n.custom-width .w-140 {\n  width: 140px !important; }\n\n.mat-header-row {\n  border-bottom-style: solid; }\n\n.mat-header-cell {\n  margin-right: 1rem; }\n\n.mat-row {\n  border-bottom-style: none; }\n\n.mat-column-note {\n  flex: 0 0 40px;\n  margin: 0 !important; }\n\n.clickable {\n  cursor: pointer; }\n\n.mat-column-agentId {\n  max-width: 200px; }\n\n.mat-column-commission {\n  max-width: 80px; }\n\n.mat-column-sales {\n  max-width: 75px; }\n\n.mat-column-total {\n  max-width: 80px; }\n\n.mat-column-delete {\n  max-width: 30px;\n  margin: 0 !important; }\n\n.required-field-error {\n  background-color: red; }\n\n.overrides-expenses-panel {\n  max-width: 1150px;\n  margin: 0 auto; }\n\n.toolbar-icon {\n  padding: 0 1.5rem; }\n\n.toolbar-spacer {\n  flex: 1 1 auto; }\n\n.align-center {\n  width: 100%;\n  max-width: 1150px;\n  margin: 0 auto; }\n\n.sales-table {\n  max-height: 400px;\n  overflow: auto; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy9kcmV3cGF5bWVudC9kZXYvdmVyb3N0YWNrL3Jlc291cmNlcy9hc3NldHMvbmcvc3JjL2FwcC9wYXlyb2xsL3BheXJvbGwuY29tcG9uZW50LnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQ0E7RUFDRSxZQUFXO0VBQ1gsa0JBQWlCLEVBQ2xCOztBQUVEO0VBQ0UsV0FBVSxFQUNYOztBQUdDO0VBREY7SUFFSSxjQUFhLEVBRWhCLEVBQUE7O0FBSUM7RUFGRjtJQUdJLHlCQUF3QixFQU0zQixFQUFBOztBQVREO0VBT0ksZUFBYyxFQUNmOztBQUdIO0VBQ0UsMkJBQTBCLEVBQzNCOztBQUVEO0VBR0ksbUJBQWtCLEVBQ25COztBQUpIO0VBT0ksWUFBVyxFQUNaOztBQUdIO0VBRUksd0JBQXVCLEVBQ3hCOztBQUhIO0VBTUksdUJBQXNCLEVBQ3ZCOztBQVBIO0VBVUksd0JBQXVCLEVBQ3hCOztBQUdIO0VBQ0UsMkJBQTBCLEVBQzNCOztBQUVEO0VBQ0UsbUJBQWtCLEVBQ25COztBQUVEO0VBQ0UsMEJBQXlCLEVBQzFCOztBQUVEO0VBQ0UsZUFBYztFQUNkLHFCQUFvQixFQUNyQjs7QUFFRDtFQUNFLGdCQUFlLEVBQ2hCOztBQUVEO0VBQ0UsaUJBQWdCLEVBQ2pCOztBQUVEO0VBQ0UsZ0JBQWUsRUFDaEI7O0FBRUQ7RUFDRSxnQkFBZSxFQUNoQjs7QUFFRDtFQUNFLGdCQUFlLEVBQ2hCOztBQUVEO0VBQ0UsZ0JBQWU7RUFDZixxQkFBb0IsRUFDckI7O0FBRUQ7RUFDRSxzQkFBcUIsRUFDdEI7O0FBRUQ7RUFDRSxrQkFBaUI7RUFDakIsZUFBYyxFQUNmOztBQUVEO0VBQ0Usa0JBQWlCLEVBQ2xCOztBQUVEO0VBQ0UsZUFBYyxFQUNmOztBQUVEO0VBQ0UsWUFBVztFQUNYLGtCQUFpQjtFQUNqQixlQUFjLEVBQ2Y7O0FBRUQ7RUFDRSxrQkFBaUI7RUFDakIsZUFBYyxFQUNmIiwiZmlsZSI6InNyYy9hcHAvcGF5cm9sbC9wYXlyb2xsLmNvbXBvbmVudC5zY3NzIiwic291cmNlc0NvbnRlbnQiOlsiXG4uc2FsZXMtY2FyZCB7XG4gIHdpZHRoOiAxMDAlO1xuICBtYXgtd2lkdGg6IDExNTBweDtcbn1cblxuLndpZHRocC01MCB7XG4gIHdpZHRoOiA1MCU7XG59XG5cbi5kZXNrdG9wLW9ubHkge1xuICBAbWVkaWEgc2NyZWVuIGFuZCAobWF4LXdpZHRoOiA3NTBweCkge1xuICAgIGRpc3BsYXk6IG5vbmU7XG4gIH1cbn1cblxuLm1vYmlsZS13YXJuaW5nIHtcblxuICBAbWVkaWEgc2NyZWVuIGFuZCAobWluLXdpZHRoOiA3NTFweCkge1xuICAgIGRpc3BsYXk6IG5vbmUgIWltcG9ydGFudDtcbiAgfVxuXG4gICYgbWF0LWNhcmQge1xuICAgIG1heC13aWR0aDogOTUlO1xuICB9XG59XG5cbi5tYXgtd2lkdGgtOTAge1xuICBtYXgtd2lkdGg6IDkwcHggIWltcG9ydGFudDtcbn1cblxuLmZvcm0tdGFibGUge1xuXG4gIG1hdC1jZWxsIHtcbiAgICBtYXJnaW46IDAgMXJlbSAwIDA7XG4gIH1cblxuICBtYXQtZm9ybS1maWVsZDpub3QoLmN1c3RvbS13aWR0aCkge1xuICAgIHdpZHRoOiAxMDAlO1xuICB9XG59XG5cbi5jdXN0b20td2lkdGgge1xuICAudy0xMDAge1xuICAgIHdpZHRoOiAxMDBweCAhaW1wb3J0YW50O1xuICB9XG5cbiAgLnctNDAge1xuICAgIHdpZHRoOiA0MHB4ICFpbXBvcnRhbnQ7XG4gIH1cblxuICAudy0xNDAge1xuICAgIHdpZHRoOiAxNDBweCAhaW1wb3J0YW50O1xuICB9XG59XG5cbi5tYXQtaGVhZGVyLXJvdyB7XG4gIGJvcmRlci1ib3R0b20tc3R5bGU6IHNvbGlkO1xufVxuXG4ubWF0LWhlYWRlci1jZWxsIHtcbiAgbWFyZ2luLXJpZ2h0OiAxcmVtO1xufVxuXG4ubWF0LXJvdyB7XG4gIGJvcmRlci1ib3R0b20tc3R5bGU6IG5vbmU7XG59XG5cbi5tYXQtY29sdW1uLW5vdGUge1xuICBmbGV4OiAwIDAgNDBweDtcbiAgbWFyZ2luOiAwICFpbXBvcnRhbnQ7XG59XG5cbi5jbGlja2FibGUge1xuICBjdXJzb3I6IHBvaW50ZXI7XG59XG5cbi5tYXQtY29sdW1uLWFnZW50SWQge1xuICBtYXgtd2lkdGg6IDIwMHB4O1xufVxuXG4ubWF0LWNvbHVtbi1jb21taXNzaW9uIHtcbiAgbWF4LXdpZHRoOiA4MHB4O1xufVxuXG4ubWF0LWNvbHVtbi1zYWxlcyB7XG4gIG1heC13aWR0aDogNzVweDtcbn1cblxuLm1hdC1jb2x1bW4tdG90YWwge1xuICBtYXgtd2lkdGg6IDgwcHg7XG59XG5cbi5tYXQtY29sdW1uLWRlbGV0ZSB7XG4gIG1heC13aWR0aDogMzBweDtcbiAgbWFyZ2luOiAwICFpbXBvcnRhbnQ7XG59XG5cbi5yZXF1aXJlZC1maWVsZC1lcnJvciB7XG4gIGJhY2tncm91bmQtY29sb3I6IHJlZDtcbn1cblxuLm92ZXJyaWRlcy1leHBlbnNlcy1wYW5lbCB7XG4gIG1heC13aWR0aDogMTE1MHB4O1xuICBtYXJnaW46IDAgYXV0bztcbn1cblxuLnRvb2xiYXItaWNvbiB7XG4gIHBhZGRpbmc6IDAgMS41cmVtO1xufVxuXG4udG9vbGJhci1zcGFjZXIge1xuICBmbGV4OiAxIDEgYXV0bztcbn1cblxuLmFsaWduLWNlbnRlciB7XG4gIHdpZHRoOiAxMDAlO1xuICBtYXgtd2lkdGg6IDExNTBweDtcbiAgbWFyZ2luOiAwIGF1dG87XG59XG5cbi5zYWxlcy10YWJsZSB7XG4gIG1heC1oZWlnaHQ6IDQwMHB4O1xuICBvdmVyZmxvdzogYXV0bztcbn1cbiJdfQ== */"
-
-/***/ }),
-
-/***/ "./src/app/payroll/payroll.component.ts":
-/*!**********************************************!*\
-  !*** ./src/app/payroll/payroll.component.ts ***!
-  \**********************************************/
-/*! exports provided: PayrollComponent */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PayrollComponent", function() { return PayrollComponent; });
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
-/* harmony import */ var ng2_file_upload__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ng2-file-upload */ "./node_modules/ng2-file-upload/index.js");
-/* harmony import */ var ng2_file_upload__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(ng2_file_upload__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _app_message_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @app/message.service */ "./src/app/message.service.ts");
-/* harmony import */ var _campaigns_campaign_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../campaigns/campaign.service */ "./src/app/campaigns/campaign.service.ts");
-/* harmony import */ var _user_features_user_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../user-features/user.service */ "./src/app/user-features/user.service.ts");
-/* harmony import */ var _payroll_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./payroll.service */ "./src/app/payroll/payroll.service.ts");
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_8__);
-/* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @angular/material */ "./node_modules/@angular/material/esm5/material.es5.js");
-/* harmony import */ var _dialogs_reject_note_component__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./dialogs/reject-note.component */ "./src/app/payroll/dialogs/reject-note.component.ts");
-/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
-/* harmony import */ var _app_shared_models_state_model__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @app/shared/models/state.model */ "./src/app/shared/models/state.model.ts");
-
-
-
-
-
-
-
-
-
-
-
-
-
-var PayrollComponent = /** @class */ (function () {
-    function PayrollComponent(campaignApi, msg, userService, dialog, payrollService, fb) {
-        var _this = this;
-        this.campaignApi = campaignApi;
-        this.msg = msg;
-        this.userService = userService;
-        this.dialog = dialog;
-        this.payrollService = payrollService;
-        this.fb = fb;
-        this.$indexVal = -1;
-        this.displayedColumns = ['saleDate', 'firstName', 'lastName', 'address', 'city', 'state', 'postalCode', 'statusType', 'amount', 'note'];
-        this.dataSource$ = new rxjs__WEBPACK_IMPORTED_MODULE_11__["BehaviorSubject"]([]);
-        this.overrideColumns = ['agentId', 'sales', 'commission', 'total', 'delete'];
-        this.overrideDataSource$ = new rxjs__WEBPACK_IMPORTED_MODULE_11__["BehaviorSubject"]([]);
-        this.expenseColumns = ['title', 'description', 'amount', 'delete'];
-        this.expenseDataSource$ = new rxjs__WEBPACK_IMPORTED_MODULE_11__["BehaviorSubject"]([]);
-        this.uploader = new ng2_file_upload__WEBPACK_IMPORTED_MODULE_3__["FileUploader"]({ removeAfterUpload: true });
-        this.states = _app_shared_models_state_model__WEBPACK_IMPORTED_MODULE_12__["States"].$get();
-        this.showRejectNotes = false;
-        this.wsHeaders$ = new rxjs__WEBPACK_IMPORTED_MODULE_11__["BehaviorSubject"]([]);
-        this.wsData$ = new rxjs__WEBPACK_IMPORTED_MODULE_11__["BehaviorSubject"]([]);
-        this.wsData = [];
-        this.selectedOverrideAgent = new _angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormControl"]('', []);
-        this.disableOverrides = true;
-        this.dataSource = this.dataSource$.asObservable();
-        this.overrideDataSource = this.overrideDataSource$.asObservable();
-        this.expenseDataSource = this.expenseDataSource$.asObservable();
-        this.agents$ = this.userService.agents;
-        this.user$ = this.userService.user;
-        // gets active list of users to fill dropdown on invoice page
-        this.userService.users.subscribe(function (next) { _this.users = next; });
-        this.userService.userDetail.subscribe(function (next) {
-            _this.userDetail = next;
-        });
-    }
-    PayrollComponent.prototype.ngOnInit = function () {
-        var _this = this;
-        this.agents$.subscribe(function (agents) { _this.agents = agents; });
-        this.user$.subscribe(function (user) {
-            _this.user = user;
-            _this.campaignApi.getCampaigns(user.sessionUser.sessionClient)
-                .then(function (campaigns) {
-                _this.campaigns = campaigns;
-            })
-                .catch(_this.msg.showWebApiError);
-            _this.userService.loadAgents(true);
-        });
-        this.userService.reloadUserPromise();
-        this.userService.loadAgents();
-        this.isMappedByUsername = true;
-        this.createForm();
-        this.mapped = {
-            agentId: null,
-            agentName: null,
-            entries: []
-        };
-        // assume that the page is going to have data at page load
-        this.newFileUpload = false;
-        this.showRejectNotes = lodash__WEBPACK_IMPORTED_MODULE_8__["find"](this.dataSource, ['statusType', false]) !== null;
-        this.wsHeaders$.subscribe(function (next) {
-            _this.wsHeaders = next;
-        });
-        this.wsData$.subscribe(function (next) {
-            if (next !== undefined)
-                _this.wsData.push(next);
-        });
-    };
-    PayrollComponent.prototype.createForm = function () {
-        var _this = this;
-        var salesArray = this.createFormGroup(this.dataSource$.getValue());
-        var overridesArray = this.createFormGroup(this.overrideDataSource$.getValue(), 'overrides');
-        var expensesArray = this.createFormGroup(this.expenseDataSource$.getValue(), 'expenses');
-        this.form = this.fb.group({
-            agentId: this.fb.control(this.selectedAgentId || '', _angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].required),
-            campaignId: this.fb.control(this.selectedCampaignId || '', _angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].required),
-            issueDate: this.fb.control(this.issueDate || '', _angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].required),
-            weekEnding: this.fb.control(this.weekEnding || '', _angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].required),
-            sales: this.fb.array(salesArray),
-            overrides: this.fb.array(overridesArray),
-            expenses: this.fb.array(expensesArray)
-        });
-        this.payrollService.sales.subscribe(function (sales) {
-            if (!sales.length || sales == null)
-                return;
-            _this.dataSource$.next(sales);
-            _this.form.controls.sales = _this.fb.array(_this.createFormGroup(sales));
-            _this.form.updateValueAndValidity();
-        });
-        this.payrollService.overrides.subscribe(function (overrides) {
-            if (!overrides.length || overrides == null)
-                return;
-            _this.overrideDataSource$.next(overrides);
-            _this.form.controls.overrides = _this.fb.array(_this.createFormGroup(overrides, 'overrides'));
-            _this.form.updateValueAndValidity();
-        });
-        this.payrollService.expenses.subscribe(function (expenses) {
-            if (!expenses.length || expenses == null)
-                return;
-            _this.expenseDataSource$.next(expenses);
-            _this.form.controls.expenses = _this.fb.array(_this.createFormGroup(expenses, 'expenses'));
-            _this.form.updateValueAndValidity();
-        });
-    };
-    PayrollComponent.prototype.createFormGroup = function (data, keyType) {
-        if (keyType === void 0) { keyType = null; }
-        var formGroups = [];
-        var keys = ['saleDate', 'firstName', 'lastName', 'address', 'city', 'state', 'postalCode', 'statusType', 'amount'];
-        if (keyType != null) {
-            keys = keyType == 'overrides'
-                ? ['agentId', 'sales', 'commission', 'total']
-                : keyType == 'expenses'
-                    ? ['title', 'description', 'amount']
-                    : keys;
-        }
-        // loop through each row of the dataset
-        for (var i = 0; i < data.length; i++) {
-            var group = {};
-            // loop through the keys
-            for (var j = 0; j < keys.length; j++) {
-                // append this rows properties as form controls to the form group
-                group[keys[j]] = this.fb.control(data[i][keys[j]], _angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].required);
-            }
-            formGroups.push(this.fb.group(group));
-        }
-        return formGroups;
-    };
-    PayrollComponent.prototype.clickFileUploader = function () {
-        document.getElementById('file-uploader').click();
-    };
-    PayrollComponent.prototype.getErrorMessage = function (f) {
-        var form = f.form;
-        return form.controls.selectedAgent.errors.required ? 'You must select an agent' :
-            form.controls.selectedCampaign.errors.required ? 'You must select a campaign' :
-                form.controls.selectedIssueDate.errors.required ? 'You must select an issue date' :
-                    form.controls.selectedWeekending.errors.required ? 'You must select a weekending' : null;
-    };
-    PayrollComponent.prototype.saleDateEvent = function (item, event) {
-        var fieldValue = event.value;
-        var data = this.dataSource$.getValue();
-        item.saleDate = fieldValue.format('YYYY-MM-DD');
-        if (this.hasEditedLastRow(data)) {
-            data.push(this.insertPayrollRow());
-            var newDataSource = data;
-            this.dataSource$.next(newDataSource);
-            this.form.controls.sales = this.fb.array(this.createFormGroup(this.dataSource$.getValue()));
-        }
-    };
-    /**
-     * Check if the last row in the array has any data in it. If it does,
-     * we set our boolean to true that inserts a new row at the bottom of the table.
-     */
-    PayrollComponent.prototype.hasEditedLastRow = function (data) {
-        var testValidity = data[data.length - 1];
-        var result;
-        for (var p in testValidity) {
-            result = testValidity[p] != null;
-            if (result)
-                break;
-        }
-        return result;
-    };
-    /**
-     * Handles changes to the sales rows and updates underlying objects and validity on form.
-     *
-     * @param prop
-     * @param item
-     * @param event
-     * @param pos
-     */
-    PayrollComponent.prototype.handleRowEdit = function (prop, item, event) {
-        var fieldValue = event.target.value;
-        // set item property to field value
-        item[prop] = fieldValue;
-        // Insert a new row at the bottom of the table if there are is not an empty last row.
-        if (this.hasEditedLastRow(this.dataSource$.getValue())) {
-            var current = this.dataSource$.getValue();
-            current.push(this.insertPayrollRow());
-            this.payrollService.sales$.next(current);
-        }
-    };
-    PayrollComponent.prototype.overrideRowEdit = function (prop, item, event, index) {
-        if (index === void 0) { index = null; }
-        var fieldValue = (prop == 'agentId') ? event.value : event.target.value;
-        // set item property to field value
-        item[prop] = +fieldValue;
-        if (index != null) {
-            var form = this.form.controls.overrides;
-            var patch = {};
-            patch[prop] = fieldValue;
-            form.controls[index].patchValue(patch);
-            if (prop == 'sales'
-                || prop == 'commission'
-                    && item.sales > 0
-                    && item.commission > 0) {
-                item.total = item.sales * item.commission;
-                form.controls[index].patchValue({
-                    total: item.total
-                });
-            }
-        }
-        if (this.hasEditedLastRow(this.overrideDataSource$.getValue())) {
-            var current = this.overrideDataSource$.getValue();
-            current.push(this.insertOverrideRow());
-            this.payrollService.overrides$.next(current);
-        }
-    };
-    PayrollComponent.prototype.expenseRowEdit = function (prop, item, event, index) {
-        var fieldValue = event.target.value;
-        // set item property to field value
-        item[prop] = fieldValue;
-        if (index != null) {
-            var form = this.form.controls.expenses;
-            var patch = {};
-            patch[prop] = fieldValue;
-            form.controls[index].patchValue(patch);
-        }
-        if (this.hasEditedLastRow(this.expenseDataSource$.getValue())) {
-            var current = this.expenseDataSource$.getValue();
-            current.push(this.insertExpenseRow());
-            this.payrollService.expenses$.next(current);
-        }
-    };
-    PayrollComponent.prototype.openRejectDialog = function (item, index) {
-        var _this = this;
-        this.dialog
-            .open(_dialogs_reject_note_component__WEBPACK_IMPORTED_MODULE_10__["RejectNoteDialogComponent"], {
-            width: '400px',
-            data: { item: item, index: index }
-        })
-            .afterClosed().subscribe(function (result) {
-            if (result == null)
-                return;
-            var agent = result.agent;
-            var index = result.index;
-            _this.dataSource[index] = agent;
-        });
-    };
-    PayrollComponent.prototype.updateSelectedAgent = function () {
-        var _this = this;
-        if (this.overrideAgents == null
-            || this.overrideAgents.length == 0) {
-            this.userService.refreshAgents()
-                .then(function (agents) {
-                _this.agent = lodash__WEBPACK_IMPORTED_MODULE_8__["find"](agents, { 'agentId': _this.invoice.agentId });
-                _this.disableOverrides = !_this.agent.isManager;
-            });
-        }
-        else {
-            this.agent = lodash__WEBPACK_IMPORTED_MODULE_8__["find"](this.agents, { 'agentId': this.invoice.agentId });
-            this.disableOverrides = !this.agent.isManager;
-        }
-    };
-    PayrollComponent.prototype.validateInvoice = function () {
-        var dataSource = this.dataSource$.getValue();
-        var overrideDataSource = this.overrideDataSource$.getValue();
-        var expenseDataSource = this.expenseDataSource$.getValue();
-        var lastSalesRow = dataSource.length - 1;
-        var lastOverrideRow = overrideDataSource.length - 1;
-        var lastExpenseRow = expenseDataSource.length - 1;
-        var salesFormArray = this.form.controls.sales;
-        var overridesFormArray = this.form.controls.overrides;
-        var expensesFormArray = this.form.controls.expenses;
-        if (this.form.invalid && salesFormArray.controls[lastSalesRow].dirty)
-            return;
-        this.removeEmptyDataSourceRow(salesFormArray, dataSource, lastSalesRow, 'dataSource$');
-        this.removeEmptyDataSourceRow(overridesFormArray, overrideDataSource, lastOverrideRow, 'overrideDataSource$');
-        this.removeEmptyDataSourceRow(expensesFormArray, expenseDataSource, lastExpenseRow, 'expenseDataSource$');
-        this.form.updateValueAndValidity();
-        this.saveInvoice(dataSource, overrideDataSource, expenseDataSource);
-    };
-    PayrollComponent.prototype.removeEmptyDataSourceRow = function (formArray, dataSource, pos, destinationDataSource) {
-        var hasData;
-        var row = dataSource[pos];
-        for (var p in row) {
-            hasData = row[p] != null;
-            if (hasData)
-                break;
-        }
-        if (hasData)
-            return;
-        formArray.removeAt(pos);
-        dataSource.splice(pos, 1);
-        this[destinationDataSource].next(dataSource);
-    };
-    PayrollComponent.prototype.removeEmptyOverride = function (i) {
-        var data = this.overrideDataSource$.getValue();
-        if (!lodash__WEBPACK_IMPORTED_MODULE_8__["isEmpty"](data[i]))
-            return;
-        data.splice(i, 1);
-        this.overrideDataSource$.next(data);
-    };
-    PayrollComponent.prototype.removeEmptyExpense = function (i) {
-        var data = this.expenseDataSource$.getValue();
-        if (!lodash__WEBPACK_IMPORTED_MODULE_8__["isEmpty"](data[i]))
-            return;
-        data.splice(i, 1);
-        this.expenseDataSource$.next(data);
-    };
-    PayrollComponent.prototype.saveInvoice = function (sales, overrides, expenses) {
-        console.log('Form is invalid: ' + this.form.invalid);
-        console.dir(this.form);
-        if (this.form.invalid)
-            return;
-        var data = {
-            invoiceId: null,
-            agentId: this.selectedAgentId,
-            campaignId: this.selectedCampaignId,
-            agentSales: sales,
-            overrides: overrides,
-            expenses: expenses,
-            issueDate: this.issueDate,
-            weekEnding: this.weekEnding
-        };
-        for (var i = 0; i < data.agentSales.length; i++) {
-            data.agentSales[i].agentId = this.selectedAgentId;
-        }
-        for (var i = 0; i < data.expenses.length; i++) {
-            data.expenses[i].agentId = this.selectedAgentId;
-        }
-        console.dir(data);
-        this.payrollService
-            .saveNewInvoice(this.user.sessionUser.sessionClient, this.agent.agentId, data)
-            .subscribe(function (result) {
-            console.dir(result);
-        });
-        // let dto: InvoiceDto = <InvoiceDto>{
-        //   invoiceId: null,
-        //   agentId: form.control,
-        //   campaignId: form.controls.campaign.value,
-        //   agentSales: sales,
-        //   overrides: overrides,
-        //   expenses: expenses,
-        //   issueDate: form.controls.issueDate.value,
-        //   weekEnding: form.controls.weekEnding.value
-        // }
-        // this.payrollService
-        //   .saveInvoice(dto)
-        //   .then((result: InvoiceDto) => {
-        //     console.dir(result);
-        //   });
-    };
-    /**
-     * finds the currently selected agent and checks to see if they're a manager so
-     * that we can properly set the var that shows/hides the overrides panel.
-     */
-    PayrollComponent.prototype.changeAgent = function () {
-        this.agent = lodash__WEBPACK_IMPORTED_MODULE_8__["find"](this.agents, { 'agentId': this.form.value.agentId });
-        this.disableOverrides = !(this.agent.isActive && this.agent.isManager);
-    };
-    /**
-     * Checks to make sure agent has suboridnates prior to expanding the
-     * dataset and adding an override row.
-     *
-     * @param wasSectionHidden
-     *
-     */
-    PayrollComponent.prototype.addOverrideRow = function (wasSectionHidden) {
-        var _this = this;
-        if (wasSectionHidden === void 0) { wasSectionHidden = false; }
-        if (wasSectionHidden && this.agent.agentId != null) {
-            if (this.agent == null)
-                this.agent = lodash__WEBPACK_IMPORTED_MODULE_8__["find"](this.agents, { 'agentId': this.selectedAgentId });
-            this.userService.getAgentsByManagerId(this.agent.managerId)
-                .then(function (agents) {
-                _this.overrideAgents = agents;
-                _this.payrollService.addEmptyOverride();
-            })
-                .catch(this.msg.showWebApiError);
-        }
-        else {
-            if (this.overrideAgents == null || this.overrideAgents.length == 0) {
-                this.msg.addMessage('Please make sure you select an agent before you start entering overrides.', 'dismiss', 6000);
-                return;
-            }
-            this.payrollService.addEmptyOverride();
-        }
-    };
-    PayrollComponent.prototype.addExpenseRow = function () {
-        this.payrollService.addEmptyExpense();
-    };
-    PayrollComponent.prototype.removeRow = function (sourceType, index) {
-        var data;
-        switch (sourceType) {
-            case 'overrides':
-                data = this.overrideDataSource$.getValue();
-                data.splice(index, 1);
-                this.overrideDataSource$.next(data);
-                this.payrollService.updateDataSource(sourceType, this.overrideDataSource$.getValue());
-                break;
-            case 'expenses':
-                data = this.expenseDataSource$.getValue();
-                data.splice(index, 1);
-                this.expenseDataSource$.next(data);
-                this.payrollService.updateDataSource(sourceType, this.expenseDataSource$.getValue());
-                break;
-            case 'sales':
-            default:
-                data = this.dataSource$.getValue();
-                data.splice(index, 1);
-                this.dataSource$.next(data);
-                this.payrollService.updateDataSource(sourceType, this.dataSource$.getValue());
-                break;
-        }
-    };
-    PayrollComponent.prototype.insertPayrollRow = function () {
-        return {
-            invoiceId: null,
-            agentSalesId: null,
-            agentId: null,
-            saleDate: null,
-            firstName: null,
-            lastName: null,
-            address: null,
-            city: null,
-            state: null,
-            postalCode: null,
-            statusType: null,
-            amount: null,
-            note: null,
-            createdAt: null,
-            updatedAt: null
-        };
-    };
-    PayrollComponent.prototype.insertOverrideRow = function () {
-        return {
-            overrideId: null,
-            agentId: null,
-            invoiceId: null,
-            commission: null,
-            sales: null,
-            total: null
-        };
-    };
-    PayrollComponent.prototype.insertExpenseRow = function () {
-        return {
-            expenseId: null,
-            agentId: null,
-            invoiceId: null,
-            title: null,
-            description: null,
-            amount: null,
-            updatedAt: null,
-            modifiedBy: null,
-            createdAt: null
-        };
-    };
-    PayrollComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
-            selector: 'app-payroll',
-            template: __webpack_require__(/*! ./payroll.component.html */ "./src/app/payroll/payroll.component.html"),
-            viewProviders: [ng2_file_upload__WEBPACK_IMPORTED_MODULE_3__["FileSelectDirective"]],
-            styles: [__webpack_require__(/*! ./payroll.component.scss */ "./src/app/payroll/payroll.component.scss")]
-        }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_campaigns_campaign_service__WEBPACK_IMPORTED_MODULE_5__["CampaignService"],
-            _app_message_service__WEBPACK_IMPORTED_MODULE_4__["MessageService"],
-            _user_features_user_service__WEBPACK_IMPORTED_MODULE_6__["UserService"],
-            _angular_material__WEBPACK_IMPORTED_MODULE_9__["MatDialog"],
-            _payroll_service__WEBPACK_IMPORTED_MODULE_7__["PayrollService"],
-            _angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormBuilder"]])
-    ], PayrollComponent);
-    return PayrollComponent;
-}());
-
-// updateMapping(f:FormGroup):void {
-//   if(f.controls.selectedAgent.invalid) this.msg.addMessage('Oops! Looks like we encountered an error, please refresh and try again.', 'dismiss', 6000);
-//   this.mapped.agentId = f.controls.selectedAgent.value;
-//   let user = _.find(this.users, { id: this.mapped.agentId });
-//   this.mapped.agentName = user.firstName + ' ' + user.lastName;
-//   let sales: IAgentSale[] = this.dataSource$.getValue();
-//   let salesTableHasData: boolean = false;
-//   _.each(sales, (sale: IAgentSale) => {
-//     for(let s in sale) {
-//       // check if there are any values in the first row and on... then do the check.
-//       if(salesTableHasData) break;
-//       salesTableHasData = sale[s] !== null;
-//     }
-//   });
-//   if(salesTableHasData) {
-//     let dialogRef = this.dialog.open(ChangeAgentDialogComponent, {
-//       width: '250px',
-//     });
-//     dialogRef.afterClosed().subscribe((result: boolean) => {
-//       if(result) {
-//         this.mapped.entries = [];
-//         this.mapped.entries.push(this.insertPayrollRow());
-//         this.dataSource$.next(this.mapped.entries);
-//         this.overrideDataSource$.next([]);
-//         this.expenseDataSource$.next([]);
-//       }
-//     });
-//   }
-// }
-// private createForm() {
-//   this.form = this.fb.group({
-//     sales: this.fb.array(this.dataSource$.getValue()),
-//     overrides: this.fb.array(this.overrideDataSource$.getValue()),
-//     expenses: this.fb.array(this.expenseDataSource$.getValue())
-//   });
-// }
-// private resetForm() {
-//   this.form = this.fb.group({
-//     sales: this.fb.array(this.dataSource$.getValue()),
-//     overrides: this.fb.array(this.overrideDataSource$.getValue()),
-//     expenses: this.fb.array(this.expenseDataSource$.getValue())
-//   });
-// }
-// openSalesMappingDialog(headers: any, rows: IAgentSale[]): void {
-//   // move this to import button click event... and highlight field that user needs to interact with before they continue
-//   if(!(this.invoice.agentId > 0)) {
-//     this.msg.addMessage('Please make sure you select a salesperson before continuing.', 'dismiss', 5000);
-//     return;
-//   } else if (!(this.invoice.campaignId > 0)) {
-//     this.msg.addMessage('Please select a campaign before continuing.', 'dismiss', 5000);
-//     return;
-//   }
-//   this.dialog
-//     .open(SelectMapperComponent, {
-//       width: '500px',
-//       data: {}
-//     })
-//     .afterClosed()
-//     .subscribe((mapBy:string) => {
-//       if(mapBy == undefined) return;
-//       // if the user is mapping by something other than username, we need to do the work to get the correct sales ID to map with here...
-//       if(mapBy === 'salesId') {
-//         // need to get user details here and get their sales id for the currently selected campaign and store the current sales id
-//         // to something that we can use... maybe store this as "currentSalesId" in the payroll service or something, so that it is
-//         // easily accessible from multiple components...?
-//         console.log('map by ' + mapBy);
-//         this.userService.getUserDetail()
-//           .then((detail:IUserDetail) => {
-//             if(detail == null) {
-//               this.msg.addMessage('Fatal error. Please refresh and try again.', 'dismiss', 6000);
-//             } else {
-//               switch(this.selectedCampaign.value) {
-//                 case this.userDetail.saleOneCampaignId:
-//                   this.salesId = this.userDetail.saleOneId;
-//                   break;
-//                 case this.userDetail.saleTwoCampaignId:
-//                   this.salesId = this.userDetail.saleTwoId;
-//                   break;
-//                 case this.userDetail.saleThreeCampaignId:
-//                   this.salesId = this.userDetail.saleThreeId;
-//                   break;
-//                 default:
-//                   this.salesId = 0;
-//                   break;
-//               }
-//               if(this.salesId === 0)
-//                 this.msg.addMessage('Please make sure that you have a sales ID for the specified campaign saved in your profile.', 'dismiss', 6000);
-//             }
-//           });
-//         console.dir(this.userDetail);
-//       } else {
-//         console.log("map by " + mapBy);
-//       }
-//       let dialogRef = this.dialog.open(SalesMappingComponent, {
-//         width: '500px',
-//         data: { headers: headers, rows: rows }
-//       });
-//       dialogRef.afterClosed().subscribe((result: IPayrollMap) => {
-//         if(result.entries == null) {
-//           this.msg.addMessage('Something went wrong. Please try again.', 'dismiss', 6000);
-//           return;
-//         }
-//         if(result != undefined && result.entries.length > 0) {
-//           this.mapped.entries = result.entries;
-//           // make sure our results only match the employee that the user has selected in the top left...
-//           _.remove(this.mapped.entries, (e: IAgentSale) => {
-//             return e.agentName.toLowerCase().trim() !== this.mapped.agentName.toLowerCase().trim();
-//           });
-//           for(let i = 0; i < this.mapped.entries.length; i++) {
-//             let data = this.mapped.entries[i];
-//             if(data['zip']) {
-//               data.postalCode = data['zip'];
-//               delete data['zip'];
-//             }
-//           }
-//           if(this.mapped.entries.length === 0) this.msg.addMessage('Looks like there are no results for that agent. Please try again.', 'dismiss', 5000);
-//           // if(this.newFileUpload) {
-//           //   for(let i = 0; i < this.mapped.entries.length; i++) {
-//           //     this.mapped.entries[i].agentSalesId = i + 1;
-//           //   }
-//           // }
-//           this.mapped.entries.push(this.insertPayrollRow());
-//           console.dir(this.mapped.entries);
-//           this.payrollService.updateDataSource('sales', this.mapped.entries);
-//         }
-//       });
-//     });
-// }
-// chooseFile(e:any):void {
-//   this.newFileUpload = true;
-//   let file:File = e.target.files[0];
-//   let reader:FileReader = new FileReader();
-//   reader.onload = (e: any) => {
-//     const bstr: string = e.target.result;
-//     const wb: XLSX.WorkBook = XLSX.read(bstr, { type: 'binary' });
-//     // grab first sheet
-//     let wsname: string;
-//     let ws: XLSX.WorkSheet;
-//     if(wb.SheetNames.length > 1) {
-//       wsname = wb.SheetNames[1] === 'Data' ? wb.SheetNames[1] : 'Data';
-//       ws = wb.Sheets[wsname];
-//     } else {
-//       wsname = wb.SheetNames[0];
-//       ws = wb.Sheets[wsname];
-//     }
-//     // save data
-//     this.data = <any>(XLSX.utils.sheet_to_json(ws, { header: 1 }));
-//     let entry = [];
-//     let rows = [];
-//     for(var h = 0; h < this.data.length; h++) {
-//       let row = this.data[h];
-//       if(h === 0) {
-//         for(var i = 0; i < row.length; i++) {
-//           row[i] = row[i].toLowerCase().split(' ').map(function(w, idx){
-//             if(idx > 0 && w.length > 2) {
-//               return w.charAt(0).toUpperCase() + w.substr(1);
-//             } else {
-//               return w;
-//             }
-//           }).join(' ');
-//           entry.push(row[i]);
-//         }
-//         this.wsHeaders$.next(row);
-//       } else { // data form worksheet
-//         if(row.length > 0) rows.push(row);
-//       }
-//     }
-//     this.openSalesMappingDialog(entry, rows);
-//   };
-//   if(file) reader.readAsBinaryString(file);
-// }
 
 
 /***/ }),
@@ -8937,9 +8027,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
-/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
-/* harmony import */ var _env_environment__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @env/environment */ "./src/environments/environment.ts");
-
+/* harmony import */ var _env_environment__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @env/environment */ "./src/environments/environment.ts");
 
 
 
@@ -8947,123 +8035,11 @@ __webpack_require__.r(__webpack_exports__);
 var PayrollService = /** @class */ (function () {
     function PayrollService(http) {
         this.http = http;
-        this.apiUrl = _env_environment__WEBPACK_IMPORTED_MODULE_4__["environment"].apiUrl;
-        this.dataStore = {
-            sales: [this.insertSalesRow()],
-            overrides: [],
-            expenses: []
-        };
-        this.sales$ = new rxjs__WEBPACK_IMPORTED_MODULE_3__["BehaviorSubject"](this.dataStore.sales);
-        this.sales = this.sales$.asObservable();
-        this.overrides$ = new rxjs__WEBPACK_IMPORTED_MODULE_3__["BehaviorSubject"](this.dataStore.overrides);
-        this.overrides = this.overrides$.asObservable();
-        this.expenses$ = new rxjs__WEBPACK_IMPORTED_MODULE_3__["BehaviorSubject"](this.dataStore.expenses);
-        this.expenses = this.expenses$.asObservable();
+        this.api = _env_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].apiUrl + 'api';
     }
-    PayrollService.prototype.reloadSales = function () {
-        var _this = this;
-        return new Promise(function (resolve) {
-            _this.sales$.next(_this.dataStore.sales);
-        });
-    };
-    PayrollService.prototype.reloadOverrides = function () {
-        var _this = this;
-        return new Promise(function (resolve) {
-            _this.overrides$.next(_this.dataStore.overrides);
-        });
-    };
-    PayrollService.prototype.reloadExpenses = function () {
-        var _this = this;
-        return new Promise(function (resolve) {
-            _this.expenses$.next(_this.dataStore.expenses);
-        });
-    };
-    PayrollService.prototype.addEmptyOverride = function () {
-        this.dataStore.overrides.push(this.insertOverrideRow());
-        this.overrides$.next(this.dataStore.overrides);
-    };
-    PayrollService.prototype.addEmptyExpense = function () {
-        this.dataStore.expenses.push(this.insertExpenseRow());
-        this.expenses$.next(this.dataStore.expenses);
-    };
-    PayrollService.prototype.saveInvoice = function (invoiceDto, invoiceId) {
-        if (invoiceId === void 0) { invoiceId = null; }
-        var url = invoiceId === null ?
-            this.apiUrl + 'api/invoices' :
-            this.apiUrl + 'api/invoices/' + invoiceId;
-        return this.http.post(url, invoiceDto).toPromise();
-    };
-    PayrollService.prototype.saveNewInvoice = function (clientId, agentId, data) {
-        var url = this.apiUrl + '/api/clients/' + clientId + '/agents/'
-            + agentId + '/invoices';
-        return this.http.post(url, data);
-    };
-    /**
-     * Can pass any of the three datasources with descriptive string that will update their
-     * behavior subject and private data stores.
-     *
-     * @param sourceType string
-     * @param data any
-     */
-    PayrollService.prototype.updateDataSource = function (sourceType, data) {
-        switch (sourceType) {
-            case 'overrides':
-                this.dataStore.overrides = data;
-                this.overrides$.next(this.dataStore.overrides);
-                break;
-            case 'expenses':
-                this.dataStore.expenses = data;
-                this.expenses$.next(this.dataStore.expenses);
-                break;
-            case 'sales':
-            default:
-                this.dataStore.sales = data;
-                this.sales$.next(this.dataStore.sales);
-                break;
-        }
-    };
-    // private methods
-    PayrollService.prototype.insertSalesRow = function () {
-        return {
-            invoiceId: null,
-            agentSalesId: null,
-            agentId: null,
-            saleDate: null,
-            firstName: null,
-            lastName: null,
-            address: null,
-            city: null,
-            state: null,
-            postalCode: null,
-            statusType: null,
-            amount: null,
-            note: null,
-            createdAt: null,
-            updatedAt: null
-        };
-    };
-    PayrollService.prototype.insertOverrideRow = function () {
-        return {
-            overrideId: null,
-            agentId: null,
-            invoiceId: null,
-            commission: null,
-            sales: null,
-            total: null
-        };
-    };
-    PayrollService.prototype.insertExpenseRow = function () {
-        return {
-            expenseId: null,
-            agentId: null,
-            invoiceId: null,
-            title: null,
-            description: null,
-            amount: null,
-            updatedAt: null,
-            modifiedBy: null,
-            createdAt: null
-        };
+    PayrollService.prototype.savePayrollList = function (clientId, payload) {
+        var url = this.api + "/clients/" + clientId + "/payrolls";
+        return this.http.post(url, payload);
     };
     PayrollService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
@@ -10364,14 +9340,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _weather_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../weather.service */ "./src/app/weather.service.ts");
 /* harmony import */ var _my_information_my_information_component__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../my-information/my-information.component */ "./src/app/my-information/my-information.component.ts");
 /* harmony import */ var _user_service__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./user.service */ "./src/app/user-features/user.service.ts");
-/* harmony import */ var _payroll_payroll_component__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../payroll/payroll.component */ "./src/app/payroll/payroll.component.ts");
-/* harmony import */ var _payroll_dialogs_change_agent_component__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../payroll/dialogs/change-agent.component */ "./src/app/payroll/dialogs/change-agent.component.ts");
-/* harmony import */ var _payroll_dialogs_reject_note_component__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../payroll/dialogs/reject-note.component */ "./src/app/payroll/dialogs/reject-note.component.ts");
-/* harmony import */ var _payroll_dialogs_sales_mapping_component__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../payroll/dialogs/sales-mapping.component */ "./src/app/payroll/dialogs/sales-mapping.component.ts");
-/* harmony import */ var _masks_ssn_directive__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../masks/ssn.directive */ "./src/app/masks/ssn.directive.ts");
-/* harmony import */ var _validators_required_validator_directive__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../validators/required-validator.directive */ "./src/app/validators/required-validator.directive.ts");
-/* harmony import */ var _app_campaigns_campaigns_module__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! @app/campaigns/campaigns.module */ "./src/app/campaigns/campaigns.module.ts");
-/* harmony import */ var _app_payroll_paste_directive__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! @app/payroll/paste.directive */ "./src/app/payroll/paste.directive.ts");
+/* harmony import */ var _masks_ssn_directive__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../masks/ssn.directive */ "./src/app/masks/ssn.directive.ts");
+/* harmony import */ var _validators_required_validator_directive__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../validators/required-validator.directive */ "./src/app/validators/required-validator.directive.ts");
+/* harmony import */ var _app_campaigns_campaigns_module__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @app/campaigns/campaigns.module */ "./src/app/campaigns/campaigns.module.ts");
 
 
 
@@ -10382,15 +9353,15 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-
-
-
-
+// import { PayrollComponent } from '../payroll/payroll.component';
+// import { ChangeAgentDialogComponent } from '../payroll/dialogs/change-agent.component';
+// import { RejectNoteDialogComponent } from '../payroll/dialogs/reject-note.component';
+// import { SalesMappingComponent } from '../payroll/dialogs/sales-mapping.component';
 // import { HotTableModule } from '@handsontable/angular';
 
 
 
-
+// import { VsPasteDirective } from '@app/payroll/paste.directive';
 var UserFeaturesModule = /** @class */ (function () {
     function UserFeaturesModule() {
     }
@@ -10403,22 +9374,21 @@ var UserFeaturesModule = /** @class */ (function () {
                 _angular_forms__WEBPACK_IMPORTED_MODULE_3__["FormsModule"],
                 _angular_forms__WEBPACK_IMPORTED_MODULE_3__["ReactiveFormsModule"],
                 ng2_file_upload__WEBPACK_IMPORTED_MODULE_6__["FileUploadModule"],
-                _app_campaigns_campaigns_module__WEBPACK_IMPORTED_MODULE_16__["CampaignsModule"]
+                _app_campaigns_campaigns_module__WEBPACK_IMPORTED_MODULE_12__["CampaignsModule"]
             ],
             declarations: [
                 _my_information_my_information_component__WEBPACK_IMPORTED_MODULE_8__["MyInformationComponent"],
-                _payroll_payroll_component__WEBPACK_IMPORTED_MODULE_10__["PayrollComponent"],
-                _payroll_dialogs_change_agent_component__WEBPACK_IMPORTED_MODULE_11__["ChangeAgentDialogComponent"],
-                _masks_ssn_directive__WEBPACK_IMPORTED_MODULE_14__["MaskSsn"],
-                _payroll_dialogs_reject_note_component__WEBPACK_IMPORTED_MODULE_12__["RejectNoteDialogComponent"],
-                _payroll_dialogs_sales_mapping_component__WEBPACK_IMPORTED_MODULE_13__["SalesMappingComponent"],
-                _validators_required_validator_directive__WEBPACK_IMPORTED_MODULE_15__["RequiredValidatorDirective"],
-                _app_payroll_paste_directive__WEBPACK_IMPORTED_MODULE_17__["VsPasteDirective"]
+                // PayrollComponent,
+                // ChangeAgentDialogComponent,
+                _masks_ssn_directive__WEBPACK_IMPORTED_MODULE_10__["MaskSsn"],
+                // RejectNoteDialogComponent,
+                // SalesMappingComponent,
+                _validators_required_validator_directive__WEBPACK_IMPORTED_MODULE_11__["RequiredValidatorDirective"],
             ],
             entryComponents: [
-                _payroll_dialogs_reject_note_component__WEBPACK_IMPORTED_MODULE_12__["RejectNoteDialogComponent"],
-                _payroll_dialogs_sales_mapping_component__WEBPACK_IMPORTED_MODULE_13__["SalesMappingComponent"],
-                _payroll_dialogs_change_agent_component__WEBPACK_IMPORTED_MODULE_11__["ChangeAgentDialogComponent"]
+            // RejectNoteDialogComponent,
+            // SalesMappingComponent,
+            // ChangeAgentDialogComponent
             ],
             providers: [_weather_service__WEBPACK_IMPORTED_MODULE_7__["WeatherService"], _user_service__WEBPACK_IMPORTED_MODULE_9__["UserService"]]
         })

@@ -15,7 +15,7 @@
                         >
                             Show Closed
                         </mat-slide-toggle>
-                        <button type="button" mat-button color="primary" (click)="addPayCycle()">
+                        <button type="button" mat-stroked-button color="primary" (click)="addPayCycle()">
                             <mat-icon inline="true">add</mat-icon>
                             <span>Payroll</span>
                         </button>
@@ -43,33 +43,55 @@
                                 <mat-icon>play_arrow</mat-icon>
                                 <span>Start</span>
                             </button>
-                            <button
-                                type="button" mat-button
-                                color="primary"
-                                *ngIf="cycle.isPending && !cycle.isClosed"
-                                (click)="editPayCycle(cycle)"
-                            >
-                                <mat-icon>redo</mat-icon>
-                                <span>Continue</span>
-                            </button>
-                            <button
-                                type="button" mat-button
-                                color="accent"
-                                *ngIf="cycle.isPending && !cycle.isClosed"
-                                (click)="closePayCycle(cycle)"
-                            >
-                                <mat-icon>check_circle</mat-icon>
-                                <span>Close</span>
-                            </button>
-                            <button
-                                type="button" mat-button
-                                color="primary"
-                                *ngIf="cycle.isClosed"
-                                (click)="openPayCycle(cycle)"
-                            >
-                                <mat-icon>cached</mat-icon>
-                                <span>Re-Open</span>
-                            </button>
+                            <ng-container *ngIf="!isBeforeEndDate(cycle); else payrollReadyToRun">
+                                <button
+                                    type="button" mat-button
+                                    color="primary"
+                                    *ngIf="cycle.isPending && !cycle.isClosed"
+                                    (click)="editPayCycle(cycle)"
+                                >
+                                    <mat-icon>redo</mat-icon>
+                                    <span>Continue</span>
+                                </button>
+                                <button
+                                    type="button" mat-button
+                                    color="accent"
+                                    *ngIf="cycle.isPending && !cycle.isClosed"
+                                    (click)="closePayCycle(cycle)"
+                                >
+                                    <mat-icon>check_circle</mat-icon>
+                                    <span>Close</span>
+                                </button>
+                                <button
+                                    type="button" mat-button
+                                    color="primary"
+                                    *ngIf="cycle.isClosed"
+                                    (click)="openPayCycle(cycle)"
+                                >
+                                    <mat-icon>cached</mat-icon>
+                                    <span>Re-Open</span>
+                                </button>
+                            </ng-container>
+                            <ng-template #payrollReadyToRun>
+                                <button type="button"
+                                    mat-button
+                                    color="primary"
+                                    *ngIf="cycle.isPending && !cycle.isClosed"
+                                    (click)="editPayCycle(cycle)"
+                                >
+                                    <mat-icon>create</mat-icon>
+                                    <span>Edit</span>
+                                </button>
+                                <button type="button"
+                                    mat-button
+                                    color="accent"
+                                    *ngIf="cycle.isPending && !cycle.isClosed"
+                                    (click)="processPayroll(cycle)"
+                                >
+                                    <mat-icon>sync</mat-icon>
+                                    <span>Process</span>
+                                </button>
+                            </ng-template>
                         </div>
                         <!-- <button type="button" mat-icon-button color="primary" (click)="editPayCycle(cycle)">
                             <mat-icon>edit</mat-icon>

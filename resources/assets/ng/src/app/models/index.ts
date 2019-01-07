@@ -21,3 +21,5 @@ export * from './sale-status.model';
 export * from './remark.model';
 export * from './auth-response.model';
 export * from './utility.model';
+export * from './payroll.model';
+export * from './payroll-detail.model';

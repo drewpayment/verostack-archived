@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import { User, ICampaign } from '@app/models';
+import { User, ICampaign, DailySale, PayrollDetails, Payroll } from '@app/models';
 import { SessionService } from '@app/session.service';
 import { MatDialog } from '@angular/material';
 import { FloatBtnService } from '@app/fab-float-btn/float-btn.service';
@@ -11,6 +11,15 @@ import { PayCycle } from '@app/models/pay-cycle.model';
 import { Router } from '@angular/router';
 import { Subject, BehaviorSubject } from 'rxjs';
 import { PayCycleDialogComponent } from './components/pay-cycle-dialog/pay-cycle-dialog.component';
+import { Moment } from 'moment';
+import * as moment from 'moment';
+import { switchMap, map, filter } from 'rxjs/operators';
+import { PayrollService } from '@app/payroll/payroll.service';
+
+interface GroupedSaleByCampaign {
+    campaignId:number,
+    sale:DailySale[]
+}
 
 @Component({
     selector: 'vs-pay-cycle',
@@ -19,6 +28,7 @@ import { PayCycleDialogComponent } from './components/pay-cycle-dialog/pay-cycle
 })
 export class PayCycleComponent implements OnInit {
 
+    today:Moment = moment();
     user:User;
     campaigns:ICampaign[];
     private _cycles:PayCycle[];
@@ -28,6 +38,7 @@ export class PayCycleComponent implements OnInit {
     constructor(
         private session:SessionService,
         private payCycleService:PayCycleService,
+        private payrollService:PayrollService,
         private dialog:MatDialog,
         private campaignService:CampaignService,
         private fb:FormBuilder,
@@ -108,6 +119,88 @@ export class PayCycleComponent implements OnInit {
         cycle.isClosed = false;
 
         this.updatePayCycle(cycle);
+    }
+
+    isBeforeEndDate(cycle:PayCycle):boolean {
+        return moment(cycle.endDate).isBefore(this.today);
+    }
+
+    /**
+     * Begins the workflow of processing payroll. Opens the dialog to allow user to select a "pay date" 
+     * and then creates the relationship to the this cycle, calculates total information for users, 
+     * and finally closes the cycle.
+     * 
+     * @param cycle 
+     */
+    processPayroll(cycle:PayCycle) {
+        this.createPayrollsByCampaign(cycle);
+    }
+
+    private createPayrollsByCampaign(cycle:PayCycle) {
+        this.payCycleService.getPayCycleSales(
+            this.user.sessionUser.sessionClient, 
+            cycle.startDate as string, 
+            cycle.endDate as string, 
+            cycle.payCycleId
+            ).pipe(
+                map(sales => {
+                    const campaigns = sales.map(s => s.campaignId).filter((s, i, a) => a.indexOf(s) === i);
+                    let payrollResults:Payroll[] = [];
+                    
+                    campaigns.forEach(c => {
+                        let campaign = this.campaigns.find(camp => camp.campaignId === c);
+                        let filteredSales = sales.filter(s => s.campaignId == c);
+                        let payroll:Payroll = {
+                            payrollId: null,
+                            payCycleId: cycle.payCycleId,
+                            campaignId: c,
+                            utilityId: 0,
+                            weekEnding: cycle.endDate,
+                            isAutomated: false,
+                            isReleased: false,
+                            details: <PayrollDetails[]>[]
+                        };
+                        
+                        const uniqueAgents = filteredSales.map(fs => fs.agentId).filter((fs, i, a) => a.indexOf(fs) === i);
+                        
+                        uniqueAgents.forEach(ua => {
+                            const agentSales = filteredSales.filter(fs => fs.agentId == ua);
+                            const grossTotal = agentSales.length * (campaign.compensation || 0);
+                            /** 
+                             * how do we figure this out? this might need to be a server side calc if 
+                             * the company has "taxes" turned on? 
+                             */
+                            const taxes = 0;
+                            const netTotal = grossTotal - taxes;
+
+                            /** push our payroll detail to the details property on the current payroll we're creating */
+                            payroll.details.push({
+                                payrollDetailsId: null,
+                                payrollId: null,
+                                agentId: ua,
+                                sales: agentSales.length,
+                                grossTotal: grossTotal,
+                                taxes: taxes,
+                                netTotal: netTotal,
+                                modifiedBy: this.user.id,
+                                createdAt: moment(),
+                                updatedAt: moment()
+                            });
+                        });
+
+                        payrollResults.push(payroll);
+                    });
+
+                    return payrollResults;
+                })
+            )
+            .subscribe(sales => {
+                this.payrollService.savePayrollList(this.user.sessionUser.sessionClient, sales)
+                    .subscribe(payrolls => {
+                        this.msg.addMessage('Successfully process payroll.');
+                        console.dir(payrolls);
+                    });
+            });
     }
 
     private updatePayCycle(cycle:PayCycle):void {

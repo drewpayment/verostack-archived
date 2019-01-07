@@ -9,17 +9,17 @@ import { WeatherService } from '../weather.service';
 
 import { MyInformationComponent } from '../my-information/my-information.component';
 import { UserService } from './user.service';
-import { PayrollComponent } from '../payroll/payroll.component';
-import { ChangeAgentDialogComponent } from '../payroll/dialogs/change-agent.component';
-import { RejectNoteDialogComponent } from '../payroll/dialogs/reject-note.component';
-import { SalesMappingComponent } from '../payroll/dialogs/sales-mapping.component';
+// import { PayrollComponent } from '../payroll/payroll.component';
+// import { ChangeAgentDialogComponent } from '../payroll/dialogs/change-agent.component';
+// import { RejectNoteDialogComponent } from '../payroll/dialogs/reject-note.component';
+// import { SalesMappingComponent } from '../payroll/dialogs/sales-mapping.component';
 
 // import { HotTableModule } from '@handsontable/angular';
 
 import { MaskSsn } from '../masks/ssn.directive';
 import { RequiredValidatorDirective } from '../validators/required-validator.directive';
 import { CampaignsModule } from '@app/campaigns/campaigns.module';
-import { VsPasteDirective } from '@app/payroll/paste.directive';
+// import { VsPasteDirective } from '@app/payroll/paste.directive';
 
 @NgModule({
   imports: [
@@ -33,18 +33,18 @@ import { VsPasteDirective } from '@app/payroll/paste.directive';
   ],
   declarations: [
     MyInformationComponent,
-    PayrollComponent,
-    ChangeAgentDialogComponent,
+    // PayrollComponent,
+    // ChangeAgentDialogComponent,
     MaskSsn,
-    RejectNoteDialogComponent,
-    SalesMappingComponent,
+    // RejectNoteDialogComponent,
+    // SalesMappingComponent,
     RequiredValidatorDirective,
-    VsPasteDirective
+    // VsPasteDirective
   ],
   entryComponents: [
-    RejectNoteDialogComponent,
-    SalesMappingComponent,
-    ChangeAgentDialogComponent
+    // RejectNoteDialogComponent,
+    // SalesMappingComponent,
+    // ChangeAgentDialogComponent
   ],
   providers: [WeatherService, UserService]
 })

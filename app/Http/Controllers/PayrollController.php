@@ -1,0 +1,70 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Http\Resources\ApiResource;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Services\PayrollService;
+
+class PayrollController extends Controller
+{
+    protected $service;
+
+    public function __construct(PayrollService $_service)
+    {
+        $this->service = $_service;
+    }
+
+    /**
+     * Saves a list of payroll entities and their child detail entities. 
+     *
+     * @param Request $request
+     * @param int $clientId
+     * @return JsonResponse
+     */
+    public function savePayrollList(Request $request, $clientId)
+    {
+        $result = new ApiResource();
+
+        $result
+			->checkAccessByClient($clientId, Auth::user()->id)
+			->mergeInto($result);
+
+		if($result->hasError)
+			return $result->throwApiException()->getResponse();
+
+        $payrolls = [];
+        foreach($request->all() as $req)
+        {
+            $req = (object)$req;
+            $payroll = (object)[
+                'payrollId' => null,
+                'payCycleId' => $req->payCycleId,
+                'campaignId' => $req->campaignId,
+                'clientId' => $clientId,
+                'weekEnding' => $req->weekEnding,
+                'isReleased' => $req->isReleased,
+                'isAutomated' => $req->isAutomated,
+                'automatedRelease' => !isset($req->automatedRelease) ? null : $req->automatedRelease,
+                'modifiedBy' => !isset($req->modifiedBy) ? null : $req->modifiedBy,
+                'details' => $req->details
+            ];
+            
+            $res = $this->service->savePayroll($payroll);
+
+            if($res->hasError)
+                return $result->setToFail('Fatal error. Please try again later.');
+
+            $payrolls[] = $res->getData();
+        }
+
+        if(!is_array($payrolls) || !(count($payrolls) > 0))
+            return $result->setToFail('Fatal error. Please try again later.');
+
+        return $result->setData($payrolls)
+            ->throwApiException()
+            ->getResponse();
+    }
+
+}
