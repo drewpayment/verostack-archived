@@ -23,6 +23,7 @@ import { ConfirmUnpaidSelectionDialogComponent } from './pay-cycle/components/co
 import { NewSaleComponent } from './daily-sale-tracker/components/new-sale/new-sale.component';
 import { PayCycleDialogComponent } from './pay-cycle/components/pay-cycle-dialog/pay-cycle-dialog.component';
 import { PayrollDialogComponent } from './payroll/payroll-dialog/payroll-dialog.component';
+import { PayrollListComponent } from './payroll/payroll-list/payroll-list.component';
 
 @NgModule({
   imports: [
@@ -52,7 +53,8 @@ import { PayrollDialogComponent } from './payroll/payroll-dialog/payroll-dialog.
     ConfirmUnpaidSelectionDialogComponent,
     NewSaleComponent,
     PayCycleDialogComponent,
-    PayrollDialogComponent
+    PayrollDialogComponent,
+    PayrollListComponent
   ],
   entryComponents: [
     EditAgentDialogComponent,

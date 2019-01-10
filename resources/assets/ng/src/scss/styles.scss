@@ -9,7 +9,8 @@
   '~handsontable/dist/handsontable.full.css',
   '~quill/dist/quill.core.css',
   '~quill/dist/quill.snow.css',
-  '~quill/dist/quill.bubble.css';
+  '~quill/dist/quill.bubble.css',
+  './_cards';
 
 .font-sm {
   font-size: .75rem;
@@ -140,31 +141,3 @@ button:focus {
     padding: 1.5rem !important;
 }
 
-
-
-
-/** CARD BASED STYLING */
-
-// title cards for page headers
-.page-header-accent {
-    padding: 0.75rem 1.5rem 0.5rem;
-    border-top: 5px solid $mat-accent;
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
-    margin-bottom: 1rem;
-}
-
-.mat-card-border-primary {
-    padding: 0.75rem 1.5rem 0.5rem;
-    border-top: 5px solid $mat-primary;
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
-}
-
-.left-border-primary {
-    padding: 0.75rem 1.5rem 0.5rem;
-    border-left: 5px solid $vs-info;
-    border-top-left-radius: 5px;
-    border-bottom-left-radius: 5px;
-    margin-bottom: 1rem;
-}

@@ -34,10 +34,13 @@ class PayrollController extends Controller
 		if($result->hasError)
 			return $result->throwApiException()->getResponse();
 
+        $cycleId = 0;
         $payrolls = [];
         foreach($request->all() as $req)
         {
             $req = (object)$req;
+            if($cycleId == 0) $cycleId = $req->payCycleId;
+
             $payroll = (object)[
                 'payrollId' => null,
                 'payCycleId' => $req->payCycleId,
@@ -64,6 +67,24 @@ class PayrollController extends Controller
 
         return $result->setData($payrolls)
             ->throwApiException()
+            ->getResponse();
+    }
+
+    public function getPayrollList($clientId, $userId)
+    {
+        $result = new ApiResource();
+
+        $result
+			->checkAccessByClient($clientId, Auth::user()->id)
+			->mergeInto($result);
+
+		if($result->hasError)
+			return $result->throwApiException()->getResponse();
+
+        $this->service->getPayrollListByUser($clientId, $userId)
+            ->mergeInto($result);
+
+        return $result->throwApiException()
             ->getResponse();
     }
 

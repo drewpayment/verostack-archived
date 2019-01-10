@@ -27,7 +27,9 @@ class PayCycleController extends Controller
         if($result->hasError)
             return $result->throwApiException()->getResponse();
 
-        return $result->setData(PayCycle::includeClosed($includeClosed)->get())
+        $cycles = PayCycle::with('payrolls')->includeClosed($includeClosed)->get();
+
+        return $result->setData($cycles)
             ->throwApiException()
             ->getresponse();
     }

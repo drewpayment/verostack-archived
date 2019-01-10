@@ -17,5 +17,10 @@ export class PayrollService {
         const url = `${this.api}/clients/${clientId}/payrolls`;
         return this.http.post<Payroll[]>(url, payload);
     }
+
+    getPayrollList(clientId:number, userId:number):Observable<Payroll[]> {
+        const url = `${this.api}/clients/${clientId}/users/${userId}/payrolls`;
+        return this.http.get<Payroll[]>(url);
+    }
     
 }

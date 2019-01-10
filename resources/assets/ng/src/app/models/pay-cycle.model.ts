@@ -1,4 +1,5 @@
 import { Moment } from 'moment';
+import { Payroll } from './payroll.model';
 
 
 export interface PayCycle {
@@ -8,5 +9,8 @@ export interface PayCycle {
     isPending:boolean,
     isClosed:boolean,
     createdAt?:string | Moment,
-    updatedAt?:string | Moment
+    updatedAt?:string | Moment,
+
+    // DTO ONLY 
+    payrolls?:Payroll[]
 }

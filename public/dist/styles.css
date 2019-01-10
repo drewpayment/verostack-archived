@@ -10842,41 +10842,89 @@ mat-toolbar-row button.vs-toolbar-icon .mat-button-wrapper mat-icon {
   border-top-left-radius: 3px;
   border-top-right-radius: 3px;
   border-top-style: solid; }
+.left-border-primary {
+  padding: 0.75rem 1.5rem 0.5rem;
+  border-left: 5px solid #007bff;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  margin-bottom: 1rem; }
 .border-top-secondary {
   border-top-color: #6c757d;
   border-top-left-radius: 3px;
   border-top-right-radius: 3px;
   border-top-style: solid; }
+.left-border-secondary {
+  padding: 0.75rem 1.5rem 0.5rem;
+  border-left: 5px solid #6c757d;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  margin-bottom: 1rem; }
 .border-top-success {
   border-top-color: #28a745;
   border-top-left-radius: 3px;
   border-top-right-radius: 3px;
   border-top-style: solid; }
+.left-border-success {
+  padding: 0.75rem 1.5rem 0.5rem;
+  border-left: 5px solid #28a745;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  margin-bottom: 1rem; }
 .border-top-info {
   border-top-color: #17a2b8;
   border-top-left-radius: 3px;
   border-top-right-radius: 3px;
   border-top-style: solid; }
+.left-border-info {
+  padding: 0.75rem 1.5rem 0.5rem;
+  border-left: 5px solid #17a2b8;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  margin-bottom: 1rem; }
 .border-top-warning {
   border-top-color: #ffc107;
   border-top-left-radius: 3px;
   border-top-right-radius: 3px;
   border-top-style: solid; }
+.left-border-warning {
+  padding: 0.75rem 1.5rem 0.5rem;
+  border-left: 5px solid #ffc107;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  margin-bottom: 1rem; }
 .border-top-danger {
   border-top-color: #dc3545;
   border-top-left-radius: 3px;
   border-top-right-radius: 3px;
   border-top-style: solid; }
+.left-border-danger {
+  padding: 0.75rem 1.5rem 0.5rem;
+  border-left: 5px solid #dc3545;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  margin-bottom: 1rem; }
 .border-top-light {
   border-top-color: #f8f9fa;
   border-top-left-radius: 3px;
   border-top-right-radius: 3px;
   border-top-style: solid; }
+.left-border-light {
+  padding: 0.75rem 1.5rem 0.5rem;
+  border-left: 5px solid #f8f9fa;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  margin-bottom: 1rem; }
 .border-top-dark {
   border-top-color: #343a40;
   border-top-left-radius: 3px;
   border-top-right-radius: 3px;
   border-top-style: solid; }
+.left-border-dark {
+  padding: 0.75rem 1.5rem 0.5rem;
+  border-left: 5px solid #343a40;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  margin-bottom: 1rem; }
 /***********************************************
  * NEEDED FOR (@MDI/FONTS)                     *
 ***********************************************/
@@ -11586,6 +11634,18 @@ mat-toolbar-row button.vs-toolbar-icon .mat-button-wrapper mat-icon {
 *************************************************/
 .new-customer-form mat-form-field {
   margin: 0 0.5rem 0; }
+/** CARD BASED STYLING */
+.page-header-accent {
+  padding: 0.75rem 1.5rem 0.5rem;
+  border-top: 5px solid #ff9800;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  margin-bottom: 1rem; }
+.mat-card-border-primary {
+  padding: 0.75rem 1.5rem 0.5rem;
+  border-top: 5px solid #3f51b5;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px; }
 .font-sm {
   font-size: .75rem; }
 .font-xs {
@@ -11682,24 +11742,6 @@ button:focus {
 .mat-dialog-container {
   max-height: 80vh !important;
   padding: 1.5rem !important; }
-/** CARD BASED STYLING */
-.page-header-accent {
-  padding: 0.75rem 1.5rem 0.5rem;
-  border-top: 5px solid #ff9800;
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
-  margin-bottom: 1rem; }
-.mat-card-border-primary {
-  padding: 0.75rem 1.5rem 0.5rem;
-  border-top: 5px solid #3f51b5;
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px; }
-.left-border-primary {
-  padding: 0.75rem 1.5rem 0.5rem;
-  border-left: 5px solid #536dfe;
-  border-top-left-radius: 5px;
-  border-bottom-left-radius: 5px;
-  margin-bottom: 1rem; }
 
 
 /*# sourceMappingURL=styles.css.map*/

@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Payroll;
 use App\DailySale;
 use Illuminate\Database\Eloquent\Model;
 
@@ -42,7 +43,10 @@ class PayCycle extends Model
         return $this->hasMany(DailySale::class, 'pay_cycle_id');
     }
 
-
+    public function payrolls()
+    {
+        return $this->hasMany(Payroll::class, 'pay_cycle_id');
+    }
 
     /** QUERY HELPERS */
 

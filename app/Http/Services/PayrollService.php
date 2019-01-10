@@ -2,8 +2,10 @@
 
 namespace App\Http\Services;
 
+use App\Agent;
 use App\Payroll;
 use App\Http\Helpers;
+use App\Http\UserService;
 use App\Http\Resources\ApiResource;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Services\PayrollDetailsService;
@@ -12,11 +14,13 @@ class PayrollService
 {
     protected $helper;
 	protected $detailService;
+    protected $userService;
 
-	public function __construct(Helpers $_helper, PayrollDetailsService $_ds)
+	public function __construct(Helpers $_helper, PayrollDetailsService $_ds, UserService $_us)
 	{
 		$this->helper = $_helper;
         $this->detailService = $_ds;
+        $this->userService = $_us;
 	}
 
     /**
@@ -42,7 +46,9 @@ class PayrollService
         $p->modified_by = isset($payroll->modifiedBy) ? $payroll->modifiedBy : Auth::user()->id;
         $res = $p->save();
 
-        if(!$res) return $result->setToFail('Failed to save the entity.');
+        if(is_null($res)) return $result->setToFail('Failed to save the entity.');
+
+        $p = Payroll::with('payCycle')->byPayroll($p->payroll_id)->first();
 
         if(!is_null($payroll->details)) {
             $detailResults = [];
@@ -64,4 +70,27 @@ class PayrollService
         return $result->setData($p);
     }
 
+    public function getPayrollListByUser($clientId, $userId)
+    {
+        $result = new ApiResource();
+
+        $payrolls = Payroll::with('details')->byClient($clientId)->get();
+
+        if(count($payrolls) < 1) return $result;
+
+        $children = Agent::byManager($userId)->get();
+
+        if(count($children) > 0)
+        {
+            $payrolls = $payrolls->filter(function ($p, $i) use ($children) {
+                return $p->details->contains(function ($d, $j) use ($children) {
+                    return $children->first(function ($c) use ($d) { 
+                            return $c->agent_id == $d->agent_id; 
+                        }) != null; 
+                });
+            });
+        }
+        
+        return $result->setData($payrolls);
+    }
 }

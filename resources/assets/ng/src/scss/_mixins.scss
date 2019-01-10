@@ -1,4 +1,12 @@
 
+@mixin border-color($color, $border) {
+    padding: 0.75rem 1.5rem 0.5rem;
+    border-#{$border}: 5px solid $color;
+    border-top-#{$border}-radius: 5px;
+    border-bottom-#{$border}-radius: 5px;
+    margin-bottom: 1rem;
+}
+
 @each $color, $value in $theme-colors {
   .border-top-#{$color} {
     border-top-color: $value;
@@ -6,4 +14,9 @@
     border-top-right-radius: 3px;
     border-top-style: solid;
   }
+
+  .left-border-#{$color} {
+      @include border-color($value, 'left');
+  }
+
 }

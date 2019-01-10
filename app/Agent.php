@@ -54,6 +54,11 @@ class Agent extends Model
 		return $query->where('agent_id', $agentId);
 	}
 
+    public function scopeByUser($query, $userId)
+    {
+        return $query->where('user_id', $userId);
+    }
+
 	/**
 	 * Get a list of agents by their manager's agent_id.
 	 *
@@ -66,6 +71,18 @@ class Agent extends Model
 	{
 		return $query->where('manager_id', $managerId);
 	}
+
+    /**
+     * Same as scopeManagerId, but for some reason I used terrible naming convention.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param int $managerId
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeByManager($query, $managerId)
+    {
+        return $query->where('manager_id', $managerId);
+    }
 
 	/**
 	 * Filter agents by active status.
@@ -120,5 +137,10 @@ class Agent extends Model
 	{
 		return $this->hasOne(User::class, 'id', 'user_id');
 	}
+
+    public function children()
+    {
+        return $this->hasMany(Agent::class, 'manager_id', 'user_id');
+    }
 
 }

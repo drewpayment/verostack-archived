@@ -78,6 +78,30 @@ export class PayCycleComponent implements OnInit {
         });
     }
 
+    getPayrollEditDate(cycle:PayCycle) {
+        return cycle.payrolls[0].updatedAt;
+    }
+
+    getBorderColor(cycle:PayCycle, borderDirection:string = 'left') {
+        if(this.isPayCycleDue(cycle))
+            return `${borderDirection}-border-danger`;
+        return cycle != null && cycle.payrolls != null && cycle.payrolls.length > 0 
+            ? `${borderDirection}-border-success`
+            : `${borderDirection}-border-primary`;
+    }
+
+    getButtonColor(cycle:PayCycle) {
+        return !(cycle != null && cycle.payrolls != null && cycle.payrolls.length > 0 )
+            ? 'accent'
+            : '';
+    }
+
+    getEditButtonColor(cycle:PayCycle) {
+        return cycle != null && cycle.payrolls != null && cycle.payrolls.length > 0
+            ? ''
+            : 'primary';
+    }
+
     private getActive():void {
         this.displayCycles.next(this._cycles.filter(c => !c.isClosed));
     }
@@ -88,14 +112,26 @@ export class PayCycleComponent implements OnInit {
 
     getCycleStatus(cycle:PayCycle):string {
         let message = '';
+
+        if(cycle.payrolls != null && cycle.payrolls.length > 0)
+            return 'Complete. Ready to release.';
+
+        if(moment(cycle.endDate).isSameOrBefore(moment(), 'day'))
+            return 'Due for release.';
+
         if(!cycle.isPending && !cycle.isClosed) {
-            message = 'The payroll has been created. Get it started now.';
+            message = 'Get started.';
         } else if (cycle.isPending && !cycle.isClosed) {
-            message = 'The payroll has been started. Needs to be closed.';
+            message = 'Pending.';
         } else if (cycle.isClosed) {
-            message = 'Closed.';
+            message = 'Closed with no sales.';
         }
         return message;
+    }
+
+    isPayCycleDue(cycle:PayCycle):boolean {
+        return moment(cycle.endDate).isSameOrBefore(moment(), 'days')
+            && (cycle.payrolls == null || cycle.payrolls.length == 0);
     }
 
     editPayCycle(cycle:PayCycle):void {
@@ -198,7 +234,11 @@ export class PayCycleComponent implements OnInit {
                 this.payrollService.savePayrollList(this.user.sessionUser.sessionClient, sales)
                     .subscribe(payrolls => {
                         this.msg.addMessage('Successfully process payroll.');
-                        console.dir(payrolls);
+                        
+                        if(cycle.payrolls.length)
+                            cycle.payrolls.concat(payrolls);
+                        else 
+                            cycle.payrolls = payrolls;
                     });
             });
     }

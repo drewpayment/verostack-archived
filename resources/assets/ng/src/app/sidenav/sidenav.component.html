@@ -52,10 +52,11 @@
 
     <!-- company admin+ -->
     <ng-container *ngIf="user.role.role >= roleType.companyAdmin">
+        <!-- THIS WHOLE COMPONENT NEEDS TO BE REWORKED AFTER SO MANY SCHEMA CHANGES
         <a mat-list-item routerLink="dashboard" routerLinkActive="mat-router-link-active">
             <i class="material-icons px-1">pie_chart</i>
             <span>Analyze</span>
-        </a>
+        </a> -->
         <a mat-list-item routerLink="daily-tracker" routerLinkActive="mat-router-link-active">
             <i class="material-icons px-1">ballot</i>
             <span>Sales</span>
@@ -65,8 +66,12 @@
             <span>Organization</span>
         </a>
         <a mat-list-item routerLink="admin/pay" routerLinkActive="mat-router-link-active">
-            <i class="material-icons px-1">payment</i>
-            <span>Pay Admin</span>
+            <i class="material-icons px-1">date_range</i>
+            <span>Payroll Cycles</span>
+        </a>
+        <a mat-list-item routerLink="admin/payroll" routerLinkActive="mat-router-link-active">
+            <i class="material-icons px-1">monetization_on</i>
+            <span>Manage Pay</span>
         </a>
         <a mat-list-item class="hide">
             <i class="material-icons px-1">dashboard</i>

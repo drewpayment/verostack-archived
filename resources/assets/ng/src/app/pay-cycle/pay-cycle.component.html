@@ -28,11 +28,11 @@
     <ng-container *ngIf="displayCycles != null && (displayCycles|async).length; else noCycles">
         <div class="row" *ngFor="let cycle of displayCycles|async as cycles">
             <div class="col-md-12">
-                <mat-card class="left-border-primary">
+                <mat-card [ngClass]="getBorderColor(cycle, 'left')">
                     <mat-card-title class="d-flex justify-content-between">
-                        <div>
-                            <span class="font-weight-bold">Status:</span>
-                            {{getCycleStatus(cycle)}}
+                        <div [class.text-danger]="isPayCycleDue(cycle)">
+                            <span class="font-weight-bold">Status: </span>
+                            <small>{{getCycleStatus(cycle)}}</small>
                         </div>
                         <div class="d-flex justify-content-end">
                             <button type="button" mat-button 
@@ -75,7 +75,8 @@
                             <ng-template #payrollReadyToRun>
                                 <button type="button"
                                     mat-button
-                                    color="primary"
+                                    [color]="getEditButtonColor(cycle)"
+                                    [class.text-muted]="cycle?.payrolls?.length > 0"
                                     *ngIf="cycle.isPending && !cycle.isClosed"
                                     (click)="editPayCycle(cycle)"
                                 >
@@ -84,12 +85,14 @@
                                 </button>
                                 <button type="button"
                                     mat-button
-                                    color="accent"
+                                    [color]="getButtonColor(cycle)"
                                     *ngIf="cycle.isPending && !cycle.isClosed"
                                     (click)="processPayroll(cycle)"
                                 >
                                     <mat-icon>sync</mat-icon>
-                                    <span>Process</span>
+                                    <span>
+                                        {{ cycle?.payrolls?.length > 0 ? 'Reprocess' : 'Process' }}
+                                    </span>
                                 </button>
                             </ng-template>
                         </div>
@@ -98,8 +101,13 @@
                         </button> -->
                     </mat-card-title>
                     <mat-card-content>
-                        <span class="font-weight-bold">Dates:</span> 
-                        {{cycle.startDate | date:'shortDate'}} - {{cycle.endDate | date:'shortDate'}}
+                        <p>
+                            <span class="font-weight-bold">Dates:</span> 
+                            {{cycle.startDate | date:'shortDate'}} - {{cycle.endDate | date:'shortDate'}}
+                        </p>
+                        <p class="text-muted" *ngIf="cycle?.payrolls?.length">
+                            Payroll was processed {{getPayrollEditDate(cycle) | date:'short'}}
+                        </p>
                     </mat-card-content>
                 </mat-card>
             </div>

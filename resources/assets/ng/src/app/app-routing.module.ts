@@ -19,6 +19,7 @@ import { EditPayCycleComponent } from '@app/pay-cycle/components/edit-pay-cycle/
 import { CampaignDetailComponent } from '@app/campaigns/components/campaign-detail/campaign-detail.component';
 import { UtilityDetailComponent } from './campaigns/components/utility-detail/utility-detail.component';
 import { NewSaleComponent } from './daily-sale-tracker/components/new-sale/new-sale.component';
+import { PayrollListComponent } from './payroll/payroll-list/payroll-list.component';
 
 const routes: Routes = [
     { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -36,7 +37,8 @@ const routes: Routes = [
         path: 'admin', 
         children: [
             { path: 'pay', component: PayCycleComponent, canActivate: [AuthGuard] },
-            { path: 'pay/edit/:payCycleId', component: EditPayCycleComponent, canActivate: [AuthGuard] }
+            { path: 'pay/edit/:payCycleId', component: EditPayCycleComponent, canActivate: [AuthGuard] },
+            { path: 'payroll', component: PayrollListComponent, canActivate: [AuthGuard] }
         ]
     },
     { path: 'agents', component: AgentComponent, canActivate: [AuthGuard] },

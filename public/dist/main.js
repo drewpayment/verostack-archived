@@ -1145,6 +1145,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _app_campaigns_components_campaign_detail_campaign_detail_component__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! @app/campaigns/components/campaign-detail/campaign-detail.component */ "./src/app/campaigns/components/campaign-detail/campaign-detail.component.ts");
 /* harmony import */ var _campaigns_components_utility_detail_utility_detail_component__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./campaigns/components/utility-detail/utility-detail.component */ "./src/app/campaigns/components/utility-detail/utility-detail.component.ts");
 /* harmony import */ var _daily_sale_tracker_components_new_sale_new_sale_component__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./daily-sale-tracker/components/new-sale/new-sale.component */ "./src/app/daily-sale-tracker/components/new-sale/new-sale.component.ts");
+/* harmony import */ var _payroll_payroll_list_payroll_list_component__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./payroll/payroll-list/payroll-list.component */ "./src/app/payroll/payroll-list/payroll-list.component.ts");
+
 
 
 
@@ -1178,7 +1180,8 @@ var routes = [
         path: 'admin',
         children: [
             { path: 'pay', component: _app_pay_cycle_pay_cycle_component__WEBPACK_IMPORTED_MODULE_12__["PayCycleComponent"], canActivate: [_auth_guard__WEBPACK_IMPORTED_MODULE_7__["AuthGuard"]] },
-            { path: 'pay/edit/:payCycleId', component: _app_pay_cycle_components_edit_pay_cycle_edit_pay_cycle_component__WEBPACK_IMPORTED_MODULE_13__["EditPayCycleComponent"], canActivate: [_auth_guard__WEBPACK_IMPORTED_MODULE_7__["AuthGuard"]] }
+            { path: 'pay/edit/:payCycleId', component: _app_pay_cycle_components_edit_pay_cycle_edit_pay_cycle_component__WEBPACK_IMPORTED_MODULE_13__["EditPayCycleComponent"], canActivate: [_auth_guard__WEBPACK_IMPORTED_MODULE_7__["AuthGuard"]] },
+            { path: 'payroll', component: _payroll_payroll_list_payroll_list_component__WEBPACK_IMPORTED_MODULE_17__["PayrollListComponent"], canActivate: [_auth_guard__WEBPACK_IMPORTED_MODULE_7__["AuthGuard"]] }
         ]
     },
     { path: 'agents', component: _app_agent_agent_component__WEBPACK_IMPORTED_MODULE_10__["AgentComponent"], canActivate: [_auth_guard__WEBPACK_IMPORTED_MODULE_7__["AuthGuard"]] },
@@ -1389,6 +1392,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _daily_sale_tracker_components_new_sale_new_sale_component__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ./daily-sale-tracker/components/new-sale/new-sale.component */ "./src/app/daily-sale-tracker/components/new-sale/new-sale.component.ts");
 /* harmony import */ var _pay_cycle_components_pay_cycle_dialog_pay_cycle_dialog_component__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ./pay-cycle/components/pay-cycle-dialog/pay-cycle-dialog.component */ "./src/app/pay-cycle/components/pay-cycle-dialog/pay-cycle-dialog.component.ts");
 /* harmony import */ var _payroll_payroll_dialog_payroll_dialog_component__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ./payroll/payroll-dialog/payroll-dialog.component */ "./src/app/payroll/payroll-dialog/payroll-dialog.component.ts");
+/* harmony import */ var _payroll_payroll_list_payroll_list_component__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! ./payroll/payroll-list/payroll-list.component */ "./src/app/payroll/payroll-list/payroll-list.component.ts");
+
 
 
 
@@ -1447,7 +1452,8 @@ var AppModule = /** @class */ (function () {
                 _pay_cycle_components_confirm_unpaid_selection_dialog_confirm_unpaid_selection_dialog_component__WEBPACK_IMPORTED_MODULE_22__["ConfirmUnpaidSelectionDialogComponent"],
                 _daily_sale_tracker_components_new_sale_new_sale_component__WEBPACK_IMPORTED_MODULE_23__["NewSaleComponent"],
                 _pay_cycle_components_pay_cycle_dialog_pay_cycle_dialog_component__WEBPACK_IMPORTED_MODULE_24__["PayCycleDialogComponent"],
-                _payroll_payroll_dialog_payroll_dialog_component__WEBPACK_IMPORTED_MODULE_25__["PayrollDialogComponent"]
+                _payroll_payroll_dialog_payroll_dialog_component__WEBPACK_IMPORTED_MODULE_25__["PayrollDialogComponent"],
+                _payroll_payroll_list_payroll_list_component__WEBPACK_IMPORTED_MODULE_26__["PayrollListComponent"]
             ],
             entryComponents: [
                 _agent_edit_agent_dialog_edit_agent_dialog_component__WEBPACK_IMPORTED_MODULE_16__["EditAgentDialogComponent"],
@@ -7608,7 +7614,7 @@ var PayCycleDialogComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n<div class=\"container\">\n    <div class=\"row mb-4\">\n        <div class=\"col-md-12\">\n            <mat-card class=\"page-header-accent\">\n                <mat-card-content class=\"d-flex justify-content-between\">\n                    <h3>\n                        <span>Payroll Administration</span>\n                    </h3>\n                    <div>\n                        <mat-slide-toggle \n                            [checked]=\"showClosed\" \n                            (change)=\"switchDisplay()\"\n                            class=\"my-0 mr-2\"\n                        >\n                            Show Closed\n                        </mat-slide-toggle>\n                        <button type=\"button\" mat-stroked-button color=\"primary\" (click)=\"addPayCycle()\">\n                            <mat-icon inline=\"true\">add</mat-icon>\n                            <span>Payroll</span>\n                        </button>\n                    </div>\n                </mat-card-content>\n            </mat-card>\n        </div>\n    </div>\n\n    <ng-container *ngIf=\"displayCycles != null && (displayCycles|async).length; else noCycles\">\n        <div class=\"row\" *ngFor=\"let cycle of displayCycles|async as cycles\">\n            <div class=\"col-md-12\">\n                <mat-card class=\"left-border-primary\">\n                    <mat-card-title class=\"d-flex justify-content-between\">\n                        <div>\n                            <span class=\"font-weight-bold\">Status:</span>\n                            {{getCycleStatus(cycle)}}\n                        </div>\n                        <div class=\"d-flex justify-content-end\">\n                            <button type=\"button\" mat-button \n                                color=\"primary\" \n                                *ngIf=\"!cycle.isPending && !cycle.isClosed\"\n                                (click)=\"editPayCycle(cycle)\"\n                            >\n                                <mat-icon>play_arrow</mat-icon>\n                                <span>Start</span>\n                            </button>\n                            <ng-container *ngIf=\"!isBeforeEndDate(cycle); else payrollReadyToRun\">\n                                <button\n                                    type=\"button\" mat-button\n                                    color=\"primary\"\n                                    *ngIf=\"cycle.isPending && !cycle.isClosed\"\n                                    (click)=\"editPayCycle(cycle)\"\n                                >\n                                    <mat-icon>redo</mat-icon>\n                                    <span>Continue</span>\n                                </button>\n                                <button\n                                    type=\"button\" mat-button\n                                    color=\"accent\"\n                                    *ngIf=\"cycle.isPending && !cycle.isClosed\"\n                                    (click)=\"closePayCycle(cycle)\"\n                                >\n                                    <mat-icon>check_circle</mat-icon>\n                                    <span>Close</span>\n                                </button>\n                                <button\n                                    type=\"button\" mat-button\n                                    color=\"primary\"\n                                    *ngIf=\"cycle.isClosed\"\n                                    (click)=\"openPayCycle(cycle)\"\n                                >\n                                    <mat-icon>cached</mat-icon>\n                                    <span>Re-Open</span>\n                                </button>\n                            </ng-container>\n                            <ng-template #payrollReadyToRun>\n                                <button type=\"button\"\n                                    mat-button\n                                    color=\"primary\"\n                                    *ngIf=\"cycle.isPending && !cycle.isClosed\"\n                                    (click)=\"editPayCycle(cycle)\"\n                                >\n                                    <mat-icon>create</mat-icon>\n                                    <span>Edit</span>\n                                </button>\n                                <button type=\"button\"\n                                    mat-button\n                                    color=\"accent\"\n                                    *ngIf=\"cycle.isPending && !cycle.isClosed\"\n                                    (click)=\"processPayroll(cycle)\"\n                                >\n                                    <mat-icon>sync</mat-icon>\n                                    <span>Process</span>\n                                </button>\n                            </ng-template>\n                        </div>\n                        <!-- <button type=\"button\" mat-icon-button color=\"primary\" (click)=\"editPayCycle(cycle)\">\n                            <mat-icon>edit</mat-icon>\n                        </button> -->\n                    </mat-card-title>\n                    <mat-card-content>\n                        <span class=\"font-weight-bold\">Dates:</span> \n                        {{cycle.startDate | date:'shortDate'}} - {{cycle.endDate | date:'shortDate'}}\n                    </mat-card-content>\n                </mat-card>\n            </div>\n        </div>\n    </ng-container>\n    <ng-template #noCycles>\n        <div class=\"row\">\n            <div class=\"col-md-12\">\n                <h5 class=\"text-center text-muted font-italic\">No Payroll Cycles to display.</h5>\n            </div>\n        </div>\n    </ng-template>\n    \n</div>"
+module.exports = "\n<div class=\"container\">\n    <div class=\"row mb-4\">\n        <div class=\"col-md-12\">\n            <mat-card class=\"page-header-accent\">\n                <mat-card-content class=\"d-flex justify-content-between\">\n                    <h3>\n                        <span>Payroll Administration</span>\n                    </h3>\n                    <div>\n                        <mat-slide-toggle \n                            [checked]=\"showClosed\" \n                            (change)=\"switchDisplay()\"\n                            class=\"my-0 mr-2\"\n                        >\n                            Show Closed\n                        </mat-slide-toggle>\n                        <button type=\"button\" mat-stroked-button color=\"primary\" (click)=\"addPayCycle()\">\n                            <mat-icon inline=\"true\">add</mat-icon>\n                            <span>Payroll</span>\n                        </button>\n                    </div>\n                </mat-card-content>\n            </mat-card>\n        </div>\n    </div>\n\n    <ng-container *ngIf=\"displayCycles != null && (displayCycles|async).length; else noCycles\">\n        <div class=\"row\" *ngFor=\"let cycle of displayCycles|async as cycles\">\n            <div class=\"col-md-12\">\n                <mat-card [ngClass]=\"getBorderColor(cycle, 'left')\">\n                    <mat-card-title class=\"d-flex justify-content-between\">\n                        <div [class.text-danger]=\"isPayCycleDue(cycle)\">\n                            <span class=\"font-weight-bold\">Status: </span>\n                            <small>{{getCycleStatus(cycle)}}</small>\n                        </div>\n                        <div class=\"d-flex justify-content-end\">\n                            <button type=\"button\" mat-button \n                                color=\"primary\" \n                                *ngIf=\"!cycle.isPending && !cycle.isClosed\"\n                                (click)=\"editPayCycle(cycle)\"\n                            >\n                                <mat-icon>play_arrow</mat-icon>\n                                <span>Start</span>\n                            </button>\n                            <ng-container *ngIf=\"!isBeforeEndDate(cycle); else payrollReadyToRun\">\n                                <button\n                                    type=\"button\" mat-button\n                                    color=\"primary\"\n                                    *ngIf=\"cycle.isPending && !cycle.isClosed\"\n                                    (click)=\"editPayCycle(cycle)\"\n                                >\n                                    <mat-icon>redo</mat-icon>\n                                    <span>Continue</span>\n                                </button>\n                                <button\n                                    type=\"button\" mat-button\n                                    color=\"accent\"\n                                    *ngIf=\"cycle.isPending && !cycle.isClosed\"\n                                    (click)=\"closePayCycle(cycle)\"\n                                >\n                                    <mat-icon>check_circle</mat-icon>\n                                    <span>Close</span>\n                                </button>\n                                <button\n                                    type=\"button\" mat-button\n                                    color=\"primary\"\n                                    *ngIf=\"cycle.isClosed\"\n                                    (click)=\"openPayCycle(cycle)\"\n                                >\n                                    <mat-icon>cached</mat-icon>\n                                    <span>Re-Open</span>\n                                </button>\n                            </ng-container>\n                            <ng-template #payrollReadyToRun>\n                                <button type=\"button\"\n                                    mat-button\n                                    [color]=\"getEditButtonColor(cycle)\"\n                                    [class.text-muted]=\"cycle?.payrolls?.length > 0\"\n                                    *ngIf=\"cycle.isPending && !cycle.isClosed\"\n                                    (click)=\"editPayCycle(cycle)\"\n                                >\n                                    <mat-icon>create</mat-icon>\n                                    <span>Edit</span>\n                                </button>\n                                <button type=\"button\"\n                                    mat-button\n                                    [color]=\"getButtonColor(cycle)\"\n                                    *ngIf=\"cycle.isPending && !cycle.isClosed\"\n                                    (click)=\"processPayroll(cycle)\"\n                                >\n                                    <mat-icon>sync</mat-icon>\n                                    <span>\n                                        {{ cycle?.payrolls?.length > 0 ? 'Reprocess' : 'Process' }}\n                                    </span>\n                                </button>\n                            </ng-template>\n                        </div>\n                        <!-- <button type=\"button\" mat-icon-button color=\"primary\" (click)=\"editPayCycle(cycle)\">\n                            <mat-icon>edit</mat-icon>\n                        </button> -->\n                    </mat-card-title>\n                    <mat-card-content>\n                        <p>\n                            <span class=\"font-weight-bold\">Dates:</span> \n                            {{cycle.startDate | date:'shortDate'}} - {{cycle.endDate | date:'shortDate'}}\n                        </p>\n                        <p class=\"text-muted\" *ngIf=\"cycle?.payrolls?.length\">\n                            Payroll was processed {{getPayrollEditDate(cycle) | date:'short'}}\n                        </p>\n                    </mat-card-content>\n                </mat-card>\n            </div>\n        </div>\n    </ng-container>\n    <ng-template #noCycles>\n        <div class=\"row\">\n            <div class=\"col-md-12\">\n                <h5 class=\"text-center text-muted font-italic\">No Payroll Cycles to display.</h5>\n            </div>\n        </div>\n    </ng-template>\n    \n</div>"
 
 /***/ }),
 
@@ -7708,6 +7714,27 @@ var PayCycleComponent = /** @class */ (function () {
             });
         });
     };
+    PayCycleComponent.prototype.getPayrollEditDate = function (cycle) {
+        return cycle.payrolls[0].updatedAt;
+    };
+    PayCycleComponent.prototype.getBorderColor = function (cycle, borderDirection) {
+        if (borderDirection === void 0) { borderDirection = 'left'; }
+        if (this.isPayCycleDue(cycle))
+            return borderDirection + "-border-danger";
+        return cycle != null && cycle.payrolls != null && cycle.payrolls.length > 0
+            ? borderDirection + "-border-success"
+            : borderDirection + "-border-primary";
+    };
+    PayCycleComponent.prototype.getButtonColor = function (cycle) {
+        return !(cycle != null && cycle.payrolls != null && cycle.payrolls.length > 0)
+            ? 'accent'
+            : '';
+    };
+    PayCycleComponent.prototype.getEditButtonColor = function (cycle) {
+        return cycle != null && cycle.payrolls != null && cycle.payrolls.length > 0
+            ? ''
+            : 'primary';
+    };
     PayCycleComponent.prototype.getActive = function () {
         this.displayCycles.next(this._cycles.filter(function (c) { return !c.isClosed; }));
     };
@@ -7716,16 +7743,24 @@ var PayCycleComponent = /** @class */ (function () {
     };
     PayCycleComponent.prototype.getCycleStatus = function (cycle) {
         var message = '';
+        if (cycle.payrolls != null && cycle.payrolls.length > 0)
+            return 'Complete. Ready to release.';
+        if (moment__WEBPACK_IMPORTED_MODULE_11__(cycle.endDate).isSameOrBefore(moment__WEBPACK_IMPORTED_MODULE_11__(), 'day'))
+            return 'Due for release.';
         if (!cycle.isPending && !cycle.isClosed) {
-            message = 'The payroll has been created. Get it started now.';
+            message = 'Get started.';
         }
         else if (cycle.isPending && !cycle.isClosed) {
-            message = 'The payroll has been started. Needs to be closed.';
+            message = 'Pending.';
         }
         else if (cycle.isClosed) {
-            message = 'Closed.';
+            message = 'Closed with no sales.';
         }
         return message;
+    };
+    PayCycleComponent.prototype.isPayCycleDue = function (cycle) {
+        return moment__WEBPACK_IMPORTED_MODULE_11__(cycle.endDate).isSameOrBefore(moment__WEBPACK_IMPORTED_MODULE_11__(), 'days')
+            && (cycle.payrolls == null || cycle.payrolls.length == 0);
     };
     PayCycleComponent.prototype.editPayCycle = function (cycle) {
         this.payCycleService.cycle = cycle;
@@ -7775,7 +7810,6 @@ var PayCycleComponent = /** @class */ (function () {
                     details: []
                 };
                 var uniqueAgents = filteredSales.map(function (fs) { return fs.agentId; }).filter(function (fs, i, a) { return a.indexOf(fs) === i; });
-                console.dir(uniqueAgents);
                 uniqueAgents.forEach(function (ua) {
                     var agentSales = filteredSales.filter(function (fs) { return fs.agentId == ua; });
                     var grossTotal = agentSales.length * (campaign.compensation || 0);
@@ -7807,7 +7841,10 @@ var PayCycleComponent = /** @class */ (function () {
             _this.payrollService.savePayrollList(_this.user.sessionUser.sessionClient, sales)
                 .subscribe(function (payrolls) {
                 _this.msg.addMessage('Successfully process payroll.');
-                console.dir(payrolls);
+                if (cycle.payrolls.length)
+                    cycle.payrolls.concat(payrolls);
+                else
+                    cycle.payrolls = payrolls;
             });
         });
     };
@@ -7997,8 +8034,7 @@ __webpack_require__.r(__webpack_exports__);
 var PayrollDialogComponent = /** @class */ (function () {
     function PayrollDialogComponent() {
     }
-    PayrollDialogComponent.prototype.ngOnInit = function () {
-    };
+    PayrollDialogComponent.prototype.ngOnInit = function () { };
     PayrollDialogComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
             selector: 'vs-payroll-dialog',
@@ -8008,6 +8044,89 @@ var PayrollDialogComponent = /** @class */ (function () {
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [])
     ], PayrollDialogComponent);
     return PayrollDialogComponent;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/payroll/payroll-list/payroll-list.component.html":
+/*!******************************************************************!*\
+  !*** ./src/app/payroll/payroll-list/payroll-list.component.html ***!
+  \******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<p>\n  payroll-list works!\n</p>\n<ng-container *ngIf=\"(payrolls$|async) != null; else noPayrolls\">\n    <div *ngFor=\"let p of (payrolls$|async); let i = index;\">\n        {{ i + 1 }}: {{ p.weekEnding | date:'short' }}\n    </div>\n</ng-container>\n<ng-template #noPayrolls>\n    <div>\n        Oh no! There aren't any payrolls ready to work with... \n    </div>\n</ng-template>"
+
+/***/ }),
+
+/***/ "./src/app/payroll/payroll-list/payroll-list.component.scss":
+/*!******************************************************************!*\
+  !*** ./src/app/payroll/payroll-list/payroll-list.component.scss ***!
+  \******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzcmMvYXBwL3BheXJvbGwvcGF5cm9sbC1saXN0L3BheXJvbGwtbGlzdC5jb21wb25lbnQuc2NzcyJ9 */"
+
+/***/ }),
+
+/***/ "./src/app/payroll/payroll-list/payroll-list.component.ts":
+/*!****************************************************************!*\
+  !*** ./src/app/payroll/payroll-list/payroll-list.component.ts ***!
+  \****************************************************************/
+/*! exports provided: PayrollListComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PayrollListComponent", function() { return PayrollListComponent; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
+/* harmony import */ var _app_message_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @app/message.service */ "./src/app/message.service.ts");
+/* harmony import */ var _payroll_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../payroll.service */ "./src/app/payroll/payroll.service.ts");
+/* harmony import */ var _app_session_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @app/session.service */ "./src/app/session.service.ts");
+
+
+
+
+
+
+var PayrollListComponent = /** @class */ (function () {
+    function PayrollListComponent(msg, service, session) {
+        this.msg = msg;
+        this.service = service;
+        this.session = session;
+        this.payrolls$ = new rxjs__WEBPACK_IMPORTED_MODULE_2__["BehaviorSubject"](null);
+    }
+    PayrollListComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this.session.getUserItem().subscribe(function (user) {
+            _this.user = user;
+            _this.initializeComponent();
+        });
+    };
+    PayrollListComponent.prototype.initializeComponent = function () {
+        var _this = this;
+        this.service.getPayrollList(this.user.sessionUser.sessionClient, this.user.id)
+            .subscribe(function (payrolls) {
+            _this._payrolls = payrolls;
+            _this.payrolls$.next(payrolls);
+        });
+    };
+    PayrollListComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
+            selector: 'vs-payroll-list',
+            template: __webpack_require__(/*! ./payroll-list.component.html */ "./src/app/payroll/payroll-list/payroll-list.component.html"),
+            styles: [__webpack_require__(/*! ./payroll-list.component.scss */ "./src/app/payroll/payroll-list/payroll-list.component.scss")]
+        }),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_app_message_service__WEBPACK_IMPORTED_MODULE_3__["MessageService"],
+            _payroll_service__WEBPACK_IMPORTED_MODULE_4__["PayrollService"],
+            _app_session_service__WEBPACK_IMPORTED_MODULE_5__["SessionService"]])
+    ], PayrollListComponent);
+    return PayrollListComponent;
 }());
 
 
@@ -8040,6 +8159,10 @@ var PayrollService = /** @class */ (function () {
     PayrollService.prototype.savePayrollList = function (clientId, payload) {
         var url = this.api + "/clients/" + clientId + "/payrolls";
         return this.http.post(url, payload);
+    };
+    PayrollService.prototype.getPayrollList = function (clientId, userId) {
+        var url = this.api + "/clients/" + clientId + "/users/" + userId + "/payrolls";
+        return this.http.get(url);
     };
     PayrollService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
@@ -9125,7 +9248,7 @@ var SharedModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<mat-toolbar color=\"primary\" *ngIf=\"user != null\">\n    <mat-toolbar-row>\n        <i class=\"material-icons md-48 mt-3\">account_circle</i>\n        <span class=\"fill-remaining-space\"></span>\n        <button mat-button (click)=\"toggleSidenav()\" class=\"sidenav-close\">\n            <i class=\"material-icons\">close</i>\n        </button>\n    </mat-toolbar-row>\n    <mat-toolbar-row class=\"d-flex flex-column align-items-start mb-2 mt-3\">\n        {{user.firstName}} {{user.lastName}}\n        <small>{{user.email}}</small>\n    </mat-toolbar-row>\n</mat-toolbar>\n\n<mat-nav-list *ngIf=\"user != null\">\n    <!-- all users -->\n    \n    <a mat-list-item routerLink=\"my-information\" routerLinkActive=\"mat-router-link-active\">\n        <i class=\"material-icons px-1\">info_outline</i>\n        <span>My Information</span>\n    </a>\n    <a mat-list-item \n        routerLink=\"daily-tracker\" \n        routerLinkActive=\"mat-router-link-active\"\n        *ngIf=\"user.role.role < roleType.companyAdmin && user.role.isSalesAdmin\"\n    >\n        <i class=\"material-icons px-1\">ballot</i>\n        <span>Daily Tracker</span>\n    </a>\n\n    <!-- agents only -->\n    <ng-template *ngIf=\"user.role.role < roleType.companyAdmin\">\n        <a mat-list-item routerLink=\"dashboard\" routerLinkActive=\"mat-router-link-active\">\n            <i class=\"material-icons px-1\">pie_chart</i>\n            <span>My Work</span>\n        </a>\n        <a mat-list-item class=\"hide\">\n            <i class=\"material-icons px-1\">monetization_on</i>\n            <span>My Pay</span>\n        </a>\n        <a mat-list-item class=\"hide\">\n            <i class=\"material-icons px-1\">library_books</i>\n            <span>My Documents</span>\n        </a>\n        <a mat-list-item class=\"hide\">\n            <i class=\"material-icons px-1\">chat_bubble</i>\n            <span>Messages</span>\n        </a>\n    </ng-template>\n\n    <!-- do we have hr level links? -->\n\n    <!-- company admin+ -->\n    <ng-container *ngIf=\"user.role.role >= roleType.companyAdmin\">\n        <a mat-list-item routerLink=\"dashboard\" routerLinkActive=\"mat-router-link-active\">\n            <i class=\"material-icons px-1\">pie_chart</i>\n            <span>Analyze</span>\n        </a>\n        <a mat-list-item routerLink=\"daily-tracker\" routerLinkActive=\"mat-router-link-active\">\n            <i class=\"material-icons px-1\">ballot</i>\n            <span>Sales</span>\n        </a>\n        <a mat-list-item routerLink=\"client-information\" routerLinkActive=\"mat-router-link-active\">\n            <i class=\"material-icons px-1\">business</i>\n            <span>Organization</span>\n        </a>\n        <a mat-list-item routerLink=\"admin/pay\" routerLinkActive=\"mat-router-link-active\">\n            <i class=\"material-icons px-1\">payment</i>\n            <span>Pay Admin</span>\n        </a>\n        <a mat-list-item class=\"hide\">\n            <i class=\"material-icons px-1\">dashboard</i>\n            <span>Blog</span>\n        </a>\n        <a mat-list-item routerLink=\"agents\" routerLinkActive=\"mat-router-link-active\">\n            <i class=\"material-icons px-1\">person</i>\n            <span>Agents</span>\n        </a>\n        <a mat-list-item class=\"hide\">\n            <i class=\"material-icons px-1\">monetization_on</i>\n            <span>Pay Status</span>\n        </a>\n        <!-- <a mat-list-item routerLink=\"payroll-tools\" routerLinkActive=\"mat-router-link-active\">\n      <i class=\"material-icons px-1\">build</i>\n      <span>Payroll Entry</span>\n    </a> -->\n        <a mat-list-item class=\"hide\">\n            <i class=\"material-icons px-1\">assignment_ind</i>\n            <span>Overrides</span>\n        </a>\n        <a mat-list-item routerLink=\"campaigns\" routerLinkActive=\"mat-router-link-active\">\n            <i class=\"material-icons px-1\">assignment</i>\n            <span>Campaigns</span>\n        </a>\n        <a mat-list-item class=\"hide\">\n            <i class=\"material-icons px-1\">library_books</i>\n            <span>Documents</span>\n        </a>\n        <a mat-list-item class=\"hide\">\n            <i class=\"material-icons px-1\">face</i>\n            <span>Customers</span>\n        </a>\n        <!-- end of admin links -->\n    </ng-container>\n\n    <!-- all users -->\n    <a mat-list-item class=\"hide\">\n        <i class=\"material-icons px-1\">info_outline</i>\n        <span>About</span>\n    </a>\n</mat-nav-list>"
+module.exports = "<mat-toolbar color=\"primary\" *ngIf=\"user != null\">\n    <mat-toolbar-row>\n        <i class=\"material-icons md-48 mt-3\">account_circle</i>\n        <span class=\"fill-remaining-space\"></span>\n        <button mat-button (click)=\"toggleSidenav()\" class=\"sidenav-close\">\n            <i class=\"material-icons\">close</i>\n        </button>\n    </mat-toolbar-row>\n    <mat-toolbar-row class=\"d-flex flex-column align-items-start mb-2 mt-3\">\n        {{user.firstName}} {{user.lastName}}\n        <small>{{user.email}}</small>\n    </mat-toolbar-row>\n</mat-toolbar>\n\n<mat-nav-list *ngIf=\"user != null\">\n    <!-- all users -->\n    \n    <a mat-list-item routerLink=\"my-information\" routerLinkActive=\"mat-router-link-active\">\n        <i class=\"material-icons px-1\">info_outline</i>\n        <span>My Information</span>\n    </a>\n    <a mat-list-item \n        routerLink=\"daily-tracker\" \n        routerLinkActive=\"mat-router-link-active\"\n        *ngIf=\"user.role.role < roleType.companyAdmin && user.role.isSalesAdmin\"\n    >\n        <i class=\"material-icons px-1\">ballot</i>\n        <span>Daily Tracker</span>\n    </a>\n\n    <!-- agents only -->\n    <ng-template *ngIf=\"user.role.role < roleType.companyAdmin\">\n        <a mat-list-item routerLink=\"dashboard\" routerLinkActive=\"mat-router-link-active\">\n            <i class=\"material-icons px-1\">pie_chart</i>\n            <span>My Work</span>\n        </a>\n        <a mat-list-item class=\"hide\">\n            <i class=\"material-icons px-1\">monetization_on</i>\n            <span>My Pay</span>\n        </a>\n        <a mat-list-item class=\"hide\">\n            <i class=\"material-icons px-1\">library_books</i>\n            <span>My Documents</span>\n        </a>\n        <a mat-list-item class=\"hide\">\n            <i class=\"material-icons px-1\">chat_bubble</i>\n            <span>Messages</span>\n        </a>\n    </ng-template>\n\n    <!-- do we have hr level links? -->\n\n    <!-- company admin+ -->\n    <ng-container *ngIf=\"user.role.role >= roleType.companyAdmin\">\n        <!-- THIS WHOLE COMPONENT NEEDS TO BE REWORKED AFTER SO MANY SCHEMA CHANGES\n        <a mat-list-item routerLink=\"dashboard\" routerLinkActive=\"mat-router-link-active\">\n            <i class=\"material-icons px-1\">pie_chart</i>\n            <span>Analyze</span>\n        </a> -->\n        <a mat-list-item routerLink=\"daily-tracker\" routerLinkActive=\"mat-router-link-active\">\n            <i class=\"material-icons px-1\">ballot</i>\n            <span>Sales</span>\n        </a>\n        <a mat-list-item routerLink=\"client-information\" routerLinkActive=\"mat-router-link-active\">\n            <i class=\"material-icons px-1\">business</i>\n            <span>Organization</span>\n        </a>\n        <a mat-list-item routerLink=\"admin/pay\" routerLinkActive=\"mat-router-link-active\">\n            <i class=\"material-icons px-1\">date_range</i>\n            <span>Payroll Cycles</span>\n        </a>\n        <a mat-list-item routerLink=\"admin/payroll\" routerLinkActive=\"mat-router-link-active\">\n            <i class=\"material-icons px-1\">monetization_on</i>\n            <span>Manage Pay</span>\n        </a>\n        <a mat-list-item class=\"hide\">\n            <i class=\"material-icons px-1\">dashboard</i>\n            <span>Blog</span>\n        </a>\n        <a mat-list-item routerLink=\"agents\" routerLinkActive=\"mat-router-link-active\">\n            <i class=\"material-icons px-1\">person</i>\n            <span>Agents</span>\n        </a>\n        <a mat-list-item class=\"hide\">\n            <i class=\"material-icons px-1\">monetization_on</i>\n            <span>Pay Status</span>\n        </a>\n        <!-- <a mat-list-item routerLink=\"payroll-tools\" routerLinkActive=\"mat-router-link-active\">\n      <i class=\"material-icons px-1\">build</i>\n      <span>Payroll Entry</span>\n    </a> -->\n        <a mat-list-item class=\"hide\">\n            <i class=\"material-icons px-1\">assignment_ind</i>\n            <span>Overrides</span>\n        </a>\n        <a mat-list-item routerLink=\"campaigns\" routerLinkActive=\"mat-router-link-active\">\n            <i class=\"material-icons px-1\">assignment</i>\n            <span>Campaigns</span>\n        </a>\n        <a mat-list-item class=\"hide\">\n            <i class=\"material-icons px-1\">library_books</i>\n            <span>Documents</span>\n        </a>\n        <a mat-list-item class=\"hide\">\n            <i class=\"material-icons px-1\">face</i>\n            <span>Customers</span>\n        </a>\n        <!-- end of admin links -->\n    </ng-container>\n\n    <!-- all users -->\n    <a mat-list-item class=\"hide\">\n        <i class=\"material-icons px-1\">info_outline</i>\n        <span>About</span>\n    </a>\n</mat-nav-list>"
 
 /***/ }),
 
