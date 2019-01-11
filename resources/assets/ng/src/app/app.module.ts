@@ -24,6 +24,7 @@ import { NewSaleComponent } from './daily-sale-tracker/components/new-sale/new-s
 import { PayCycleDialogComponent } from './pay-cycle/components/pay-cycle-dialog/pay-cycle-dialog.component';
 import { PayrollDialogComponent } from './payroll/payroll-dialog/payroll-dialog.component';
 import { PayrollListComponent } from './payroll/payroll-list/payroll-list.component';
+import { PayrollFilterDialogComponent } from './payroll/payroll-filter-dialog/payroll-filter-dialog.component';
 
 @NgModule({
   imports: [
@@ -54,7 +55,8 @@ import { PayrollListComponent } from './payroll/payroll-list/payroll-list.compon
     NewSaleComponent,
     PayCycleDialogComponent,
     PayrollDialogComponent,
-    PayrollListComponent
+    PayrollListComponent,
+    PayrollFilterDialogComponent
   ],
   entryComponents: [
     EditAgentDialogComponent,

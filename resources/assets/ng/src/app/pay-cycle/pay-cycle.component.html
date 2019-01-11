@@ -5,7 +5,7 @@
             <mat-card class="page-header-accent">
                 <mat-card-content class="d-flex justify-content-between">
                     <h3>
-                        <span>Payroll Administration</span>
+                        <span>Payroll Cycle Management</span>
                     </h3>
                     <div>
                         <mat-slide-toggle 
@@ -59,8 +59,8 @@
                                     *ngIf="cycle.isPending && !cycle.isClosed"
                                     (click)="closePayCycle(cycle)"
                                 >
-                                    <mat-icon>check_circle</mat-icon>
-                                    <span>Close</span>
+                                    <mat-icon>archive</mat-icon>
+                                    <span>Archive</span>
                                 </button>
                                 <button
                                     type="button" mat-button
@@ -68,7 +68,7 @@
                                     *ngIf="cycle.isClosed"
                                     (click)="openPayCycle(cycle)"
                                 >
-                                    <mat-icon>cached</mat-icon>
+                                    <mat-icon>unarchive</mat-icon>
                                     <span>Re-Open</span>
                                 </button>
                             </ng-container>
@@ -85,7 +85,7 @@
                                 </button>
                                 <button type="button"
                                     mat-button
-                                    [color]="getButtonColor(cycle)"
+                                    color="primary"
                                     *ngIf="cycle.isPending && !cycle.isClosed"
                                     (click)="processPayroll(cycle)"
                                 >
@@ -93,6 +93,24 @@
                                     <span>
                                         {{ cycle?.payrolls?.length > 0 ? 'Reprocess' : 'Process' }}
                                     </span>
+                                </button>
+                                <button
+                                    type="button" mat-button
+                                    color="accent"
+                                    *ngIf="cycle.isPending && !cycle.isClosed"
+                                    (click)="closePayCycle(cycle)"
+                                >
+                                    <mat-icon>archive</mat-icon>
+                                    <span>Archive</span>
+                                </button>
+                                <button
+                                    type="button" mat-button
+                                    color="primary"
+                                    *ngIf="cycle.isClosed"
+                                    (click)="openPayCycle(cycle)"
+                                >
+                                    <mat-icon>unarchive</mat-icon>
+                                    <span>Re-Open</span>
                                 </button>
                             </ng-template>
                         </div>

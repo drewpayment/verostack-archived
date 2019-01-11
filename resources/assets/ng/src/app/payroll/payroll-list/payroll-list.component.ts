@@ -15,6 +15,7 @@ export class PayrollListComponent implements OnInit {
     user:User;
     private _payrolls:Payroll[];
     payrolls$ = new BehaviorSubject<Payroll[]>(null);
+    isFilterBtnActive:boolean = false;
 
     constructor(
         private msg:MessageService,
@@ -27,6 +28,10 @@ export class PayrollListComponent implements OnInit {
             this.user = user;
             this.initializeComponent();
         });
+    }
+
+    filterBtnClick() {
+        this.isFilterBtnActive = !this.isFilterBtnActive;
     }
 
     private initializeComponent() {

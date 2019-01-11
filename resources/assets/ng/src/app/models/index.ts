@@ -23,3 +23,4 @@ export * from './auth-response.model';
 export * from './utility.model';
 export * from './payroll.model';
 export * from './payroll-detail.model';
+export * from './payroll-filter.model';

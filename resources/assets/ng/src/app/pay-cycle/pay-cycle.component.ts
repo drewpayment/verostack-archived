@@ -92,7 +92,7 @@ export class PayCycleComponent implements OnInit {
 
     getButtonColor(cycle:PayCycle) {
         return !(cycle != null && cycle.payrolls != null && cycle.payrolls.length > 0 )
-            ? 'accent'
+            ? 'primary'
             : '';
     }
 

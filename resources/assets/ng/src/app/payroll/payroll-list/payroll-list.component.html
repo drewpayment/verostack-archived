@@ -1,13 +1,46 @@
-<p>
-  payroll-list works!
-</p>
-<ng-container *ngIf="(payrolls$|async) != null; else noPayrolls">
-    <div *ngFor="let p of (payrolls$|async); let i = index;">
-        {{ i + 1 }}: {{ p.weekEnding | date:'short' }}
+
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <mat-card class="page-header-accent">
+                <mat-card-content class="d-flex justify-content-between">
+                    <h3>
+                        <span>Payroll Release Schedule</span>
+                    </h3>
+                    <div>
+                        <!-- <mat-slide-toggle 
+                            [checked]="showClosed" 
+                            (change)="switchDisplay()"
+                            class="my-0 mr-2"
+                        >
+                            Show Closed
+                        </mat-slide-toggle> -->
+                        <button type="button"
+                            mat-icon-button
+                            color="primary"
+                            [class.active]="isFilterBtnActive"
+                            (click)="filterBtnClick()"
+                        >
+                            <mat-icon>filter_list</mat-icon>
+                        </button>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
     </div>
-</ng-container>
-<ng-template #noPayrolls>
-    <div>
-        Oh no! There aren't any payrolls ready to work with... 
+
+    <div class="row">
+        <div class="col-md-12">
+            <ng-container *ngIf="(payrolls$|async) != null; else noPayrolls">
+                <div *ngFor="let p of (payrolls$|async); let i = index;">
+                    {{ i + 1 }}: {{ p.weekEnding | date:'short' }}
+                </div>
+            </ng-container>
+            <ng-template #noPayrolls>
+                <div>
+                    Oh no! There aren't any payrolls ready to work with... 
+                </div>
+            </ng-template>
+        </div>
     </div>
-</ng-template>
+</div>
