@@ -1,8 +1,110 @@
 
-<h3 mat-dialog-title>Payroll Release Filters</h3>
+<h3 mat-dialog-title>Narrow By:</h3>
 <div mat-dialog-content>
-    <!-- let's put the form here -->
+    <div [formGroup]="f">
+        <div class="row">
+            <div class="col-md-6">
+                <mat-form-field>
+                    <input type="text" matInput 
+                        [matDatepicker]="startDatepicker"
+                        placeholder="Start"
+                        formControlName="startDate"
+                        required
+                    />
+                    <mat-datepicker-toggle matSuffix [for]="startDatepicker"></mat-datepicker-toggle>
+                    <mat-datepicker #startDatepicker></mat-datepicker>
+                    <mat-error *ngIf="f.get('startDate').hasError('required')">
+                        Please select a valid start date.
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="col-md-6">
+                <mat-form-field>
+                    <input type="text" matInput 
+                        [matDatepicker]="endDatepicker"
+                        placeholder="End"
+                        formControlName="endDate"
+                        required
+                    />
+                    <mat-datepicker-toggle matSuffix [for]="endDatepicker"></mat-datepicker-toggle>
+                    <mat-datepicker #endDatepicker></mat-datepicker>
+                    <mat-error *ngIf="f.get('endDate').hasError('required')">
+                        Please select a valid end date.
+                    </mat-error>
+                </mat-form-field>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-6">
+                <mat-form-field>
+                    <mat-select placeholder="Agent" formControlName="agent">
+                        <ng-container *ngIf="agents != null">
+                            <mat-option *ngFor="let a of agents" [value]="a.agentId">
+                                {{a.firstName}} {{a.lastName}}
+                            </mat-option>
+                        </ng-container>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="col-md-6">
+                <mat-form-field>
+                    <input type="text" matInput
+                        [matDatepicker]="weekEnding"
+                        placeholder="Week Ending"
+                        formControlName="weekEnding"
+                    />
+                    <mat-datepicker-toggle matSuffix [for]="weekEnding"></mat-datepicker-toggle>
+                    <mat-datepicker #weekEnding></mat-datepicker>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <mat-form-field>
+                    <mat-select placeholder="Campaign" formControlName="campaign">
+                        <ng-container *ngIf="campaigns != null">
+                            <mat-option *ngFor="let c of campaigns" [value]="c.campaignId">
+                                {{c.name}} 
+                                <span class="font-weight-bold"
+                                    [class.text-danger]="!c.active"
+                                    [class.text-muted]="c.active"
+                                >({{c.active ? 'A' : 'I'}})</span>
+                            </mat-option>
+                        </ng-container>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="col-md-6">
+                <mat-form-field>
+                    <input type="text" matInput
+                        [matDatepicker]="automatedRelease"
+                        placeholder="Release"
+                        formControlName="automatedRelease"
+                    />
+                    <mat-datepicker-toggle matSuffix [for]="automatedRelease"></mat-datepicker-toggle>
+                    <mat-datepicker #automatedRelease></mat-datepicker>
+                </mat-form-field>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-6">
+                <mat-checkbox formControlName="isAutomated">
+                    Auto Released
+                </mat-checkbox>
+            </div>
+            <div class="col-md-6">
+                 <mat-checkbox formControlName="isReleased">
+                    Status: Released        
+                </mat-checkbox>
+            </div>
+        </div>
+        
+    </div>
 </div>
-<div mat-dialog-actions>
+<div mat-dialog-actions class="d-flex justify-content-between">
     <button mat-button (click)="onNoClick()">Cancel</button>
+    <button mat-button color="primary" (click)="save()">Save</button>    
 </div>

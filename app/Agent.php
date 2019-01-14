@@ -2,6 +2,8 @@
 
 namespace App;
 
+use App\Payroll;
+use App\PayrollDetail;
 use Illuminate\Database\Eloquent\Model;
 
 class Agent extends Model
@@ -138,9 +140,24 @@ class Agent extends Model
 		return $this->hasOne(User::class, 'id', 'user_id');
 	}
 
+    /**
+     * Manager of the following agents...
+     *
+     * @return void
+     */
     public function children()
     {
         return $this->hasMany(Agent::class, 'manager_id', 'user_id');
+    }
+
+    public function payrollDetails()
+    {
+        return $this->hasMany(PayrollDetail::class, 'payroll_details_id');
+    }
+
+    public function payrolls()
+    {
+        return $this->hasManyThrough(Payroll::class, PayrollDetail::class);
     }
 
 }

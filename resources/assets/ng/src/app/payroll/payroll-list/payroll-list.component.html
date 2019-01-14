@@ -3,26 +3,46 @@
     <div class="row mb-4">
         <div class="col-md-12">
             <mat-card class="page-header-accent">
-                <mat-card-content class="d-flex justify-content-between">
-                    <h3>
-                        <span>Payroll Release Schedule</span>
-                    </h3>
-                    <div>
-                        <!-- <mat-slide-toggle 
-                            [checked]="showClosed" 
-                            (change)="switchDisplay()"
-                            class="my-0 mr-2"
-                        >
-                            Show Closed
-                        </mat-slide-toggle> -->
-                        <button type="button"
-                            mat-icon-button
-                            color="primary"
-                            [class.active]="isFilterBtnActive"
-                            (click)="filterBtnClick()"
-                        >
-                            <mat-icon>filter_list</mat-icon>
-                        </button>
+                <mat-card-content>
+                    <div class="d-flex justify-content-between">
+                        <h3>
+                            <span>Payroll Release Schedule</span>
+                        </h3>
+                        <div *ngLet="isFilterBtnActive$|async as active">
+                            <button type="button"
+                                mat-icon-button
+                                color="primary"
+                                [class.active]="active"
+                                (click)="filterBtnClick()"
+                            >
+                                <mat-icon>filter_list</mat-icon>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="text-muted d-flex align-items-center">
+                        <span class="font-weight-bold mr-2">
+                            Narrowed to:
+                        </span>
+                        <mat-chip-list #matChipList>
+                            <mat-chip class="bg-transparent" *ngIf="filters.startDate" [removable]="false" [selectable]="false">
+                                <span>Start: {{filters.startDate | date:'shortDate'}}</span>
+                            </mat-chip>
+                            <mat-chip class="bg-transparent" *ngIf="filters.endDate" [removable]="false" [selectable]="false">
+                                <span>End: {{filters.endDate | date:'shortDate'}}</span>
+                            </mat-chip>
+                            <mat-chip class="bg-transparent" *ngIf="filters.campaignId" (removed)="removeFilter(3)" [selectable]="false">
+                                <ng-container *ngLet="getFilteredCampaign(filters.campaignId) as c">
+                                    <span>Campaign: {{c.name}}</span>
+                                    <mat-icon matChipRemove>cancel</mat-icon>
+                                </ng-container>
+                            </mat-chip>
+                            <mat-chip class="bg-transparent" *ngIf="filters.agentId" (removed)="removeFilter(2)" [selectable]="false">
+                                <ng-container *ngLet="getFilteredAgent(filters.agentId) as a">
+                                    <span>{{a.firstName}} {{a.lastName}}</span>
+                                    <mat-icon matChipRemove>cancel</mat-icon>
+                                </ng-container>
+                            </mat-chip>
+                        </mat-chip-list>
                     </div>
                 </mat-card-content>
             </mat-card>
@@ -31,15 +51,164 @@
 
     <div class="row">
         <div class="col-md-12">
-            <ng-container *ngIf="(payrolls$|async) != null; else noPayrolls">
-                <div *ngFor="let p of (payrolls$|async); let i = index;">
-                    {{ i + 1 }}: {{ p.weekEnding | date:'short' }}
-                </div>
+            <ng-container *ngIf="(payrolls$|async) != null && (payrolls$|async).length; else noPayrolls">
+                <mat-card class="border-top-primary">
+                    <mat-card-subtitle>
+                        <p class="text-muted float-right">
+                            {{displayingResults}}
+                        </p>
+                    </mat-card-subtitle>
+                    <mat-card-content>
+                        <ng-container *ngLet="payrolls$|async as payrolls">
+                            <table mat-table #tableRef [dataSource]="payrolls" multiTemplateDataRows class="mat-elevation-z8">
+
+                                <!-- SELECTED -->
+                                <ng-container matColumnDef="selected">
+                                    <th mat-header-cell *matHeaderCellDef>
+                                        <mat-checkbox (change)="$event ? masterToggle() : null"
+                                            [checked]="selection.hasValue() && isAllSelected()"
+                                            [indeterminate]="selection.hasValue() && !isAllSelected()"
+                                        ></mat-checkbox>
+                                    </th>
+                                    <td mat-cell *matCellDef="let item">
+                                        <mat-checkbox
+                                            (click)="$event.stopPropagation()"
+                                            (change)="$event ? selection.toggle(item) : null"
+                                            [checked]="selection.isSelected(item)"
+                                        ></mat-checkbox>
+                                    </td>
+                                </ng-container>
+
+                                <!-- WEEKENDING -->
+                                <ng-container matColumnDef="weekending">
+                                    <th mat-header-cell *matHeaderCellDef>Weekending</th>
+                                    <td mat-cell *matCellDef="let item">{{item.weekEnding | date:'shortDate'}}</td>
+                                </ng-container>
+
+                                <!-- CYCLE START DATE -->
+                                <ng-container matColumnDef="cycleStart">
+                                    <th mat-header-cell *matHeaderCellDef>Cycle Start</th>
+                                    <td mat-cell *matCellDef="let item">{{item.payCycle.startDate | date:'shortDate'}}</td>
+                                </ng-container>
+
+                                <!-- CYCLE END DATE -->
+                                <ng-container matColumnDef="cycleEnd">
+                                    <th mat-header-cell *matHeaderCellDef>Cycle End</th>
+                                    <td mat-cell *matCellDef="let item">{{item.payCycle.endDate | date:'shortDate'}}</td>
+                                </ng-container>
+
+                                <!-- IS AUTOMATED -->
+                                <ng-container matColumnDef="isAutomated">
+                                    <th mat-header-cell *matHeaderCellDef>Auto Release</th>
+                                    <td mat-cell *matCellDef="let item">
+                                        <mat-checkbox [value]="item.isAutomated" [disabled]="true"></mat-checkbox>
+                                    </td>
+                                </ng-container>
+
+                                <!-- IS RELEASED -->
+                                <ng-container matColumnDef="isReleased">
+                                    <th mat-header-cell *matHeaderCellDef>Released</th>
+                                    <td *matCellDef="let item">
+                                        <mat-checkbox [value]="item.isReleased" [disabled]="true"></mat-checkbox>
+                                    </td>
+                                </ng-container>
+
+                                <!-- AUTOMATIC RELEASE DATE -->
+                                <ng-container matColumnDef="automatedRelease">
+                                    <th mat-header-cell *matHeaderCellDef>Release Date</th>
+                                    <td mat-cell *matCellDef="let item">
+                                        {{item.automatedRelease | date:'shortDate'}}
+                                    </td>
+                                </ng-container>
+
+                                <!-- PAYROLL STATUS -->
+                                <ng-container matColumnDef="status">
+                                    <th mat-header-cell *matHeaderCellDef>Status</th>
+                                    <td mat-cell *matCellDef="let item">
+                                        <ng-container *ngLet="getPayrollStatus(item) as desc">
+                                            {{desc}}
+                                        </ng-container>
+                                    </td>
+                                </ng-container>
+
+                                <!-- EXPANDED DETAIL -->
+                                <ng-container matColumnDef="expandedDetail">
+                                    <td mat-cell *matCellDef="let item" 
+                                        [attr.colspan]="displayColumns.length" 
+                                    >
+                                        <div class="element-detail"
+                                            [@detailExpand]="item == expandedItem ? 'expanded' : 'collapsed'"
+                                            [class.pb-2]="item == expandedItem"
+                                        >
+                                            <div class="row w-100">
+                                                <div class="col-md-12">                                                    
+                                                    <ul class="list-group">
+                                                        <li class="list-group-item">
+                                                            <div class="row">
+                                                                <div class="col-md-4">
+                                                                    <span class="font-weight-bold">Agent</span>
+                                                                </div>
+                                                                <div class="col-md-2">
+                                                                    <span class="font-weight-bold">Sales</span>
+                                                                </div>
+                                                                <div class="col-md-2">
+                                                                    <span class="font-weight-bold">Gross</span>
+                                                                </div>
+                                                                <div class="col-md-2">
+                                                                    <span class="font-weight-bold">Taxes</span>
+                                                                </div>
+                                                                <div class="col-md-2">
+                                                                    <span class="font-weight-bold">Net</span>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                        <li *ngFor="let detail of item.details" class="list-group-item">
+                                                            <div class="row">
+                                                                <div class="col-md-4">
+                                                                    {{detail.agent.firstName}} {{detail.agent.lastName}}
+                                                                </div>
+                                                                <div class="col-md-2">
+                                                                    {{detail.sales}}
+                                                                </div>
+                                                                <div class="col-md-2">
+                                                                    {{detail.grossTotal | currency}}
+                                                                </div>
+                                                                <div class="col-md-2">
+                                                                    {{detail.taxes | currency}}
+                                                                </div>
+                                                                <div class="col-md-2">
+                                                                    {{detail.netTotal | currency}}
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="displayColumns"></tr>
+                                <tr mat-row *matRowDef="let item; columns: displayColumns"
+                                    class="element-row"
+                                    [class.expanded-row]="expandedItem === item"
+                                    [class.expanded]="expandedItem === item"
+                                    (click)="expandedItem = expandedItem === item ? null : item"
+                                ></tr>
+                                <tr mat-row 
+                                    *matRowDef="let row; columns: ['expandedDetail']" 
+                                    class="detail-row"
+                                    [class.expanded]="row == expandedItem"
+                                ></tr>
+                            </table>
+                        </ng-container>
+                    </mat-card-content>
+                </mat-card>
             </ng-container>
             <ng-template #noPayrolls>
-                <div>
-                    Oh no! There aren't any payrolls ready to work with... 
-                </div>
+                <p class="text-center text-muted font-italic h4">
+                    No Payrolls were found based on this search criteria. Please try adjusting your filters.
+                </p>
             </ng-template>
         </div>
     </div>

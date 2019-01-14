@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Agent;
 use App\PayCycle;
 use App\PayrollDetail;
 use Illuminate\Database\Eloquent\Model;

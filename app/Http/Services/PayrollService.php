@@ -74,7 +74,7 @@ class PayrollService
     {
         $result = new ApiResource();
 
-        $payrolls = Payroll::with('details')->byClient($clientId)->get();
+        $payrolls = Payroll::with(['details.agent', 'payCycle'])->byClient($clientId)->get();
 
         if(count($payrolls) < 1) return $result;
 

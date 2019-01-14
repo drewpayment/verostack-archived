@@ -136,6 +136,8 @@ var map = {
 	"./kn.js": "./node_modules/moment/locale/kn.js",
 	"./ko": "./node_modules/moment/locale/ko.js",
 	"./ko.js": "./node_modules/moment/locale/ko.js",
+	"./ku": "./node_modules/moment/locale/ku.js",
+	"./ku.js": "./node_modules/moment/locale/ku.js",
 	"./ky": "./node_modules/moment/locale/ky.js",
 	"./ky.js": "./node_modules/moment/locale/ky.js",
 	"./lb": "./node_modules/moment/locale/lb.js",
@@ -1393,6 +1395,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _pay_cycle_components_pay_cycle_dialog_pay_cycle_dialog_component__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ./pay-cycle/components/pay-cycle-dialog/pay-cycle-dialog.component */ "./src/app/pay-cycle/components/pay-cycle-dialog/pay-cycle-dialog.component.ts");
 /* harmony import */ var _payroll_payroll_dialog_payroll_dialog_component__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ./payroll/payroll-dialog/payroll-dialog.component */ "./src/app/payroll/payroll-dialog/payroll-dialog.component.ts");
 /* harmony import */ var _payroll_payroll_list_payroll_list_component__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! ./payroll/payroll-list/payroll-list.component */ "./src/app/payroll/payroll-list/payroll-list.component.ts");
+/* harmony import */ var _payroll_payroll_filter_dialog_payroll_filter_dialog_component__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! ./payroll/payroll-filter-dialog/payroll-filter-dialog.component */ "./src/app/payroll/payroll-filter-dialog/payroll-filter-dialog.component.ts");
+/* harmony import */ var _let_directive__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! ./let.directive */ "./src/app/let.directive.ts");
+
+
 
 
 
@@ -1453,14 +1459,17 @@ var AppModule = /** @class */ (function () {
                 _daily_sale_tracker_components_new_sale_new_sale_component__WEBPACK_IMPORTED_MODULE_23__["NewSaleComponent"],
                 _pay_cycle_components_pay_cycle_dialog_pay_cycle_dialog_component__WEBPACK_IMPORTED_MODULE_24__["PayCycleDialogComponent"],
                 _payroll_payroll_dialog_payroll_dialog_component__WEBPACK_IMPORTED_MODULE_25__["PayrollDialogComponent"],
-                _payroll_payroll_list_payroll_list_component__WEBPACK_IMPORTED_MODULE_26__["PayrollListComponent"]
+                _payroll_payroll_list_payroll_list_component__WEBPACK_IMPORTED_MODULE_26__["PayrollListComponent"],
+                _payroll_payroll_filter_dialog_payroll_filter_dialog_component__WEBPACK_IMPORTED_MODULE_27__["PayrollFilterDialogComponent"],
+                _let_directive__WEBPACK_IMPORTED_MODULE_28__["LetDirective"]
             ],
             entryComponents: [
                 _agent_edit_agent_dialog_edit_agent_dialog_component__WEBPACK_IMPORTED_MODULE_16__["EditAgentDialogComponent"],
                 _agent_agent_rules_dialog_agent_rules_dialog_component__WEBPACK_IMPORTED_MODULE_19__["AgentRulesDialogComponent"],
                 _pay_cycle_components_confirm_unpaid_selection_dialog_confirm_unpaid_selection_dialog_component__WEBPACK_IMPORTED_MODULE_22__["ConfirmUnpaidSelectionDialogComponent"],
                 _pay_cycle_components_pay_cycle_dialog_pay_cycle_dialog_component__WEBPACK_IMPORTED_MODULE_24__["PayCycleDialogComponent"],
-                _payroll_payroll_dialog_payroll_dialog_component__WEBPACK_IMPORTED_MODULE_25__["PayrollDialogComponent"]
+                _payroll_payroll_dialog_payroll_dialog_component__WEBPACK_IMPORTED_MODULE_25__["PayrollDialogComponent"],
+                _payroll_payroll_filter_dialog_payroll_filter_dialog_component__WEBPACK_IMPORTED_MODULE_27__["PayrollFilterDialogComponent"]
             ],
             providers: [],
             bootstrap: [_app_component__WEBPACK_IMPORTED_MODULE_5__["AppComponent"]]
@@ -3365,7 +3374,7 @@ module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n<div>\n  <h2 mat-dialog-title>Current Client</h2>\n  <mat-dialog-content>\n    <mat-form-field>\n      <mat-select [(ngModel)]=\"user.sessionUser.sessionClient\">\n        <mat-option *ngFor=\"let c of data.clients\" [value]=\"c.clientId\">{{c.name}}</mat-option>\n      </mat-select>\n      <mat-error *ngIf=\"clientControl.hasError('required')\">Please choose a client.</mat-error>\n    </mat-form-field>\n  </mat-dialog-content>\n  <mat-dialog-actions class=\"d-flex justify-content-between\">\n    <button mat-button (click)=\"cancel()\">Cancel</button>\n    <button mat-raised-button color=\"primary\" (click)=\"onClientChange()\">Change Client</button>\n  </mat-dialog-actions>\n</div>\n"
+module.exports = "\n<div>\n  <h2 mat-dialog-title>Current Client</h2>\n  <mat-dialog-content>\n    <mat-form-field class=\"w-100\">\n      <mat-select [(ngModel)]=\"user.sessionUser.sessionClient\">\n        <mat-option *ngFor=\"let c of data.clients\" [value]=\"c.clientId\">{{c.name}}</mat-option>\n      </mat-select>\n      <mat-error *ngIf=\"clientControl.hasError('required')\">Please choose a client.</mat-error>\n    </mat-form-field>\n  </mat-dialog-content>\n  <mat-dialog-actions class=\"d-flex justify-content-between\">\n    <button mat-button (click)=\"cancel()\">Cancel</button>\n    <button mat-raised-button color=\"primary\" (click)=\"onClientChange()\">Change Client</button>\n  </mat-dialog-actions>\n</div>\n"
 
 /***/ }),
 
@@ -6334,6 +6343,50 @@ var HeaderComponent = /** @class */ (function () {
 
 /***/ }),
 
+/***/ "./src/app/let.directive.ts":
+/*!**********************************!*\
+  !*** ./src/app/let.directive.ts ***!
+  \**********************************/
+/*! exports provided: LetDirective */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LetDirective", function() { return LetDirective; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+
+
+var LetDirective = /** @class */ (function () {
+    function LetDirective(viewContainer, templateRef) {
+        this.context = { ngLet: null };
+        viewContainer.createEmbeddedView(templateRef, this.context);
+    }
+    Object.defineProperty(LetDirective.prototype, "ngLet", {
+        set: function (value) {
+            this.context.ngLet = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Object),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [Object])
+    ], LetDirective.prototype, "ngLet", null);
+    LetDirective = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Directive"])({
+            selector: '[ngLet]'
+        }),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewContainerRef"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["TemplateRef"]])
+    ], LetDirective);
+    return LetDirective;
+}());
+
+
+
+/***/ }),
+
 /***/ "./src/app/loading-spinner/loading-spinner.component.css":
 /*!***************************************************************!*\
   !*** ./src/app/loading-spinner/loading-spinner.component.css ***!
@@ -6946,7 +6999,7 @@ var PaidStatusType;
 /*!*********************************!*\
   !*** ./src/app/models/index.ts ***!
   \*********************************/
-/*! exports provided: AgentSale, PaidStatusType */
+/*! exports provided: AgentSale, PaidStatusType, PayrollFilterType */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -6957,8 +7010,38 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _daily_sale_model__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./daily-sale.model */ "./src/app/models/daily-sale.model.ts");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PaidStatusType", function() { return _daily_sale_model__WEBPACK_IMPORTED_MODULE_1__["PaidStatusType"]; });
 
+/* harmony import */ var _payroll_filter_model__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./payroll-filter.model */ "./src/app/models/payroll-filter.model.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PayrollFilterType", function() { return _payroll_filter_model__WEBPACK_IMPORTED_MODULE_2__["PayrollFilterType"]; });
 
 
+
+
+
+
+/***/ }),
+
+/***/ "./src/app/models/payroll-filter.model.ts":
+/*!************************************************!*\
+  !*** ./src/app/models/payroll-filter.model.ts ***!
+  \************************************************/
+/*! exports provided: PayrollFilterType */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PayrollFilterType", function() { return PayrollFilterType; });
+var PayrollFilterType;
+(function (PayrollFilterType) {
+    PayrollFilterType[PayrollFilterType["startDate"] = 0] = "startDate";
+    PayrollFilterType[PayrollFilterType["endDate"] = 1] = "endDate";
+    PayrollFilterType[PayrollFilterType["agent"] = 2] = "agent";
+    PayrollFilterType[PayrollFilterType["campaign"] = 3] = "campaign";
+    PayrollFilterType[PayrollFilterType["client"] = 4] = "client";
+    PayrollFilterType[PayrollFilterType["weekEnding"] = 5] = "weekEnding";
+    PayrollFilterType[PayrollFilterType["isAutomated"] = 6] = "isAutomated";
+    PayrollFilterType[PayrollFilterType["isReleased"] = 7] = "isReleased";
+    PayrollFilterType[PayrollFilterType["automatedRelease"] = 8] = "automatedRelease";
+})(PayrollFilterType || (PayrollFilterType = {}));
 
 
 /***/ }),
@@ -7614,7 +7697,7 @@ var PayCycleDialogComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n<div class=\"container\">\n    <div class=\"row mb-4\">\n        <div class=\"col-md-12\">\n            <mat-card class=\"page-header-accent\">\n                <mat-card-content class=\"d-flex justify-content-between\">\n                    <h3>\n                        <span>Payroll Administration</span>\n                    </h3>\n                    <div>\n                        <mat-slide-toggle \n                            [checked]=\"showClosed\" \n                            (change)=\"switchDisplay()\"\n                            class=\"my-0 mr-2\"\n                        >\n                            Show Closed\n                        </mat-slide-toggle>\n                        <button type=\"button\" mat-stroked-button color=\"primary\" (click)=\"addPayCycle()\">\n                            <mat-icon inline=\"true\">add</mat-icon>\n                            <span>Payroll</span>\n                        </button>\n                    </div>\n                </mat-card-content>\n            </mat-card>\n        </div>\n    </div>\n\n    <ng-container *ngIf=\"displayCycles != null && (displayCycles|async).length; else noCycles\">\n        <div class=\"row\" *ngFor=\"let cycle of displayCycles|async as cycles\">\n            <div class=\"col-md-12\">\n                <mat-card [ngClass]=\"getBorderColor(cycle, 'left')\">\n                    <mat-card-title class=\"d-flex justify-content-between\">\n                        <div [class.text-danger]=\"isPayCycleDue(cycle)\">\n                            <span class=\"font-weight-bold\">Status: </span>\n                            <small>{{getCycleStatus(cycle)}}</small>\n                        </div>\n                        <div class=\"d-flex justify-content-end\">\n                            <button type=\"button\" mat-button \n                                color=\"primary\" \n                                *ngIf=\"!cycle.isPending && !cycle.isClosed\"\n                                (click)=\"editPayCycle(cycle)\"\n                            >\n                                <mat-icon>play_arrow</mat-icon>\n                                <span>Start</span>\n                            </button>\n                            <ng-container *ngIf=\"!isBeforeEndDate(cycle); else payrollReadyToRun\">\n                                <button\n                                    type=\"button\" mat-button\n                                    color=\"primary\"\n                                    *ngIf=\"cycle.isPending && !cycle.isClosed\"\n                                    (click)=\"editPayCycle(cycle)\"\n                                >\n                                    <mat-icon>redo</mat-icon>\n                                    <span>Continue</span>\n                                </button>\n                                <button\n                                    type=\"button\" mat-button\n                                    color=\"accent\"\n                                    *ngIf=\"cycle.isPending && !cycle.isClosed\"\n                                    (click)=\"closePayCycle(cycle)\"\n                                >\n                                    <mat-icon>check_circle</mat-icon>\n                                    <span>Close</span>\n                                </button>\n                                <button\n                                    type=\"button\" mat-button\n                                    color=\"primary\"\n                                    *ngIf=\"cycle.isClosed\"\n                                    (click)=\"openPayCycle(cycle)\"\n                                >\n                                    <mat-icon>cached</mat-icon>\n                                    <span>Re-Open</span>\n                                </button>\n                            </ng-container>\n                            <ng-template #payrollReadyToRun>\n                                <button type=\"button\"\n                                    mat-button\n                                    [color]=\"getEditButtonColor(cycle)\"\n                                    [class.text-muted]=\"cycle?.payrolls?.length > 0\"\n                                    *ngIf=\"cycle.isPending && !cycle.isClosed\"\n                                    (click)=\"editPayCycle(cycle)\"\n                                >\n                                    <mat-icon>create</mat-icon>\n                                    <span>Edit</span>\n                                </button>\n                                <button type=\"button\"\n                                    mat-button\n                                    [color]=\"getButtonColor(cycle)\"\n                                    *ngIf=\"cycle.isPending && !cycle.isClosed\"\n                                    (click)=\"processPayroll(cycle)\"\n                                >\n                                    <mat-icon>sync</mat-icon>\n                                    <span>\n                                        {{ cycle?.payrolls?.length > 0 ? 'Reprocess' : 'Process' }}\n                                    </span>\n                                </button>\n                            </ng-template>\n                        </div>\n                        <!-- <button type=\"button\" mat-icon-button color=\"primary\" (click)=\"editPayCycle(cycle)\">\n                            <mat-icon>edit</mat-icon>\n                        </button> -->\n                    </mat-card-title>\n                    <mat-card-content>\n                        <p>\n                            <span class=\"font-weight-bold\">Dates:</span> \n                            {{cycle.startDate | date:'shortDate'}} - {{cycle.endDate | date:'shortDate'}}\n                        </p>\n                        <p class=\"text-muted\" *ngIf=\"cycle?.payrolls?.length\">\n                            Payroll was processed {{getPayrollEditDate(cycle) | date:'short'}}\n                        </p>\n                    </mat-card-content>\n                </mat-card>\n            </div>\n        </div>\n    </ng-container>\n    <ng-template #noCycles>\n        <div class=\"row\">\n            <div class=\"col-md-12\">\n                <h5 class=\"text-center text-muted font-italic\">No Payroll Cycles to display.</h5>\n            </div>\n        </div>\n    </ng-template>\n    \n</div>"
+module.exports = "\n<div class=\"container\">\n    <div class=\"row mb-4\">\n        <div class=\"col-md-12\">\n            <mat-card class=\"page-header-accent\">\n                <mat-card-content class=\"d-flex justify-content-between\">\n                    <h3>\n                        <span>Payroll Cycle Management</span>\n                    </h3>\n                    <div>\n                        <mat-slide-toggle \n                            [checked]=\"showClosed\" \n                            (change)=\"switchDisplay()\"\n                            class=\"my-0 mr-2\"\n                        >\n                            Show Closed\n                        </mat-slide-toggle>\n                        <button type=\"button\" mat-stroked-button color=\"primary\" (click)=\"addPayCycle()\">\n                            <mat-icon inline=\"true\">add</mat-icon>\n                            <span>Payroll</span>\n                        </button>\n                    </div>\n                </mat-card-content>\n            </mat-card>\n        </div>\n    </div>\n\n    <ng-container *ngIf=\"displayCycles != null && (displayCycles|async).length; else noCycles\">\n        <div class=\"row\" *ngFor=\"let cycle of displayCycles|async as cycles\">\n            <div class=\"col-md-12\">\n                <mat-card [ngClass]=\"getBorderColor(cycle, 'left')\">\n                    <mat-card-title class=\"d-flex justify-content-between\">\n                        <div [class.text-danger]=\"isPayCycleDue(cycle)\">\n                            <span class=\"font-weight-bold\">Status: </span>\n                            <small>{{getCycleStatus(cycle)}}</small>\n                        </div>\n                        <div class=\"d-flex justify-content-end\">\n                            <button type=\"button\" mat-button \n                                color=\"primary\" \n                                *ngIf=\"!cycle.isPending && !cycle.isClosed\"\n                                (click)=\"editPayCycle(cycle)\"\n                            >\n                                <mat-icon>play_arrow</mat-icon>\n                                <span>Start</span>\n                            </button>\n                            <ng-container *ngIf=\"!isBeforeEndDate(cycle); else payrollReadyToRun\">\n                                <button\n                                    type=\"button\" mat-button\n                                    color=\"primary\"\n                                    *ngIf=\"cycle.isPending && !cycle.isClosed\"\n                                    (click)=\"editPayCycle(cycle)\"\n                                >\n                                    <mat-icon>redo</mat-icon>\n                                    <span>Continue</span>\n                                </button>\n                                <button\n                                    type=\"button\" mat-button\n                                    color=\"accent\"\n                                    *ngIf=\"cycle.isPending && !cycle.isClosed\"\n                                    (click)=\"closePayCycle(cycle)\"\n                                >\n                                    <mat-icon>archive</mat-icon>\n                                    <span>Archive</span>\n                                </button>\n                                <button\n                                    type=\"button\" mat-button\n                                    color=\"primary\"\n                                    *ngIf=\"cycle.isClosed\"\n                                    (click)=\"openPayCycle(cycle)\"\n                                >\n                                    <mat-icon>unarchive</mat-icon>\n                                    <span>Re-Open</span>\n                                </button>\n                            </ng-container>\n                            <ng-template #payrollReadyToRun>\n                                <button type=\"button\"\n                                    mat-button\n                                    [color]=\"getEditButtonColor(cycle)\"\n                                    [class.text-muted]=\"cycle?.payrolls?.length > 0\"\n                                    *ngIf=\"cycle.isPending && !cycle.isClosed\"\n                                    (click)=\"editPayCycle(cycle)\"\n                                >\n                                    <mat-icon>create</mat-icon>\n                                    <span>Edit</span>\n                                </button>\n                                <button type=\"button\"\n                                    mat-button\n                                    color=\"primary\"\n                                    *ngIf=\"cycle.isPending && !cycle.isClosed\"\n                                    (click)=\"processPayroll(cycle)\"\n                                >\n                                    <mat-icon>sync</mat-icon>\n                                    <span>\n                                        {{ cycle?.payrolls?.length > 0 ? 'Reprocess' : 'Process' }}\n                                    </span>\n                                </button>\n                                <button\n                                    type=\"button\" mat-button\n                                    color=\"accent\"\n                                    *ngIf=\"cycle.isPending && !cycle.isClosed\"\n                                    (click)=\"closePayCycle(cycle)\"\n                                >\n                                    <mat-icon>archive</mat-icon>\n                                    <span>Archive</span>\n                                </button>\n                                <button\n                                    type=\"button\" mat-button\n                                    color=\"primary\"\n                                    *ngIf=\"cycle.isClosed\"\n                                    (click)=\"openPayCycle(cycle)\"\n                                >\n                                    <mat-icon>unarchive</mat-icon>\n                                    <span>Re-Open</span>\n                                </button>\n                            </ng-template>\n                        </div>\n                        <!-- <button type=\"button\" mat-icon-button color=\"primary\" (click)=\"editPayCycle(cycle)\">\n                            <mat-icon>edit</mat-icon>\n                        </button> -->\n                    </mat-card-title>\n                    <mat-card-content>\n                        <p>\n                            <span class=\"font-weight-bold\">Dates:</span> \n                            {{cycle.startDate | date:'shortDate'}} - {{cycle.endDate | date:'shortDate'}}\n                        </p>\n                        <p class=\"text-muted\" *ngIf=\"cycle?.payrolls?.length\">\n                            Payroll was processed {{getPayrollEditDate(cycle) | date:'short'}}\n                        </p>\n                    </mat-card-content>\n                </mat-card>\n            </div>\n        </div>\n    </ng-container>\n    <ng-template #noCycles>\n        <div class=\"row\">\n            <div class=\"col-md-12\">\n                <h5 class=\"text-center text-muted font-italic\">No Payroll Cycles to display.</h5>\n            </div>\n        </div>\n    </ng-template>\n    \n</div>"
 
 /***/ }),
 
@@ -7727,7 +7810,7 @@ var PayCycleComponent = /** @class */ (function () {
     };
     PayCycleComponent.prototype.getButtonColor = function (cycle) {
         return !(cycle != null && cycle.payrolls != null && cycle.payrolls.length > 0)
-            ? 'accent'
+            ? 'primary'
             : '';
     };
     PayCycleComponent.prototype.getEditButtonColor = function (cycle) {
@@ -8050,6 +8133,185 @@ var PayrollDialogComponent = /** @class */ (function () {
 
 /***/ }),
 
+/***/ "./src/app/payroll/payroll-filter-dialog/payroll-filter-dialog.component.html":
+/*!************************************************************************************!*\
+  !*** ./src/app/payroll/payroll-filter-dialog/payroll-filter-dialog.component.html ***!
+  \************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "\n<h3 mat-dialog-title>Narrow By:</h3>\n<div mat-dialog-content>\n    <div [formGroup]=\"f\">\n        <div class=\"row\">\n            <div class=\"col-md-6\">\n                <mat-form-field>\n                    <input type=\"text\" matInput \n                        [matDatepicker]=\"startDatepicker\"\n                        placeholder=\"Start\"\n                        formControlName=\"startDate\"\n                        required\n                    />\n                    <mat-datepicker-toggle matSuffix [for]=\"startDatepicker\"></mat-datepicker-toggle>\n                    <mat-datepicker #startDatepicker></mat-datepicker>\n                    <mat-error *ngIf=\"f.get('startDate').hasError('required')\">\n                        Please select a valid start date.\n                    </mat-error>\n                </mat-form-field>\n            </div>\n            <div class=\"col-md-6\">\n                <mat-form-field>\n                    <input type=\"text\" matInput \n                        [matDatepicker]=\"endDatepicker\"\n                        placeholder=\"End\"\n                        formControlName=\"endDate\"\n                        required\n                    />\n                    <mat-datepicker-toggle matSuffix [for]=\"endDatepicker\"></mat-datepicker-toggle>\n                    <mat-datepicker #endDatepicker></mat-datepicker>\n                    <mat-error *ngIf=\"f.get('endDate').hasError('required')\">\n                        Please select a valid end date.\n                    </mat-error>\n                </mat-form-field>\n            </div>\n        </div>\n        \n        <div class=\"row\">\n            <div class=\"col-md-6\">\n                <mat-form-field>\n                    <mat-select placeholder=\"Agent\" formControlName=\"agent\">\n                        <ng-container *ngIf=\"agents != null\">\n                            <mat-option *ngFor=\"let a of agents\" [value]=\"a.agentId\">\n                                {{a.firstName}} {{a.lastName}}\n                            </mat-option>\n                        </ng-container>\n                    </mat-select>\n                </mat-form-field>\n            </div>\n            <div class=\"col-md-6\">\n                <mat-form-field>\n                    <input type=\"text\" matInput\n                        [matDatepicker]=\"weekEnding\"\n                        placeholder=\"Week Ending\"\n                        formControlName=\"weekEnding\"\n                    />\n                    <mat-datepicker-toggle matSuffix [for]=\"weekEnding\"></mat-datepicker-toggle>\n                    <mat-datepicker #weekEnding></mat-datepicker>\n                </mat-form-field>\n            </div>\n        </div>\n\n        <div class=\"row\">\n            <div class=\"col-md-6\">\n                <mat-form-field>\n                    <mat-select placeholder=\"Campaign\" formControlName=\"campaign\">\n                        <ng-container *ngIf=\"campaigns != null\">\n                            <mat-option *ngFor=\"let c of campaigns\" [value]=\"c.campaignId\">\n                                {{c.name}} \n                                <span class=\"font-weight-bold\"\n                                    [class.text-danger]=\"!c.active\"\n                                    [class.text-muted]=\"c.active\"\n                                >({{c.active ? 'A' : 'I'}})</span>\n                            </mat-option>\n                        </ng-container>\n                    </mat-select>\n                </mat-form-field>\n            </div>\n            <div class=\"col-md-6\">\n                <mat-form-field>\n                    <input type=\"text\" matInput\n                        [matDatepicker]=\"automatedRelease\"\n                        placeholder=\"Release\"\n                        formControlName=\"automatedRelease\"\n                    />\n                    <mat-datepicker-toggle matSuffix [for]=\"automatedRelease\"></mat-datepicker-toggle>\n                    <mat-datepicker #automatedRelease></mat-datepicker>\n                </mat-form-field>\n            </div>\n        </div>\n        \n        <div class=\"row\">\n            <div class=\"col-md-6\">\n                <mat-checkbox formControlName=\"isAutomated\">\n                    Auto Released\n                </mat-checkbox>\n            </div>\n            <div class=\"col-md-6\">\n                 <mat-checkbox formControlName=\"isReleased\">\n                    Status: Released        \n                </mat-checkbox>\n            </div>\n        </div>\n        \n    </div>\n</div>\n<div mat-dialog-actions class=\"d-flex justify-content-between\">\n    <button mat-button (click)=\"onNoClick()\">Cancel</button>\n    <button mat-button color=\"primary\" (click)=\"save()\">Save</button>    \n</div>"
+
+/***/ }),
+
+/***/ "./src/app/payroll/payroll-filter-dialog/payroll-filter-dialog.component.scss":
+/*!************************************************************************************!*\
+  !*** ./src/app/payroll/payroll-filter-dialog/payroll-filter-dialog.component.scss ***!
+  \************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "mat-form-field {\n  width: 100%; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy9kcmV3cGF5bWVudC9kZXYvdmVyb3N0YWNrL3Jlc291cmNlcy9hc3NldHMvbmcvc3JjL2FwcC9wYXlyb2xsL3BheXJvbGwtZmlsdGVyLWRpYWxvZy9wYXlyb2xsLWZpbHRlci1kaWFsb2cuY29tcG9uZW50LnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQ0E7RUFDSSxZQUFXLEVBQ2QiLCJmaWxlIjoic3JjL2FwcC9wYXlyb2xsL3BheXJvbGwtZmlsdGVyLWRpYWxvZy9wYXlyb2xsLWZpbHRlci1kaWFsb2cuY29tcG9uZW50LnNjc3MiLCJzb3VyY2VzQ29udGVudCI6WyJcbm1hdC1mb3JtLWZpZWxkIHtcbiAgICB3aWR0aDogMTAwJTtcbn0iXX0= */"
+
+/***/ }),
+
+/***/ "./src/app/payroll/payroll-filter-dialog/payroll-filter-dialog.component.ts":
+/*!**********************************************************************************!*\
+  !*** ./src/app/payroll/payroll-filter-dialog/payroll-filter-dialog.component.ts ***!
+  \**********************************************************************************/
+/*! exports provided: PayrollFilterDialogComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PayrollFilterDialogComponent", function() { return PayrollFilterDialogComponent; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/material */ "./node_modules/@angular/material/esm5/material.es5.js");
+/* harmony import */ var _app_models__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @app/models */ "./src/app/models/index.ts");
+/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_5__);
+
+
+
+
+
+
+var PayrollFilterDialogComponent = /** @class */ (function () {
+    function PayrollFilterDialogComponent(ref, data, fb) {
+        this.ref = ref;
+        this.data = data;
+        this.fb = fb;
+        this.f = this.createForm();
+        this.showReleaseDateFormControl = false;
+        this.defaultEndDate = moment__WEBPACK_IMPORTED_MODULE_5__();
+        this.defaultStartDate = this.defaultEndDate.clone().subtract(7, 'days');
+        this.filters = this.data.filters || { activeFilters: [] };
+        this.agents = this.data.agents || [];
+        this.campaigns = this.data.campaigns.sort(function (a, b) {
+            if (a.active && !b.active)
+                return -1;
+            if (!a.active && b.active)
+                return 1;
+            if (a.active == b.active)
+                return 0;
+        }) || [];
+    }
+    PayrollFilterDialogComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this.patchForm();
+        this.f.controls.isAutomated.valueChanges.subscribe(function (value) {
+            _this.showReleaseDateFormControl = value;
+            if (value)
+                _this.f.controls.automatedRelease.setValidators([_angular_forms__WEBPACK_IMPORTED_MODULE_4__["Validators"].required]);
+            else
+                _this.f.controls.automatedRelease.clearValidators();
+        });
+    };
+    PayrollFilterDialogComponent.prototype.onNoClick = function () {
+        this.ref.close();
+    };
+    PayrollFilterDialogComponent.prototype.save = function () {
+        // get model
+        var model = this.getModel();
+        this.ref.close(model);
+    };
+    PayrollFilterDialogComponent.prototype.getModel = function () {
+        var vals = this.f.value;
+        return {
+            activeFilters: this.setActiveFilters(vals),
+            startDate: vals.startDate,
+            endDate: vals.endDate,
+            agentId: vals.agent,
+            clientId: vals.client,
+            campaignId: vals.campaign,
+            weekEnding: vals.weekEnding,
+            isAutomated: vals.isAutomated,
+            isReleased: vals.isReleased,
+            automatedRelease: vals.automatedRelease
+        };
+    };
+    PayrollFilterDialogComponent.prototype.setActiveFilters = function (values) {
+        var result = [];
+        for (var p in values) {
+            switch (p) {
+                case 'agent':
+                    if (values[p] != null)
+                        result.push(_app_models__WEBPACK_IMPORTED_MODULE_3__["PayrollFilterType"].agent);
+                    break;
+                case 'client':
+                    if (values[p] != null)
+                        result.push(_app_models__WEBPACK_IMPORTED_MODULE_3__["PayrollFilterType"].client);
+                    break;
+                case 'campaign':
+                    if (values[p] != null)
+                        result.push(_app_models__WEBPACK_IMPORTED_MODULE_3__["PayrollFilterType"].campaign);
+                    break;
+                case 'weekEnding':
+                    if (values[p] != null)
+                        result.push(_app_models__WEBPACK_IMPORTED_MODULE_3__["PayrollFilterType"].weekEnding);
+                    break;
+                case 'isAutomated':
+                    if (values[p])
+                        result.push(_app_models__WEBPACK_IMPORTED_MODULE_3__["PayrollFilterType"].isAutomated);
+                    break;
+                case 'isReleased':
+                    if (values[p])
+                        result.push(_app_models__WEBPACK_IMPORTED_MODULE_3__["PayrollFilterType"].isReleased);
+                    break;
+                case 'automatedRelease':
+                    if (values[p] != null)
+                        result.push(_app_models__WEBPACK_IMPORTED_MODULE_3__["PayrollFilterType"].automatedRelease);
+                    break;
+                default:
+                    break;
+            }
+        }
+        return result;
+    };
+    PayrollFilterDialogComponent.prototype.patchForm = function () {
+        this.f.patchValue({
+            startDate: this.filters.startDate || this.defaultStartDate,
+            endDate: this.filters.endDate || this.defaultEndDate,
+            agent: this.filters.agentId,
+            campaign: this.filters.campaignId,
+            client: this.filters.clientId,
+            weekEnding: this.filters.weekEnding,
+            isAutomated: this.filters.isAutomated || false,
+            isReleased: this.filters.isReleased || false,
+            automatedRelease: this.filters.automatedRelease
+        });
+    };
+    PayrollFilterDialogComponent.prototype.createForm = function () {
+        return this.fb.group({
+            startDate: this.fb.control('', [_angular_forms__WEBPACK_IMPORTED_MODULE_4__["Validators"].required]),
+            endDate: this.fb.control('', [_angular_forms__WEBPACK_IMPORTED_MODULE_4__["Validators"].required]),
+            agent: this.fb.control(''),
+            campaign: this.fb.control(''),
+            weekEnding: this.fb.control(''),
+            isAutomated: this.fb.control(false),
+            isReleased: this.fb.control(false),
+            automatedRelease: this.fb.control(''),
+            client: this.fb.control('')
+        });
+    };
+    PayrollFilterDialogComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
+            selector: 'vs-payroll-filter-dialog',
+            template: __webpack_require__(/*! ./payroll-filter-dialog.component.html */ "./src/app/payroll/payroll-filter-dialog/payroll-filter-dialog.component.html"),
+            styles: [__webpack_require__(/*! ./payroll-filter-dialog.component.scss */ "./src/app/payroll/payroll-filter-dialog/payroll-filter-dialog.component.scss")]
+        }),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__param"](1, Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Inject"])(_angular_material__WEBPACK_IMPORTED_MODULE_2__["MAT_DIALOG_DATA"])),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_material__WEBPACK_IMPORTED_MODULE_2__["MatDialogRef"], Object, _angular_forms__WEBPACK_IMPORTED_MODULE_4__["FormBuilder"]])
+    ], PayrollFilterDialogComponent);
+    return PayrollFilterDialogComponent;
+}());
+
+
+
+/***/ }),
+
 /***/ "./src/app/payroll/payroll-list/payroll-list.component.html":
 /*!******************************************************************!*\
   !*** ./src/app/payroll/payroll-list/payroll-list.component.html ***!
@@ -8057,7 +8319,7 @@ var PayrollDialogComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<p>\n  payroll-list works!\n</p>\n<ng-container *ngIf=\"(payrolls$|async) != null; else noPayrolls\">\n    <div *ngFor=\"let p of (payrolls$|async); let i = index;\">\n        {{ i + 1 }}: {{ p.weekEnding | date:'short' }}\n    </div>\n</ng-container>\n<ng-template #noPayrolls>\n    <div>\n        Oh no! There aren't any payrolls ready to work with... \n    </div>\n</ng-template>"
+module.exports = "\n<div class=\"container\">\n    <div class=\"row mb-4\">\n        <div class=\"col-md-12\">\n            <mat-card class=\"page-header-accent\">\n                <mat-card-content>\n                    <div class=\"d-flex justify-content-between\">\n                        <h3>\n                            <span>Payroll Release Schedule</span>\n                        </h3>\n                        <div *ngLet=\"isFilterBtnActive$|async as active\">\n                            <button type=\"button\"\n                                mat-icon-button\n                                color=\"primary\"\n                                [class.active]=\"active\"\n                                (click)=\"filterBtnClick()\"\n                            >\n                                <mat-icon>filter_list</mat-icon>\n                            </button>\n                        </div>\n                    </div>\n                    <div class=\"text-muted d-flex align-items-center\">\n                        <span class=\"font-weight-bold mr-2\">\n                            Narrowed to:\n                        </span>\n                        <mat-chip-list #matChipList>\n                            <mat-chip class=\"bg-transparent\" *ngIf=\"filters.startDate\" [removable]=\"false\" [selectable]=\"false\">\n                                <span>Start: {{filters.startDate | date:'shortDate'}}</span>\n                            </mat-chip>\n                            <mat-chip class=\"bg-transparent\" *ngIf=\"filters.endDate\" [removable]=\"false\" [selectable]=\"false\">\n                                <span>End: {{filters.endDate | date:'shortDate'}}</span>\n                            </mat-chip>\n                            <mat-chip class=\"bg-transparent\" *ngIf=\"filters.campaignId\" (removed)=\"removeFilter(3)\" [selectable]=\"false\">\n                                <ng-container *ngLet=\"getFilteredCampaign(filters.campaignId) as c\">\n                                    <span>Campaign: {{c.name}}</span>\n                                    <mat-icon matChipRemove>cancel</mat-icon>\n                                </ng-container>\n                            </mat-chip>\n                            <mat-chip class=\"bg-transparent\" *ngIf=\"filters.agentId\" (removed)=\"removeFilter(2)\" [selectable]=\"false\">\n                                <ng-container *ngLet=\"getFilteredAgent(filters.agentId) as a\">\n                                    <span>{{a.firstName}} {{a.lastName}}</span>\n                                    <mat-icon matChipRemove>cancel</mat-icon>\n                                </ng-container>\n                            </mat-chip>\n                        </mat-chip-list>\n                    </div>\n                </mat-card-content>\n            </mat-card>\n        </div>\n    </div>\n\n    <div class=\"row\">\n        <div class=\"col-md-12\">\n            <ng-container *ngIf=\"(payrolls$|async) != null && (payrolls$|async).length; else noPayrolls\">\n                <mat-card class=\"border-top-primary\">\n                    <mat-card-subtitle>\n                        <p class=\"text-muted float-right\">\n                            {{displayingResults}}\n                        </p>\n                    </mat-card-subtitle>\n                    <mat-card-content>\n                        <ng-container *ngLet=\"payrolls$|async as payrolls\">\n                            <table mat-table #tableRef [dataSource]=\"payrolls\" multiTemplateDataRows class=\"mat-elevation-z8\">\n\n                                <!-- SELECTED -->\n                                <ng-container matColumnDef=\"selected\">\n                                    <th mat-header-cell *matHeaderCellDef>\n                                        <mat-checkbox (change)=\"$event ? masterToggle() : null\"\n                                            [checked]=\"selection.hasValue() && isAllSelected()\"\n                                            [indeterminate]=\"selection.hasValue() && !isAllSelected()\"\n                                        ></mat-checkbox>\n                                    </th>\n                                    <td mat-cell *matCellDef=\"let item\">\n                                        <mat-checkbox\n                                            (click)=\"$event.stopPropagation()\"\n                                            (change)=\"$event ? selection.toggle(item) : null\"\n                                            [checked]=\"selection.isSelected(item)\"\n                                        ></mat-checkbox>\n                                    </td>\n                                </ng-container>\n\n                                <!-- WEEKENDING -->\n                                <ng-container matColumnDef=\"weekending\">\n                                    <th mat-header-cell *matHeaderCellDef>Weekending</th>\n                                    <td mat-cell *matCellDef=\"let item\">{{item.weekEnding | date:'shortDate'}}</td>\n                                </ng-container>\n\n                                <!-- CYCLE START DATE -->\n                                <ng-container matColumnDef=\"cycleStart\">\n                                    <th mat-header-cell *matHeaderCellDef>Cycle Start</th>\n                                    <td mat-cell *matCellDef=\"let item\">{{item.payCycle.startDate | date:'shortDate'}}</td>\n                                </ng-container>\n\n                                <!-- CYCLE END DATE -->\n                                <ng-container matColumnDef=\"cycleEnd\">\n                                    <th mat-header-cell *matHeaderCellDef>Cycle End</th>\n                                    <td mat-cell *matCellDef=\"let item\">{{item.payCycle.endDate | date:'shortDate'}}</td>\n                                </ng-container>\n\n                                <!-- IS AUTOMATED -->\n                                <ng-container matColumnDef=\"isAutomated\">\n                                    <th mat-header-cell *matHeaderCellDef>Auto Release</th>\n                                    <td mat-cell *matCellDef=\"let item\">\n                                        <mat-checkbox [value]=\"item.isAutomated\" [disabled]=\"true\"></mat-checkbox>\n                                    </td>\n                                </ng-container>\n\n                                <!-- IS RELEASED -->\n                                <ng-container matColumnDef=\"isReleased\">\n                                    <th mat-header-cell *matHeaderCellDef>Released</th>\n                                    <td *matCellDef=\"let item\">\n                                        <mat-checkbox [value]=\"item.isReleased\" [disabled]=\"true\"></mat-checkbox>\n                                    </td>\n                                </ng-container>\n\n                                <!-- AUTOMATIC RELEASE DATE -->\n                                <ng-container matColumnDef=\"automatedRelease\">\n                                    <th mat-header-cell *matHeaderCellDef>Release Date</th>\n                                    <td mat-cell *matCellDef=\"let item\">\n                                        {{item.automatedRelease | date:'shortDate'}}\n                                    </td>\n                                </ng-container>\n\n                                <!-- PAYROLL STATUS -->\n                                <ng-container matColumnDef=\"status\">\n                                    <th mat-header-cell *matHeaderCellDef>Status</th>\n                                    <td mat-cell *matCellDef=\"let item\">\n                                        <ng-container *ngLet=\"getPayrollStatus(item) as desc\">\n                                            {{desc}}\n                                        </ng-container>\n                                    </td>\n                                </ng-container>\n\n                                <!-- EXPANDED DETAIL -->\n                                <ng-container matColumnDef=\"expandedDetail\">\n                                    <td mat-cell *matCellDef=\"let item\" \n                                        [attr.colspan]=\"displayColumns.length\" \n                                    >\n                                        <div class=\"element-detail\"\n                                            [@detailExpand]=\"item == expandedItem ? 'expanded' : 'collapsed'\"\n                                            [class.pb-2]=\"item == expandedItem\"\n                                        >\n                                            <div class=\"row w-100\">\n                                                <div class=\"col-md-12\">                                                    \n                                                    <ul class=\"list-group\">\n                                                        <li class=\"list-group-item\">\n                                                            <div class=\"row\">\n                                                                <div class=\"col-md-4\">\n                                                                    <span class=\"font-weight-bold\">Agent</span>\n                                                                </div>\n                                                                <div class=\"col-md-2\">\n                                                                    <span class=\"font-weight-bold\">Sales</span>\n                                                                </div>\n                                                                <div class=\"col-md-2\">\n                                                                    <span class=\"font-weight-bold\">Gross</span>\n                                                                </div>\n                                                                <div class=\"col-md-2\">\n                                                                    <span class=\"font-weight-bold\">Taxes</span>\n                                                                </div>\n                                                                <div class=\"col-md-2\">\n                                                                    <span class=\"font-weight-bold\">Net</span>\n                                                                </div>\n                                                            </div>\n                                                        </li>\n                                                        <li *ngFor=\"let detail of item.details\" class=\"list-group-item\">\n                                                            <div class=\"row\">\n                                                                <div class=\"col-md-4\">\n                                                                    {{detail.agent.firstName}} {{detail.agent.lastName}}\n                                                                </div>\n                                                                <div class=\"col-md-2\">\n                                                                    {{detail.sales}}\n                                                                </div>\n                                                                <div class=\"col-md-2\">\n                                                                    {{detail.grossTotal | currency}}\n                                                                </div>\n                                                                <div class=\"col-md-2\">\n                                                                    {{detail.taxes | currency}}\n                                                                </div>\n                                                                <div class=\"col-md-2\">\n                                                                    {{detail.netTotal | currency}}\n                                                                </div>\n                                                            </div>\n                                                        </li>\n                                                    </ul>\n                                                </div>\n                                            </div>\n                                        </div>\n                                    </td>\n                                </ng-container>\n\n                                <tr mat-header-row *matHeaderRowDef=\"displayColumns\"></tr>\n                                <tr mat-row *matRowDef=\"let item; columns: displayColumns\"\n                                    class=\"element-row\"\n                                    [class.expanded-row]=\"expandedItem === item\"\n                                    [class.expanded]=\"expandedItem === item\"\n                                    (click)=\"expandedItem = expandedItem === item ? null : item\"\n                                ></tr>\n                                <tr mat-row \n                                    *matRowDef=\"let row; columns: ['expandedDetail']\" \n                                    class=\"detail-row\"\n                                    [class.expanded]=\"row == expandedItem\"\n                                ></tr>\n                            </table>\n                        </ng-container>\n                    </mat-card-content>\n                </mat-card>\n            </ng-container>\n            <ng-template #noPayrolls>\n                <p class=\"text-center text-muted font-italic h4\">\n                    No Payrolls were found based on this search criteria. Please try adjusting your filters.\n                </p>\n            </ng-template>\n        </div>\n    </div>\n</div>\n"
 
 /***/ }),
 
@@ -8068,7 +8330,7 @@ module.exports = "<p>\n  payroll-list works!\n</p>\n<ng-container *ngIf=\"(payro
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzcmMvYXBwL3BheXJvbGwvcGF5cm9sbC1saXN0L3BheXJvbGwtbGlzdC5jb21wb25lbnQuc2NzcyJ9 */"
+module.exports = "table {\n  width: 100%; }\n\ntr.detail-row {\n  height: 0; }\n\ntr.element-row:not(.expanded-row):hover {\n  background: #f5f5f5; }\n\ntr.element-row:not(.expanded-row):active {\n  background: #efefef; }\n\n.element-row td {\n  border-bottom-width: 0; }\n\n.element-detail {\n  min-height: 48px;\n  overflow: hidden;\n  display: flex; }\n\n.expanded {\n  background: #f5f5f5; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy9kcmV3cGF5bWVudC9kZXYvdmVyb3N0YWNrL3Jlc291cmNlcy9hc3NldHMvbmcvc3JjL2FwcC9wYXlyb2xsL3BheXJvbGwtbGlzdC9wYXlyb2xsLWxpc3QuY29tcG9uZW50LnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQ0E7RUFDSSxZQUFXLEVBQ2Q7O0FBRUQ7RUFDSSxVQUFTLEVBQ1o7O0FBRUQ7RUFDSSxvQkFBbUIsRUFDdEI7O0FBRUQ7RUFDSSxvQkFBbUIsRUFDdEI7O0FBRUQ7RUFDSSx1QkFBc0IsRUFDekI7O0FBRUQ7RUFDSSxpQkFBZ0I7RUFDaEIsaUJBQWU7RUFDZixjQUFZLEVBQ2Y7O0FBRUQ7RUFDSSxvQkFBbUIsRUFDdEIiLCJmaWxlIjoic3JjL2FwcC9wYXlyb2xsL3BheXJvbGwtbGlzdC9wYXlyb2xsLWxpc3QuY29tcG9uZW50LnNjc3MiLCJzb3VyY2VzQ29udGVudCI6WyJcbnRhYmxlIHtcbiAgICB3aWR0aDogMTAwJTtcbn1cblxudHIuZGV0YWlsLXJvdyB7XG4gICAgaGVpZ2h0OiAwO1xufVxuXG50ci5lbGVtZW50LXJvdzpub3QoLmV4cGFuZGVkLXJvdyk6aG92ZXIge1xuICAgIGJhY2tncm91bmQ6ICNmNWY1ZjU7XG59XG5cbnRyLmVsZW1lbnQtcm93Om5vdCguZXhwYW5kZWQtcm93KTphY3RpdmUge1xuICAgIGJhY2tncm91bmQ6ICNlZmVmZWY7XG59XG5cbi5lbGVtZW50LXJvdyB0ZCB7XG4gICAgYm9yZGVyLWJvdHRvbS13aWR0aDogMDtcbn1cblxuLmVsZW1lbnQtZGV0YWlsIHtcbiAgICBtaW4taGVpZ2h0OiA0OHB4O1xuICAgIG92ZXJmbG93OmhpZGRlbjtcbiAgICBkaXNwbGF5OmZsZXg7XG59XG5cbi5leHBhbmRlZCB7XG4gICAgYmFja2dyb3VuZDogI2Y1ZjVmNTtcbn0iXX0= */"
 
 /***/ }),
 
@@ -8084,10 +8346,27 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PayrollListComponent", function() { return PayrollListComponent; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
-/* harmony import */ var _app_message_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @app/message.service */ "./src/app/message.service.ts");
-/* harmony import */ var _payroll_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../payroll.service */ "./src/app/payroll/payroll.service.ts");
-/* harmony import */ var _app_session_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @app/session.service */ "./src/app/session.service.ts");
+/* harmony import */ var _app_models__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @app/models */ "./src/app/models/index.ts");
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
+/* harmony import */ var _app_message_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @app/message.service */ "./src/app/message.service.ts");
+/* harmony import */ var _payroll_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../payroll.service */ "./src/app/payroll/payroll.service.ts");
+/* harmony import */ var _app_session_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @app/session.service */ "./src/app/session.service.ts");
+/* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @angular/material */ "./node_modules/@angular/material/esm5/material.es5.js");
+/* harmony import */ var _payroll_filter_dialog_payroll_filter_dialog_component__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../payroll-filter-dialog/payroll-filter-dialog.component */ "./src/app/payroll/payroll-filter-dialog/payroll-filter-dialog.component.ts");
+/* harmony import */ var _app_shared_moment_extensions__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @app/shared/moment-extensions */ "./src/app/shared/moment-extensions.ts");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_10__);
+/* harmony import */ var _app_campaigns_campaign_service__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @app/campaigns/campaign.service */ "./src/app/campaigns/campaign.service.ts");
+/* harmony import */ var _angular_animations__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @angular/animations */ "./node_modules/@angular/animations/fesm5/animations.js");
+/* harmony import */ var _angular_cdk_collections__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @angular/cdk/collections */ "./node_modules/@angular/cdk/esm5/collections.es5.js");
+
+
+
+
+
+
+
+
 
 
 
@@ -8095,36 +8374,223 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var PayrollListComponent = /** @class */ (function () {
-    function PayrollListComponent(msg, service, session) {
+    function PayrollListComponent(msg, service, session, campaignService, dialog) {
         this.msg = msg;
         this.service = service;
         this.session = session;
-        this.payrolls$ = new rxjs__WEBPACK_IMPORTED_MODULE_2__["BehaviorSubject"](null);
+        this.campaignService = campaignService;
+        this.dialog = dialog;
+        this.payrolls$ = new rxjs__WEBPACK_IMPORTED_MODULE_3__["BehaviorSubject"](null);
+        this.defaultEndDate = moment__WEBPACK_IMPORTED_MODULE_10__();
+        this.defaultStartDate = this.defaultEndDate.clone().subtract(7, 'days');
+        this.filters = {
+            activeFilters: [],
+            startDate: this.defaultStartDate,
+            endDate: this.defaultEndDate
+        };
+        this._isFilterBtnActive = false;
+        this.isFilterBtnActive$ = new rxjs__WEBPACK_IMPORTED_MODULE_3__["BehaviorSubject"](this._isFilterBtnActive);
+        this.displayColumns = ['selected', 'weekending', 'cycleStart', 'cycleEnd', 'isAutomated', 'isReleased', 'automatedRelease', 'status'];
+        this.detailColumns = ['agent', 'sales', 'gross', 'taxes', 'net'];
+        this.initialSelection = [];
+        this.allowMultiSelect = true;
+        this.selection = new _angular_cdk_collections__WEBPACK_IMPORTED_MODULE_13__["SelectionModel"](true, []);
     }
     PayrollListComponent.prototype.ngOnInit = function () {
         var _this = this;
         this.session.getUserItem().subscribe(function (user) {
             _this.user = user;
+            _this.populateCampaigns();
             _this.initializeComponent();
         });
+    };
+    PayrollListComponent.prototype.filterBtnClick = function () {
+        var _this = this;
+        this.dialog.open(_payroll_filter_dialog_payroll_filter_dialog_component__WEBPACK_IMPORTED_MODULE_8__["PayrollFilterDialogComponent"], {
+            width: '40vw',
+            data: {
+                filters: this.filters,
+                agents: this.agents,
+                campaigns: this.campaigns
+            }
+        })
+            .afterClosed()
+            .subscribe(function (result) {
+            if (result == null)
+                return;
+            _this.filters = result;
+            _this.setActiveFiltersStatus();
+            _this.applyFilters();
+        });
+    };
+    PayrollListComponent.prototype.getFilteredAgent = function (agentId) {
+        if (this.agents == null || !this.agents.length)
+            return {};
+        return this.agents.find(function (a) { return a.agentId == agentId; });
+    };
+    PayrollListComponent.prototype.getFilteredCampaign = function (campaignId) {
+        if (this.campaigns == null || !this.campaigns.length)
+            return {};
+        return this.campaigns.find(function (c) { return c.campaignId == campaignId; });
+    };
+    PayrollListComponent.prototype.populateCampaigns = function () {
+        var _this = this;
+        this.campaignService.getCampaignsByClient(this.user.sessionUser.sessionClient)
+            .subscribe(function (campaigns) { return _this.campaigns = campaigns; });
+    };
+    PayrollListComponent.prototype.removeFilter = function (filterType) {
+        this.removeActiveFilter(filterType);
+        switch (filterType) {
+            case _app_models__WEBPACK_IMPORTED_MODULE_2__["PayrollFilterType"].startDate:
+                this.filters.startDate = null;
+                break;
+            case _app_models__WEBPACK_IMPORTED_MODULE_2__["PayrollFilterType"].endDate:
+                this.filters.endDate = null;
+                break;
+            case _app_models__WEBPACK_IMPORTED_MODULE_2__["PayrollFilterType"].agent:
+                this.filters.agentId = null;
+                break;
+            case _app_models__WEBPACK_IMPORTED_MODULE_2__["PayrollFilterType"].campaign:
+                this.filters.campaignId = null;
+                break;
+            case _app_models__WEBPACK_IMPORTED_MODULE_2__["PayrollFilterType"].weekEnding:
+                this.filters.weekEnding = null;
+                break;
+            case _app_models__WEBPACK_IMPORTED_MODULE_2__["PayrollFilterType"].isAutomated:
+                this.filters.isAutomated = null;
+                break;
+            case _app_models__WEBPACK_IMPORTED_MODULE_2__["PayrollFilterType"].isReleased:
+                this.filters.isReleased = null;
+                break;
+            case _app_models__WEBPACK_IMPORTED_MODULE_2__["PayrollFilterType"].automatedRelease:
+                this.filters.automatedRelease = null;
+                break;
+            default:
+                break;
+        }
+        this.setActiveFiltersStatus();
+    };
+    PayrollListComponent.prototype.getPayrollStatus = function (item) {
+        return item.payCycle.isClosed
+            ? 'Closed'
+            : item.payCycle.isPending && !item.payCycle.isClosed
+                ? 'Pending'
+                : 'Open';
+    };
+    PayrollListComponent.prototype.masterToggle = function () {
+        var _this = this;
+        this.isAllSelected() ?
+            this.selection.clear() :
+            this._payrolls.forEach(function (p) { return _this.selection.select(p); });
+    };
+    PayrollListComponent.prototype.isAllSelected = function () {
+        var numSelected = this.selection.selected.length;
+        var numRows = this._payrolls.length;
+        return numSelected === numRows;
+    };
+    PayrollListComponent.prototype.applyFilters = function () {
+        var _this = this;
+        var filteredPayrolls = [];
+        filteredPayrolls = this._payrolls.filter(function (p) {
+            var startDate = moment__WEBPACK_IMPORTED_MODULE_10__(_this.filters.startDate);
+            var endDate = moment__WEBPACK_IMPORTED_MODULE_10__(_this.filters.endDate);
+            return moment__WEBPACK_IMPORTED_MODULE_10__(p.weekEnding).isBetween(startDate, endDate, 'd', _app_shared_moment_extensions__WEBPACK_IMPORTED_MODULE_9__["MomentInclusivity"].includeBoth);
+        });
+        this.filters.activeFilters.forEach(function (af) {
+            filteredPayrolls = _this.applyFilterByType(filteredPayrolls, af);
+        });
+        this.payrolls$.next(filteredPayrolls);
+        this.displayingResults = "Displaying " + filteredPayrolls.length + " of " + this._payrolls.length + " possible results";
+    };
+    PayrollListComponent.prototype.applyFilterByType = function (payrolls, type) {
+        var _this = this;
+        var result;
+        switch (type) {
+            case _app_models__WEBPACK_IMPORTED_MODULE_2__["PayrollFilterType"].agent:
+                result = payrolls.map(function (p, i, a) {
+                    var hasDetails = p.details.find(function (d) { return d.agentId == _this.filters.agentId; }) != null;
+                    if (hasDetails) {
+                        p.details = p.details.filter(function (d) { return d.agentId == _this.filters.agentId; });
+                        return p;
+                    }
+                });
+                break;
+            case _app_models__WEBPACK_IMPORTED_MODULE_2__["PayrollFilterType"].campaign:
+                result = payrolls.filter(function (p) { return p.campaignId == _this.filters.campaignId; });
+                break;
+            case _app_models__WEBPACK_IMPORTED_MODULE_2__["PayrollFilterType"].isAutomated:
+                result = payrolls.filter(function (p) { return p.isAutomated == _this.filters.isAutomated; });
+                break;
+            case _app_models__WEBPACK_IMPORTED_MODULE_2__["PayrollFilterType"].isReleased:
+                result = payrolls.filter(function (p) { return p.isReleased == _this.filters.isReleased; });
+                break;
+            case _app_models__WEBPACK_IMPORTED_MODULE_2__["PayrollFilterType"].automatedRelease:
+                result = payrolls.filter(function (p) { return moment__WEBPACK_IMPORTED_MODULE_10__(p.automatedRelease).isSame(_this.filters.automatedRelease, 'days'); });
+                break;
+            case _app_models__WEBPACK_IMPORTED_MODULE_2__["PayrollFilterType"].weekEnding:
+                result = payrolls.filter(function (p) { return moment__WEBPACK_IMPORTED_MODULE_10__(p.weekEnding).isSame(_this.filters.weekEnding); });
+                break;
+            default:
+                result = payrolls;
+                break;
+        }
+        return result.filter(function (r) { return r; });
+    };
+    PayrollListComponent.prototype.setActiveFiltersStatus = function () {
+        var setFiltersActive = false;
+        if (this.filters.activeFilters.length)
+            setFiltersActive = true;
+        if (this._isFilterBtnActive != setFiltersActive) {
+            this._isFilterBtnActive = setFiltersActive;
+            this.isFilterBtnActive$.next(this._isFilterBtnActive);
+        }
+    };
+    PayrollListComponent.prototype.removeActiveFilter = function (type) {
+        this.filters.activeFilters.splice(this.filters.activeFilters.indexOf(type), 1);
+        this.setActiveFiltersStatus();
+        this.applyFilters();
     };
     PayrollListComponent.prototype.initializeComponent = function () {
         var _this = this;
         this.service.getPayrollList(this.user.sessionUser.sessionClient, this.user.id)
             .subscribe(function (payrolls) {
             _this._payrolls = payrolls;
-            _this.payrolls$.next(payrolls);
+            _this.applyFilters();
+            if (_this.agents == null)
+                _this.agents = [];
+            _this._payrolls.forEach(function (p) {
+                p.details.forEach(function (d) {
+                    if (d.agent == null)
+                        return;
+                    if (_this.agents.find(function (a) { return a.agentId == d.agentId; }) != null)
+                        return;
+                    _this.agents = _this.agents.concat(d.agent);
+                });
+            });
         });
     };
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewChild"])('tableRef'),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", _angular_material__WEBPACK_IMPORTED_MODULE_7__["MatTable"])
+    ], PayrollListComponent.prototype, "table", void 0);
     PayrollListComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
             selector: 'vs-payroll-list',
             template: __webpack_require__(/*! ./payroll-list.component.html */ "./src/app/payroll/payroll-list/payroll-list.component.html"),
+            animations: [
+                Object(_angular_animations__WEBPACK_IMPORTED_MODULE_12__["trigger"])('detailExpand', [
+                    Object(_angular_animations__WEBPACK_IMPORTED_MODULE_12__["state"])('collapsed', Object(_angular_animations__WEBPACK_IMPORTED_MODULE_12__["style"])({ height: '0px', minHeight: '0', display: 'none' })),
+                    Object(_angular_animations__WEBPACK_IMPORTED_MODULE_12__["state"])('expanded', Object(_angular_animations__WEBPACK_IMPORTED_MODULE_12__["style"])({ height: '*' })),
+                    Object(_angular_animations__WEBPACK_IMPORTED_MODULE_12__["transition"])('expanded <=> collapsed', Object(_angular_animations__WEBPACK_IMPORTED_MODULE_12__["animate"])('225ms cubic-bezier(0.4, 0.0, 0.2, 1)'))
+                ])
+            ],
             styles: [__webpack_require__(/*! ./payroll-list.component.scss */ "./src/app/payroll/payroll-list/payroll-list.component.scss")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_app_message_service__WEBPACK_IMPORTED_MODULE_3__["MessageService"],
-            _payroll_service__WEBPACK_IMPORTED_MODULE_4__["PayrollService"],
-            _app_session_service__WEBPACK_IMPORTED_MODULE_5__["SessionService"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_app_message_service__WEBPACK_IMPORTED_MODULE_4__["MessageService"],
+            _payroll_service__WEBPACK_IMPORTED_MODULE_5__["PayrollService"],
+            _app_session_service__WEBPACK_IMPORTED_MODULE_6__["SessionService"],
+            _app_campaigns_campaign_service__WEBPACK_IMPORTED_MODULE_11__["CampaignService"],
+            _angular_material__WEBPACK_IMPORTED_MODULE_7__["MatDialog"]])
     ], PayrollListComponent);
     return PayrollListComponent;
 }());
@@ -9115,15 +9581,22 @@ var States = /** @class */ (function () {
 /*!*********************************************!*\
   !*** ./src/app/shared/moment-extensions.ts ***!
   \*********************************************/
-/*! exports provided: MomentExtensions */
+/*! exports provided: MomentInclusivity, MomentExtensions */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MomentInclusivity", function() { return MomentInclusivity; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MomentExtensions", function() { return MomentExtensions; });
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_0__);
 
+var MomentInclusivity = {
+    includeNone: '()',
+    includeStart: '[)',
+    includeEnd: '(]',
+    includeBoth: '[]'
+};
 var MomentExtensions = /** @class */ (function () {
     function MomentExtensions() {
         this.toDateString = function () {

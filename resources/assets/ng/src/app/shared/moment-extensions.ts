@@ -5,6 +5,22 @@ export interface Moment extends Moment {
     toDateString?():string
 }
 
+type Inclusivity = "()" | "[)" | "(]" | "[]";
+
+interface IMomentInclusivity {
+    includeNone:Inclusivity,
+    includeStart:Inclusivity,
+    includeEnd:Inclusivity,
+    includeBoth:Inclusivity
+}
+
+export const MomentInclusivity:IMomentInclusivity = {
+    includeNone:'()',
+    includeStart: '[)',
+    includeEnd: '(]',
+    includeBoth: '[]'
+}
+
 export class MomentExtensions {
 
     constructor() {
