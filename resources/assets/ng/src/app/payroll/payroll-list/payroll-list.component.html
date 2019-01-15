@@ -53,8 +53,15 @@
         <div class="col-md-12">
             <ng-container *ngIf="(payrolls$|async) != null && (payrolls$|async).length; else noPayrolls">
                 <mat-card class="border-top-primary">
-                    <mat-card-subtitle>
-                        <p class="text-muted float-right">
+                    <mat-card-subtitle class="d-flex justify-content-between">
+                        <button type="button" mat-button 
+                            color="primary" 
+                            (click)="showReleaseConfirm()"
+                            [disabled]="disableRelease"
+                        >
+                            <mat-icon inline="true">send</mat-icon> Release
+                        </button>
+                        <p class="text-muted">
                             {{displayingResults}}
                         </p>
                     </mat-card-subtitle>
@@ -145,7 +152,7 @@
                                                     <ul class="list-group">
                                                         <li class="list-group-item">
                                                             <div class="row">
-                                                                <div class="col-md-4">
+                                                                <div class="col-md-3">
                                                                     <span class="font-weight-bold">Agent</span>
                                                                 </div>
                                                                 <div class="col-md-2">
@@ -160,24 +167,35 @@
                                                                 <div class="col-md-2">
                                                                     <span class="font-weight-bold">Net</span>
                                                                 </div>
+                                                                <div class="col-md-auto">
+                                                                    <span>&nbsp;</span>
+                                                                </div>
                                                             </div>
                                                         </li>
                                                         <li *ngFor="let detail of item.details" class="list-group-item">
-                                                            <div class="row">
-                                                                <div class="col-md-4">
+                                                            <div class="row align-middle">
+                                                                <div class="col-md-3">
                                                                     {{detail.agent.firstName}} {{detail.agent.lastName}}
                                                                 </div>
                                                                 <div class="col-md-2">
                                                                     {{detail.sales}}
                                                                 </div>
                                                                 <div class="col-md-2">
-                                                                    {{detail.grossTotal | currency}}
+                                                                    {{calculateGrossTotal(detail) | currency}}
                                                                 </div>
                                                                 <div class="col-md-2">
                                                                     {{detail.taxes | currency}}
                                                                 </div>
                                                                 <div class="col-md-2">
-                                                                    {{detail.netTotal | currency}}
+                                                                    {{calculateNetTotal(detail) | currency}}
+                                                                </div>
+                                                                <div class="col-md-auto">
+                                                                    <button type="button" mat-icon-button 
+                                                                        color="primary"
+                                                                        (click)="showExpensesAndOverrides(detail)"
+                                                                    >
+                                                                        <mat-icon>settings</mat-icon>
+                                                                    </button>
                                                                 </div>
                                                             </div>
                                                         </li>
@@ -190,7 +208,7 @@
 
                                 <tr mat-header-row *matHeaderRowDef="displayColumns"></tr>
                                 <tr mat-row *matRowDef="let item; columns: displayColumns"
-                                    class="element-row"
+                                    class="element-row clickable"
                                     [class.expanded-row]="expandedItem === item"
                                     [class.expanded]="expandedItem === item"
                                     (click)="expandedItem = expandedItem === item ? null : item"

@@ -26,6 +26,7 @@ include('core/agents.php');
 include('core/contacts.php');
 include('core/pay-cycle.php');
 include('core/payrolls.php');
+include('core/payroll-details.php');
 include('core/utility.php');
 
 //Route::middleware('auth:api')->get('/user', function (Request $request) {

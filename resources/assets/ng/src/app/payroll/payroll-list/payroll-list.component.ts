@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import { Payroll, User, PayrollFilter, IAgent, ICampaign, PayrollFilterType } from '@app/models';
+import { Payroll, User, PayrollFilter, IAgent, ICampaign, PayrollFilterType, PayrollDetails } from '@app/models';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { MessageService } from '@app/message.service';
 import { PayrollService } from '../payroll.service';
@@ -43,13 +43,17 @@ export class PayrollListComponent implements OnInit {
     filteredAgent:IAgent;
     displayingResults:string;
 
-    displayColumns = ['selected', 'weekending', 'cycleStart', 'cycleEnd', 'isAutomated', 'isReleased', 'automatedRelease', 'status'];
+    displayColumns = [
+        'selected', 'weekending', 'cycleStart', 'cycleEnd', 'isAutomated', 
+        'isReleased', 'automatedRelease', 'status'
+    ];
     detailColumns = ['agent', 'sales', 'gross', 'taxes', 'net'];
     expandedItem:Payroll;
     initialSelection = [];
     allowMultiSelect = true;
     selection = new SelectionModel<Payroll>(true, []);
     @ViewChild('tableRef') table:MatTable<MatTableDataSource<Payroll>>; 
+    disableRelease:boolean = true;
 
     constructor(
         private msg:MessageService,
@@ -65,6 +69,8 @@ export class PayrollListComponent implements OnInit {
             this.populateCampaigns();
             this.initializeComponent();
         });
+
+        this.selection.onChange.subscribe(() => this.disableRelease = this.selection.selected.length == 0);
     }
 
     filterBtnClick() {
@@ -151,6 +157,38 @@ export class PayrollListComponent implements OnInit {
         const numSelected = this.selection.selected.length;
         const numRows = this._payrolls.length;
         return numSelected === numRows;
+    }
+
+    showExpensesAndOverrides(detail:PayrollDetails) {
+        console.dir(detail);
+    }
+
+    showReleaseConfirm() {
+        console.dir(this.selection.selected);
+    }
+
+    /**
+     * 
+     * 
+     * @param detail PayrollDetails
+     */
+    calculateGrossTotal(detail:PayrollDetails):number {
+        let expenses:any = detail.expenses.map(e => e.amount);
+        expenses = expenses != null && expenses.length
+            ? +expenses.reduce((a,c) => a + c)
+            : 0;
+        let overrides:any = detail.overrides.map(o => (o.units * o.amount));
+        overrides = overrides != null && overrides.length
+            ? +overrides.reduce((a,c) => a + c)
+            : 0;
+        const result = detail.grossTotal + expenses + overrides;
+        return result;
+    }
+
+    calculateNetTotal(detail:PayrollDetails):number {
+        let result = this.calculateGrossTotal(detail);
+        result = result - detail.taxes;
+        return result;
     }
 
     private applyFilters() {

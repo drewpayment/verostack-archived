@@ -2,6 +2,8 @@ import { Moment } from 'moment';
 import { Payroll } from './payroll.model';
 import { IAgent } from './agent.model';
 import { User } from './user.model';
+import { IExpense } from './expense.model';
+import { IOverride } from './override.model';
 
 export interface PayrollDetails {
     payrollDetailsId:number,
@@ -18,5 +20,7 @@ export interface PayrollDetails {
     /** RELATIONSHIPS */
     payroll?:Payroll,
     agent?:IAgent,
-    modifiedByUser?:User
+    modifiedByUser?:User,
+    expenses?:IExpense[],
+    overrides?:IOverride[]
 }

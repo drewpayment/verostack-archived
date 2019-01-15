@@ -1,9 +1,8 @@
 
 export interface IOverride {
-  overrideId: number,
-  agentId: number,
-  invoiceId: number,
-  sales: number,
-  commission: number,
-  total: number
+  overrideId:number,
+  agentId:number,
+  payrollDetailsId:number,
+  units:number,
+  amount:number
 }

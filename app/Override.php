@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\PayrollDetail;
 use Illuminate\Database\Eloquent\Model;
 
 class Override extends Model
@@ -21,7 +22,10 @@ class Override extends Model
 		'issue_date',
 		'week_ending'
 	];
-
-
+    
+    public function payrollDetails()
+    {
+        return $this->belongsTo(PayrollDetail::class, 'payroll_details_id');
+    }
 
 }
