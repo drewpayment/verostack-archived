@@ -1,0 +1,54 @@
+
+
+<mat-tab-group [formGroup]="f">
+
+    <!-- OVERRIDES TAB -->
+    <mat-tab label="Overrides" formArrayName="overrides">
+        
+        <ng-container *ngFor="let o of overrides; let i = index">
+            <div class="row" [formGroupName]="i">
+                <div class="col-md-4">
+                    <mat-form-field class="w-100">
+                        <mat-select placeholder="Agent" formControlName="agentId" required>
+                            <mat-option *ngFor="let a of agents" [value]="a.agentId">
+                                {{a.firstName}} {{a.lastName}}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="f.get(['overrides', i, 'agentId']).hasError('required')">
+                            Please select an agent
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="col-md-4">
+                    <mat-form-field class="w-100">
+                        <input type="text" matInput
+                            placeholder="No. of Units"
+                            formControlName="units" 
+                            required />
+                        <mat-error *ngIf="f.get(['overrides', i, 'units']).hasError('required')">
+                            Please enter a number of units
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="col-md-4">
+                    <mat-form-field class="w-100">
+                        <input type="text" matInput
+                            placeholder="Amount per Unit"
+                            formControlName="amount"
+                            required />
+                        <mat-error *ngIf="f.get(['overrides', i, 'amount']).hasError('required')">
+                            Please enter an amount per unit
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+        </ng-container>
+
+    </mat-tab>
+
+    <!-- EXPENSES TAB -->
+    <mat-tab label="Expenses" formArrayName="expenses">
+        <p>Here is where our expenses stuff will go</p>
+    </mat-tab>
+
+</mat-tab-group>

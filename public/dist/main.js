@@ -1397,6 +1397,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _payroll_payroll_list_payroll_list_component__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! ./payroll/payroll-list/payroll-list.component */ "./src/app/payroll/payroll-list/payroll-list.component.ts");
 /* harmony import */ var _payroll_payroll_filter_dialog_payroll_filter_dialog_component__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! ./payroll/payroll-filter-dialog/payroll-filter-dialog.component */ "./src/app/payroll/payroll-filter-dialog/payroll-filter-dialog.component.ts");
 /* harmony import */ var _let_directive__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! ./let.directive */ "./src/app/let.directive.ts");
+/* harmony import */ var _payroll_override_expense_dialog_override_expense_dialog_component__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! ./payroll/override-expense-dialog/override-expense-dialog.component */ "./src/app/payroll/override-expense-dialog/override-expense-dialog.component.ts");
+
 
 
 
@@ -1461,7 +1463,8 @@ var AppModule = /** @class */ (function () {
                 _payroll_payroll_dialog_payroll_dialog_component__WEBPACK_IMPORTED_MODULE_25__["PayrollDialogComponent"],
                 _payroll_payroll_list_payroll_list_component__WEBPACK_IMPORTED_MODULE_26__["PayrollListComponent"],
                 _payroll_payroll_filter_dialog_payroll_filter_dialog_component__WEBPACK_IMPORTED_MODULE_27__["PayrollFilterDialogComponent"],
-                _let_directive__WEBPACK_IMPORTED_MODULE_28__["LetDirective"]
+                _let_directive__WEBPACK_IMPORTED_MODULE_28__["LetDirective"],
+                _payroll_override_expense_dialog_override_expense_dialog_component__WEBPACK_IMPORTED_MODULE_29__["OverrideExpenseDialogComponent"]
             ],
             entryComponents: [
                 _agent_edit_agent_dialog_edit_agent_dialog_component__WEBPACK_IMPORTED_MODULE_16__["EditAgentDialogComponent"],
@@ -1469,7 +1472,8 @@ var AppModule = /** @class */ (function () {
                 _pay_cycle_components_confirm_unpaid_selection_dialog_confirm_unpaid_selection_dialog_component__WEBPACK_IMPORTED_MODULE_22__["ConfirmUnpaidSelectionDialogComponent"],
                 _pay_cycle_components_pay_cycle_dialog_pay_cycle_dialog_component__WEBPACK_IMPORTED_MODULE_24__["PayCycleDialogComponent"],
                 _payroll_payroll_dialog_payroll_dialog_component__WEBPACK_IMPORTED_MODULE_25__["PayrollDialogComponent"],
-                _payroll_payroll_filter_dialog_payroll_filter_dialog_component__WEBPACK_IMPORTED_MODULE_27__["PayrollFilterDialogComponent"]
+                _payroll_payroll_filter_dialog_payroll_filter_dialog_component__WEBPACK_IMPORTED_MODULE_27__["PayrollFilterDialogComponent"],
+                _payroll_override_expense_dialog_override_expense_dialog_component__WEBPACK_IMPORTED_MODULE_29__["OverrideExpenseDialogComponent"]
             ],
             providers: [],
             bootstrap: [_app_component__WEBPACK_IMPORTED_MODULE_5__["AppComponent"]]
@@ -8078,6 +8082,118 @@ var PayCycleService = /** @class */ (function () {
 
 /***/ }),
 
+/***/ "./src/app/payroll/override-expense-dialog/override-expense-dialog.component.html":
+/*!****************************************************************************************!*\
+  !*** ./src/app/payroll/override-expense-dialog/override-expense-dialog.component.html ***!
+  \****************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "\n\n<mat-tab-group [formGroup]=\"f\">\n\n    <!-- OVERRIDES TAB -->\n    <mat-tab label=\"Overrides\" formArrayName=\"overrides\">\n        \n        <ng-container *ngFor=\"let o of overrides; let i = index\">\n            <div class=\"row\" [formGroupName]=\"i\">\n                <div class=\"col-md-4\">\n                    <mat-form-field class=\"w-100\">\n                        <mat-select placeholder=\"Agent\" formControlName=\"agentId\" required>\n                            <mat-option *ngFor=\"let a of agents\" [value]=\"a.agentId\">\n                                {{a.firstName}} {{a.lastName}}\n                            </mat-option>\n                        </mat-select>\n                        <mat-error *ngIf=\"f.get(['overrides', i, 'agentId']).hasError('required')\">\n                            Please select an agent\n                        </mat-error>\n                    </mat-form-field>\n                </div>\n                <div class=\"col-md-4\">\n                    <mat-form-field class=\"w-100\">\n                        <input type=\"text\" matInput\n                            placeholder=\"No. of Units\"\n                            formControlName=\"units\" \n                            required />\n                        <mat-error *ngIf=\"f.get(['overrides', i, 'units']).hasError('required')\">\n                            Please enter a number of units\n                        </mat-error>\n                    </mat-form-field>\n                </div>\n                <div class=\"col-md-4\">\n                    <mat-form-field class=\"w-100\">\n                        <input type=\"text\" matInput\n                            placeholder=\"Amount per Unit\"\n                            formControlName=\"amount\"\n                            required />\n                        <mat-error *ngIf=\"f.get(['overrides', i, 'amount']).hasError('required')\">\n                            Please enter an amount per unit\n                        </mat-error>\n                    </mat-form-field>\n                </div>\n            </div>\n        </ng-container>\n\n    </mat-tab>\n\n    <!-- EXPENSES TAB -->\n    <mat-tab label=\"Expenses\" formArrayName=\"expenses\">\n        <p>Here is where our expenses stuff will go</p>\n    </mat-tab>\n\n</mat-tab-group>"
+
+/***/ }),
+
+/***/ "./src/app/payroll/override-expense-dialog/override-expense-dialog.component.scss":
+/*!****************************************************************************************!*\
+  !*** ./src/app/payroll/override-expense-dialog/override-expense-dialog.component.scss ***!
+  \****************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzcmMvYXBwL3BheXJvbGwvb3ZlcnJpZGUtZXhwZW5zZS1kaWFsb2cvb3ZlcnJpZGUtZXhwZW5zZS1kaWFsb2cuY29tcG9uZW50LnNjc3MifQ== */"
+
+/***/ }),
+
+/***/ "./src/app/payroll/override-expense-dialog/override-expense-dialog.component.ts":
+/*!**************************************************************************************!*\
+  !*** ./src/app/payroll/override-expense-dialog/override-expense-dialog.component.ts ***!
+  \**************************************************************************************/
+/*! exports provided: OverrideExpenseDialogComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "OverrideExpenseDialogComponent", function() { return OverrideExpenseDialogComponent; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/material */ "./node_modules/@angular/material/esm5/material.es5.js");
+/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
+
+
+
+
+var OverrideExpenseDialogComponent = /** @class */ (function () {
+    function OverrideExpenseDialogComponent(ref, data, fb) {
+        this.ref = ref;
+        this.data = data;
+        this.fb = fb;
+        this.f = this.createForm();
+        this.detail = this.data.detail || {};
+        this.agents = this.data.agents || [];
+    }
+    OverrideExpenseDialogComponent.prototype.ngOnInit = function () {
+        if (this.detail != null)
+            this.patchForm();
+    };
+    Object.defineProperty(OverrideExpenseDialogComponent.prototype, "overrides", {
+        get: function () {
+            return this.f.get('overrides');
+        },
+        enumerable: true,
+        configurable: true
+    });
+    OverrideExpenseDialogComponent.prototype.patchForm = function () {
+        this.f.patchValue({
+            overrides: this.createOverridesFormArray(),
+            expenses: this.createExpensesFormArray()
+        });
+    };
+    OverrideExpenseDialogComponent.prototype.createForm = function () {
+        return this.fb.group({
+            overrides: this.fb.array([]),
+            expenses: this.fb.array([])
+        });
+    };
+    OverrideExpenseDialogComponent.prototype.createOverridesFormArray = function () {
+        var _this = this;
+        this.detail.overrides.forEach(function (o) {
+            _this.f.get('overrides').push(_this.fb.group({
+                overrideId: _this.fb.control(o.overrideId),
+                payrollDetailsId: _this.fb.control(o.payrollDetailsId),
+                agentId: _this.fb.control(o.agentId, [_angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required]),
+                units: _this.fb.control(o.units, [_angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required]),
+                amount: _this.fb.control(o.amount, [_angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required])
+            }));
+        });
+    };
+    OverrideExpenseDialogComponent.prototype.createExpensesFormArray = function () {
+        var _this = this;
+        this.detail.expenses.forEach(function (e) {
+            _this.f.get('expenses').push(_this.fb.group({
+                expenseId: _this.fb.control(e.expenseId),
+                payrollDetailsId: _this.fb.control(e.payrollDetailsId),
+                agentId: _this.fb.control(e.agentId),
+                description: _this.fb.control(e.description),
+                amount: _this.fb.control(e.amount)
+            }));
+        });
+    };
+    OverrideExpenseDialogComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
+            selector: 'vs-override-expense-dialog',
+            template: __webpack_require__(/*! ./override-expense-dialog.component.html */ "./src/app/payroll/override-expense-dialog/override-expense-dialog.component.html"),
+            styles: [__webpack_require__(/*! ./override-expense-dialog.component.scss */ "./src/app/payroll/override-expense-dialog/override-expense-dialog.component.scss")]
+        }),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__param"](1, Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Inject"])(_angular_material__WEBPACK_IMPORTED_MODULE_2__["MAT_DIALOG_DATA"])),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_material__WEBPACK_IMPORTED_MODULE_2__["MatDialogRef"], Object, _angular_forms__WEBPACK_IMPORTED_MODULE_3__["FormBuilder"]])
+    ], OverrideExpenseDialogComponent);
+    return OverrideExpenseDialogComponent;
+}());
+
+
+
+/***/ }),
+
 /***/ "./src/app/payroll/payroll-dialog/payroll-dialog.component.html":
 /*!**********************************************************************!*\
   !*** ./src/app/payroll/payroll-dialog/payroll-dialog.component.html ***!
@@ -8359,6 +8475,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _app_campaigns_campaign_service__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @app/campaigns/campaign.service */ "./src/app/campaigns/campaign.service.ts");
 /* harmony import */ var _angular_animations__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @angular/animations */ "./node_modules/@angular/animations/fesm5/animations.js");
 /* harmony import */ var _angular_cdk_collections__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @angular/cdk/collections */ "./node_modules/@angular/cdk/esm5/collections.es5.js");
+/* harmony import */ var _override_expense_dialog_override_expense_dialog_component__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../override-expense-dialog/override-expense-dialog.component */ "./src/app/payroll/override-expense-dialog/override-expense-dialog.component.ts");
+
 
 
 
@@ -8495,6 +8613,19 @@ var PayrollListComponent = /** @class */ (function () {
     };
     PayrollListComponent.prototype.showExpensesAndOverrides = function (detail) {
         console.dir(detail);
+        this.dialog.open(_override_expense_dialog_override_expense_dialog_component__WEBPACK_IMPORTED_MODULE_14__["OverrideExpenseDialogComponent"], {
+            width: '75vw',
+            data: {
+                detail: detail,
+                agents: this.agents
+            }
+        })
+            .afterClosed()
+            .subscribe(function (result) {
+            if (result == null)
+                return;
+            console.dir(result);
+        });
     };
     PayrollListComponent.prototype.showReleaseConfirm = function () {
         console.dir(this.selection.selected);
@@ -8513,12 +8644,12 @@ var PayrollListComponent = /** @class */ (function () {
         overrides = overrides != null && overrides.length
             ? +overrides.reduce(function (a, c) { return a + c; })
             : 0;
-        var result = detail.grossTotal + expenses + overrides;
+        var result = +detail.grossTotal + expenses + overrides;
         return result;
     };
     PayrollListComponent.prototype.calculateNetTotal = function (detail) {
         var result = this.calculateGrossTotal(detail);
-        result = result - detail.taxes;
+        result = result - +detail.taxes;
         return result;
     };
     PayrollListComponent.prototype.applyFilters = function () {

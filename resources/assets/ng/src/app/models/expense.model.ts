@@ -1,7 +1,7 @@
 
 export interface IExpense {
   expenseId: number,
-  payDetailsId: number,
+  payrollDetailsId: number,
   agentId: number,
   title: string,
   description: string,

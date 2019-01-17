@@ -11,6 +11,7 @@ import * as moment from 'moment';
 import { CampaignService } from '@app/campaigns/campaign.service';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { SelectionModel } from '@angular/cdk/collections';
+import { OverrideExpenseDialogComponent } from '../override-expense-dialog/override-expense-dialog.component';
 
 @Component({
     selector: 'vs-payroll-list',
@@ -161,6 +162,20 @@ export class PayrollListComponent implements OnInit {
 
     showExpensesAndOverrides(detail:PayrollDetails) {
         console.dir(detail);
+
+        this.dialog.open(OverrideExpenseDialogComponent, {
+            width: '75vw',
+            data: {
+                detail: detail,
+                agents: this.agents
+            }
+        })
+        .afterClosed()
+        .subscribe(result => {
+            if(result == null) return;
+
+            console.dir(result);
+        });
     }
 
     showReleaseConfirm() {
@@ -181,13 +196,13 @@ export class PayrollListComponent implements OnInit {
         overrides = overrides != null && overrides.length
             ? +overrides.reduce((a,c) => a + c)
             : 0;
-        const result = detail.grossTotal + expenses + overrides;
+        const result = +detail.grossTotal + expenses + overrides;
         return result;
     }
 
     calculateNetTotal(detail:PayrollDetails):number {
         let result = this.calculateGrossTotal(detail);
-        result = result - detail.taxes;
+        result = result - +detail.taxes;
         return result;
     }
 

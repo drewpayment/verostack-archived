@@ -26,6 +26,8 @@ import { PayrollDialogComponent } from './payroll/payroll-dialog/payroll-dialog.
 import { PayrollListComponent } from './payroll/payroll-list/payroll-list.component';
 import { PayrollFilterDialogComponent } from './payroll/payroll-filter-dialog/payroll-filter-dialog.component';
 import { LetDirective } from './let.directive';
+import { OverrideExpenseDialogComponent } from './payroll/override-expense-dialog/override-expense-dialog.component';
+
 
 @NgModule({
   imports: [
@@ -58,7 +60,8 @@ import { LetDirective } from './let.directive';
     PayrollDialogComponent,
     PayrollListComponent,
     PayrollFilterDialogComponent,
-    LetDirective
+    LetDirective,
+    OverrideExpenseDialogComponent
   ],
   entryComponents: [
     EditAgentDialogComponent,
@@ -66,7 +69,8 @@ import { LetDirective } from './let.directive';
     ConfirmUnpaidSelectionDialogComponent,
     PayCycleDialogComponent,
     PayrollDialogComponent,
-    PayrollFilterDialogComponent
+    PayrollFilterDialogComponent,
+    OverrideExpenseDialogComponent
   ],
   providers: [
   ],
