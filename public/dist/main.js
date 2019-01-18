@@ -8089,7 +8089,7 @@ var PayCycleService = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n\n<mat-tab-group [formGroup]=\"f\">\n\n    <!-- OVERRIDES TAB -->\n    <mat-tab label=\"Overrides\" formArrayName=\"overrides\">\n        \n        <ng-container *ngFor=\"let o of overrides; let i = index\">\n            <div class=\"row\" [formGroupName]=\"i\">\n                <div class=\"col-md-4\">\n                    <mat-form-field class=\"w-100\">\n                        <mat-select placeholder=\"Agent\" formControlName=\"agentId\" required>\n                            <mat-option *ngFor=\"let a of agents\" [value]=\"a.agentId\">\n                                {{a.firstName}} {{a.lastName}}\n                            </mat-option>\n                        </mat-select>\n                        <mat-error *ngIf=\"f.get(['overrides', i, 'agentId']).hasError('required')\">\n                            Please select an agent\n                        </mat-error>\n                    </mat-form-field>\n                </div>\n                <div class=\"col-md-4\">\n                    <mat-form-field class=\"w-100\">\n                        <input type=\"text\" matInput\n                            placeholder=\"No. of Units\"\n                            formControlName=\"units\" \n                            required />\n                        <mat-error *ngIf=\"f.get(['overrides', i, 'units']).hasError('required')\">\n                            Please enter a number of units\n                        </mat-error>\n                    </mat-form-field>\n                </div>\n                <div class=\"col-md-4\">\n                    <mat-form-field class=\"w-100\">\n                        <input type=\"text\" matInput\n                            placeholder=\"Amount per Unit\"\n                            formControlName=\"amount\"\n                            required />\n                        <mat-error *ngIf=\"f.get(['overrides', i, 'amount']).hasError('required')\">\n                            Please enter an amount per unit\n                        </mat-error>\n                    </mat-form-field>\n                </div>\n            </div>\n        </ng-container>\n\n    </mat-tab>\n\n    <!-- EXPENSES TAB -->\n    <mat-tab label=\"Expenses\" formArrayName=\"expenses\">\n        <p>Here is where our expenses stuff will go</p>\n    </mat-tab>\n\n</mat-tab-group>"
+module.exports = "\n<h3 mat-dialog-title>\n    Paycheck Adjustments\n</h3>\n<mat-dialog-content class=\"\">\n    <mat-tab-group [formGroup]=\"f\">\n\n        <!-- OVERRIDES TAB -->\n        <mat-tab label=\"Overrides\" formArrayName=\"overrides\">\n            \n            <ng-container *ngIf=\"detail.overrides.length\">\n                <div class=\"row mt-4\">\n                    <div class=\"col-md-4\">\n                        Agent\n                    </div>\n                    <div class=\"col-md-4\">\n                        No of Units\n                    </div>\n                    <div class=\"col-md-4\">\n                        Amount\n                    </div>\n                </div>\n            </ng-container>\n            <ng-container *ngFor=\"let o of detail.overrides; let i = index\">\n                <div class=\"row mb-4\" [formGroupName]=\"i\">\n                    <div class=\"col-md-4\">\n                        <mat-form-field class=\"w-100\" appearance=\"legacy\">\n                            <mat-select placeholder=\"Agent\" formControlName=\"agentId\" required>\n                                <mat-option *ngFor=\"let a of agents\" [value]=\"a.agentId\">\n                                    {{a.firstName}} {{a.lastName}}\n                                </mat-option>\n                            </mat-select>\n                            <mat-error *ngIf=\"f.get(['overrides', i, 'agentId']).hasError('required')\">\n                                Please select an agent\n                            </mat-error>\n                        </mat-form-field>\n                    </div>\n                    <div class=\"col-md-4\">\n                        <mat-form-field class=\"w-100\">\n                            <input type=\"text\" matInput\n                                placeholder=\"No. of Units\"\n                                formControlName=\"units\" \n                                required />\n                            <mat-error *ngIf=\"f.get(['overrides', i, 'units']).hasError('required')\">\n                                Please enter a number of units\n                            </mat-error>\n                        </mat-form-field>\n                    </div>\n                    <div class=\"col-md-4\">\n                        <mat-form-field class=\"w-100\">\n                            <input type=\"text\" matInput\n                                placeholder=\"Amount per Unit\"\n                                formControlName=\"amount\"\n                                required />\n                            <mat-error *ngIf=\"f.get(['overrides', i, 'amount']).hasError('required')\">\n                                Please enter an amount per unit\n                            </mat-error>\n                        </mat-form-field>\n                    </div>\n                </div>\n            </ng-container>\n\n        </mat-tab>\n\n        <!-- EXPENSES TAB -->\n        <mat-tab label=\"Expenses\" formArrayName=\"expenses\">\n            <p>Here is where our expenses stuff will go</p>\n        </mat-tab>\n\n    </mat-tab-group>\n</mat-dialog-content>"
 
 /***/ }),
 
@@ -8133,20 +8133,18 @@ var OverrideExpenseDialogComponent = /** @class */ (function () {
     }
     OverrideExpenseDialogComponent.prototype.ngOnInit = function () {
         if (this.detail != null)
-            this.patchForm();
+            this.buildFormArrays();
     };
     Object.defineProperty(OverrideExpenseDialogComponent.prototype, "overrides", {
         get: function () {
-            return this.f.get('overrides');
+            return this.f.controls.overrides.value;
         },
         enumerable: true,
         configurable: true
     });
-    OverrideExpenseDialogComponent.prototype.patchForm = function () {
-        this.f.patchValue({
-            overrides: this.createOverridesFormArray(),
-            expenses: this.createExpensesFormArray()
-        });
+    OverrideExpenseDialogComponent.prototype.buildFormArrays = function () {
+        this.createOverridesFormArray();
+        this.createExpensesFormArray();
     };
     OverrideExpenseDialogComponent.prototype.createForm = function () {
         return this.fb.group({
@@ -8156,6 +8154,8 @@ var OverrideExpenseDialogComponent = /** @class */ (function () {
     };
     OverrideExpenseDialogComponent.prototype.createOverridesFormArray = function () {
         var _this = this;
+        if (this.detail.overrides == null || this.detail.overrides.length == 0)
+            return;
         this.detail.overrides.forEach(function (o) {
             _this.f.get('overrides').push(_this.fb.group({
                 overrideId: _this.fb.control(o.overrideId),
@@ -8168,6 +8168,8 @@ var OverrideExpenseDialogComponent = /** @class */ (function () {
     };
     OverrideExpenseDialogComponent.prototype.createExpensesFormArray = function () {
         var _this = this;
+        if (this.detail.expenses == null || this.detail.expenses.length == 0)
+            return;
         this.detail.expenses.forEach(function (e) {
             _this.f.get('expenses').push(_this.fb.group({
                 expenseId: _this.fb.control(e.expenseId),

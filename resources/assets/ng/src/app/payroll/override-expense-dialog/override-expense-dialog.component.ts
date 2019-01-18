@@ -29,18 +29,16 @@ export class OverrideExpenseDialogComponent implements OnInit {
     }
 
     ngOnInit() {
-        if(this.detail != null) this.patchForm();
+        if(this.detail != null) this.buildFormArrays();
     }
 
     get overrides():FormArray {
-        return this.f.get('overrides') as FormArray;
+        return this.f.controls.overrides.value;
     }
 
-    private patchForm():void {
-        this.f.patchValue({
-            overrides: this.createOverridesFormArray(),
-            expenses: this.createExpensesFormArray()
-        });
+    private buildFormArrays() {
+        this.createOverridesFormArray();
+        this.createExpensesFormArray();
     }
 
     private createForm():FormGroup {
@@ -51,6 +49,7 @@ export class OverrideExpenseDialogComponent implements OnInit {
     }
 
     private createOverridesFormArray() {
+        if(this.detail.overrides == null || this.detail.overrides.length == 0) return;
         this.detail.overrides.forEach(o => {
             (<FormArray>this.f.get('overrides')).push(this.fb.group({
                 overrideId: this.fb.control(o.overrideId),
@@ -63,6 +62,7 @@ export class OverrideExpenseDialogComponent implements OnInit {
     }
 
     private createExpensesFormArray() {
+        if(this.detail.expenses == null || this.detail.expenses.length == 0) return;
         this.detail.expenses.forEach(e => {
             (<FormArray>this.f.get('expenses')).push(this.fb.group({
                 expenseId: this.fb.control(e.expenseId),
