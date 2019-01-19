@@ -11649,6 +11649,12 @@ mat-toolbar-row button.vs-toolbar-icon .mat-button-wrapper mat-icon {
 .mat-icon-button.active {
   background-color: #3f51b5;
   color: #fff; }
+.mat-tab-body-content {
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto; }
 .font-sm {
   font-size: .75rem; }
 .font-xs {

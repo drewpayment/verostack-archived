@@ -1,3 +1,4 @@
+import { Moment } from '@app/shared/moment-extensions';
 
 export interface IExpense {
   expenseId: number,
@@ -6,7 +7,8 @@ export interface IExpense {
   title: string,
   description: string,
   amount: number,
-  modifiedBy: number,
-  createdAt: Date,
-  updatedAt: Date
+  expenseDate:Date|Moment|string,
+  modifiedBy?: number,
+  createdAt?:Date|Moment|string,
+  updatedAt?:Date|Moment|string
 }

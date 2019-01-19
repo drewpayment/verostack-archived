@@ -164,7 +164,8 @@ export class PayrollListComponent implements OnInit {
         console.dir(detail);
 
         this.dialog.open(OverrideExpenseDialogComponent, {
-            width: '75vw',
+            width: '60vw',
+            maxHeight: '80vh',
             data: {
                 detail: detail,
                 agents: this.agents

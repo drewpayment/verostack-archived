@@ -1,30 +1,20 @@
 
-<h3 mat-dialog-title>
-    Paycheck Adjustments
-</h3>
-<mat-dialog-content class="">
+<div mat-dialog-title class="d-flex justify-content-between">
+    <h3>Paycheck Adjustments</h3>
+    <button type="button" mat-icon-button (click)="onNoClick()">
+        <mat-icon>clear</mat-icon>
+    </button>
+</div>
+<mat-dialog-content>
     <mat-tab-group [formGroup]="f">
 
         <!-- OVERRIDES TAB -->
-        <mat-tab label="Overrides" formArrayName="overrides">
+        <mat-tab label="Overrides" formArrayName="overrides" #overrideTab>
             
-            <ng-container *ngIf="detail.overrides.length">
-                <div class="row mt-4">
-                    <div class="col-md-4">
-                        Agent
-                    </div>
-                    <div class="col-md-4">
-                        No of Units
-                    </div>
-                    <div class="col-md-4">
-                        Amount
-                    </div>
-                </div>
-            </ng-container>
             <ng-container *ngFor="let o of detail.overrides; let i = index">
-                <div class="row mb-4" [formGroupName]="i">
+                <div class="row mt-4 mb-2" [formGroupName]="i">
                     <div class="col-md-4">
-                        <mat-form-field class="w-100" appearance="legacy">
+                        <mat-form-field class="w-100">
                             <mat-select placeholder="Agent" formControlName="agentId" required>
                                 <mat-option *ngFor="let a of agents" [value]="a.agentId">
                                     {{a.firstName}} {{a.lastName}}
@@ -46,26 +36,118 @@
                             </mat-error>
                         </mat-form-field>
                     </div>
-                    <div class="col-md-4">
-                        <mat-form-field class="w-100">
-                            <input type="text" matInput
-                                placeholder="Amount per Unit"
-                                formControlName="amount"
-                                required />
-                            <mat-error *ngIf="f.get(['overrides', i, 'amount']).hasError('required')">
-                                Please enter an amount per unit
-                            </mat-error>
-                        </mat-form-field>
+                    <div class="col-md-4 d-flex">
+                        <div>
+                            <mat-form-field class="w-100">
+                                <input type="text" matInput
+                                    placeholder="Amount per Unit"
+                                    [value]="f.get(['overrides', i, 'amount']).value | currency"
+                                    formControlName="amount"
+                                    required />
+                                <mat-error *ngIf="f.get(['overrides', i, 'amount']).hasError('required')">
+                                    Please enter an amount per unit
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <button type="button"
+                            mat-icon-button
+                            *ngIf="detail.overrides[i].overrideId == null || detail.overrides[i].overrideId == 0"
+                            (click)="removeUnsavedOverride(i)"
+                        >
+                            <mat-icon>remove_circle_outline</mat-icon>
+                        </button>
+                    </div>
+                </div>
+                <mat-divider></mat-divider>
+            </ng-container>
+            <ng-container *ngIf="detail.overrides == null || detail.overrides.length == 0">
+                <div class="row my-4">
+                    <div class="col-md-12">
+                        <h5 class="text-muted font-italic">
+                            No overrides for this paycheck. Click the add button below if you'd like to add one.
+                        </h5>
+                    </div>
+                </div>
+            </ng-container>
+            
+        </mat-tab>
+
+        <!-- EXPENSES TAB -->
+        <mat-tab label="Expenses" formArrayName="expenses" #expenseTab>
+            
+            <ng-container *ngFor="let e of detail.expenses; let i = index">
+                <ng-container [formGroupName]="i">
+                    <div class="row mt-4">
+                        <div class="col-md-5">
+                            <mat-form-field class="w-100">
+                                <input type="text" matInput
+                                    placeholder="Title"
+                                    formControlName="title"
+                                />
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-3">
+                            <mat-form-field class="w-100">
+                                <input type="text" matInput
+                                    placeholder="Amount"
+                                    [value]="f.get(['expenses', i, 'amount']).value | currency"
+                                    formControlName="amount"
+                                    required
+                                />
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-4 d-flex">
+                            <div>
+                                <mat-form-field class="w-100">
+                                    <input matInput
+                                        [matDatepicker]="expenseDatepicker"
+                                        placeholder="Date"
+                                        formControlName="expenseDate"
+                                        required
+                                    />
+                                    <mat-datepicker-toggle matSuffix [for]="expenseDatepicker"></mat-datepicker-toggle>
+                                    <mat-datepicker #expenseDatepicker></mat-datepicker>
+                                </mat-form-field>
+                            </div>
+                            <button type="button"
+                                mat-icon-button
+                                *ngIf="detail.expenses[i].expenseId == null || detail.expenses[i].expenseId == 0"
+                                (click)="removeUnsavedExpense(i)"
+                            >
+                                <mat-icon>remove_circle_outline</mat-icon>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-md-12">
+                            <mat-form-field class="w-100">
+                                <textarea matInput 
+                                    placeholder="Description" 
+                                    formControlName="description"
+                                    rows="5"
+                                ></textarea>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </ng-container>
+                <mat-divider></mat-divider>
+            </ng-container>
+            <ng-container *ngIf="detail.expenses == null || detail.expenses.length == 0">
+                <div class="row my-4">
+                    <div class="col-md-12">
+                        <h5 class="text-muted font-italic">
+                            No expenses for this paycheck. Click the add button below if you'd like to add one.
+                        </h5>
                     </div>
                 </div>
             </ng-container>
 
         </mat-tab>
 
-        <!-- EXPENSES TAB -->
-        <mat-tab label="Expenses" formArrayName="expenses">
-            <p>Here is where our expenses stuff will go</p>
-        </mat-tab>
-
     </mat-tab-group>
 </mat-dialog-content>
+<mat-dialog-actions class="d-flex justify-content-end">
+    <button type="button" mat-button color="primary" (click)="addAdjustment()">
+        Add {{ getActiveTabTitle() }}
+    </button>
+</mat-dialog-actions>
