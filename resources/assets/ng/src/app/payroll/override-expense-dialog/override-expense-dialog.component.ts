@@ -1,5 +1,5 @@
 import {Component, OnInit, Inject, ViewChild} from '@angular/core';
-import { PayrollDetails, IAgent, IOverride } from '@app/models';
+import { PayrollDetails, IAgent, IOverride, IExpense } from '@app/models';
 import { MatDialogRef, MAT_DIALOG_DATA, MatTab } from '@angular/material';
 import { FormGroup, FormBuilder, FormArray, Validators, FormControl } from '@angular/forms';
 import { trigger, transition, style, animate } from '@angular/animations';
@@ -118,7 +118,37 @@ export class OverrideExpenseDialogComponent implements OnInit {
     }
 
     private prepareModel() {
-        return {} as PayrollDetails;
+        const overridesForm = this.f.get('overrides') as FormArray;
+        const expensesForm = this.f.get('expenses') as FormArray;
+        let overrides = [] as IOverride[];
+        let expenses = [] as IExpense[];
+
+        overridesForm.value.forEach((o:IOverride) => {
+            overrides.push({
+                overrideId: o.overrideId,
+                payrollDetailsId: o.payrollDetailsId,
+                agentId: o.agentId,
+                amount: o.amount,
+                units: o.units
+            });
+        });
+
+        expensesForm.value.forEach((e:IExpense) => {
+            expenses.push({
+                expenseId: e.expenseId,
+                payrollDetailsId: e.payrollDetailsId,
+                agentId: e.agentId,
+                amount: e.amount,
+                description: e.description,
+                expenseDate: e.expenseDate,
+                title: e.title
+            });
+        });
+
+        this.detail.overrides = overrides;
+        this.detail.expenses = expenses;
+
+        return this.detail;
     }
 
     private isNumericKeyPress(key) {

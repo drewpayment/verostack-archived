@@ -8299,7 +8299,33 @@ var OverrideExpenseDialogComponent = /** @class */ (function () {
         this.ref.close(model);
     };
     OverrideExpenseDialogComponent.prototype.prepareModel = function () {
-        return {};
+        var overridesForm = this.f.get('overrides');
+        var expensesForm = this.f.get('expenses');
+        var overrides = [];
+        var expenses = [];
+        overridesForm.value.forEach(function (o) {
+            overrides.push({
+                overrideId: o.overrideId,
+                payrollDetailsId: o.payrollDetailsId,
+                agentId: o.agentId,
+                amount: o.amount,
+                units: o.units
+            });
+        });
+        expensesForm.value.forEach(function (e) {
+            expenses.push({
+                expenseId: e.expenseId,
+                payrollDetailsId: e.payrollDetailsId,
+                agentId: e.agentId,
+                amount: e.amount,
+                description: e.description,
+                expenseDate: e.expenseDate,
+                title: e.title
+            });
+        });
+        this.detail.overrides = overrides;
+        this.detail.expenses = expenses;
+        return this.detail;
     };
     OverrideExpenseDialogComponent.prototype.isNumericKeyPress = function (key) {
         var numericKeys = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
