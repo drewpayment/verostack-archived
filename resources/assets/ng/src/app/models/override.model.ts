@@ -4,5 +4,5 @@ export interface IOverride {
   agentId:number,
   payrollDetailsId:number,
   units:number,
-  amount:number
+  amount:any
 }

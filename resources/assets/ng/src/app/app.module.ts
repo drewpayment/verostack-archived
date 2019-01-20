@@ -27,6 +27,7 @@ import { PayrollListComponent } from './payroll/payroll-list/payroll-list.compon
 import { PayrollFilterDialogComponent } from './payroll/payroll-filter-dialog/payroll-filter-dialog.component';
 import { LetDirective } from './let.directive';
 import { OverrideExpenseDialogComponent } from './payroll/override-expense-dialog/override-expense-dialog.component';
+import { DirectivesModule } from './directives/directives.module';
 
 
 @NgModule({
@@ -41,7 +42,8 @@ import { OverrideExpenseDialogComponent } from './payroll/override-expense-dialo
     FabFloatBtnModule,
     PipesModule,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    DirectivesModule
   ],
   declarations: [
     AppComponent,

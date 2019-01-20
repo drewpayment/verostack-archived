@@ -1398,6 +1398,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _payroll_payroll_filter_dialog_payroll_filter_dialog_component__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! ./payroll/payroll-filter-dialog/payroll-filter-dialog.component */ "./src/app/payroll/payroll-filter-dialog/payroll-filter-dialog.component.ts");
 /* harmony import */ var _let_directive__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! ./let.directive */ "./src/app/let.directive.ts");
 /* harmony import */ var _payroll_override_expense_dialog_override_expense_dialog_component__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! ./payroll/override-expense-dialog/override-expense-dialog.component */ "./src/app/payroll/override-expense-dialog/override-expense-dialog.component.ts");
+/* harmony import */ var _directives_directives_module__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(/*! ./directives/directives.module */ "./src/app/directives/directives.module.ts");
+
 
 
 
@@ -1444,7 +1446,8 @@ var AppModule = /** @class */ (function () {
                 _app_fab_float_btn_fab_float_btn_module__WEBPACK_IMPORTED_MODULE_14__["FabFloatBtnModule"],
                 _app_pipes_pipes_module__WEBPACK_IMPORTED_MODULE_15__["PipesModule"],
                 _angular_forms__WEBPACK_IMPORTED_MODULE_17__["ReactiveFormsModule"],
-                _angular_forms__WEBPACK_IMPORTED_MODULE_17__["FormsModule"]
+                _angular_forms__WEBPACK_IMPORTED_MODULE_17__["FormsModule"],
+                _directives_directives_module__WEBPACK_IMPORTED_MODULE_30__["DirectivesModule"]
             ],
             declarations: [
                 _app_component__WEBPACK_IMPORTED_MODULE_5__["AppComponent"],
@@ -6050,6 +6053,100 @@ var AgentAddSaleDialog = /** @class */ (function () {
 
 /***/ }),
 
+/***/ "./src/app/directives/debounce-keyup.directive.ts":
+/*!********************************************************!*\
+  !*** ./src/app/directives/debounce-keyup.directive.ts ***!
+  \********************************************************/
+/*! exports provided: DebounceKeyupDirective */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DebounceKeyupDirective", function() { return DebounceKeyupDirective; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
+/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
+
+
+
+
+var DebounceKeyupDirective = /** @class */ (function () {
+    function DebounceKeyupDirective() {
+        this.debounceKeyup = new _angular_core__WEBPACK_IMPORTED_MODULE_1__["EventEmitter"]();
+        this.keyups = new rxjs__WEBPACK_IMPORTED_MODULE_2__["Subject"]();
+    }
+    DebounceKeyupDirective.prototype.ngOnInit = function () {
+        var _this = this;
+        this.keyups.pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["debounceTime"])(250)).subscribe(function (e) { return _this.debounceKeyup.emit(e); });
+    };
+    DebounceKeyupDirective.prototype.keyup = function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        this.keyups.next(event);
+    };
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Output"])(),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Object)
+    ], DebounceKeyupDirective.prototype, "debounceKeyup", void 0);
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["HostListener"])('keyup', ['$event']),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Function),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [Object]),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:returntype", void 0)
+    ], DebounceKeyupDirective.prototype, "keyup", null);
+    DebounceKeyupDirective = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Directive"])({
+            selector: '[debounceKeyup]'
+        }),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [])
+    ], DebounceKeyupDirective);
+    return DebounceKeyupDirective;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/directives/directives.module.ts":
+/*!*************************************************!*\
+  !*** ./src/app/directives/directives.module.ts ***!
+  \*************************************************/
+/*! exports provided: DirectivesModule */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DirectivesModule", function() { return DirectivesModule; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/fesm5/common.js");
+/* harmony import */ var _debounce_keyup_directive__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./debounce-keyup.directive */ "./src/app/directives/debounce-keyup.directive.ts");
+
+
+
+
+var DirectivesModule = /** @class */ (function () {
+    function DirectivesModule() {
+    }
+    DirectivesModule = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["NgModule"])({
+            declarations: [_debounce_keyup_directive__WEBPACK_IMPORTED_MODULE_3__["DebounceKeyupDirective"]],
+            imports: [
+                _angular_common__WEBPACK_IMPORTED_MODULE_2__["CommonModule"]
+            ],
+            exports: [
+                _debounce_keyup_directive__WEBPACK_IMPORTED_MODULE_3__["DebounceKeyupDirective"]
+            ]
+        })
+    ], DirectivesModule);
+    return DirectivesModule;
+}());
+
+
+
+/***/ }),
+
 /***/ "./src/app/fab-float-btn/fab-float-btn.component.html":
 /*!************************************************************!*\
   !*** ./src/app/fab-float-btn/fab-float-btn.component.html ***!
@@ -8089,7 +8186,7 @@ var PayCycleService = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n<div mat-dialog-title class=\"d-flex justify-content-between\">\n    <h3>Paycheck Adjustments</h3>\n    <button type=\"button\" mat-icon-button (click)=\"onNoClick()\">\n        <mat-icon>clear</mat-icon>\n    </button>\n</div>\n<mat-dialog-content>\n    <mat-tab-group [formGroup]=\"f\">\n\n        <!-- OVERRIDES TAB -->\n        <mat-tab label=\"Overrides\" formArrayName=\"overrides\" #overrideTab>\n            \n            <ng-container *ngFor=\"let o of detail.overrides; let i = index\">\n                <div class=\"row mt-4 mb-2\" [formGroupName]=\"i\">\n                    <div class=\"col-md-4\">\n                        <mat-form-field class=\"w-100\">\n                            <mat-select placeholder=\"Agent\" formControlName=\"agentId\" required>\n                                <mat-option *ngFor=\"let a of agents\" [value]=\"a.agentId\">\n                                    {{a.firstName}} {{a.lastName}}\n                                </mat-option>\n                            </mat-select>\n                            <mat-error *ngIf=\"f.get(['overrides', i, 'agentId']).hasError('required')\">\n                                Please select an agent\n                            </mat-error>\n                        </mat-form-field>\n                    </div>\n                    <div class=\"col-md-4\">\n                        <mat-form-field class=\"w-100\">\n                            <input type=\"text\" matInput\n                                placeholder=\"No. of Units\"\n                                formControlName=\"units\" \n                                required />\n                            <mat-error *ngIf=\"f.get(['overrides', i, 'units']).hasError('required')\">\n                                Please enter a number of units\n                            </mat-error>\n                        </mat-form-field>\n                    </div>\n                    <div class=\"col-md-4 d-flex\">\n                        <div>\n                            <mat-form-field class=\"w-100\">\n                                <input type=\"text\" matInput\n                                    placeholder=\"Amount per Unit\"\n                                    [value]=\"f.get(['overrides', i, 'amount']).value | currency\"\n                                    formControlName=\"amount\"\n                                    required />\n                                <mat-error *ngIf=\"f.get(['overrides', i, 'amount']).hasError('required')\">\n                                    Please enter an amount per unit\n                                </mat-error>\n                            </mat-form-field>\n                        </div>\n                        <button type=\"button\"\n                            mat-icon-button\n                            *ngIf=\"detail.overrides[i].overrideId == null || detail.overrides[i].overrideId == 0\"\n                            (click)=\"removeUnsavedOverride(i)\"\n                        >\n                            <mat-icon>remove_circle_outline</mat-icon>\n                        </button>\n                    </div>\n                </div>\n                <mat-divider></mat-divider>\n            </ng-container>\n            <ng-container *ngIf=\"detail.overrides == null || detail.overrides.length == 0\">\n                <div class=\"row my-4\">\n                    <div class=\"col-md-12\">\n                        <h5 class=\"text-muted font-italic\">\n                            No overrides for this paycheck. Click the add button below if you'd like to add one.\n                        </h5>\n                    </div>\n                </div>\n            </ng-container>\n            \n        </mat-tab>\n\n        <!-- EXPENSES TAB -->\n        <mat-tab label=\"Expenses\" formArrayName=\"expenses\" #expenseTab>\n            \n            <ng-container *ngFor=\"let e of detail.expenses; let i = index\">\n                <ng-container [formGroupName]=\"i\">\n                    <div class=\"row mt-4\">\n                        <div class=\"col-md-5\">\n                            <mat-form-field class=\"w-100\">\n                                <input type=\"text\" matInput\n                                    placeholder=\"Title\"\n                                    formControlName=\"title\"\n                                />\n                            </mat-form-field>\n                        </div>\n                        <div class=\"col-md-3\">\n                            <mat-form-field class=\"w-100\">\n                                <input type=\"text\" matInput\n                                    placeholder=\"Amount\"\n                                    [value]=\"f.get(['expenses', i, 'amount']).value | currency\"\n                                    formControlName=\"amount\"\n                                    required\n                                />\n                            </mat-form-field>\n                        </div>\n                        <div class=\"col-md-4 d-flex\">\n                            <div>\n                                <mat-form-field class=\"w-100\">\n                                    <input matInput\n                                        [matDatepicker]=\"expenseDatepicker\"\n                                        placeholder=\"Date\"\n                                        formControlName=\"expenseDate\"\n                                        required\n                                    />\n                                    <mat-datepicker-toggle matSuffix [for]=\"expenseDatepicker\"></mat-datepicker-toggle>\n                                    <mat-datepicker #expenseDatepicker></mat-datepicker>\n                                </mat-form-field>\n                            </div>\n                            <button type=\"button\"\n                                mat-icon-button\n                                *ngIf=\"detail.expenses[i].expenseId == null || detail.expenses[i].expenseId == 0\"\n                                (click)=\"removeUnsavedExpense(i)\"\n                            >\n                                <mat-icon>remove_circle_outline</mat-icon>\n                            </button>\n                        </div>\n                    </div>\n                    <div class=\"row mb-2\">\n                        <div class=\"col-md-12\">\n                            <mat-form-field class=\"w-100\">\n                                <textarea matInput \n                                    placeholder=\"Description\" \n                                    formControlName=\"description\"\n                                    rows=\"5\"\n                                ></textarea>\n                            </mat-form-field>\n                        </div>\n                    </div>\n                </ng-container>\n                <mat-divider></mat-divider>\n            </ng-container>\n            <ng-container *ngIf=\"detail.expenses == null || detail.expenses.length == 0\">\n                <div class=\"row my-4\">\n                    <div class=\"col-md-12\">\n                        <h5 class=\"text-muted font-italic\">\n                            No expenses for this paycheck. Click the add button below if you'd like to add one.\n                        </h5>\n                    </div>\n                </div>\n            </ng-container>\n\n        </mat-tab>\n\n    </mat-tab-group>\n</mat-dialog-content>\n<mat-dialog-actions class=\"d-flex justify-content-end\">\n    <button type=\"button\" mat-button color=\"primary\" (click)=\"addAdjustment()\">\n        Add {{ getActiveTabTitle() }}\n    </button>\n</mat-dialog-actions>"
+module.exports = "\n<div mat-dialog-title class=\"d-flex justify-content-between\">\n    <h3>Paycheck Adjustments</h3>\n    <button type=\"button\" mat-icon-button (click)=\"onNoClick()\">\n        <mat-icon>clear</mat-icon>\n    </button>\n</div>\n<mat-dialog-content>\n    <mat-tab-group [formGroup]=\"f\">\n\n        <!-- OVERRIDES TAB -->\n        <mat-tab label=\"Overrides\" formArrayName=\"overrides\" #overrideTab>\n            \n            <ng-container *ngFor=\"let o of detail.overrides; let i = index\">\n                <div class=\"row mt-4 mb-2\" [formGroupName]=\"i\">\n                    <div class=\"col-md-4\">\n                        <mat-form-field class=\"w-100\">\n                            <mat-select placeholder=\"Agent\" formControlName=\"agentId\" required>\n                                <mat-option *ngFor=\"let a of agents\" [value]=\"a.agentId\">\n                                    {{a.firstName}} {{a.lastName}}\n                                </mat-option>\n                            </mat-select>\n                            <mat-error *ngIf=\"f.get(['overrides', i, 'agentId']).hasError('required')\">\n                                Please select an agent\n                            </mat-error>\n                        </mat-form-field>\n                    </div>\n                    <div class=\"col-md-4\">\n                        <mat-form-field class=\"w-100\">\n                            <input type=\"text\" matInput\n                                placeholder=\"No. of Units\"\n                                formControlName=\"units\" \n                                required />\n                            <mat-error *ngIf=\"f.get(['overrides', i, 'units']).hasError('required')\">\n                                Please enter a number of units\n                            </mat-error>\n                        </mat-form-field>\n                    </div>\n                    <div class=\"col-md-4 d-flex\">\n                        <div>\n                            <mat-form-field class=\"w-100\">\n                                <input type=\"text\" matInput\n                                    placeholder=\"Amount per Unit\"\n                                    (blur)=\"formatCurrencyOnBlur(f.get(['overrides', i, 'amount']), $event)\"\n                                    formControlName=\"amount\"\n                                    required />\n                                <mat-error *ngIf=\"f.get(['overrides', i, 'amount']).hasError('required')\">\n                                    Please enter an amount per unit\n                                </mat-error>\n                            </mat-form-field>\n                        </div>\n                        <button type=\"button\"\n                            mat-icon-button\n                            *ngIf=\"detail.overrides[i].overrideId == null || detail.overrides[i].overrideId == 0\"\n                            (click)=\"removeUnsavedOverride(i)\"\n                        >\n                            <mat-icon>remove_circle_outline</mat-icon>\n                        </button>\n                    </div>\n                </div>\n                <mat-divider></mat-divider>\n            </ng-container>\n            <ng-container *ngIf=\"detail.overrides == null || detail.overrides.length == 0\">\n                <div class=\"row my-4\">\n                    <div class=\"col-md-12\">\n                        <h5 class=\"text-muted font-italic\">\n                            No overrides for this paycheck. Click the add button below if you'd like to add one.\n                        </h5>\n                    </div>\n                </div>\n            </ng-container>\n            \n        </mat-tab>\n\n        <!-- EXPENSES TAB -->\n        <mat-tab label=\"Expenses\" formArrayName=\"expenses\" #expenseTab>\n            \n            <ng-container *ngFor=\"let e of detail.expenses; let i = index\">\n                <ng-container [formGroupName]=\"i\">\n                    <div class=\"row mt-4\">\n                        <div class=\"col-md-5\">\n                            <mat-form-field class=\"w-100\">\n                                <input type=\"text\" matInput\n                                    placeholder=\"Title\"\n                                    formControlName=\"title\"\n                                />\n                            </mat-form-field>\n                        </div>\n                        <div class=\"col-md-3\">\n                            <mat-form-field class=\"w-100\">\n                                <input type=\"text\" matInput\n                                    placeholder=\"Amount\"\n                                    (blur)=\"formatCurrencyOnBlur(f.get(['expenses', i, 'amount']), $event)\"\n                                    formControlName=\"amount\"\n                                    required\n                                />\n                            </mat-form-field>\n                        </div>\n                        <div class=\"col-md-4 d-flex\">\n                            <div>\n                                <mat-form-field class=\"w-100\">\n                                    <input matInput\n                                        [matDatepicker]=\"expenseDatepicker\"\n                                        placeholder=\"Date\"\n                                        formControlName=\"expenseDate\"\n                                        required\n                                    />\n                                    <mat-datepicker-toggle matSuffix [for]=\"expenseDatepicker\"></mat-datepicker-toggle>\n                                    <mat-datepicker #expenseDatepicker></mat-datepicker>\n                                </mat-form-field>\n                            </div>\n                            <button type=\"button\"\n                                mat-icon-button\n                                *ngIf=\"detail.expenses[i].expenseId == null || detail.expenses[i].expenseId == 0\"\n                                (click)=\"removeUnsavedExpense(i)\"\n                            >\n                                <mat-icon>remove_circle_outline</mat-icon>\n                            </button>\n                        </div>\n                    </div>\n                    <div class=\"row mb-2\">\n                        <div class=\"col-md-12\">\n                            <mat-form-field class=\"w-100\">\n                                <textarea matInput \n                                    placeholder=\"Description\" \n                                    formControlName=\"description\"\n                                    rows=\"5\"\n                                ></textarea>\n                            </mat-form-field>\n                        </div>\n                    </div>\n                </ng-container>\n                <mat-divider></mat-divider>\n            </ng-container>\n            <ng-container *ngIf=\"detail.expenses == null || detail.expenses.length == 0\">\n                <div class=\"row my-4\">\n                    <div class=\"col-md-12\">\n                        <h5 class=\"text-muted font-italic\">\n                            No expenses for this paycheck. Click the add button below if you'd like to add one.\n                        </h5>\n                    </div>\n                </div>\n            </ng-container>\n\n        </mat-tab>\n\n    </mat-tab-group>\n</mat-dialog-content>\n<mat-dialog-actions class=\"d-flex justify-content-end\">\n    <button type=\"button\" mat-button color=\"primary\" (click)=\"addAdjustment()\">\n        Add {{ getActiveTabTitle() }}\n    </button>\n    <ng-container *ngIf=\"f.dirty && f.touched\">\n        <div class=\"d-flex\" [@enter]>\n            <mat-divider inset=\"true\"></mat-divider>\n            <button type=\"button\" mat-button\n                color=\"warn\"\n                (click)=\"onNoClick()\"\n            >Cancel</button>\n            <button type=\"button\" mat-button\n                color=\"primary\"\n                (click)=\"saveForm()\"\n            >Save</button>\n        </div>\n    </ng-container>\n</mat-dialog-actions>"
 
 /***/ }),
 
@@ -8118,6 +8215,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/material */ "./node_modules/@angular/material/esm5/material.es5.js");
 /* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
+/* harmony import */ var _angular_animations__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/animations */ "./node_modules/@angular/animations/fesm5/animations.js");
+
 
 
 
@@ -8171,6 +8270,43 @@ var OverrideExpenseDialogComponent = /** @class */ (function () {
             this.detail.expenses.splice(index, 1);
             this.f.get('expenses').removeAt(index);
         }
+    };
+    OverrideExpenseDialogComponent.prototype.formatCurrencyOnBlur = function (element, event) {
+        var result = event.target.value;
+        var i = result.lastIndexOf('.');
+        if (i == -1) {
+            result = result + ".00";
+        }
+        else if (result.slice(i).length < 2) {
+            var cents = result.slice(i);
+            if (cents == 0)
+                result = result.slice(0, i) + '00';
+            else
+                result = result.slice(0, result.length - 1) + '0';
+        }
+        else if (result.slice(i).length > 2) {
+            var cents = result.slice(i);
+            result = result.replace(cents, "." + cents.slice(-2));
+        }
+        if (result.charAt(0) != '$')
+            result = "$" + result;
+        element.patchValue(result);
+    };
+    OverrideExpenseDialogComponent.prototype.saveForm = function () {
+        if (!this.f.valid)
+            return;
+        var model = this.prepareModel();
+        this.ref.close(model);
+    };
+    OverrideExpenseDialogComponent.prototype.prepareModel = function () {
+        return {};
+    };
+    OverrideExpenseDialogComponent.prototype.isNumericKeyPress = function (key) {
+        var numericKeys = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+        return numericKeys.includes(key);
+    };
+    OverrideExpenseDialogComponent.prototype.isNumeric = function (value) {
+        return !isNaN(value - parseFloat(value));
     };
     OverrideExpenseDialogComponent.prototype.addOverrideFormItem = function () {
         this.f.get('overrides').push(this.fb.group({
@@ -8260,6 +8396,18 @@ var OverrideExpenseDialogComponent = /** @class */ (function () {
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
             selector: 'vs-override-expense-dialog',
             template: __webpack_require__(/*! ./override-expense-dialog.component.html */ "./src/app/payroll/override-expense-dialog/override-expense-dialog.component.html"),
+            animations: [
+                Object(_angular_animations__WEBPACK_IMPORTED_MODULE_4__["trigger"])('enter', [
+                    Object(_angular_animations__WEBPACK_IMPORTED_MODULE_4__["transition"])(':enter', [
+                        Object(_angular_animations__WEBPACK_IMPORTED_MODULE_4__["style"])({ transform: 'translateX(100%)', opacity: 0 }),
+                        Object(_angular_animations__WEBPACK_IMPORTED_MODULE_4__["animate"])('500ms', Object(_angular_animations__WEBPACK_IMPORTED_MODULE_4__["style"])({ transform: 'translateX(0)', opacity: 1 }))
+                    ]),
+                    Object(_angular_animations__WEBPACK_IMPORTED_MODULE_4__["transition"])(':leave', [
+                        Object(_angular_animations__WEBPACK_IMPORTED_MODULE_4__["style"])({ transform: 'translateX(0)', opacity: 1 }),
+                        Object(_angular_animations__WEBPACK_IMPORTED_MODULE_4__["animate"])('500ms', Object(_angular_animations__WEBPACK_IMPORTED_MODULE_4__["style"])({ transform: 'translateX(100%)', opacity: 0 }))
+                    ])
+                ])
+            ],
             styles: [__webpack_require__(/*! ./override-expense-dialog.component.scss */ "./src/app/payroll/override-expense-dialog/override-expense-dialog.component.scss")]
         }),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__param"](1, Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Inject"])(_angular_material__WEBPACK_IMPORTED_MODULE_2__["MAT_DIALOG_DATA"])),
@@ -8886,6 +9034,49 @@ var PayrollService = /** @class */ (function () {
 
 /***/ }),
 
+/***/ "./src/app/pipes/currency-input.pipe.ts":
+/*!**********************************************!*\
+  !*** ./src/app/pipes/currency-input.pipe.ts ***!
+  \**********************************************/
+/*! exports provided: CurrencyInputPipe */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CurrencyInputPipe", function() { return CurrencyInputPipe; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+
+
+var CurrencyInputPipe = /** @class */ (function () {
+    function CurrencyInputPipe() {
+    }
+    CurrencyInputPipe.prototype.transform = function (value, args) {
+        console.dir([value, args]);
+        var result = this.isNumeric(value) ? value + '' : value;
+        var firstChar = result.charAt(0);
+        if (!this.isNumeric(firstChar))
+            result.slice(0, 1);
+        var decimalIndex = result.indexOf('.');
+        result.slice(decimalIndex, 2);
+        result = result == null || result.length == 0 ? "00" : result;
+        return "$" + result + ".00";
+    };
+    CurrencyInputPipe.prototype.isNumeric = function (value) {
+        return !isNaN(value - parseFloat(value));
+    };
+    CurrencyInputPipe = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Pipe"])({
+            name: 'currencyInput'
+        })
+    ], CurrencyInputPipe);
+    return CurrencyInputPipe;
+}());
+
+
+
+/***/ }),
+
 /***/ "./src/app/pipes/phone.pipe.ts":
 /*!*************************************!*\
   !*** ./src/app/pipes/phone.pipe.ts ***!
@@ -8937,6 +9128,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/fesm5/common.js");
 /* harmony import */ var _app_pipes_phone_pipe__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @app/pipes/phone.pipe */ "./src/app/pipes/phone.pipe.ts");
 /* harmony import */ var _app_material_material_module__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @app/material/material.module */ "./src/app/material/material.module.ts");
+/* harmony import */ var _currency_input_pipe__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./currency-input.pipe */ "./src/app/pipes/currency-input.pipe.ts");
+
 
 
 
@@ -8951,8 +9144,8 @@ var PipesModule = /** @class */ (function () {
                 _angular_common__WEBPACK_IMPORTED_MODULE_2__["CommonModule"],
                 _app_material_material_module__WEBPACK_IMPORTED_MODULE_4__["MaterialModule"]
             ],
-            declarations: [_app_pipes_phone_pipe__WEBPACK_IMPORTED_MODULE_3__["PhonePipe"]],
-            exports: [_app_pipes_phone_pipe__WEBPACK_IMPORTED_MODULE_3__["PhonePipe"]]
+            declarations: [_app_pipes_phone_pipe__WEBPACK_IMPORTED_MODULE_3__["PhonePipe"], _currency_input_pipe__WEBPACK_IMPORTED_MODULE_5__["CurrencyInputPipe"]],
+            exports: [_app_pipes_phone_pipe__WEBPACK_IMPORTED_MODULE_3__["PhonePipe"], _currency_input_pipe__WEBPACK_IMPORTED_MODULE_5__["CurrencyInputPipe"]]
         })
     ], PipesModule);
     return PipesModule;

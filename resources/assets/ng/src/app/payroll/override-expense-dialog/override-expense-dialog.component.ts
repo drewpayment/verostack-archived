@@ -1,7 +1,8 @@
 import {Component, OnInit, Inject, ViewChild} from '@angular/core';
-import { PayrollDetails, IAgent } from '@app/models';
+import { PayrollDetails, IAgent, IOverride } from '@app/models';
 import { MatDialogRef, MAT_DIALOG_DATA, MatTab } from '@angular/material';
-import { FormGroup, FormBuilder, FormArray, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, FormArray, Validators, FormControl } from '@angular/forms';
+import { trigger, transition, style, animate } from '@angular/animations';
 
 interface DialogData {
     detail:PayrollDetails,
@@ -11,7 +12,21 @@ interface DialogData {
 @Component({
     selector: 'vs-override-expense-dialog',
     templateUrl: './override-expense-dialog.component.html',
-    styleUrls: ['./override-expense-dialog.component.scss']
+    styleUrls: ['./override-expense-dialog.component.scss'],
+    animations: [
+        trigger(
+            'enter', [
+                transition(':enter', [
+                    style({transform: 'translateX(100%)', opacity: 0}),
+                    animate('500ms', style({transform: 'translateX(0)', opacity: 1}))
+                ]),
+                transition(':leave', [
+                    style({transform: 'translateX(0)', opacity: 1}),
+                    animate('500ms', style({transform: 'translateX(100%)', opacity: 0}))
+                ])
+            ]
+        )
+    ]
 })
 export class OverrideExpenseDialogComponent implements OnInit {
 
@@ -71,6 +86,48 @@ export class OverrideExpenseDialogComponent implements OnInit {
             this.detail.expenses.splice(index, 1);
             (<FormArray>this.f.get('expenses')).removeAt(index);
         }
+    }
+
+    formatCurrencyOnBlur(element:FormControl, event) {
+        let result = event.target.value;
+        let i = result.lastIndexOf('.');
+
+        if(i == -1) {
+            result = `${result}.00`;
+        } else if(result.slice(i).length < 2) {
+            let cents = result.slice(i);
+            if(cents == 0)
+                result = result.slice(0, i) + '00';
+            else
+                result = result.slice(0, result.length - 1) + '0';
+        } else if(result.slice(i).length > 2) {
+            let cents = result.slice(i);
+            result = result.replace(cents, `.${cents.slice(-2)}`);
+        }
+
+        if(result.charAt(0) != '$')
+            result = `$${result}`;
+
+        element.patchValue(result);
+    }
+
+    saveForm() {
+        if(!this.f.valid) return;
+        const model = this.prepareModel();
+        this.ref.close(model);
+    }
+
+    private prepareModel() {
+        return {} as PayrollDetails;
+    }
+
+    private isNumericKeyPress(key) {
+        const numericKeys = [0,1,2,3,4,5,6,7,8,9,0];
+        return numericKeys.includes(key);
+    }
+
+    private isNumeric(value:any):boolean {
+        return !isNaN(value - parseFloat(value));
     }
 
     private addOverrideFormItem() {

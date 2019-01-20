@@ -41,7 +41,7 @@
                             <mat-form-field class="w-100">
                                 <input type="text" matInput
                                     placeholder="Amount per Unit"
-                                    [value]="f.get(['overrides', i, 'amount']).value | currency"
+                                    (blur)="formatCurrencyOnBlur(f.get(['overrides', i, 'amount']), $event)"
                                     formControlName="amount"
                                     required />
                                 <mat-error *ngIf="f.get(['overrides', i, 'amount']).hasError('required')">
@@ -90,7 +90,7 @@
                             <mat-form-field class="w-100">
                                 <input type="text" matInput
                                     placeholder="Amount"
-                                    [value]="f.get(['expenses', i, 'amount']).value | currency"
+                                    (blur)="formatCurrencyOnBlur(f.get(['expenses', i, 'amount']), $event)"
                                     formControlName="amount"
                                     required
                                 />
@@ -150,4 +150,17 @@
     <button type="button" mat-button color="primary" (click)="addAdjustment()">
         Add {{ getActiveTabTitle() }}
     </button>
+    <ng-container *ngIf="f.dirty && f.touched">
+        <div class="d-flex" [@enter]>
+            <mat-divider inset="true"></mat-divider>
+            <button type="button" mat-button
+                color="warn"
+                (click)="onNoClick()"
+            >Cancel</button>
+            <button type="button" mat-button
+                color="primary"
+                (click)="saveForm()"
+            >Save</button>
+        </div>
+    </ng-container>
 </mat-dialog-actions>
