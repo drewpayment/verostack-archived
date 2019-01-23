@@ -1,10 +1,10 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import { Payroll, User, PayrollFilter, IAgent, ICampaign, PayrollFilterType, PayrollDetails } from '@app/models';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable, BehaviorSubject, Subscription } from 'rxjs';
 import { MessageService } from '@app/message.service';
 import { PayrollService } from '../payroll.service';
 import { SessionService } from '@app/session.service';
-import { MatDialog, MatTable, MatTableDataSource } from '@angular/material';
+import { MatDialog, MatTable, MatTableDataSource, MatDatepicker, MatDatepickerInputEvent } from '@angular/material';
 import { PayrollFilterDialogComponent } from '../payroll-filter-dialog/payroll-filter-dialog.component';
 import { Moment, MomentInclusivity } from '@app/shared/moment-extensions';
 import * as moment from 'moment';
@@ -12,6 +12,8 @@ import { CampaignService } from '@app/campaigns/campaign.service';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { SelectionModel } from '@angular/cdk/collections';
 import { OverrideExpenseDialogComponent } from '../override-expense-dialog/override-expense-dialog.component';
+import { ScheduleAutoReleaseDialogComponent } from '../schedule-auto-release-dialog/schedule-auto-release-dialog.component';
+import { FormControl } from '@angular/forms';
 
 @Component({
     selector: 'vs-payroll-list',
@@ -56,6 +58,8 @@ export class PayrollListComponent implements OnInit {
     @ViewChild('tableRef') table:MatTable<MatTableDataSource<Payroll>>; 
     disableRelease:boolean = true;
 
+    selectedAutoReleaseDate:Moment;
+
     constructor(
         private msg:MessageService,
         private service:PayrollService,
@@ -72,6 +76,14 @@ export class PayrollListComponent implements OnInit {
         });
 
         this.selection.onChange.subscribe(() => this.disableRelease = this.selection.selected.length == 0);
+    }
+
+    dateChanged(event:MatDatepickerInputEvent<Moment>) {
+        console.log('New Release Date: ' + event.value.format('MM-DD-YYYY'));
+        this.selectedAutoReleaseDate = event.value;
+
+        console.log('Need to display confirmation dialog and then save the selected payrolls with it if confirmed.');
+        /** don't forget to set the "isReleased" boolean on each selected payroll to 'true'. */
     }
 
     filterBtnClick() {
@@ -161,8 +173,6 @@ export class PayrollListComponent implements OnInit {
     }
 
     showExpensesAndOverrides(detail:PayrollDetails) {
-        console.dir(detail);
-
         this.dialog.open(OverrideExpenseDialogComponent, {
             width: '60vw',
             maxHeight: '80vh',
@@ -177,6 +187,29 @@ export class PayrollListComponent implements OnInit {
 
             console.dir(result);
         });
+    }
+
+    /** not used */
+    scheduleAutoRelease() {
+        let dates = this.selection.selected.filter(p => p.automatedRelease != null).map(p => p.automatedRelease);
+        const selectedDate = this.getLatestDate(dates);
+        this.dialog.open(ScheduleAutoReleaseDialogComponent, {
+            width: '40vw',
+            data: {
+                date: selectedDate
+            }
+        })
+        .afterClosed()
+        .subscribe(result => {
+            if(result == null) return;
+
+            console.dir(result);
+        });
+    }
+
+    private getLatestDate(dates:(Moment|Date|string)[]) {
+        if(!dates.length) return;
+        return dates.reduce((a, c, i) => (c > a) && i ? c : a);
     }
 
     showReleaseConfirm() {

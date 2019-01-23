@@ -32,7 +32,7 @@ import {
   MatToolbarModule,
   MatTooltipModule,
   MatStepperModule,
-  MatBadgeModule,
+  MatBadgeModule
 } from '@angular/material';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
 

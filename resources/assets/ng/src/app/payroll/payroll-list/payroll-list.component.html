@@ -54,13 +54,26 @@
             <ng-container *ngIf="(payrolls$|async) != null && (payrolls$|async).length; else noPayrolls">
                 <mat-card class="border-top-primary">
                     <mat-card-subtitle class="d-flex justify-content-between">
-                        <button type="button" mat-button 
-                            color="primary" 
-                            (click)="showReleaseConfirm()"
-                            [disabled]="disableRelease"
-                        >
-                            <mat-icon inline="true">send</mat-icon> Release
-                        </button>
+                        <div>
+                            <button type="button" mat-button 
+                                color="primary" 
+                                (click)="showReleaseConfirm()"
+                                [disabled]="disableRelease"
+                            >
+                                <mat-icon inline="true">send</mat-icon> Release
+                            </button>
+                            <button type="button" mat-button
+                                color="accent"
+                                (click)="autoReleaseDatepicker.open()"
+                                [disabled]="disableRelease"
+                            >
+                                <mat-icon inline="true">date_range</mat-icon> Schedule Auto-Release
+                            </button>
+                            <mat-form-field [style.visibility]="'hidden'">
+                                <input matInput [matDatepicker]="autoReleaseDatepicker" (dateChange)="dateChanged($event)" />
+                                <mat-datepicker touchUi="true" #autoReleaseDatepicker></mat-datepicker>
+                            </mat-form-field>
+                        </div>
                         <p class="text-muted">
                             {{displayingResults}}
                         </p>
