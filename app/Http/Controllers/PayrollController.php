@@ -88,4 +88,31 @@ class PayrollController extends Controller
             ->getResponse();
     }
 
+    /**
+     * Ability to set a collection of payroll entities to "auto release" on a specific day.
+     *
+     * @param Request $request
+     * @param int $clientId
+     * @return Array<Payroll>
+     */
+    public function setAutoReleaseSettings(Request $request, $clientId)
+    {
+        $result = new ApiResource();
+
+        $date = $request->date;
+        $payrollIds = $request->payrollIds;
+
+        $result
+			->checkAccessByClient($clientId, Auth::user()->id)
+			->mergeInto($result);
+
+		if($result->hasError)
+			return $result->throwApiException()->getResponse();
+
+        $this->service->saveAutoReleaseSettings($clientId, $payrollIds, $date)
+            ->mergeInto($result);
+
+        return $result->throwApiException()->getResponse();
+    }
+
 }

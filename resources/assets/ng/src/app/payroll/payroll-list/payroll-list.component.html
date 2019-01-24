@@ -21,7 +21,7 @@
                     </div>
                     <div class="text-muted d-flex align-items-center">
                         <span class="font-weight-bold mr-2">
-                            Narrowed to:
+                            Narrowed to
                         </span>
                         <mat-chip-list #matChipList>
                             <mat-chip class="bg-transparent" *ngIf="filters.startDate" [removable]="false" [selectable]="false">
@@ -121,7 +121,10 @@
                                 <ng-container matColumnDef="isAutomated">
                                     <th mat-header-cell *matHeaderCellDef>Auto Release</th>
                                     <td mat-cell *matCellDef="let item">
-                                        <mat-checkbox [value]="item.isAutomated" [disabled]="true"></mat-checkbox>
+                                        <mat-checkbox [checked]="item.isAutomated" 
+                                            [disabled]="!(item.isAutomated && !item.isReleased)"
+                                            (change)="removeAutoRelease($event, item)"
+                                        ></mat-checkbox>
                                     </td>
                                 </ng-container>
 
@@ -129,7 +132,7 @@
                                 <ng-container matColumnDef="isReleased">
                                     <th mat-header-cell *matHeaderCellDef>Released</th>
                                     <td *matCellDef="let item">
-                                        <mat-checkbox [value]="item.isReleased" [disabled]="true"></mat-checkbox>
+                                        <mat-checkbox [checked]="item.isReleased" [disabled]="true"></mat-checkbox>
                                     </td>
                                 </ng-container>
 

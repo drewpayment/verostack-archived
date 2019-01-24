@@ -53,6 +53,11 @@ class Payroll extends Model
         return $query->where('payroll_id', $payrollId);
     }
 
+    public function scopeByPayrollList($query, $payrollIds)
+    {
+        return $query->whereIn('payroll_id', $payrollIds);
+    }
+
     public function scopeByClient($query, $clientId)
     {
         return $query->where('client_id', $clientId);

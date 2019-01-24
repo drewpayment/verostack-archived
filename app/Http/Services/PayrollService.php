@@ -9,6 +9,7 @@ use App\Http\UserService;
 use App\Http\Resources\ApiResource;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Services\PayrollDetailsService;
+use Carbon\Carbon;
 
 class PayrollService
 {
@@ -92,5 +93,34 @@ class PayrollService
         }
         
         return $result->setData($payrolls);
+    }
+
+    public function saveAutoReleaseSettings($clientId, $payrollIds, $date)
+    {
+        $result = new ApiResource();
+        $updatedPayrolls = [];
+        $formattedDt = Carbon::parse($date)->toDateTimeString();
+
+        $payrolls = Payroll::with(['details.agent', 'details.expenses', 'details.overrides', 'payCycle'])
+            ->byPayrollList($payrollIds)
+            ->byClient($clientId)
+            ->get();
+
+        if(count($payrolls) < 1) return $result;
+
+        foreach($payrolls as $p)
+        {
+            $p->is_automated = true;
+            $p->automated_release = $formattedDt;
+            $res = $p->save();
+
+            $result->setStatus($res);
+            if($result->hasError) break;
+            $updatedPayrolls[] = $this->helper->normalizeLaravelObject(array_filter($p->toArray()));
+        }
+
+        if($result->hasError) return $result;
+
+        return $result->setData($updatedPayrolls);
     }
 }

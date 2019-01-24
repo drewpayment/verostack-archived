@@ -1,0 +1,14 @@
+
+<div mat-dialog-title>
+    <h4>Confirm Auto-Release Date</h4>
+</div>
+<mat-dialog-content>
+    <p>
+        Please confirm your selection of date:
+    </p>
+    <p class="font-weight-bold text-center">{{date | date:'fullDate'}}</p>
+</mat-dialog-content>
+<mat-dialog-actions class="d-flex justify-content-between">
+    <button type="button" mat-raised-button color="accent" (click)="onNoClick()">Go Back</button>
+    <button type="button" mat-raised-button color="primary" (click)="confirmDate()">Confirm</button>
+</mat-dialog-actions>

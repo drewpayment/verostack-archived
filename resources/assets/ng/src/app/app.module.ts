@@ -30,6 +30,7 @@ import {OverrideExpenseDialogComponent} from './payroll/override-expense-dialog/
 import {DirectivesModule} from './directives/directives.module';
 import {ScheduleAutoReleaseDialogComponent} from './payroll/schedule-auto-release-dialog/schedule-auto-release-dialog.component';
 import {MatCalendar, MatCalendarHeader} from '@angular/material';
+import { ConfirmAutoreleaseDateDialogComponent } from './payroll/confirm-autorelease-date-dialog/confirm-autorelease-date-dialog.component';
 
 @NgModule({
     imports: [
@@ -65,7 +66,8 @@ import {MatCalendar, MatCalendarHeader} from '@angular/material';
         PayrollFilterDialogComponent,
         LetDirective,
         OverrideExpenseDialogComponent,
-        ScheduleAutoReleaseDialogComponent
+        ScheduleAutoReleaseDialogComponent,
+        ConfirmAutoreleaseDateDialogComponent
     ],
     entryComponents: [
         EditAgentDialogComponent,
@@ -75,7 +77,8 @@ import {MatCalendar, MatCalendarHeader} from '@angular/material';
         PayrollDialogComponent,
         PayrollFilterDialogComponent,
         OverrideExpenseDialogComponent,
-        ScheduleAutoReleaseDialogComponent
+        ScheduleAutoReleaseDialogComponent,
+        ConfirmAutoreleaseDateDialogComponent
     ],
     providers: [],
     bootstrap: [AppComponent]

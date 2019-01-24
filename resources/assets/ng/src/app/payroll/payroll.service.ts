@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Payroll } from '@app/models';
 import { Observable } from 'rxjs';
 import { environment } from '@env/environment';
@@ -21,6 +21,15 @@ export class PayrollService {
     getPayrollList(clientId:number, userId:number):Observable<Payroll[]> {
         const url = `${this.api}/clients/${clientId}/users/${userId}/payrolls`;
         return this.http.get<Payroll[]>(url);
+    }
+
+    saveAutoReleaseSettings(clientId:number, ids:number[], date:any) {
+        const url = `${this.api}/clients/${clientId}/payrolls/auto-release`;
+        const body = {
+            date: date,
+            payrollIds: ids
+        };
+        return this.http.post<Payroll[]>(url, body);
     }
     
 }

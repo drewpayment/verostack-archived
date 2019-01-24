@@ -4,7 +4,7 @@ import { Observable, BehaviorSubject, Subscription } from 'rxjs';
 import { MessageService } from '@app/message.service';
 import { PayrollService } from '../payroll.service';
 import { SessionService } from '@app/session.service';
-import { MatDialog, MatTable, MatTableDataSource, MatDatepicker, MatDatepickerInputEvent } from '@angular/material';
+import { MatDialog, MatTable, MatTableDataSource, MatDatepicker, MatDatepickerInputEvent, MatCheckboxChange } from '@angular/material';
 import { PayrollFilterDialogComponent } from '../payroll-filter-dialog/payroll-filter-dialog.component';
 import { Moment, MomentInclusivity } from '@app/shared/moment-extensions';
 import * as moment from 'moment';
@@ -14,6 +14,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { OverrideExpenseDialogComponent } from '../override-expense-dialog/override-expense-dialog.component';
 import { ScheduleAutoReleaseDialogComponent } from '../schedule-auto-release-dialog/schedule-auto-release-dialog.component';
 import { FormControl } from '@angular/forms';
+import { ConfirmAutoreleaseDateDialogComponent } from '../confirm-autorelease-date-dialog/confirm-autorelease-date-dialog.component';
 
 @Component({
     selector: 'vs-payroll-list',
@@ -84,6 +85,44 @@ export class PayrollListComponent implements OnInit {
 
         console.log('Need to display confirmation dialog and then save the selected payrolls with it if confirmed.');
         /** don't forget to set the "isReleased" boolean on each selected payroll to 'true'. */
+
+        this.dialog.open(ConfirmAutoreleaseDateDialogComponent, {
+            width: '30vw',
+            data: {
+                date: this.selectedAutoReleaseDate
+            }
+        })
+        .afterClosed()
+        .subscribe(result => {
+            if(result == null) return;
+
+            const payrollIds = this.selection.selected.map(p => p.payrollId);
+
+            this.service.saveAutoReleaseSettings(this.user.sessionUser.sessionClient, payrollIds, result)
+                .subscribe(payrolls => {
+                    payrolls.forEach(p => {
+                        this._payrolls.forEach((pp, i, a) => {
+                            if(pp.payrollId == p.payrollId) 
+                                a[i] = p;
+                        });
+                    });
+                    
+                    this.payrolls$.next(this._payrolls);
+                });
+        });
+    }
+
+    /**
+     * If the payroll has been scheduled for autorelease and the release hasn't happened, 
+     * the user can uncheck the autorelease option and it will remove the autorelease settings.
+     * 
+     * @param event 
+     * @param item 
+     */
+    removeAutoRelease(event:MatCheckboxChange, item:Payroll) {
+        console.dir([event, item]);
+
+        // TODO: need to finish the api to cancel the autorelease settings
     }
 
     filterBtnClick() {
@@ -203,7 +242,7 @@ export class PayrollListComponent implements OnInit {
         .subscribe(result => {
             if(result == null) return;
 
-            console.dir(result);
+            
         });
     }
 
