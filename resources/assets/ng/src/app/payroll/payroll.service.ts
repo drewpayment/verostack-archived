@@ -31,5 +31,10 @@ export class PayrollService {
         };
         return this.http.post<Payroll[]>(url, body);
     }
+
+    removeAutoReleaseSettings(clientId:number, payrollId:number):Observable<Payroll> {
+        const url = `${this.api}/clients/${clientId}/payrolls/${payrollId}/remove-auto-release`;
+        return this.http.get<Payroll>(url);
+    }
     
 }

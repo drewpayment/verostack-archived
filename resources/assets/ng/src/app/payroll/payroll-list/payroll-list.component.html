@@ -124,6 +124,7 @@
                                         <mat-checkbox [checked]="item.isAutomated" 
                                             [disabled]="!(item.isAutomated && !item.isReleased)"
                                             (change)="removeAutoRelease($event, item)"
+                                            (click)="$event.stopPropagation()"
                                         ></mat-checkbox>
                                     </td>
                                 </ng-container>

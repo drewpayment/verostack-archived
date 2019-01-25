@@ -123,4 +123,22 @@ class PayrollService
 
         return $result->setData($updatedPayrolls);
     }
+
+    public function removeAutoRelease($payrollId)
+    {
+        $result = new ApiResource();
+
+        $payroll = Payroll::with(['details.agent', 'details.expenses', 'details.overrides', 'payCycle'])
+                        ->byPayroll($payrollId)
+                        ->first();
+
+        $payroll->is_automated = false;
+        $payroll->automated_release = null;
+
+        $res = $payroll->save();
+
+        if(!$res) return $result->setToFail();
+
+        return $result->setData($payroll);
+    }
 }

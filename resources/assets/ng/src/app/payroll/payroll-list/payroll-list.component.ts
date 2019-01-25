@@ -120,9 +120,14 @@ export class PayrollListComponent implements OnInit {
      * @param item 
      */
     removeAutoRelease(event:MatCheckboxChange, item:Payroll) {
-        console.dir([event, item]);
-
-        // TODO: need to finish the api to cancel the autorelease settings
+        this.service.removeAutoReleaseSettings(this.user.sessionUser.sessionClient, item.payrollId)
+            .subscribe(result => {
+                this._payrolls.forEach((p, i, a) => {
+                    if(p.payrollId != result.payrollId) return;
+                    a[i] = result;
+                });
+                this.payrolls$.next(this._payrolls);
+            });
     }
 
     filterBtnClick() {

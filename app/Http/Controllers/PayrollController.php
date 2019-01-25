@@ -115,4 +115,21 @@ class PayrollController extends Controller
         return $result->throwApiException()->getResponse();
     }
 
+    public function removeAutoReleaseSettings($clientId, $payrollId)
+    {
+        $result = new ApiResource();
+
+        $result
+			->checkAccessByClient($clientId, Auth::user()->id)
+			->mergeInto($result);
+
+		if($result->hasError)
+			return $result->throwApiException()->getResponse();
+
+        $this->service->removeAutoRelease($payrollId)
+            ->mergeInto($result);
+
+        return $result->throwApiException()->getResponse();
+    }
+
 }
