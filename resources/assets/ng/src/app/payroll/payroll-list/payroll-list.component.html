@@ -95,6 +95,7 @@
                                             (click)="$event.stopPropagation()"
                                             (change)="$event ? selection.toggle(item) : null"
                                             [checked]="selection.isSelected(item)"
+                                            [disabled]="item.payCycle.isClosed || item.isReleased"
                                         ></mat-checkbox>
                                     </td>
                                 </ng-container>
@@ -129,19 +130,19 @@
                                     </td>
                                 </ng-container>
 
-                                <!-- IS RELEASED -->
-                                <ng-container matColumnDef="isReleased">
-                                    <th mat-header-cell *matHeaderCellDef>Released</th>
-                                    <td *matCellDef="let item">
-                                        <mat-checkbox [checked]="item.isReleased" [disabled]="true"></mat-checkbox>
-                                    </td>
-                                </ng-container>
-
                                 <!-- AUTOMATIC RELEASE DATE -->
                                 <ng-container matColumnDef="automatedRelease">
                                     <th mat-header-cell *matHeaderCellDef>Release Date</th>
                                     <td mat-cell *matCellDef="let item">
                                         {{item.automatedRelease | date:'shortDate'}}
+                                    </td>
+                                </ng-container>
+
+                                <!-- IS RELEASED -->
+                                <ng-container matColumnDef="isReleased">
+                                    <th mat-header-cell *matHeaderCellDef>Released</th>
+                                    <td *matCellDef="let item">
+                                        <mat-checkbox [checked]="item.isReleased" [disabled]="true"></mat-checkbox>
                                     </td>
                                 </ng-container>
 
@@ -210,6 +211,7 @@
                                                                     <button type="button" mat-icon-button 
                                                                         color="primary"
                                                                         (click)="showExpensesAndOverrides(detail)"
+                                                                        [disabled]="item.isReleased || item.payCycle.isClosed"
                                                                     >
                                                                         <mat-icon>settings</mat-icon>
                                                                     </button>

@@ -1,0 +1,43 @@
+
+<ng-template #detailTemplate let-details="details">
+    <ng-container *ngFor="let detail of details; let ii = index">
+        <div class="row my-3">
+            <div class="col-md-11 offset-md-1 d-flex justify-content-between">
+                <div>{{detail.agent.firstName}} {{detail.agent.lastName}}</div>
+                <div class="text-muted font-italic">{{detail.sales}} {{detail.sales.length > 1 ? 'sales' : 'sale'}}</div>
+                <div class="text-muted">{{detail.netTotal | currency}}</div>
+            </div>
+        </div>
+    </ng-container>
+</ng-template>
+
+<div mat-dialog-title class="d-flex justify-content-between">
+    <h4 class="font-weight-bold">Confirm to release {{payrolls.length}} {{payrolls.length > 1 ? 'payroll cycles.' : 'payroll cycle.'}}</h4>
+    <button type="button" mat-icon-button (click)="onNoClick()">
+        <mat-icon>clear</mat-icon>
+    </button>
+</div>
+<mat-dialog-content>
+    <ng-container *ngFor="let p of payrolls; let i = index">
+        <div class="row">
+            <div class="col-md-12">
+                <span class="font-weight-bold mb-4">{{(i + 1)+'.'}} </span>
+                <span class="font-weight-bold mb-4">{{p.payCycle.startDate | date:'mediumDate'}} - {{p.payCycle.endDate | date:'mediumDate'}}</span>
+                <ng-container *ngTemplateOutlet="detailTemplate;context:{details:p.details}"></ng-container>
+            </div>
+        </div>
+    </ng-container>
+
+    <ng-container *ngIf="payrolls.length">
+        <div class="row border-top pt-2 mt-2">
+            <div class="col-md-12 d-flex justify-content-between font-weight-bold">
+                <span>Gross Total projected in this release</span>
+                <span>{{grossTotalReleaseAmount | currency}}</span>
+            </div>
+        </div>
+    </ng-container>
+</mat-dialog-content>
+<mat-dialog-actions class="mt-3 d-flex justify-content-between">
+    <button type="button" mat-button (click)="onNoClick()">Go Back</button>
+    <button type="button" mat-button color="primary" (click)="confirmRelease()">Confirm</button>
+</mat-dialog-actions>

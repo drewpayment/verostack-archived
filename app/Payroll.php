@@ -11,6 +11,8 @@ class Payroll extends Model
 {
     protected $primaryKey = 'payroll_id';
 
+    protected $fillable = ['is_released'];
+
     public function getIsReleasedAttribute($value)
     {
         return $value == 1;

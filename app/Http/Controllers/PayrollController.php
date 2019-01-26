@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
+use App\Payroll;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Resources\ApiResource;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Services\PayrollService;
@@ -128,6 +131,35 @@ class PayrollController extends Controller
 
         $this->service->removeAutoRelease($payrollId)
             ->mergeInto($result);
+
+        return $result->throwApiException()->getResponse();
+    }
+
+    public function setReleased(Request $request, $clientId)
+    {
+        $result = new ApiResource();
+        $ids = json_decode($request->all()['payrollIds']);
+
+        $result
+			->checkAccessByClient($clientId, Auth::user()->id)
+			->mergeInto($result);
+
+		if($result->hasError)
+			return $result->throwApiException()->getResponse();
+
+        $payrolls = Payroll::with('payCycle')->byPayrollList($ids)->get();
+
+        foreach($payrolls as $p) 
+        {
+            $p->is_released = true;
+            $p->payCycle->is_pending = false;
+            $p->payCycle->is_closed = true;
+            $rs = $p->push();
+
+            // check if the save failed, return immediately if it did
+            if(!$rs) 
+                return $result->setToFail()->throwApiException()->getResponse();
+        }
 
         return $result->throwApiException()->getResponse();
     }

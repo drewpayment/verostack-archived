@@ -15,4 +15,7 @@ Route::middleware(['auth:api'])->group(function() {
     Route::get('clients/{clientId}/payrolls/{payrollId}/remove-auto-release', 'PayrollController@removeAutoReleaseSettings')
         ->where(['clientId' => '[0-9]+', 'payrollId' => '[0-9]+']);
 
+    Route::get('clients/{clientId}/payrolls/set-released', 'PayrollController@setReleased')
+        ->where(['clientId' => '[0-9]+']);
+
 });

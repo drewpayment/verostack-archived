@@ -36,5 +36,11 @@ export class PayrollService {
         const url = `${this.api}/clients/${clientId}/payrolls/${payrollId}/remove-auto-release`;
         return this.http.get<Payroll>(url);
     }
+
+    setReleased(clientId:number, payrollIds:number[]):Observable<boolean> {
+        const url = `${this.api}/clients/${clientId}/payrolls/set-released`;
+        let params = new HttpParams().set('payrollIds', JSON.stringify(payrollIds));
+        return this.http.get<boolean>(url, { params: params });
+    }
     
 }

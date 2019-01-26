@@ -15,6 +15,7 @@ import { OverrideExpenseDialogComponent } from '../override-expense-dialog/overr
 import { ScheduleAutoReleaseDialogComponent } from '../schedule-auto-release-dialog/schedule-auto-release-dialog.component';
 import { FormControl } from '@angular/forms';
 import { ConfirmAutoreleaseDateDialogComponent } from '../confirm-autorelease-date-dialog/confirm-autorelease-date-dialog.component';
+import { ConfirmReleaseDialogComponent } from '../confirm-release-dialog/confirm-release-dialog.component';
 
 @Component({
     selector: 'vs-payroll-list',
@@ -79,6 +80,12 @@ export class PayrollListComponent implements OnInit {
         this.selection.onChange.subscribe(() => this.disableRelease = this.selection.selected.length == 0);
     }
 
+    /**
+     * Handles when the user changes the hidden datepicker value on the template that sets the auto-release 
+     * date. 
+     * 
+     * @param event 
+     */
     dateChanged(event:MatDatepickerInputEvent<Moment>) {
         console.log('New Release Date: ' + event.value.format('MM-DD-YYYY'));
         this.selectedAutoReleaseDate = event.value;
@@ -207,12 +214,15 @@ export class PayrollListComponent implements OnInit {
     masterToggle():void {
         this.isAllSelected() ?
             this.selection.clear() :
-            this._payrolls.forEach(p => this.selection.select(p));
+            this._payrolls.forEach(p => {
+                if(p.isReleased || p.payCycle.isClosed) return;
+                this.selection.select(p);
+            });
     }
 
     isAllSelected():boolean {
         const numSelected = this.selection.selected.length;
-        const numRows = this._payrolls.length;
+        const numRows = this._payrolls.filter(p => !p.isReleased && !p.payCycle.isClosed).length;
         return numSelected === numRows;
     }
 
@@ -256,8 +266,41 @@ export class PayrollListComponent implements OnInit {
         return dates.reduce((a, c, i) => (c > a) && i ? c : a);
     }
 
+    /**
+     * Show's dialog to the user confirming their selections and showing overall total they'll 
+     * be confirming to pay for the released cycles.
+     */
     showReleaseConfirm() {
-        console.dir(this.selection.selected);
+
+        this.dialog.open(ConfirmReleaseDialogComponent, {
+            width: '50vw',
+            data: {
+                payrolls: this.selection.selected
+            },
+            autoFocus: false
+        })
+        .afterClosed()
+        .subscribe(result => {
+            if(!result) return;
+
+            const payrollIds = this.selection.selected.map(p => p.payrollId);
+
+            this.service.setReleased(this.user.sessionUser.sessionClient, payrollIds)
+                .subscribe(() => {
+                    payrollIds.forEach(id => {
+                        this._payrolls.forEach((p, i, a) => {
+                            if(p.payrollId != id) return;
+                            a[i].isReleased = true;
+                            a[i].payCycle.isPending = false;
+                            a[i].payCycle.isClosed = true;
+                        });
+                    });
+
+                    this.payrolls$.next(this._payrolls);
+                    this.msg.addMessage('Successfully released!', 'dismiss', 5000);
+                });
+        });
+
     }
 
     /**
@@ -285,7 +328,7 @@ export class PayrollListComponent implements OnInit {
     }
 
     private applyFilters() {
-        let filteredPayrolls = [];
+        let filteredPayrolls:Payroll[] = [];
         filteredPayrolls = this._payrolls.filter(p => {
             const startDate = moment(this.filters.startDate);
             const endDate = moment(this.filters.endDate);    
@@ -295,6 +338,9 @@ export class PayrollListComponent implements OnInit {
         this.filters.activeFilters.forEach(af => {
             filteredPayrolls = this.applyFilterByType(filteredPayrolls, af);
         });
+
+        /** TODO: for now we're going to stripped closed cycles out until we add to filter */
+        filteredPayrolls = filteredPayrolls.filter(f => f.payCycle.isPending && !f.payCycle.isClosed);
 
         this.payrolls$.next(filteredPayrolls);
 

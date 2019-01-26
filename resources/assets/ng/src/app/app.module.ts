@@ -31,6 +31,7 @@ import {DirectivesModule} from './directives/directives.module';
 import {ScheduleAutoReleaseDialogComponent} from './payroll/schedule-auto-release-dialog/schedule-auto-release-dialog.component';
 import {MatCalendar, MatCalendarHeader} from '@angular/material';
 import { ConfirmAutoreleaseDateDialogComponent } from './payroll/confirm-autorelease-date-dialog/confirm-autorelease-date-dialog.component';
+import { ConfirmReleaseDialogComponent } from './payroll/confirm-release-dialog/confirm-release-dialog.component';
 
 @NgModule({
     imports: [
@@ -67,7 +68,8 @@ import { ConfirmAutoreleaseDateDialogComponent } from './payroll/confirm-autorel
         LetDirective,
         OverrideExpenseDialogComponent,
         ScheduleAutoReleaseDialogComponent,
-        ConfirmAutoreleaseDateDialogComponent
+        ConfirmAutoreleaseDateDialogComponent,
+        ConfirmReleaseDialogComponent
     ],
     entryComponents: [
         EditAgentDialogComponent,
@@ -78,7 +80,8 @@ import { ConfirmAutoreleaseDateDialogComponent } from './payroll/confirm-autorel
         PayrollFilterDialogComponent,
         OverrideExpenseDialogComponent,
         ScheduleAutoReleaseDialogComponent,
-        ConfirmAutoreleaseDateDialogComponent
+        ConfirmAutoreleaseDateDialogComponent,
+        ConfirmReleaseDialogComponent
     ],
     providers: [],
     bootstrap: [AppComponent]
