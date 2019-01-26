@@ -164,4 +164,14 @@ class PayrollController extends Controller
         return $result->throwApiException()->getResponse();
     }
 
+    public function savePayrollDetails(Request $request, $clientId, $payrollId, $payrollDetailsId)
+    {
+        $result = new ApiResource();
+
+        // TODO: Need to finish this call to save details and update overrides/expenses on the deteails relationship
+
+        return $result->setToFail()->throwApiException()
+            ->getResponse();
+    }
+
 }

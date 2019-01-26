@@ -18,4 +18,7 @@ Route::middleware(['auth:api'])->group(function() {
     Route::get('clients/{clientId}/payrolls/set-released', 'PayrollController@setReleased')
         ->where(['clientId' => '[0-9]+']);
 
+    Route::post('clients/{clientId}/payrolls/{payrollId}/details/{payrollDetailsId}', 'PayrollController@savePayrollDetails')
+        ->where(['clientId' => '[0-9]+', 'payrollId' => '[0-9]+', 'payrollDetailsId' => '[0-9]+']);
+
 });

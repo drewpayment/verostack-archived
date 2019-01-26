@@ -36,8 +36,8 @@ export class PayrollListComponent implements OnInit {
     payrolls$ = new BehaviorSubject<Payroll[]>(null);
     agents:IAgent[];
     campaigns:ICampaign[];
-    defaultEndDate:Moment = moment();
-    defaultStartDate:Moment = this.defaultEndDate.clone().subtract(7, 'days');
+    defaultEndDate:Moment;
+    defaultStartDate:Moment;
     filters:PayrollFilter = { 
         activeFilters: [],
         startDate: this.defaultStartDate,
@@ -239,7 +239,7 @@ export class PayrollListComponent implements OnInit {
         .subscribe(result => {
             if(result == null) return;
 
-            console.dir(result);
+            
         });
     }
 
@@ -328,10 +328,18 @@ export class PayrollListComponent implements OnInit {
     }
 
     private applyFilters() {
+
+        /** let's set our initial filter dates based on what came back from the api */
+        if((this.filters.startDate == null || this.filters.endDate == null) && this._payrolls.length) {
+            const mostRecentWeekending = moment(this._payrolls.sort((a, b) => moment(a.weekEnding).isAfter(b.weekEnding, 'day') ? 1 : 0)[0].weekEnding);
+            this.filters.endDate = moment(mostRecentWeekending.clone().add(7, 'days')).toDate();
+            this.filters.startDate = moment(mostRecentWeekending.clone().subtract(7, 'days')).toDate();
+        }
+
         let filteredPayrolls:Payroll[] = [];
         filteredPayrolls = this._payrolls.filter(p => {
-            const startDate = moment(this.filters.startDate);
-            const endDate = moment(this.filters.endDate);    
+            const startDate = this.filters.startDate;
+            const endDate = this.filters.endDate;
             return moment(p.weekEnding).isBetween(startDate, endDate, 'd', MomentInclusivity.includeBoth);
         });
         

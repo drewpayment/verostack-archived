@@ -8265,7 +8265,7 @@ var ConfirmAutoreleaseDateDialogComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n<ng-template #detailTemplate let-details=\"details\">\n    <ng-container *ngFor=\"let detail of details; let ii = index\">\n        <div class=\"row my-3\">\n            <div class=\"col-md-11 offset-md-1 d-flex justify-content-between\">\n                <div>{{detail.agent.firstName}} {{detail.agent.lastName}}</div>\n                <div class=\"text-muted font-italic\">{{detail.sales}} {{detail.sales.length > 1 ? 'sales' : 'sale'}}</div>\n                <div class=\"text-muted\">{{detail.netTotal | currency}}</div>\n            </div>\n        </div>\n    </ng-container>\n</ng-template>\n\n<div mat-dialog-title class=\"d-flex justify-content-between\">\n    <h4 class=\"font-weight-bold\">Confirm to release {{payrolls.length}} {{payrolls.length > 1 ? 'payroll cycles.' : 'payroll cycle.'}}</h4>\n    <button type=\"button\" mat-icon-button (click)=\"onNoClick()\">\n        <mat-icon>clear</mat-icon>\n    </button>\n</div>\n<mat-dialog-content>\n    <ng-container *ngFor=\"let p of payrolls; let i = index\">\n        <div class=\"row\">\n            <div class=\"col-md-12\">\n                <span class=\"font-weight-bold mb-4\">{{(i + 1)+'.'}} </span>\n                <span class=\"font-weight-bold mb-4\">{{p.payCycle.startDate | date:'mediumDate'}} - {{p.payCycle.endDate | date:'mediumDate'}}</span>\n                <ng-container *ngTemplateOutlet=\"detailTemplate;context:{details:p.details}\"></ng-container>\n            </div>\n        </div>\n    </ng-container>\n\n    <ng-container *ngIf=\"payrolls.length\">\n        <div class=\"row border-top pt-2 mt-2\">\n            <div class=\"col-md-12 d-flex justify-content-between font-weight-bold\">\n                <span>Gross Total projected in this release</span>\n                <span>{{grossTotalReleaseAmount | currency}}</span>\n            </div>\n        </div>\n    </ng-container>\n</mat-dialog-content>\n<mat-dialog-actions class=\"mt-3 d-flex justify-content-between\">\n    <button type=\"button\" mat-button (click)=\"onNoClick()\">Go Back</button>\n    <button type=\"button\" mat-button color=\"primary\" (click)=\"confirmRelease()\">Confirm</button>\n</mat-dialog-actions>"
+module.exports = "\n<ng-template #detailTemplate let-details=\"details\">\n    <ng-container *ngFor=\"let detail of details; let ii = index\">\n        <div class=\"row my-3\">\n            <div class=\"col-md-11 offset-md-1 d-flex justify-content-between\">\n                <div>{{detail.agent.firstName}} {{detail.agent.lastName}}</div>\n                <div class=\"text-muted font-italic\">{{detail.sales}} {{detail.sales > 1 ? 'sales' : 'sale'}}</div>\n                <div class=\"text-muted\">{{detail.netTotal | currency}}</div>\n            </div>\n        </div>\n    </ng-container>\n</ng-template>\n\n<div mat-dialog-title class=\"d-flex justify-content-between\">\n    <h4 class=\"font-weight-bold\">Confirm to release {{payrolls.length}} {{payrolls.length > 1 ? 'payroll cycles.' : 'payroll cycle.'}}</h4>\n    <button type=\"button\" mat-icon-button (click)=\"onNoClick()\">\n        <mat-icon>clear</mat-icon>\n    </button>\n</div>\n<mat-dialog-content>\n    <ng-container *ngFor=\"let p of payrolls; let i = index\">\n        <div class=\"row\">\n            <div class=\"col-md-12\">\n                <span class=\"font-weight-bold mb-4\">{{(i + 1)+'.'}} </span>\n                <span class=\"font-weight-bold mb-4\">{{p.payCycle.startDate | date:'mediumDate'}} - {{p.payCycle.endDate | date:'mediumDate'}}</span>\n                <ng-container *ngTemplateOutlet=\"detailTemplate;context:{details:p.details}\"></ng-container>\n            </div>\n        </div>\n    </ng-container>\n\n    <ng-container *ngIf=\"payrolls.length\">\n        <div class=\"row border-top pt-2 mt-2\">\n            <div class=\"col-md-12 d-flex justify-content-between font-weight-bold\">\n                <span>Gross Total projected in this release</span>\n                <span>{{grossTotalReleaseAmount | currency}}</span>\n            </div>\n        </div>\n    </ng-container>\n</mat-dialog-content>\n<mat-dialog-actions class=\"mt-3 d-flex justify-content-between\">\n    <button type=\"button\" mat-button (click)=\"onNoClick()\">Go Back</button>\n    <button type=\"button\" mat-button color=\"primary\" (click)=\"confirmRelease()\">Confirm</button>\n</mat-dialog-actions>"
 
 /***/ }),
 
@@ -8908,8 +8908,6 @@ var PayrollListComponent = /** @class */ (function () {
         this.campaignService = campaignService;
         this.dialog = dialog;
         this.payrolls$ = new rxjs__WEBPACK_IMPORTED_MODULE_3__["BehaviorSubject"](null);
-        this.defaultEndDate = moment__WEBPACK_IMPORTED_MODULE_10__();
-        this.defaultStartDate = this.defaultEndDate.clone().subtract(7, 'days');
         this.filters = {
             activeFilters: [],
             startDate: this.defaultStartDate,
@@ -9091,7 +9089,6 @@ var PayrollListComponent = /** @class */ (function () {
             .subscribe(function (result) {
             if (result == null)
                 return;
-            console.dir(result);
         });
     };
     /** not used */
@@ -9173,10 +9170,16 @@ var PayrollListComponent = /** @class */ (function () {
     };
     PayrollListComponent.prototype.applyFilters = function () {
         var _this = this;
+        /** let's set our initial filter dates based on what came back from the api */
+        if ((this.filters.startDate == null || this.filters.endDate == null) && this._payrolls.length) {
+            var mostRecentWeekending = moment__WEBPACK_IMPORTED_MODULE_10__(this._payrolls.sort(function (a, b) { return moment__WEBPACK_IMPORTED_MODULE_10__(a.weekEnding).isAfter(b.weekEnding, 'day') ? 1 : 0; })[0].weekEnding);
+            this.filters.endDate = moment__WEBPACK_IMPORTED_MODULE_10__(mostRecentWeekending.clone().add(7, 'days')).toDate();
+            this.filters.startDate = moment__WEBPACK_IMPORTED_MODULE_10__(mostRecentWeekending.clone().subtract(7, 'days')).toDate();
+        }
         var filteredPayrolls = [];
         filteredPayrolls = this._payrolls.filter(function (p) {
-            var startDate = moment__WEBPACK_IMPORTED_MODULE_10__(_this.filters.startDate);
-            var endDate = moment__WEBPACK_IMPORTED_MODULE_10__(_this.filters.endDate);
+            var startDate = _this.filters.startDate;
+            var endDate = _this.filters.endDate;
             return moment__WEBPACK_IMPORTED_MODULE_10__(p.weekEnding).isBetween(startDate, endDate, 'd', _app_shared_moment_extensions__WEBPACK_IMPORTED_MODULE_9__["MomentInclusivity"].includeBoth);
         });
         this.filters.activeFilters.forEach(function (af) {
@@ -9331,6 +9334,10 @@ var PayrollService = /** @class */ (function () {
         var url = this.api + "/clients/" + clientId + "/payrolls/set-released";
         var params = new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpParams"]().set('payrollIds', JSON.stringify(payrollIds));
         return this.http.get(url, { params: params });
+    };
+    PayrollService.prototype.savePayrollDetails = function (clientId, details) {
+        var url = this.api + "/clients/" + clientId + "/payrolls/" + details.payrollId + "/details/" + details.payrollDetailsId;
+        return this.http.post(url, details);
     };
     PayrollService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({

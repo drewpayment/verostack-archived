@@ -4,7 +4,7 @@
         <div class="row my-3">
             <div class="col-md-11 offset-md-1 d-flex justify-content-between">
                 <div>{{detail.agent.firstName}} {{detail.agent.lastName}}</div>
-                <div class="text-muted font-italic">{{detail.sales}} {{detail.sales.length > 1 ? 'sales' : 'sale'}}</div>
+                <div class="text-muted font-italic">{{detail.sales}} {{detail.sales > 1 ? 'sales' : 'sale'}}</div>
                 <div class="text-muted">{{detail.netTotal | currency}}</div>
             </div>
         </div>

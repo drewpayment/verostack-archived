@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Payroll } from '@app/models';
+import { Payroll, PayrollDetails } from '@app/models';
 import { Observable } from 'rxjs';
 import { environment } from '@env/environment';
 
@@ -41,6 +41,11 @@ export class PayrollService {
         const url = `${this.api}/clients/${clientId}/payrolls/set-released`;
         let params = new HttpParams().set('payrollIds', JSON.stringify(payrollIds));
         return this.http.get<boolean>(url, { params: params });
+    }
+
+    savePayrollDetails(clientId:number, details:PayrollDetails):Observable<PayrollDetails> {
+        const url = `${this.api}/clients/${clientId}/payrolls/${details.payrollId}/details/${details.payrollDetailsId}`;
+        return this.http.post<PayrollDetails>(url, details);
     }
     
 }
