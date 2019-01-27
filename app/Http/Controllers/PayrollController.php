@@ -177,7 +177,7 @@ class PayrollController extends Controller
 		if($result->hasError)
 			return $result->throwApiException()->getResponse();
 
-        $this->service->savePayrollDetails($dto)->mergeInto($result);
+        $this->service->savePayrollDetails($clientId, $dto)->mergeInto($result);
 
         return $result->throwApiException()->getResponse();
     }

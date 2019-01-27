@@ -8293,6 +8293,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/material */ "./node_modules/@angular/material/esm5/material.es5.js");
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_3__);
+
 
 
 
@@ -8303,10 +8306,9 @@ var ConfirmReleaseDialogComponent = /** @class */ (function () {
         this.grossTotalReleaseAmount = 0;
     }
     ConfirmReleaseDialogComponent.prototype.ngOnInit = function () {
-        var _this = this;
         this.payrolls = this.data.payrolls || [];
-        console.dir(this.payrolls);
-        this.payrolls.forEach(function (p) { return p.details.forEach(function (d) { return _this.grossTotalReleaseAmount += +d.grossTotal; }); });
+        // this.payrolls.forEach(p => p.details.forEach(d => this.grossTotalReleaseAmount = +d.grossTotal));
+        this.grossTotalReleaseAmount = this.grossTotalReleaseAmount + (lodash__WEBPACK_IMPORTED_MODULE_3__["sumBy"](this.payrolls, function (p) { return lodash__WEBPACK_IMPORTED_MODULE_3__["sumBy"](p.details, function (d) { return +d.grossTotal; }); }));
     };
     ConfirmReleaseDialogComponent.prototype.confirmRelease = function () {
         this.ref.close(true);
@@ -8882,6 +8884,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _schedule_auto_release_dialog_schedule_auto_release_dialog_component__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../schedule-auto-release-dialog/schedule-auto-release-dialog.component */ "./src/app/payroll/schedule-auto-release-dialog/schedule-auto-release-dialog.component.ts");
 /* harmony import */ var _confirm_autorelease_date_dialog_confirm_autorelease_date_dialog_component__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ../confirm-autorelease-date-dialog/confirm-autorelease-date-dialog.component */ "./src/app/payroll/confirm-autorelease-date-dialog/confirm-autorelease-date-dialog.component.ts");
 /* harmony import */ var _confirm_release_dialog_confirm_release_dialog_component__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../confirm-release-dialog/confirm-release-dialog.component */ "./src/app/payroll/confirm-release-dialog/confirm-release-dialog.component.ts");
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_18___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_18__);
+
 
 
 
@@ -9090,8 +9095,6 @@ var PayrollListComponent = /** @class */ (function () {
             .subscribe(function (result) {
             if (result == null)
                 return;
-            console.log('Result from the dialog: ');
-            console.dir(result);
             if (isNaN(result.taxes.charAt(0)))
                 result.taxes = result.taxes.slice(0, 1);
             if (isNaN(result.grossTotal.charAt(0)))
@@ -9108,16 +9111,9 @@ var PayrollListComponent = /** @class */ (function () {
             });
             _this.service.savePayrollDetails(_this.user.sessionUser.sessionClient, result)
                 .subscribe(function (res) {
-                _this._payrolls.forEach(function (p, i, a) {
-                    if (p.payrollId != res.payrollId)
-                        return;
-                    p.details.forEach(function (pd, ii, aa) {
-                        if (pd.payrollDetailsId != res.payrollDetailsId)
-                            return;
-                        a[i].details[ii] = res;
-                    });
-                    _this.payrolls$.next(_this._payrolls);
-                });
+                _this._payrolls = res;
+                _this.payrolls$.next(_this._payrolls);
+                _this.msg.addMessage('Successfully updated overrides & expenses.', 'dismiss', 5000);
             });
         });
     };
@@ -9182,14 +9178,16 @@ var PayrollListComponent = /** @class */ (function () {
      * @param detail PayrollDetails
      */
     PayrollListComponent.prototype.calculateGrossTotal = function (detail) {
-        var expenses = detail.expenses.map(function (e) { return e.amount; });
-        expenses = expenses != null && expenses.length
-            ? +expenses.reduce(function (a, c) { return a + c; })
-            : 0;
-        var overrides = detail.overrides.map(function (o) { return (o.units * o.amount); });
-        overrides = overrides != null && overrides.length
-            ? +overrides.reduce(function (a, c) { return a + c; })
-            : 0;
+        // let expenses:any = detail.expenses.map(e => e.amount);
+        // expenses = expenses != null && expenses.length
+        //     ? +expenses.reduce((a,c) => a + c)
+        //     : 0;
+        // let overrides:any = detail.overrides.map(o => (o.units * o.amount));
+        // overrides = overrides != null && overrides.length
+        //     ? +overrides.reduce((a,c) => a + c)
+        //     : 0;
+        var expenses = lodash__WEBPACK_IMPORTED_MODULE_18__["sumBy"](detail.expenses, function (e) { return e.amount; });
+        var overrides = lodash__WEBPACK_IMPORTED_MODULE_18__["sumBy"](detail.overrides, function (o) { return (o.amount * o.units); });
         var result = +detail.grossTotal + expenses + overrides;
         return result;
     };

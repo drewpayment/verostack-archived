@@ -145,7 +145,7 @@ class PayrollService
         return $result->setData($payroll);
     }
 
-    public function savePayrollDetails($dto)
+    public function savePayrollDetails($clientId, $dto)
     {
         $result = new ApiResource();
 
@@ -209,12 +209,8 @@ class PayrollService
         $overrides = $detail->overrides()->saveMany($overrides);
         $expenses = $detail->expenses()->saveMany($expenses);
 
-        $detail = PayrollDetail::with(['overrides', 'expenses', 'agent'])
-            ->byPayrollDetailsId($detail->payroll_details_id)->first();
+        $this->getPayrollListByUser($clientId, Auth::user()->id)->mergeInto($result);
 
-        // TODO: Can't get expenses to work right.. they're not returning back to the frontend
-        $detail->expenses = is_null($detail->expenses) ? [] : $detail->expenses; 
-
-        return $result->setData($detail);
+        return $result;
     }
 }

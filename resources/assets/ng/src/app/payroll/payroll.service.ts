@@ -43,9 +43,9 @@ export class PayrollService {
         return this.http.get<boolean>(url, { params: params });
     }
 
-    savePayrollDetails(clientId:number, details:PayrollDetails):Observable<PayrollDetails> {
+    savePayrollDetails(clientId:number, details:PayrollDetails):Observable<Payroll[]> {
         const url = `${this.api}/clients/${clientId}/payrolls/${details.payrollId}/details/${details.payrollDetailsId}`;
-        return this.http.post<PayrollDetails>(url, details);
+        return this.http.post<Payroll[]>(url, details);
     }
     
 }

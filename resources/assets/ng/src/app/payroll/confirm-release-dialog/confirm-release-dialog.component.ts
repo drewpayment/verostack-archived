@@ -1,6 +1,7 @@
 import {Component, OnInit, Inject} from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { Payroll } from '@app/models';
+import * as _ from 'lodash';
 
 interface DialogData {
     payrolls:Payroll[]
@@ -23,9 +24,9 @@ export class ConfirmReleaseDialogComponent implements OnInit {
 
     ngOnInit() {
         this.payrolls = this.data.payrolls || [];
-        console.dir(this.payrolls);
 
-        this.payrolls.forEach(p => p.details.forEach(d => this.grossTotalReleaseAmount += +d.grossTotal));
+        // this.payrolls.forEach(p => p.details.forEach(d => this.grossTotalReleaseAmount = +d.grossTotal));
+        this.grossTotalReleaseAmount = this.grossTotalReleaseAmount + (_.sumBy(this.payrolls, p => _.sumBy(p.details, d => +d.grossTotal)));
     }
 
     confirmRelease() {

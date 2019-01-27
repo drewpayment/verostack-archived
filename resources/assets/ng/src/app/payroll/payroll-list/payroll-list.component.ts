@@ -1,6 +1,6 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import { Payroll, User, PayrollFilter, IAgent, ICampaign, PayrollFilterType, PayrollDetails } from '@app/models';
-import { Observable, BehaviorSubject, Subscription } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { MessageService } from '@app/message.service';
 import { PayrollService } from '../payroll.service';
 import { SessionService } from '@app/session.service';
@@ -13,9 +13,9 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
 import { SelectionModel } from '@angular/cdk/collections';
 import { OverrideExpenseDialogComponent } from '../override-expense-dialog/override-expense-dialog.component';
 import { ScheduleAutoReleaseDialogComponent } from '../schedule-auto-release-dialog/schedule-auto-release-dialog.component';
-import { FormControl } from '@angular/forms';
 import { ConfirmAutoreleaseDateDialogComponent } from '../confirm-autorelease-date-dialog/confirm-autorelease-date-dialog.component';
 import { ConfirmReleaseDialogComponent } from '../confirm-release-dialog/confirm-release-dialog.component';
+import * as _ from 'lodash';
 
 @Component({
     selector: 'vs-payroll-list',
@@ -238,8 +238,6 @@ export class PayrollListComponent implements OnInit {
         .afterClosed()
         .subscribe((result:PayrollDetails) => {
             if(result == null) return;
-            console.log('Result from the dialog: ');
-            console.dir(result);
 
             if(isNaN((<any>result.taxes).charAt(0)))
                 result.taxes = (<any>result.taxes).slice(0, 1);
@@ -260,14 +258,9 @@ export class PayrollListComponent implements OnInit {
             
             this.service.savePayrollDetails(this.user.sessionUser.sessionClient, result)
                 .subscribe(res => {
-                    this._payrolls.forEach((p, i, a) => {
-                        if(p.payrollId != res.payrollId) return;
-                        p.details.forEach((pd, ii, aa) => {
-                            if(pd.payrollDetailsId != res.payrollDetailsId) return;
-                            a[i].details[ii] = res;
-                        });
-                        this.payrolls$.next(this._payrolls);
-                    });
+                    this._payrolls = res;
+                    this.payrolls$.next(this._payrolls);
+                    this.msg.addMessage('Successfully updated overrides & expenses.', 'dismiss', 5000);
                 });
         });
     }
@@ -338,14 +331,17 @@ export class PayrollListComponent implements OnInit {
      * @param detail PayrollDetails
      */
     calculateGrossTotal(detail:PayrollDetails):number {
-        let expenses:any = detail.expenses.map(e => e.amount);
-        expenses = expenses != null && expenses.length
-            ? +expenses.reduce((a,c) => a + c)
-            : 0;
-        let overrides:any = detail.overrides.map(o => (o.units * o.amount));
-        overrides = overrides != null && overrides.length
-            ? +overrides.reduce((a,c) => a + c)
-            : 0;
+        // let expenses:any = detail.expenses.map(e => e.amount);
+        // expenses = expenses != null && expenses.length
+        //     ? +expenses.reduce((a,c) => a + c)
+        //     : 0;
+        // let overrides:any = detail.overrides.map(o => (o.units * o.amount));
+        // overrides = overrides != null && overrides.length
+        //     ? +overrides.reduce((a,c) => a + c)
+        //     : 0;
+
+        const expenses = _.sumBy(detail.expenses, e => e.amount);
+        const overrides = _.sumBy(detail.overrides, o => (o.amount * o.units));
         const result = +detail.grossTotal + expenses + overrides;
         return result;
     }
