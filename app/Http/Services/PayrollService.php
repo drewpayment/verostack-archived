@@ -3,13 +3,16 @@
 namespace App\Http\Services;
 
 use App\Agent;
+use App\Expense;
 use App\Payroll;
+use App\Override;
+use Carbon\Carbon;
 use App\Http\Helpers;
+use App\PayrollDetail;
 use App\Http\UserService;
 use App\Http\Resources\ApiResource;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Services\PayrollDetailsService;
-use Carbon\Carbon;
 
 class PayrollService
 {
@@ -140,5 +143,78 @@ class PayrollService
         if(!$res) return $result->setToFail();
 
         return $result->setData($payroll);
+    }
+
+    public function savePayrollDetails($dto)
+    {
+        $result = new ApiResource();
+
+        $payroll = Payroll::with('campaign')->byPayroll($dto->payrollId)->first();
+        $commission = !is_null($payroll->campaign) ? $payroll->campaign->compensation : 0;
+        $grossTotal = $dto->sales * $commission;
+
+        if(is_null($dto->payrollDetailsId) || $dto->payrollDetailsId < 1)
+            $detail = new PayrollDetail;
+        else 
+            $detail = PayrollDetail::byPayrollDetailsId($dto->payrollDetailsId)->first();
+
+        $detail->payroll_id = $dto->payrollId;
+        $detail->agent_id = $dto->agentId;
+        $detail->sales = $dto->sales;
+        $detail->taxes = $dto->taxes;
+        $detail->modified_by = Auth::user()->id;
+
+        $overrides = [];
+        foreach($dto->overrides as $ovr)
+        {
+            if(is_null($ovr['overrideId']))
+                $o = new Override;
+            else
+                $o = Override::byOverride($ovr['overrideId'])->first();
+
+            $o->payroll_details_id = $dto->payrollDetailsId;
+            $o->agent_id = $ovr['agentId'];
+            $o->units = $ovr['units'];
+            $o->amount = $ovr['amount'];
+            $o->modified_by = Auth::user()->id;
+            $overrides[] = $o;
+
+            $grossTotal += ($o->units * $o->amount);
+        }
+
+        $expenses = [];
+        foreach($detail->expenses as $exp)
+        {
+            if(is_null($exp['expenseId']))
+                $e = new Expense;
+            else
+                $e = Expense::byExpense($exp['expenseId'])->first();
+
+            $e->payroll_details_id = $dto->payrollDetailsId;
+            $e->agent_id = $dto->agentId;
+            $e->title = $exp['title'];
+            $e->description = $exp['description'];
+            $e->amount = $exp['amount'];
+            $e->expense_date = $exp['expenseDate'];
+            $e->modified_by = Auth::user()->id;
+            $expenses[] = $e;
+
+            $grossTotal += $e->amount;
+        }
+
+        $res = $detail->save();
+
+        if(!$res) return $result->setToFail();
+
+        $overrides = $detail->overrides()->saveMany($overrides);
+        $expenses = $detail->expenses()->saveMany($expenses);
+
+        $detail = PayrollDetail::with(['overrides', 'expenses', 'agent'])
+            ->byPayrollDetailsId($detail->payroll_details_id)->first();
+
+        // TODO: Can't get expenses to work right.. they're not returning back to the frontend
+        $detail->expenses = is_null($detail->expenses) ? [] : $detail->expenses; 
+
+        return $result->setData($detail);
     }
 }

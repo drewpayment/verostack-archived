@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Payroll;
 use App\Utility;
 use Illuminate\Database\Eloquent\Model;
 
@@ -40,6 +41,11 @@ class Campaign extends Model
     public function utilities()
     {
         return $this->hasMany(Utility::class, 'campaign_id');
+    }
+
+    public function payrolls()
+    {
+        return $this->belongsToMany(Payroll::class, 'payrolls', 'campaign_id');
     }
 
 	/**

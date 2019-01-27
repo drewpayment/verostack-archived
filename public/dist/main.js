@@ -9077,6 +9077,7 @@ var PayrollListComponent = /** @class */ (function () {
         return numSelected === numRows;
     };
     PayrollListComponent.prototype.showExpensesAndOverrides = function (detail) {
+        var _this = this;
         this.dialog.open(_override_expense_dialog_override_expense_dialog_component__WEBPACK_IMPORTED_MODULE_14__["OverrideExpenseDialogComponent"], {
             width: '60vw',
             maxHeight: '80vh',
@@ -9089,6 +9090,35 @@ var PayrollListComponent = /** @class */ (function () {
             .subscribe(function (result) {
             if (result == null)
                 return;
+            console.log('Result from the dialog: ');
+            console.dir(result);
+            if (isNaN(result.taxes.charAt(0)))
+                result.taxes = result.taxes.slice(0, 1);
+            if (isNaN(result.grossTotal.charAt(0)))
+                result.grossTotal = result.grossTotal.slice(0, 1);
+            if (isNaN(result.netTotal.charAt(0)))
+                result.netTotal = result.netTotal.slice(0, 1);
+            result.overrides.forEach(function (o, i, a) {
+                if (isNaN(o.amount.charAt(0)))
+                    a[i].amount = o.amount.slice(1);
+            });
+            result.expenses.forEach(function (e, i, a) {
+                if (isNaN(e.amount.charAt(0)))
+                    a[i].amount = e.amount.slice(1);
+            });
+            _this.service.savePayrollDetails(_this.user.sessionUser.sessionClient, result)
+                .subscribe(function (res) {
+                _this._payrolls.forEach(function (p, i, a) {
+                    if (p.payrollId != res.payrollId)
+                        return;
+                    p.details.forEach(function (pd, ii, aa) {
+                        if (pd.payrollDetailsId != res.payrollDetailsId)
+                            return;
+                        a[i].details[ii] = res;
+                    });
+                    _this.payrolls$.next(_this._payrolls);
+                });
+            });
         });
     };
     /** not used */

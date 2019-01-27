@@ -33,4 +33,9 @@ class PayrollDetail extends Model
         return $this->hasMany(Override::class, 'payroll_details_id');
     }
 
+    public function scopeByPayrollDetailsId($query, $id)
+    {
+        return $query->where('payroll_details_id', $id);
+    }
+
 }

@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Resources\ApiResource;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Services\PayrollService;
+use App\PayrollDetail;
 
 class PayrollController extends Controller
 {
@@ -167,11 +168,18 @@ class PayrollController extends Controller
     public function savePayrollDetails(Request $request, $clientId, $payrollId, $payrollDetailsId)
     {
         $result = new ApiResource();
+        $dto = (object)$request->all();
 
-        // TODO: Need to finish this call to save details and update overrides/expenses on the deteails relationship
+        $result
+			->checkAccessByClient($clientId, Auth::user()->id)
+			->mergeInto($result);
 
-        return $result->setToFail()->throwApiException()
-            ->getResponse();
+		if($result->hasError)
+			return $result->throwApiException()->getResponse();
+
+        $this->service->savePayrollDetails($dto)->mergeInto($result);
+
+        return $result->throwApiException()->getResponse();
     }
 
 }

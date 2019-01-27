@@ -236,10 +236,39 @@ export class PayrollListComponent implements OnInit {
             }
         })
         .afterClosed()
-        .subscribe(result => {
+        .subscribe((result:PayrollDetails) => {
             if(result == null) return;
+            console.log('Result from the dialog: ');
+            console.dir(result);
 
+            if(isNaN((<any>result.taxes).charAt(0)))
+                result.taxes = (<any>result.taxes).slice(0, 1);
+            if(isNaN((<any>result.grossTotal).charAt(0)))
+                result.grossTotal = (<any>result.grossTotal).slice(0, 1);
+            if(isNaN((<any>result.netTotal).charAt(0)))
+                result.netTotal = (<any>result.netTotal).slice(0, 1);
+
+            result.overrides.forEach((o, i, a) => {
+                if(isNaN((<any>o.amount).charAt(0)))
+                    a[i].amount = (<any>o.amount).slice(1);
+            });
+
+            result.expenses.forEach((e, i, a) => {
+                if(isNaN((<any>e.amount).charAt(0)))
+                    a[i].amount = (<any>e.amount).slice(1);
+            });
             
+            this.service.savePayrollDetails(this.user.sessionUser.sessionClient, result)
+                .subscribe(res => {
+                    this._payrolls.forEach((p, i, a) => {
+                        if(p.payrollId != res.payrollId) return;
+                        p.details.forEach((pd, ii, aa) => {
+                            if(pd.payrollDetailsId != res.payrollDetailsId) return;
+                            a[i].details[ii] = res;
+                        });
+                        this.payrolls$.next(this._payrolls);
+                    });
+                });
         });
     }
 

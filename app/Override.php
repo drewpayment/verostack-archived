@@ -28,4 +28,14 @@ class Override extends Model
         return $this->belongsTo(PayrollDetail::class, 'payroll_details_id');
     }
 
+    public function scopeByOverride($query, $id)
+    {
+        return $query->where('override_id', $id);
+    }
+
+    public function scopeByOverrideList($query, $ids)
+    {
+        return $query->whereIn('override_id', $ids);
+    }
+
 }

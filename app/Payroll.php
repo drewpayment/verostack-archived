@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Agent;
+use App\Campaign;
 use App\PayCycle;
 use App\PayrollDetail;
 use Illuminate\Database\Eloquent\Model;
@@ -41,6 +42,11 @@ class Payroll extends Model
     public function details()
     {
         return $this->hasMany(PayrollDetail::class, 'payroll_id');
+    }
+
+    public function campaign()
+    {
+        return $this->hasOne(Campaign::class, 'campaign_id');
     }
 
     /**

@@ -32,4 +32,9 @@ class Expense extends Model
         return $query->where('payroll_details_id', $id);
     }
 
+    public function scopeByExpense($query, $id)
+    {
+        return $query->where('expense_id', $id);
+    }
+
 }
