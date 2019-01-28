@@ -32,6 +32,7 @@ import {ScheduleAutoReleaseDialogComponent} from './payroll/schedule-auto-releas
 import {MatCalendar, MatCalendarHeader} from '@angular/material';
 import { ConfirmAutoreleaseDateDialogComponent } from './payroll/confirm-autorelease-date-dialog/confirm-autorelease-date-dialog.component';
 import { ConfirmReleaseDialogComponent } from './payroll/confirm-release-dialog/confirm-release-dialog.component';
+import { GrossTotalReleaseAmountPipe } from './payroll/confirm-release-dialog/gross-total-release-amount.pipe';
 
 @NgModule({
     imports: [
@@ -69,7 +70,8 @@ import { ConfirmReleaseDialogComponent } from './payroll/confirm-release-dialog/
         OverrideExpenseDialogComponent,
         ScheduleAutoReleaseDialogComponent,
         ConfirmAutoreleaseDateDialogComponent,
-        ConfirmReleaseDialogComponent
+        ConfirmReleaseDialogComponent,
+        GrossTotalReleaseAmountPipe
     ],
     entryComponents: [
         EditAgentDialogComponent,

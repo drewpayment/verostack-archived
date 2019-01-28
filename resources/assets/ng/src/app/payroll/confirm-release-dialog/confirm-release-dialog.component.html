@@ -5,7 +5,7 @@
             <div class="col-md-11 offset-md-1 d-flex justify-content-between">
                 <div>{{detail.agent.firstName}} {{detail.agent.lastName}}</div>
                 <div class="text-muted font-italic">{{detail.sales}} {{detail.sales > 1 ? 'sales' : 'sale'}}</div>
-                <div class="text-muted">{{detail.netTotal | currency}}</div>
+                <div class="text-muted">{{detail | payrollDetailTotals:'netTotal' | currency}}</div>
             </div>
         </div>
     </ng-container>
@@ -18,6 +18,10 @@
     </button>
 </div>
 <mat-dialog-content>
+    <p class="text-muted font-italic">
+        Once confirmed, the respective pay checks will be locked for release and can no longer be edited. Please ensure
+        that you are confirming the proper pay checks to be released. 
+    </p>
     <ng-container *ngFor="let p of payrolls; let i = index">
         <div class="row">
             <div class="col-md-12">
@@ -32,7 +36,7 @@
         <div class="row border-top pt-2 mt-2">
             <div class="col-md-12 d-flex justify-content-between font-weight-bold">
                 <span>Gross Total projected in this release</span>
-                <span>{{grossTotalReleaseAmount | currency}}</span>
+                <span>{{payrolls | grossTotalReleaseAmount | currency}}</span>
             </div>
         </div>
     </ng-container>

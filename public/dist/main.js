@@ -1402,6 +1402,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _payroll_schedule_auto_release_dialog_schedule_auto_release_dialog_component__WEBPACK_IMPORTED_MODULE_31__ = __webpack_require__(/*! ./payroll/schedule-auto-release-dialog/schedule-auto-release-dialog.component */ "./src/app/payroll/schedule-auto-release-dialog/schedule-auto-release-dialog.component.ts");
 /* harmony import */ var _payroll_confirm_autorelease_date_dialog_confirm_autorelease_date_dialog_component__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(/*! ./payroll/confirm-autorelease-date-dialog/confirm-autorelease-date-dialog.component */ "./src/app/payroll/confirm-autorelease-date-dialog/confirm-autorelease-date-dialog.component.ts");
 /* harmony import */ var _payroll_confirm_release_dialog_confirm_release_dialog_component__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(/*! ./payroll/confirm-release-dialog/confirm-release-dialog.component */ "./src/app/payroll/confirm-release-dialog/confirm-release-dialog.component.ts");
+/* harmony import */ var _payroll_confirm_release_dialog_gross_total_release_amount_pipe__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(/*! ./payroll/confirm-release-dialog/gross-total-release-amount.pipe */ "./src/app/payroll/confirm-release-dialog/gross-total-release-amount.pipe.ts");
+
 
 
 
@@ -1476,7 +1478,8 @@ var AppModule = /** @class */ (function () {
                 _payroll_override_expense_dialog_override_expense_dialog_component__WEBPACK_IMPORTED_MODULE_29__["OverrideExpenseDialogComponent"],
                 _payroll_schedule_auto_release_dialog_schedule_auto_release_dialog_component__WEBPACK_IMPORTED_MODULE_31__["ScheduleAutoReleaseDialogComponent"],
                 _payroll_confirm_autorelease_date_dialog_confirm_autorelease_date_dialog_component__WEBPACK_IMPORTED_MODULE_32__["ConfirmAutoreleaseDateDialogComponent"],
-                _payroll_confirm_release_dialog_confirm_release_dialog_component__WEBPACK_IMPORTED_MODULE_33__["ConfirmReleaseDialogComponent"]
+                _payroll_confirm_release_dialog_confirm_release_dialog_component__WEBPACK_IMPORTED_MODULE_33__["ConfirmReleaseDialogComponent"],
+                _payroll_confirm_release_dialog_gross_total_release_amount_pipe__WEBPACK_IMPORTED_MODULE_34__["GrossTotalReleaseAmountPipe"]
             ],
             entryComponents: [
                 _agent_edit_agent_dialog_edit_agent_dialog_component__WEBPACK_IMPORTED_MODULE_16__["EditAgentDialogComponent"],
@@ -8265,7 +8268,7 @@ var ConfirmAutoreleaseDateDialogComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n<ng-template #detailTemplate let-details=\"details\">\n    <ng-container *ngFor=\"let detail of details; let ii = index\">\n        <div class=\"row my-3\">\n            <div class=\"col-md-11 offset-md-1 d-flex justify-content-between\">\n                <div>{{detail.agent.firstName}} {{detail.agent.lastName}}</div>\n                <div class=\"text-muted font-italic\">{{detail.sales}} {{detail.sales > 1 ? 'sales' : 'sale'}}</div>\n                <div class=\"text-muted\">{{detail.netTotal | currency}}</div>\n            </div>\n        </div>\n    </ng-container>\n</ng-template>\n\n<div mat-dialog-title class=\"d-flex justify-content-between\">\n    <h4 class=\"font-weight-bold\">Confirm to release {{payrolls.length}} {{payrolls.length > 1 ? 'payroll cycles.' : 'payroll cycle.'}}</h4>\n    <button type=\"button\" mat-icon-button (click)=\"onNoClick()\">\n        <mat-icon>clear</mat-icon>\n    </button>\n</div>\n<mat-dialog-content>\n    <ng-container *ngFor=\"let p of payrolls; let i = index\">\n        <div class=\"row\">\n            <div class=\"col-md-12\">\n                <span class=\"font-weight-bold mb-4\">{{(i + 1)+'.'}} </span>\n                <span class=\"font-weight-bold mb-4\">{{p.payCycle.startDate | date:'mediumDate'}} - {{p.payCycle.endDate | date:'mediumDate'}}</span>\n                <ng-container *ngTemplateOutlet=\"detailTemplate;context:{details:p.details}\"></ng-container>\n            </div>\n        </div>\n    </ng-container>\n\n    <ng-container *ngIf=\"payrolls.length\">\n        <div class=\"row border-top pt-2 mt-2\">\n            <div class=\"col-md-12 d-flex justify-content-between font-weight-bold\">\n                <span>Gross Total projected in this release</span>\n                <span>{{grossTotalReleaseAmount | currency}}</span>\n            </div>\n        </div>\n    </ng-container>\n</mat-dialog-content>\n<mat-dialog-actions class=\"mt-3 d-flex justify-content-between\">\n    <button type=\"button\" mat-button (click)=\"onNoClick()\">Go Back</button>\n    <button type=\"button\" mat-button color=\"primary\" (click)=\"confirmRelease()\">Confirm</button>\n</mat-dialog-actions>"
+module.exports = "\n<ng-template #detailTemplate let-details=\"details\">\n    <ng-container *ngFor=\"let detail of details; let ii = index\">\n        <div class=\"row my-3\">\n            <div class=\"col-md-11 offset-md-1 d-flex justify-content-between\">\n                <div>{{detail.agent.firstName}} {{detail.agent.lastName}}</div>\n                <div class=\"text-muted font-italic\">{{detail.sales}} {{detail.sales > 1 ? 'sales' : 'sale'}}</div>\n                <div class=\"text-muted\">{{detail | payrollDetailTotals:'netTotal' | currency}}</div>\n            </div>\n        </div>\n    </ng-container>\n</ng-template>\n\n<div mat-dialog-title class=\"d-flex justify-content-between\">\n    <h4 class=\"font-weight-bold\">Confirm to release {{payrolls.length}} {{payrolls.length > 1 ? 'payroll cycles.' : 'payroll cycle.'}}</h4>\n    <button type=\"button\" mat-icon-button (click)=\"onNoClick()\">\n        <mat-icon>clear</mat-icon>\n    </button>\n</div>\n<mat-dialog-content>\n    <p class=\"text-muted font-italic\">\n        Once confirmed, the respective pay checks will be locked for release and can no longer be edited. Please ensure\n        that you are confirming the proper pay checks to be released. \n    </p>\n    <ng-container *ngFor=\"let p of payrolls; let i = index\">\n        <div class=\"row\">\n            <div class=\"col-md-12\">\n                <span class=\"font-weight-bold mb-4\">{{(i + 1)+'.'}} </span>\n                <span class=\"font-weight-bold mb-4\">{{p.payCycle.startDate | date:'mediumDate'}} - {{p.payCycle.endDate | date:'mediumDate'}}</span>\n                <ng-container *ngTemplateOutlet=\"detailTemplate;context:{details:p.details}\"></ng-container>\n            </div>\n        </div>\n    </ng-container>\n\n    <ng-container *ngIf=\"payrolls.length\">\n        <div class=\"row border-top pt-2 mt-2\">\n            <div class=\"col-md-12 d-flex justify-content-between font-weight-bold\">\n                <span>Gross Total projected in this release</span>\n                <span>{{payrolls | grossTotalReleaseAmount | currency}}</span>\n            </div>\n        </div>\n    </ng-container>\n</mat-dialog-content>\n<mat-dialog-actions class=\"mt-3 d-flex justify-content-between\">\n    <button type=\"button\" mat-button (click)=\"onNoClick()\">Go Back</button>\n    <button type=\"button\" mat-button color=\"primary\" (click)=\"confirmRelease()\">Confirm</button>\n</mat-dialog-actions>"
 
 /***/ }),
 
@@ -8307,7 +8310,6 @@ var ConfirmReleaseDialogComponent = /** @class */ (function () {
     }
     ConfirmReleaseDialogComponent.prototype.ngOnInit = function () {
         this.payrolls = this.data.payrolls || [];
-        // this.payrolls.forEach(p => p.details.forEach(d => this.grossTotalReleaseAmount = +d.grossTotal));
         this.grossTotalReleaseAmount = this.grossTotalReleaseAmount + (lodash__WEBPACK_IMPORTED_MODULE_3__["sumBy"](this.payrolls, function (p) { return lodash__WEBPACK_IMPORTED_MODULE_3__["sumBy"](p.details, function (d) { return +d.grossTotal; }); }));
     };
     ConfirmReleaseDialogComponent.prototype.confirmRelease = function () {
@@ -8326,6 +8328,53 @@ var ConfirmReleaseDialogComponent = /** @class */ (function () {
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_material__WEBPACK_IMPORTED_MODULE_2__["MatDialogRef"], Object])
     ], ConfirmReleaseDialogComponent);
     return ConfirmReleaseDialogComponent;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/payroll/confirm-release-dialog/gross-total-release-amount.pipe.ts":
+/*!***********************************************************************************!*\
+  !*** ./src/app/payroll/confirm-release-dialog/gross-total-release-amount.pipe.ts ***!
+  \***********************************************************************************/
+/*! exports provided: GrossTotalReleaseAmountPipe */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GrossTotalReleaseAmountPipe", function() { return GrossTotalReleaseAmountPipe; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+
+
+var GrossTotalReleaseAmountPipe = /** @class */ (function () {
+    function GrossTotalReleaseAmountPipe() {
+    }
+    /**
+     * Iterates through all payrolls, details and calculates the totals of the sales, expenses and overrides.
+     *
+     * @param payrolls
+     * @param args
+     */
+    GrossTotalReleaseAmountPipe.prototype.transform = function (payrolls, args) {
+        var total = 0;
+        payrolls.forEach(function (p) {
+            p.details.forEach(function (d) {
+                var salesGross = d.grossTotal;
+                var expenses = d.expenses.map(function (e) { return e.amount; }).reduce(function (t, n) { return t + n; }, 0);
+                var overrides = d.overrides.map(function (o) { return (o.amount * o.units); }).reduce(function (t, n) { return t + n; }, 0);
+                total += (+salesGross + +expenses + +overrides);
+            });
+        });
+        return total;
+    };
+    GrossTotalReleaseAmountPipe = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Pipe"])({
+            name: 'grossTotalReleaseAmount'
+        })
+    ], GrossTotalReleaseAmountPipe);
+    return GrossTotalReleaseAmountPipe;
 }());
 
 
@@ -8840,7 +8889,7 @@ var PayrollFilterDialogComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n<div class=\"container\">\n    <div class=\"row mb-4\">\n        <div class=\"col-md-12\">\n            <mat-card class=\"page-header-accent\">\n                <mat-card-content>\n                    <div class=\"d-flex justify-content-between\">\n                        <h3>\n                            <span>Payroll Release Schedule</span>\n                        </h3>\n                        <div *ngLet=\"isFilterBtnActive$|async as active\">\n                            <button type=\"button\"\n                                mat-icon-button\n                                color=\"primary\"\n                                [class.active]=\"active\"\n                                (click)=\"filterBtnClick()\"\n                            >\n                                <mat-icon>filter_list</mat-icon>\n                            </button>\n                        </div>\n                    </div>\n                    <div class=\"text-muted d-flex align-items-center\">\n                        <span class=\"font-weight-bold mr-2\">\n                            Narrowed to\n                        </span>\n                        <mat-chip-list #matChipList>\n                            <mat-chip class=\"bg-transparent\" *ngIf=\"filters.startDate\" [removable]=\"false\" [selectable]=\"false\">\n                                <span>Start: {{filters.startDate | date:'shortDate'}}</span>\n                            </mat-chip>\n                            <mat-chip class=\"bg-transparent\" *ngIf=\"filters.endDate\" [removable]=\"false\" [selectable]=\"false\">\n                                <span>End: {{filters.endDate | date:'shortDate'}}</span>\n                            </mat-chip>\n                            <mat-chip class=\"bg-transparent\" *ngIf=\"filters.campaignId\" (removed)=\"removeFilter(3)\" [selectable]=\"false\">\n                                <ng-container *ngLet=\"getFilteredCampaign(filters.campaignId) as c\">\n                                    <span>Campaign: {{c.name}}</span>\n                                    <mat-icon matChipRemove>cancel</mat-icon>\n                                </ng-container>\n                            </mat-chip>\n                            <mat-chip class=\"bg-transparent\" *ngIf=\"filters.agentId\" (removed)=\"removeFilter(2)\" [selectable]=\"false\">\n                                <ng-container *ngLet=\"getFilteredAgent(filters.agentId) as a\">\n                                    <span>{{a.firstName}} {{a.lastName}}</span>\n                                    <mat-icon matChipRemove>cancel</mat-icon>\n                                </ng-container>\n                            </mat-chip>\n                        </mat-chip-list>\n                    </div>\n                </mat-card-content>\n            </mat-card>\n        </div>\n    </div>\n\n    <div class=\"row\">\n        <div class=\"col-md-12\">\n            <ng-container *ngIf=\"(payrolls$|async) != null && (payrolls$|async).length; else noPayrolls\">\n                <mat-card class=\"border-top-primary\">\n                    <mat-card-subtitle class=\"d-flex justify-content-between\">\n                        <div>\n                            <button type=\"button\" mat-button \n                                color=\"primary\" \n                                (click)=\"showReleaseConfirm()\"\n                                [disabled]=\"disableRelease\"\n                            >\n                                <mat-icon inline=\"true\">send</mat-icon> Release\n                            </button>\n                            <button type=\"button\" mat-button\n                                color=\"accent\"\n                                (click)=\"autoReleaseDatepicker.open()\"\n                                [disabled]=\"disableRelease\"\n                            >\n                                <mat-icon inline=\"true\">date_range</mat-icon> Schedule Auto-Release\n                            </button>\n                            <mat-form-field [style.visibility]=\"'hidden'\">\n                                <input matInput [matDatepicker]=\"autoReleaseDatepicker\" (dateChange)=\"dateChanged($event)\" />\n                                <mat-datepicker touchUi=\"true\" #autoReleaseDatepicker></mat-datepicker>\n                            </mat-form-field>\n                        </div>\n                        <p class=\"text-muted\">\n                            {{displayingResults}}\n                        </p>\n                    </mat-card-subtitle>\n                    <mat-card-content>\n                        <ng-container *ngLet=\"payrolls$|async as payrolls\">\n                            <table mat-table #tableRef [dataSource]=\"payrolls\" multiTemplateDataRows class=\"mat-elevation-z8\">\n\n                                <!-- SELECTED -->\n                                <ng-container matColumnDef=\"selected\">\n                                    <th mat-header-cell *matHeaderCellDef>\n                                        <mat-checkbox (change)=\"$event ? masterToggle() : null\"\n                                            [checked]=\"selection.hasValue() && isAllSelected()\"\n                                            [indeterminate]=\"selection.hasValue() && !isAllSelected()\"\n                                        ></mat-checkbox>\n                                    </th>\n                                    <td mat-cell *matCellDef=\"let item\">\n                                        <mat-checkbox\n                                            (click)=\"$event.stopPropagation()\"\n                                            (change)=\"$event ? selection.toggle(item) : null\"\n                                            [checked]=\"selection.isSelected(item)\"\n                                            [disabled]=\"item.payCycle.isClosed || item.isReleased\"\n                                        ></mat-checkbox>\n                                    </td>\n                                </ng-container>\n\n                                <!-- WEEKENDING -->\n                                <ng-container matColumnDef=\"weekending\">\n                                    <th mat-header-cell *matHeaderCellDef>Weekending</th>\n                                    <td mat-cell *matCellDef=\"let item\">{{item.weekEnding | date:'shortDate'}}</td>\n                                </ng-container>\n\n                                <!-- CYCLE START DATE -->\n                                <ng-container matColumnDef=\"cycleStart\">\n                                    <th mat-header-cell *matHeaderCellDef>Cycle Start</th>\n                                    <td mat-cell *matCellDef=\"let item\">{{item.payCycle.startDate | date:'shortDate'}}</td>\n                                </ng-container>\n\n                                <!-- CYCLE END DATE -->\n                                <ng-container matColumnDef=\"cycleEnd\">\n                                    <th mat-header-cell *matHeaderCellDef>Cycle End</th>\n                                    <td mat-cell *matCellDef=\"let item\">{{item.payCycle.endDate | date:'shortDate'}}</td>\n                                </ng-container>\n\n                                <!-- IS AUTOMATED -->\n                                <ng-container matColumnDef=\"isAutomated\">\n                                    <th mat-header-cell *matHeaderCellDef>Auto Release</th>\n                                    <td mat-cell *matCellDef=\"let item\">\n                                        <mat-checkbox [checked]=\"item.isAutomated\" \n                                            [disabled]=\"!(item.isAutomated && !item.isReleased)\"\n                                            (change)=\"removeAutoRelease($event, item)\"\n                                            (click)=\"$event.stopPropagation()\"\n                                        ></mat-checkbox>\n                                    </td>\n                                </ng-container>\n\n                                <!-- AUTOMATIC RELEASE DATE -->\n                                <ng-container matColumnDef=\"automatedRelease\">\n                                    <th mat-header-cell *matHeaderCellDef>Release Date</th>\n                                    <td mat-cell *matCellDef=\"let item\">\n                                        {{item.automatedRelease | date:'shortDate'}}\n                                    </td>\n                                </ng-container>\n\n                                <!-- IS RELEASED -->\n                                <ng-container matColumnDef=\"isReleased\">\n                                    <th mat-header-cell *matHeaderCellDef>Released</th>\n                                    <td *matCellDef=\"let item\">\n                                        <mat-checkbox [checked]=\"item.isReleased\" [disabled]=\"true\"></mat-checkbox>\n                                    </td>\n                                </ng-container>\n\n                                <!-- PAYROLL STATUS -->\n                                <ng-container matColumnDef=\"status\">\n                                    <th mat-header-cell *matHeaderCellDef>Status</th>\n                                    <td mat-cell *matCellDef=\"let item\">\n                                        <ng-container *ngLet=\"getPayrollStatus(item) as desc\">\n                                            {{desc}}\n                                        </ng-container>\n                                    </td>\n                                </ng-container>\n\n                                <!-- EXPANDED DETAIL -->\n                                <ng-container matColumnDef=\"expandedDetail\">\n                                    <td mat-cell *matCellDef=\"let item\" \n                                        [attr.colspan]=\"displayColumns.length\" \n                                    >\n                                        <div class=\"element-detail\"\n                                            [@detailExpand]=\"item == expandedItem ? 'expanded' : 'collapsed'\"\n                                            [class.pb-2]=\"item == expandedItem\"\n                                        >\n                                            <div class=\"row w-100\">\n                                                <div class=\"col-md-12\">                                                    \n                                                    <ul class=\"list-group\">\n                                                        <li class=\"list-group-item\">\n                                                            <div class=\"row\">\n                                                                <div class=\"col-md-3\">\n                                                                    <span class=\"font-weight-bold\">Agent</span>\n                                                                </div>\n                                                                <div class=\"col-md-2\">\n                                                                    <span class=\"font-weight-bold\">Sales</span>\n                                                                </div>\n                                                                <div class=\"col-md-2\">\n                                                                    <span class=\"font-weight-bold\">Gross</span>\n                                                                </div>\n                                                                <div class=\"col-md-2\">\n                                                                    <span class=\"font-weight-bold\">Taxes</span>\n                                                                </div>\n                                                                <div class=\"col-md-2\">\n                                                                    <span class=\"font-weight-bold\">Net</span>\n                                                                </div>\n                                                                <div class=\"col-md-auto\">\n                                                                    <span>&nbsp;</span>\n                                                                </div>\n                                                            </div>\n                                                        </li>\n                                                        <li *ngFor=\"let detail of item.details\" class=\"list-group-item\">\n                                                            <div class=\"row align-middle\">\n                                                                <div class=\"col-md-3\">\n                                                                    {{detail.agent.firstName}} {{detail.agent.lastName}}\n                                                                </div>\n                                                                <div class=\"col-md-2\">\n                                                                    {{detail.sales}}\n                                                                </div>\n                                                                <div class=\"col-md-2\">\n                                                                    {{calculateGrossTotal(detail) | currency}}\n                                                                </div>\n                                                                <div class=\"col-md-2\">\n                                                                    {{detail.taxes | currency}}\n                                                                </div>\n                                                                <div class=\"col-md-2\">\n                                                                    {{calculateNetTotal(detail) | currency}}\n                                                                </div>\n                                                                <div class=\"col-md-auto\">\n                                                                    <button type=\"button\" mat-icon-button \n                                                                        color=\"primary\"\n                                                                        (click)=\"showExpensesAndOverrides(detail)\"\n                                                                        [disabled]=\"item.isReleased || item.payCycle.isClosed\"\n                                                                    >\n                                                                        <mat-icon>settings</mat-icon>\n                                                                    </button>\n                                                                </div>\n                                                            </div>\n                                                        </li>\n                                                    </ul>\n                                                </div>\n                                            </div>\n                                        </div>\n                                    </td>\n                                </ng-container>\n\n                                <tr mat-header-row *matHeaderRowDef=\"displayColumns\"></tr>\n                                <tr mat-row *matRowDef=\"let item; columns: displayColumns\"\n                                    class=\"element-row clickable\"\n                                    [class.expanded-row]=\"expandedItem === item\"\n                                    [class.expanded]=\"expandedItem === item\"\n                                    (click)=\"expandedItem = expandedItem === item ? null : item\"\n                                ></tr>\n                                <tr mat-row \n                                    *matRowDef=\"let row; columns: ['expandedDetail']\" \n                                    class=\"detail-row\"\n                                    [class.expanded]=\"row == expandedItem\"\n                                ></tr>\n                            </table>\n                        </ng-container>\n                    </mat-card-content>\n                </mat-card>\n            </ng-container>\n            <ng-template #noPayrolls>\n                <p class=\"text-center text-muted font-italic h4\">\n                    No Payrolls were found based on this search criteria. Please try adjusting your filters.\n                </p>\n            </ng-template>\n        </div>\n    </div>\n</div>\n"
+module.exports = "\n<div class=\"container\">\n    <div class=\"row mb-4\">\n        <div class=\"col-md-12\">\n            <mat-card class=\"page-header-accent\">\n                <mat-card-content>\n                    <div class=\"d-flex justify-content-between\">\n                        <h3>\n                            <span>Payroll Release Schedule</span>\n                        </h3>\n                        <div *ngLet=\"isFilterBtnActive$|async as active\">\n                            <button type=\"button\"\n                                mat-icon-button\n                                color=\"primary\"\n                                [class.active]=\"active\"\n                                (click)=\"filterBtnClick()\"\n                            >\n                                <mat-icon>filter_list</mat-icon>\n                            </button>\n                        </div>\n                    </div>\n                    <div class=\"text-muted d-flex align-items-center\">\n                        <span class=\"font-weight-bold mr-2\">\n                            Narrowed to\n                        </span>\n                        <mat-chip-list #matChipList>\n                            <mat-chip class=\"bg-transparent\" *ngIf=\"filters.startDate\" [removable]=\"false\" [selectable]=\"false\">\n                                <span>Start: {{filters.startDate | date:'shortDate'}}</span>\n                            </mat-chip>\n                            <mat-chip class=\"bg-transparent\" *ngIf=\"filters.endDate\" [removable]=\"false\" [selectable]=\"false\">\n                                <span>End: {{filters.endDate | date:'shortDate'}}</span>\n                            </mat-chip>\n                            <mat-chip class=\"bg-transparent\" *ngIf=\"filters.campaignId\" (removed)=\"removeFilter(3)\" [selectable]=\"false\">\n                                <ng-container *ngLet=\"getFilteredCampaign(filters.campaignId) as c\">\n                                    <span>Campaign: {{c.name}}</span>\n                                    <mat-icon matChipRemove>cancel</mat-icon>\n                                </ng-container>\n                            </mat-chip>\n                            <mat-chip class=\"bg-transparent\" *ngIf=\"filters.agentId\" (removed)=\"removeFilter(2)\" [selectable]=\"false\">\n                                <ng-container *ngLet=\"getFilteredAgent(filters.agentId) as a\">\n                                    <span>{{a.firstName}} {{a.lastName}}</span>\n                                    <mat-icon matChipRemove>cancel</mat-icon>\n                                </ng-container>\n                            </mat-chip>\n                        </mat-chip-list>\n                    </div>\n                </mat-card-content>\n            </mat-card>\n        </div>\n    </div>\n\n    <div class=\"row\">\n        <div class=\"col-md-12\">\n            <ng-container *ngIf=\"(payrolls$|async) != null && (payrolls$|async).length; else noPayrolls\">\n                <mat-card class=\"border-top-primary\">\n                    <mat-card-subtitle class=\"d-flex justify-content-between\">\n                        <div>\n                            <button type=\"button\" mat-button \n                                color=\"primary\" \n                                (click)=\"showReleaseConfirm()\"\n                                [disabled]=\"disableRelease\"\n                            >\n                                <mat-icon inline=\"true\">send</mat-icon> Release\n                            </button>\n                            <button type=\"button\" mat-button\n                                color=\"accent\"\n                                (click)=\"autoReleaseDatepicker.open()\"\n                                [disabled]=\"disableRelease\"\n                            >\n                                <mat-icon inline=\"true\">date_range</mat-icon> Schedule Auto-Release\n                            </button>\n                            <mat-form-field [style.visibility]=\"'hidden'\">\n                                <input matInput [matDatepicker]=\"autoReleaseDatepicker\" (dateChange)=\"dateChanged($event)\" />\n                                <mat-datepicker touchUi=\"true\" #autoReleaseDatepicker></mat-datepicker>\n                            </mat-form-field>\n                        </div>\n                        <p class=\"text-muted\">\n                            {{displayingResults}}\n                        </p>\n                    </mat-card-subtitle>\n                    <mat-card-content>\n                        <ng-container *ngLet=\"payrolls$|async as payrolls\">\n                            <table mat-table #tableRef [dataSource]=\"payrolls\" multiTemplateDataRows class=\"mat-elevation-z8\">\n\n                                <!-- SELECTED -->\n                                <ng-container matColumnDef=\"selected\">\n                                    <th mat-header-cell *matHeaderCellDef>\n                                        <mat-checkbox (change)=\"$event ? masterToggle() : null\"\n                                            [checked]=\"selection.hasValue() && isAllSelected()\"\n                                            [indeterminate]=\"selection.hasValue() && !isAllSelected()\"\n                                        ></mat-checkbox>\n                                    </th>\n                                    <td mat-cell *matCellDef=\"let item\">\n                                        <mat-checkbox\n                                            (click)=\"$event.stopPropagation()\"\n                                            (change)=\"$event ? selection.toggle(item) : null\"\n                                            [checked]=\"selection.isSelected(item)\"\n                                            [disabled]=\"item.payCycle.isClosed || item.isReleased\"\n                                        ></mat-checkbox>\n                                    </td>\n                                </ng-container>\n\n                                <!-- WEEKENDING -->\n                                <ng-container matColumnDef=\"weekending\">\n                                    <th mat-header-cell *matHeaderCellDef>Weekending</th>\n                                    <td mat-cell *matCellDef=\"let item\">{{item.weekEnding | date:'shortDate'}}</td>\n                                </ng-container>\n\n                                <!-- CYCLE START DATE -->\n                                <ng-container matColumnDef=\"cycleStart\">\n                                    <th mat-header-cell *matHeaderCellDef>Cycle Start</th>\n                                    <td mat-cell *matCellDef=\"let item\">{{item.payCycle.startDate | date:'shortDate'}}</td>\n                                </ng-container>\n\n                                <!-- CYCLE END DATE -->\n                                <ng-container matColumnDef=\"cycleEnd\">\n                                    <th mat-header-cell *matHeaderCellDef>Cycle End</th>\n                                    <td mat-cell *matCellDef=\"let item\">{{item.payCycle.endDate | date:'shortDate'}}</td>\n                                </ng-container>\n\n                                <!-- IS AUTOMATED -->\n                                <ng-container matColumnDef=\"isAutomated\">\n                                    <th mat-header-cell *matHeaderCellDef>Auto Release</th>\n                                    <td mat-cell *matCellDef=\"let item\">\n                                        <mat-checkbox [checked]=\"item.isAutomated\" \n                                            [disabled]=\"!(item.isAutomated && !item.isReleased)\"\n                                            (change)=\"removeAutoRelease($event, item)\"\n                                            (click)=\"$event.stopPropagation()\"\n                                        ></mat-checkbox>\n                                    </td>\n                                </ng-container>\n\n                                <!-- AUTOMATIC RELEASE DATE -->\n                                <ng-container matColumnDef=\"automatedRelease\">\n                                    <th mat-header-cell *matHeaderCellDef>Release Date</th>\n                                    <td mat-cell *matCellDef=\"let item\">\n                                        {{item.automatedRelease | date:'shortDate'}}\n                                    </td>\n                                </ng-container>\n\n                                <!-- IS RELEASED -->\n                                <ng-container matColumnDef=\"isReleased\">\n                                    <th mat-header-cell *matHeaderCellDef>Released</th>\n                                    <td *matCellDef=\"let item\">\n                                        <mat-checkbox [checked]=\"item.isReleased\" [disabled]=\"true\"></mat-checkbox>\n                                    </td>\n                                </ng-container>\n\n                                <!-- PAYROLL STATUS -->\n                                <ng-container matColumnDef=\"status\">\n                                    <th mat-header-cell *matHeaderCellDef>Status</th>\n                                    <td mat-cell *matCellDef=\"let item\">\n                                        <ng-container *ngLet=\"getPayrollStatus(item) as desc\">\n                                            {{desc}}\n                                        </ng-container>\n                                    </td>\n                                </ng-container>\n\n                                <!-- EXPANDED DETAIL -->\n                                <ng-container matColumnDef=\"expandedDetail\">\n                                    <td mat-cell *matCellDef=\"let item\" \n                                        [attr.colspan]=\"displayColumns.length\" \n                                    >\n                                        <div class=\"element-detail\"\n                                            [@detailExpand]=\"item == expandedItem ? 'expanded' : 'collapsed'\"\n                                            [class.pb-2]=\"item == expandedItem\"\n                                        >\n                                            <div class=\"row w-100\">\n                                                <div class=\"col-md-12\">                                                    \n                                                    <ul class=\"list-group\">\n                                                        <li class=\"list-group-item\">\n                                                            <div class=\"row\">\n                                                                <div class=\"col-md-3\">\n                                                                    <span class=\"font-weight-bold\">Agent</span>\n                                                                </div>\n                                                                <div class=\"col-md-2\">\n                                                                    <span class=\"font-weight-bold\">Sales</span>\n                                                                </div>\n                                                                <div class=\"col-md-2\">\n                                                                    <span class=\"font-weight-bold\">Gross</span>\n                                                                </div>\n                                                                <div class=\"col-md-2\">\n                                                                    <span class=\"font-weight-bold\">Taxes</span>\n                                                                </div>\n                                                                <div class=\"col-md-2\">\n                                                                    <span class=\"font-weight-bold\">Net</span>\n                                                                </div>\n                                                                <div class=\"col-md-auto\">\n                                                                    <span>&nbsp;</span>\n                                                                </div>\n                                                            </div>\n                                                        </li>\n                                                        <li *ngFor=\"let detail of item.details\" class=\"list-group-item\">\n                                                            <div class=\"row align-middle\">\n                                                                <div class=\"col-md-3\">\n                                                                    {{detail.agent.firstName}} {{detail.agent.lastName}}\n                                                                </div>\n                                                                <div class=\"col-md-2\">\n                                                                    {{detail.sales}}\n                                                                </div>\n                                                                <div class=\"col-md-2\">\n                                                                    {{detail | payrollDetailTotals:'grossTotal' | currency}}\n                                                                </div>\n                                                                <div class=\"col-md-2\">\n                                                                    {{detail.taxes | currency}}\n                                                                </div>\n                                                                <div class=\"col-md-2\">\n                                                                    {{detail | payrollDetailTotals:'netTotal' | currency}}\n                                                                </div>\n                                                                <div class=\"col-md-auto\">\n                                                                    <button type=\"button\" mat-icon-button \n                                                                        color=\"primary\"\n                                                                        (click)=\"showExpensesAndOverrides(detail)\"\n                                                                        [disabled]=\"item.isReleased || item.payCycle.isClosed\"\n                                                                    >\n                                                                        <mat-icon>settings</mat-icon>\n                                                                    </button>\n                                                                </div>\n                                                            </div>\n                                                        </li>\n                                                    </ul>\n                                                </div>\n                                            </div>\n                                        </div>\n                                    </td>\n                                </ng-container>\n\n                                <tr mat-header-row *matHeaderRowDef=\"displayColumns\"></tr>\n                                <tr mat-row *matRowDef=\"let item; columns: displayColumns\"\n                                    class=\"element-row clickable\"\n                                    [class.expanded-row]=\"expandedItem === item\"\n                                    [class.expanded]=\"expandedItem === item\"\n                                    (click)=\"expandedItem = expandedItem === item ? null : item;\"\n                                ></tr>\n                                <tr mat-row \n                                    *matRowDef=\"let row; columns: ['expandedDetail']\" \n                                    class=\"detail-row\"\n                                    [class.expanded]=\"row == expandedItem\"\n                                ></tr>\n                            </table>\n                        </ng-container>\n                    </mat-card-content>\n                </mat-card>\n            </ng-container>\n            <ng-template #noPayrolls>\n                <p class=\"text-center text-muted font-italic h4\">\n                    No Payrolls were found based on this search criteria. Please try adjusting your filters.\n                </p>\n            </ng-template>\n        </div>\n    </div>\n</div>\n"
 
 /***/ }),
 
@@ -8884,9 +8933,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _schedule_auto_release_dialog_schedule_auto_release_dialog_component__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../schedule-auto-release-dialog/schedule-auto-release-dialog.component */ "./src/app/payroll/schedule-auto-release-dialog/schedule-auto-release-dialog.component.ts");
 /* harmony import */ var _confirm_autorelease_date_dialog_confirm_autorelease_date_dialog_component__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ../confirm-autorelease-date-dialog/confirm-autorelease-date-dialog.component */ "./src/app/payroll/confirm-autorelease-date-dialog/confirm-autorelease-date-dialog.component.ts");
 /* harmony import */ var _confirm_release_dialog_confirm_release_dialog_component__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../confirm-release-dialog/confirm-release-dialog.component */ "./src/app/payroll/confirm-release-dialog/confirm-release-dialog.component.ts");
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_18___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_18__);
-
 
 
 
@@ -8940,6 +8986,16 @@ var PayrollListComponent = /** @class */ (function () {
         this.selection.onChange.subscribe(function () { return _this.disableRelease = _this.selection.selected.length == 0; });
     };
     /**
+     * How we manage to update our payrolls and keep track of everything happening in one method to
+     * the updated list of payrolls.
+     *
+     * @param payrolls
+     */
+    PayrollListComponent.prototype.setPayrolls = function (payrolls) {
+        this._payrolls = payrolls;
+        this.payrolls$.next(this._payrolls);
+    };
+    /**
      * Handles when the user changes the hidden datepicker value on the template that sets the auto-release
      * date.
      *
@@ -8947,10 +9003,7 @@ var PayrollListComponent = /** @class */ (function () {
      */
     PayrollListComponent.prototype.dateChanged = function (event) {
         var _this = this;
-        console.log('New Release Date: ' + event.value.format('MM-DD-YYYY'));
         this.selectedAutoReleaseDate = event.value;
-        console.log('Need to display confirmation dialog and then save the selected payrolls with it if confirmed.');
-        /** don't forget to set the "isReleased" boolean on each selected payroll to 'true'. */
         this.dialog.open(_confirm_autorelease_date_dialog_confirm_autorelease_date_dialog_component__WEBPACK_IMPORTED_MODULE_16__["ConfirmAutoreleaseDateDialogComponent"], {
             width: '30vw',
             data: {
@@ -8964,13 +9017,14 @@ var PayrollListComponent = /** @class */ (function () {
             var payrollIds = _this.selection.selected.map(function (p) { return p.payrollId; });
             _this.service.saveAutoReleaseSettings(_this.user.sessionUser.sessionClient, payrollIds, result)
                 .subscribe(function (payrolls) {
+                // TODO: Do we really need to do this? Can't we just pass "payrolls" return from the API into setPayrolls()?
                 payrolls.forEach(function (p) {
                     _this._payrolls.forEach(function (pp, i, a) {
                         if (pp.payrollId == p.payrollId)
                             a[i] = p;
                     });
                 });
-                _this.payrolls$.next(_this._payrolls);
+                _this.setPayrolls(_this._payrolls);
             });
         });
     };
@@ -8990,7 +9044,7 @@ var PayrollListComponent = /** @class */ (function () {
                     return;
                 a[i] = result;
             });
-            _this.payrolls$.next(_this._payrolls);
+            _this.setPayrolls(_this._payrolls);
         });
     };
     PayrollListComponent.prototype.filterBtnClick = function () {
@@ -9112,7 +9166,7 @@ var PayrollListComponent = /** @class */ (function () {
             _this.service.savePayrollDetails(_this.user.sessionUser.sessionClient, result)
                 .subscribe(function (res) {
                 _this._payrolls = res;
-                _this.payrolls$.next(_this._payrolls);
+                _this.setPayrolls(_this._payrolls);
                 _this.msg.addMessage('Successfully updated overrides & expenses.', 'dismiss', 5000);
             });
         });
@@ -9167,34 +9221,10 @@ var PayrollListComponent = /** @class */ (function () {
                         a[i].payCycle.isClosed = true;
                     });
                 });
-                _this.payrolls$.next(_this._payrolls);
+                _this.setPayrolls(_this._payrolls);
                 _this.msg.addMessage('Successfully released!', 'dismiss', 5000);
             });
         });
-    };
-    /**
-     *
-     *
-     * @param detail PayrollDetails
-     */
-    PayrollListComponent.prototype.calculateGrossTotal = function (detail) {
-        // let expenses:any = detail.expenses.map(e => e.amount);
-        // expenses = expenses != null && expenses.length
-        //     ? +expenses.reduce((a,c) => a + c)
-        //     : 0;
-        // let overrides:any = detail.overrides.map(o => (o.units * o.amount));
-        // overrides = overrides != null && overrides.length
-        //     ? +overrides.reduce((a,c) => a + c)
-        //     : 0;
-        var expenses = lodash__WEBPACK_IMPORTED_MODULE_18__["sumBy"](detail.expenses, function (e) { return e.amount; });
-        var overrides = lodash__WEBPACK_IMPORTED_MODULE_18__["sumBy"](detail.overrides, function (o) { return (o.amount * o.units); });
-        var result = +detail.grossTotal + expenses + overrides;
-        return result;
-    };
-    PayrollListComponent.prototype.calculateNetTotal = function (detail) {
-        var result = this.calculateGrossTotal(detail);
-        result = result - +detail.taxes;
-        return result;
     };
     PayrollListComponent.prototype.applyFilters = function () {
         var _this = this;
@@ -9215,7 +9245,7 @@ var PayrollListComponent = /** @class */ (function () {
         });
         /** TODO: for now we're going to stripped closed cycles out until we add to filter */
         filteredPayrolls = filteredPayrolls.filter(function (f) { return f.payCycle.isPending && !f.payCycle.isClosed; });
-        this.payrolls$.next(filteredPayrolls);
+        this.setPayrolls(filteredPayrolls);
         this.displayingResults = "Displaying " + filteredPayrolls.length + " of " + this._payrolls.length + " possible results";
     };
     PayrollListComponent.prototype.applyFilterByType = function (payrolls, type) {
@@ -9511,6 +9541,53 @@ var CurrencyInputPipe = /** @class */ (function () {
 
 /***/ }),
 
+/***/ "./src/app/pipes/payroll-detail-totals.pipe.ts":
+/*!*****************************************************!*\
+  !*** ./src/app/pipes/payroll-detail-totals.pipe.ts ***!
+  \*****************************************************/
+/*! exports provided: PayrollDetailTotalsPipe */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PayrollDetailTotalsPipe", function() { return PayrollDetailTotalsPipe; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+
+
+var PayrollDetailTotalsPipe = /** @class */ (function () {
+    function PayrollDetailTotalsPipe() {
+    }
+    PayrollDetailTotalsPipe.prototype.transform = function (value, args) {
+        if (args === void 0) { args = 'grossTotal'; }
+        if (args == 'grossTotal')
+            return this.calculateGrossTotal(value);
+        else if (args == 'netTotal')
+            return this.calculateNetTotal(value);
+    };
+    PayrollDetailTotalsPipe.prototype.calculateGrossTotal = function (detail) {
+        var expenses = detail.expenses.map(function (e) { return e.amount; }).reduce(function (t, n) { return t + n; }, 0);
+        var overrides = detail.overrides.map(function (o) { return (o.amount * o.units); }).reduce(function (t, n) { return t + n; }, 0);
+        var result = +detail.grossTotal + +expenses + +overrides;
+        return result;
+    };
+    PayrollDetailTotalsPipe.prototype.calculateNetTotal = function (detail) {
+        var result = this.calculateGrossTotal(detail);
+        result = +result - +detail.taxes;
+        return result;
+    };
+    PayrollDetailTotalsPipe = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Pipe"])({
+            name: 'payrollDetailTotals'
+        })
+    ], PayrollDetailTotalsPipe);
+    return PayrollDetailTotalsPipe;
+}());
+
+
+
+/***/ }),
+
 /***/ "./src/app/pipes/phone.pipe.ts":
 /*!*************************************!*\
   !*** ./src/app/pipes/phone.pipe.ts ***!
@@ -9563,6 +9640,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _app_pipes_phone_pipe__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @app/pipes/phone.pipe */ "./src/app/pipes/phone.pipe.ts");
 /* harmony import */ var _app_material_material_module__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @app/material/material.module */ "./src/app/material/material.module.ts");
 /* harmony import */ var _currency_input_pipe__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./currency-input.pipe */ "./src/app/pipes/currency-input.pipe.ts");
+/* harmony import */ var _payroll_detail_totals_pipe__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./payroll-detail-totals.pipe */ "./src/app/pipes/payroll-detail-totals.pipe.ts");
+
 
 
 
@@ -9578,8 +9657,8 @@ var PipesModule = /** @class */ (function () {
                 _angular_common__WEBPACK_IMPORTED_MODULE_2__["CommonModule"],
                 _app_material_material_module__WEBPACK_IMPORTED_MODULE_4__["MaterialModule"]
             ],
-            declarations: [_app_pipes_phone_pipe__WEBPACK_IMPORTED_MODULE_3__["PhonePipe"], _currency_input_pipe__WEBPACK_IMPORTED_MODULE_5__["CurrencyInputPipe"]],
-            exports: [_app_pipes_phone_pipe__WEBPACK_IMPORTED_MODULE_3__["PhonePipe"], _currency_input_pipe__WEBPACK_IMPORTED_MODULE_5__["CurrencyInputPipe"]]
+            declarations: [_app_pipes_phone_pipe__WEBPACK_IMPORTED_MODULE_3__["PhonePipe"], _currency_input_pipe__WEBPACK_IMPORTED_MODULE_5__["CurrencyInputPipe"], _payroll_detail_totals_pipe__WEBPACK_IMPORTED_MODULE_6__["PayrollDetailTotalsPipe"]],
+            exports: [_app_pipes_phone_pipe__WEBPACK_IMPORTED_MODULE_3__["PhonePipe"], _currency_input_pipe__WEBPACK_IMPORTED_MODULE_5__["CurrencyInputPipe"], _payroll_detail_totals_pipe__WEBPACK_IMPORTED_MODULE_6__["PayrollDetailTotalsPipe"]]
         })
     ], PipesModule);
     return PipesModule;

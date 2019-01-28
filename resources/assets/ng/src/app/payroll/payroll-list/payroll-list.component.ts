@@ -81,17 +81,24 @@ export class PayrollListComponent implements OnInit {
     }
 
     /**
+     * How we manage to update our payrolls and keep track of everything happening in one method to 
+     * the updated list of payrolls.
+     * 
+     * @param payrolls 
+     */
+    private setPayrolls(payrolls:Payroll[]):void {
+        this._payrolls = payrolls;
+        this.payrolls$.next(this._payrolls);
+    }
+
+    /**
      * Handles when the user changes the hidden datepicker value on the template that sets the auto-release 
      * date. 
      * 
      * @param event 
      */
     dateChanged(event:MatDatepickerInputEvent<Moment>) {
-        console.log('New Release Date: ' + event.value.format('MM-DD-YYYY'));
         this.selectedAutoReleaseDate = event.value;
-
-        console.log('Need to display confirmation dialog and then save the selected payrolls with it if confirmed.');
-        /** don't forget to set the "isReleased" boolean on each selected payroll to 'true'. */
 
         this.dialog.open(ConfirmAutoreleaseDateDialogComponent, {
             width: '30vw',
@@ -107,6 +114,7 @@ export class PayrollListComponent implements OnInit {
 
             this.service.saveAutoReleaseSettings(this.user.sessionUser.sessionClient, payrollIds, result)
                 .subscribe(payrolls => {
+                    // TODO: Do we really need to do this? Can't we just pass "payrolls" return from the API into setPayrolls()?
                     payrolls.forEach(p => {
                         this._payrolls.forEach((pp, i, a) => {
                             if(pp.payrollId == p.payrollId) 
@@ -114,7 +122,7 @@ export class PayrollListComponent implements OnInit {
                         });
                     });
                     
-                    this.payrolls$.next(this._payrolls);
+                    this.setPayrolls(this._payrolls);
                 });
         });
     }
@@ -133,7 +141,7 @@ export class PayrollListComponent implements OnInit {
                     if(p.payrollId != result.payrollId) return;
                     a[i] = result;
                 });
-                this.payrolls$.next(this._payrolls);
+                this.setPayrolls(this._payrolls);
             });
     }
 
@@ -259,7 +267,8 @@ export class PayrollListComponent implements OnInit {
             this.service.savePayrollDetails(this.user.sessionUser.sessionClient, result)
                 .subscribe(res => {
                     this._payrolls = res;
-                    this.payrolls$.next(this._payrolls);
+                    this.setPayrolls(this._payrolls);
+                    
                     this.msg.addMessage('Successfully updated overrides & expenses.', 'dismiss', 5000);
                 });
         });
@@ -318,38 +327,11 @@ export class PayrollListComponent implements OnInit {
                         });
                     });
 
-                    this.payrolls$.next(this._payrolls);
+                    this.setPayrolls(this._payrolls);
                     this.msg.addMessage('Successfully released!', 'dismiss', 5000);
                 });
         });
 
-    }
-
-    /**
-     * 
-     * 
-     * @param detail PayrollDetails
-     */
-    calculateGrossTotal(detail:PayrollDetails):number {
-        // let expenses:any = detail.expenses.map(e => e.amount);
-        // expenses = expenses != null && expenses.length
-        //     ? +expenses.reduce((a,c) => a + c)
-        //     : 0;
-        // let overrides:any = detail.overrides.map(o => (o.units * o.amount));
-        // overrides = overrides != null && overrides.length
-        //     ? +overrides.reduce((a,c) => a + c)
-        //     : 0;
-
-        const expenses = _.sumBy(detail.expenses, e => e.amount);
-        const overrides = _.sumBy(detail.overrides, o => (o.amount * o.units));
-        const result = +detail.grossTotal + expenses + overrides;
-        return result;
-    }
-
-    calculateNetTotal(detail:PayrollDetails):number {
-        let result = this.calculateGrossTotal(detail);
-        result = result - +detail.taxes;
-        return result;
     }
 
     private applyFilters() {
@@ -375,7 +357,7 @@ export class PayrollListComponent implements OnInit {
         /** TODO: for now we're going to stripped closed cycles out until we add to filter */
         filteredPayrolls = filteredPayrolls.filter(f => f.payCycle.isPending && !f.payCycle.isClosed);
 
-        this.payrolls$.next(filteredPayrolls);
+        this.setPayrolls(filteredPayrolls);
 
         this.displayingResults = `Displaying ${filteredPayrolls.length} of ${this._payrolls.length} possible results`;
     }

@@ -199,13 +199,13 @@
                                                                     {{detail.sales}}
                                                                 </div>
                                                                 <div class="col-md-2">
-                                                                    {{calculateGrossTotal(detail) | currency}}
+                                                                    {{detail | payrollDetailTotals:'grossTotal' | currency}}
                                                                 </div>
                                                                 <div class="col-md-2">
                                                                     {{detail.taxes | currency}}
                                                                 </div>
                                                                 <div class="col-md-2">
-                                                                    {{calculateNetTotal(detail) | currency}}
+                                                                    {{detail | payrollDetailTotals:'netTotal' | currency}}
                                                                 </div>
                                                                 <div class="col-md-auto">
                                                                     <button type="button" mat-icon-button 
@@ -230,7 +230,7 @@
                                     class="element-row clickable"
                                     [class.expanded-row]="expandedItem === item"
                                     [class.expanded]="expandedItem === item"
-                                    (click)="expandedItem = expandedItem === item ? null : item"
+                                    (click)="expandedItem = expandedItem === item ? null : item;"
                                 ></tr>
                                 <tr mat-row 
                                     *matRowDef="let row; columns: ['expandedDetail']" 

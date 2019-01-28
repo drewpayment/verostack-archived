@@ -24,8 +24,6 @@ export class ConfirmReleaseDialogComponent implements OnInit {
 
     ngOnInit() {
         this.payrolls = this.data.payrolls || [];
-
-        // this.payrolls.forEach(p => p.details.forEach(d => this.grossTotalReleaseAmount = +d.grossTotal));
         this.grossTotalReleaseAmount = this.grossTotalReleaseAmount + (_.sumBy(this.payrolls, p => _.sumBy(p.details, d => +d.grossTotal)));
     }
 
