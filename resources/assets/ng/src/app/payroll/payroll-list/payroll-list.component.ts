@@ -49,7 +49,7 @@ export class PayrollListComponent implements OnInit {
     displayingResults:string;
 
     displayColumns = [
-        'selected', 'weekending', 'cycleStart', 'cycleEnd', 'isAutomated', 
+        'selected', 'campaign', 'cycleStart', 'cycleEnd', 'isAutomated', 
         'isReleased', 'automatedRelease', 'status'
     ];
     detailColumns = ['agent', 'sales', 'gross', 'taxes', 'net'];
@@ -178,6 +178,10 @@ export class PayrollListComponent implements OnInit {
             .subscribe(campaigns => this.campaigns = campaigns);
     }
 
+    getCampaignDescById(id:number):string {
+        return this.campaigns.find(c => c.campaignId == id).name;
+    }
+
     removeFilter(filterType:PayrollFilterType) {
         this.removeActiveFilter(filterType);
         switch(filterType) {
@@ -214,9 +218,9 @@ export class PayrollListComponent implements OnInit {
     getPayrollStatus(item:Payroll) {
         return item.payCycle.isClosed
             ? 'Closed'
-            : item.payCycle.isPending && !item.payCycle.isClosed
-                ? 'Pending'
-                : 'Open';
+            : item.isReleased
+                ? 'Released'
+                : 'Pending';
     }
 
     masterToggle():void {
@@ -230,7 +234,7 @@ export class PayrollListComponent implements OnInit {
 
     isAllSelected():boolean {
         const numSelected = this.selection.selected.length;
-        const numRows = this._payrolls.filter(p => !p.isReleased && !p.payCycle.isClosed).length;
+        const numRows = this._payrolls.filter(p => !p.isReleased).length;
         return numSelected === numRows;
     }
 
@@ -266,35 +270,10 @@ export class PayrollListComponent implements OnInit {
             
             this.service.savePayrollDetails(this.user.sessionUser.sessionClient, result)
                 .subscribe(res => {
-                    this._payrolls = res;
-                    this.setPayrolls(this._payrolls);
-                    
+                    this.setPayrolls(res);
                     this.msg.addMessage('Successfully updated overrides & expenses.', 'dismiss', 5000);
                 });
         });
-    }
-
-    /** not used */
-    scheduleAutoRelease() {
-        let dates = this.selection.selected.filter(p => p.automatedRelease != null).map(p => p.automatedRelease);
-        const selectedDate = this.getLatestDate(dates);
-        this.dialog.open(ScheduleAutoReleaseDialogComponent, {
-            width: '40vw',
-            data: {
-                date: selectedDate
-            }
-        })
-        .afterClosed()
-        .subscribe(result => {
-            if(result == null) return;
-
-            
-        });
-    }
-
-    private getLatestDate(dates:(Moment|Date|string)[]) {
-        if(!dates.length) return;
-        return dates.reduce((a, c, i) => (c > a) && i ? c : a);
     }
 
     /**
@@ -323,7 +302,6 @@ export class PayrollListComponent implements OnInit {
                             if(p.payrollId != id) return;
                             a[i].isReleased = true;
                             a[i].payCycle.isPending = false;
-                            a[i].payCycle.isClosed = true;
                         });
                     });
 
@@ -355,9 +333,10 @@ export class PayrollListComponent implements OnInit {
         });
 
         /** TODO: for now we're going to stripped closed cycles out until we add to filter */
-        filteredPayrolls = filteredPayrolls.filter(f => f.payCycle.isPending && !f.payCycle.isClosed);
+        filteredPayrolls = filteredPayrolls.filter(f => !f.payCycle.isClosed);
 
-        this.setPayrolls(filteredPayrolls);
+        // this is the only time we set the payroll subject direclty without the setPayrolls() method
+        this.payrolls$.next(filteredPayrolls);
 
         this.displayingResults = `Displaying ${filteredPayrolls.length} of ${this._payrolls.length} possible results`;
     }
@@ -381,7 +360,7 @@ export class PayrollListComponent implements OnInit {
                 result = payrolls.filter(p => p.isAutomated == this.filters.isAutomated);
                 break;
             case PayrollFilterType.isReleased:
-                result = payrolls.filter(p => p.isReleased == this.filters.isReleased);
+                result = payrolls.filter(p => p.isReleased == this.filters.isReleased && p.isReleased);
                 break;
             case PayrollFilterType.automatedRelease:
                 result = payrolls.filter(p => moment(p.automatedRelease).isSame(this.filters.automatedRelease, 'days'));
@@ -420,7 +399,7 @@ export class PayrollListComponent implements OnInit {
     private initializeComponent() {
         this.service.getPayrollList(this.user.sessionUser.sessionClient, this.user.id)
             .subscribe(payrolls => {
-                this._payrolls = payrolls;
+                this.setPayrolls(payrolls);
                 this.applyFilters();
 
                 if(this.agents == null) 

@@ -148,13 +148,12 @@ class PayrollController extends Controller
 		if($result->hasError)
 			return $result->throwApiException()->getResponse();
 
-        $payrolls = Payroll::with('payCycle')->byPayrollList($ids)->get();
+        $payrolls = Payroll::with('payCycle.payrolls')->byPayrollList($ids)->get();
 
         foreach($payrolls as $p) 
         {
             $p->is_released = true;
             $p->payCycle->is_pending = false;
-            $p->payCycle->is_closed = true;
             $rs = $p->push();
 
             // check if the save failed, return immediately if it did

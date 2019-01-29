@@ -1,16 +1,16 @@
 @import
   '~bootstrap/scss/bootstrap',
-  './_variables',
-  // '~@angular/material/prebuilt-themes/deeppurple-amber.css'
-  './_theme',
-  './_utilities',
+  './colors',
+  './variables',
+  './theme',
+  './utilities',
   './mixins',
   './ui-theme',
   '~handsontable/dist/handsontable.full.css',
   '~quill/dist/quill.core.css',
   '~quill/dist/quill.snow.css',
   '~quill/dist/quill.bubble.css',
-  './_cards',
+  './cards',
   './buttons',
   './tables',
   './grid';

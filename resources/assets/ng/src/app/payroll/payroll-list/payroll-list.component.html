@@ -100,21 +100,21 @@
                                     </td>
                                 </ng-container>
 
-                                <!-- WEEKENDING -->
-                                <ng-container matColumnDef="weekending">
-                                    <th mat-header-cell *matHeaderCellDef>Weekending</th>
-                                    <td mat-cell *matCellDef="let item">{{item.weekEnding | date:'shortDate'}}</td>
+                                <!-- CAMPAIGN -->
+                                <ng-container matColumnDef="campaign">
+                                    <th mat-header-cell *matHeaderCellDef>Campaign</th>
+                                    <td mat-cell *matCellDef="let item">{{getCampaignDescById(item.campaignId)}}</td>
                                 </ng-container>
 
                                 <!-- CYCLE START DATE -->
                                 <ng-container matColumnDef="cycleStart">
-                                    <th mat-header-cell *matHeaderCellDef>Cycle Start</th>
+                                    <th mat-header-cell *matHeaderCellDef>Start</th>
                                     <td mat-cell *matCellDef="let item">{{item.payCycle.startDate | date:'shortDate'}}</td>
                                 </ng-container>
 
                                 <!-- CYCLE END DATE -->
                                 <ng-container matColumnDef="cycleEnd">
-                                    <th mat-header-cell *matHeaderCellDef>Cycle End</th>
+                                    <th mat-header-cell *matHeaderCellDef>End</th>
                                     <td mat-cell *matCellDef="let item">{{item.payCycle.endDate | date:'shortDate'}}</td>
                                 </ng-container>
 
@@ -230,6 +230,7 @@
                                     class="element-row clickable"
                                     [class.expanded-row]="expandedItem === item"
                                     [class.expanded]="expandedItem === item"
+                                    [class.released]="item.isReleased"
                                     (click)="expandedItem = expandedItem === item ? null : item;"
                                 ></tr>
                                 <tr mat-row 

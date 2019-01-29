@@ -1,5 +1,5 @@
-
-$mat-primary: #3f51b5 !default;
+@import '../../../scss/colors';
+// $mat-primary: #3f51b5 !default;
 
 table {
     width: 100%;
@@ -29,4 +29,12 @@ tr.element-row:not(.expanded-row):active {
 
 .expanded {
     background: lighten($mat-primary, 50%);
+}
+
+.released {
+
+    td {
+        color: $gray-600;
+        background-color: $gray-100;
+    }
 }
