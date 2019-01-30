@@ -37,14 +37,12 @@ export class AppComponent implements OnInit, AfterViewChecked, AfterContentInit 
         // wire up our extension methods
         MomentExtensions.init();
         this.session.loading$.subscribe(next => {
-            // dev only bug -
-            // https://stackoverflow.com/questions/39787038/how-to-manage-angular2-expression-has-changed-after-it-was-checked-exception-w
-            if (!environment.production) this.cd.detectChanges();
-
             if(next == null) return;
             this.loading$ = of(next);
             this._loading = next;
-        })
+
+            this.cd.detectChanges();
+        });
         this.session.isLoginSubject.subscribe(next => {
             if(next == null) return;
             this.loggedInStatus = of(next);

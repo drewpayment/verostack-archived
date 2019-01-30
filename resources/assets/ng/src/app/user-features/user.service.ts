@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {User, IUserDetail, IAgent, ILocalStorage} from '../models/index';
-import {Observable, ReplaySubject, Subject} from 'rxjs';
+import {Observable, ReplaySubject, Subject, BehaviorSubject} from 'rxjs';
 
 import {SessionService} from '../session.service';
 
@@ -32,7 +32,7 @@ export class UserService {
     };
 
     user: Observable<User>;
-    user$: Subject<User> = new ReplaySubject<User>(1);
+    user$ = new BehaviorSubject<User>(null);
     users: Observable<User[]>;
     private users$: Subject<User[]> = new ReplaySubject<User[]>(1);
     agents: Observable<IAgent[]>;

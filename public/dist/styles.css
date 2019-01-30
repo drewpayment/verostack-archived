@@ -11751,6 +11751,13 @@ button:focus {
 .mat-dialog-container {
   max-height: 80vh !important;
   padding: 1.5rem !important; }
+.navigation-accordion mat-expansion-panel {
+  box-shadow: none !important; }
+.navigation-accordion .mat-expansion-panel-body {
+  padding: 0 0 1rem; }
+.navigation-accordion .mat-expansion-panel-header {
+  padding: 0 1rem 0;
+  font-size: 1rem; }
 
 
 /*# sourceMappingURL=styles.css.map*/

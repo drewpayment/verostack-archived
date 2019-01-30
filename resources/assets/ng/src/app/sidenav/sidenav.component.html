@@ -12,11 +12,11 @@
     </mat-toolbar-row>
 </mat-toolbar>
 
-<mat-nav-list *ngIf="user != null">
+<mat-nav-list *ngIf="user != null" #navList>
     <!-- all users -->
     
     <a mat-list-item routerLink="my-information" routerLinkActive="mat-router-link-active">
-        <i class="material-icons px-1">info_outline</i>
+        <mat-icon>info_outline</mat-icon>
         <span>My Information</span>
     </a>
     <a mat-list-item 
@@ -24,26 +24,26 @@
         routerLinkActive="mat-router-link-active"
         *ngIf="user.role.role < roleType.companyAdmin && user.role.isSalesAdmin"
     >
-        <i class="material-icons px-1">ballot</i>
+        <mat-icon>ballot</mat-icon>
         <span>Daily Tracker</span>
     </a>
 
     <!-- agents only -->
     <ng-template *ngIf="user.role.role < roleType.companyAdmin">
         <a mat-list-item routerLink="dashboard" routerLinkActive="mat-router-link-active">
-            <i class="material-icons px-1">pie_chart</i>
+            <mat-icon>pie_chart</mat-icon>
             <span>My Work</span>
         </a>
         <a mat-list-item class="hide">
-            <i class="material-icons px-1">monetization_on</i>
+            <mat-icon>monetization_on</mat-icon>
             <span>My Pay</span>
         </a>
         <a mat-list-item class="hide">
-            <i class="material-icons px-1">library_books</i>
+            <mat-icon>library_books</mat-icon>
             <span>My Documents</span>
         </a>
         <a mat-list-item class="hide">
-            <i class="material-icons px-1">chat_bubble</i>
+            <mat-icon>chat_bubble</mat-icon>
             <span>Messages</span>
         </a>
     </ng-template>
@@ -54,55 +54,73 @@
     <ng-container *ngIf="user.role.role >= roleType.companyAdmin">
         <!-- THIS WHOLE COMPONENT NEEDS TO BE REWORKED AFTER SO MANY SCHEMA CHANGES
         <a mat-list-item routerLink="dashboard" routerLinkActive="mat-router-link-active">
-            <i class="material-icons px-1">pie_chart</i>
+            <mat-icon>pie_chart</mat-icon>
             <span>Analyze</span>
         </a> -->
         <a mat-list-item routerLink="daily-tracker" routerLinkActive="mat-router-link-active">
-            <i class="material-icons px-1">ballot</i>
+            <mat-icon>ballot</mat-icon>
             <span>Sales</span>
         </a>
         <a mat-list-item routerLink="client-information" routerLinkActive="mat-router-link-active">
-            <i class="material-icons px-1">business</i>
+            <mat-icon>business</mat-icon>
             <span>Organization</span>
         </a>
-        <a mat-list-item routerLink="admin/pay" routerLinkActive="mat-router-link-active">
-            <i class="material-icons px-1">date_range</i>
-            <span>Payroll Cycles</span>
-        </a>
-        <a mat-list-item routerLink="admin/payroll" routerLinkActive="mat-router-link-active">
-            <i class="material-icons px-1">monetization_on</i>
-            <span>Manage Pay</span>
-        </a>
+        <mat-accordion mat-list-item class="navigation-accordion">
+            <mat-expansion-panel [expanded]="expandPayrollLinks">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        <mat-icon>account_balance</mat-icon>
+                        <span>Payroll</span>
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+
+                <mat-nav-list>
+                    <a mat-list-item routerLink="admin/pay/pay-cycles" routerLinkActive="mat-router-link-active">
+                        <mat-icon>date_range</mat-icon>
+                        <span>Payroll Cycles</span>
+                    </a>
+                    <a mat-list-item routerLink="admin/pay/manage" routerLinkActive="mat-router-link-active">
+                        <mat-icon>monetization_on</mat-icon>
+                        <span>Manage Pay</span>
+                    </a>
+                    <a mat-list-item [routerLink]="['admin', 'pay', 'paycheck-list']" routerLinkActive="mat-router-link-active">
+                        <mat-icon>assignment</mat-icon>
+                        <span>View Paychecks</span>
+                    </a>
+                </mat-nav-list>
+            </mat-expansion-panel>
+        </mat-accordion>
+        
         <a mat-list-item class="hide">
-            <i class="material-icons px-1">dashboard</i>
+            <mat-icon>dashboard</mat-icon>
             <span>Blog</span>
         </a>
         <a mat-list-item routerLink="agents" routerLinkActive="mat-router-link-active">
-            <i class="material-icons px-1">person</i>
+            <mat-icon>person</mat-icon>
             <span>Agents</span>
         </a>
         <a mat-list-item class="hide">
-            <i class="material-icons px-1">monetization_on</i>
+            <mat-icon>monetization_on</mat-icon>
             <span>Pay Status</span>
         </a>
         <!-- <a mat-list-item routerLink="payroll-tools" routerLinkActive="mat-router-link-active">
-      <i class="material-icons px-1">build</i>
+      <mat-icon>build</mat-icon>
       <span>Payroll Entry</span>
     </a> -->
         <a mat-list-item class="hide">
-            <i class="material-icons px-1">assignment_ind</i>
+            <mat-icon>assignment_ind</mat-icon>
             <span>Overrides</span>
         </a>
         <a mat-list-item routerLink="campaigns" routerLinkActive="mat-router-link-active">
-            <i class="material-icons px-1">assignment</i>
+            <mat-icon>assignment</mat-icon>
             <span>Campaigns</span>
         </a>
         <a mat-list-item class="hide">
-            <i class="material-icons px-1">library_books</i>
+            <mat-icon>library_books</mat-icon>
             <span>Documents</span>
         </a>
         <a mat-list-item class="hide">
-            <i class="material-icons px-1">face</i>
+            <mat-icon>face</mat-icon>
             <span>Customers</span>
         </a>
         <!-- end of admin links -->
@@ -110,7 +128,7 @@
 
     <!-- all users -->
     <a mat-list-item class="hide">
-        <i class="material-icons px-1">info_outline</i>
+        <mat-icon>info_outline</mat-icon>
         <span>About</span>
     </a>
 </mat-nav-list>

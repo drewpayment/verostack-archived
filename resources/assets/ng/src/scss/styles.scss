@@ -144,3 +144,20 @@ button:focus {
     padding: 1.5rem !important;
 }
 
+.navigation-accordion {
+    
+    mat-expansion-panel {
+        -webkit-box-shadow: none !important;
+        -moz-box-shadow: none !important;
+        box-shadow: none !important;
+    }
+
+    .mat-expansion-panel-body {
+        padding: 0 0 1rem;
+    }
+
+    .mat-expansion-panel-header {
+        padding: 0 1rem 0;
+        font-size: 1rem;
+    }
+}

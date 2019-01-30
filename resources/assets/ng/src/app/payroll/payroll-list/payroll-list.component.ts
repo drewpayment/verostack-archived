@@ -71,6 +71,7 @@ export class PayrollListComponent implements OnInit {
     ) {}
 
     ngOnInit() {
+        this.session.showLoader();
         this.session.getUserItem().subscribe(user => {
             this.user = user;
             this.populateCampaigns();
@@ -413,6 +414,8 @@ export class PayrollListComponent implements OnInit {
                         this.agents = this.agents.concat(d.agent);
                     });
                 });
+
+                this.session.hideLoader();
             });
     }
 

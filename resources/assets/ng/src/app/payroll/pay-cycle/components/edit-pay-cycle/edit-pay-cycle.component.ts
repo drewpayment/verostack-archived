@@ -1,7 +1,6 @@
 import {Component, OnInit, AfterViewInit, AfterContentInit, TemplateRef, ViewChild, ComponentRef} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {PayCycle} from '@app/models/pay-cycle.model';
-import {PayCycleService} from '@app/pay-cycle/pay-cycle.service';
 import {FormGroup, FormBuilder} from '@angular/forms';
 import { SessionService } from '@app/session.service';
 import { User, DailySale, IAgent, PaidStatusType } from '@app/models';
@@ -10,8 +9,9 @@ import { Moment } from 'moment';
 import * as moment from 'moment';
 import { MatSelectionList, MatListOption, MatSelectionListChange, MatSelectChange, MatButtonToggleChange, MatDialog } from '@angular/material';
 import * as _ from 'lodash';
-import { ConfirmUnpaidSelectionDialogComponent } from '@app/pay-cycle/components/confirm-unpaid-selection-dialog/confirm-unpaid-selection-dialog.component';
 import { MessageService } from '@app/message.service';
+import { PayCycleService } from '../../pay-cycle.service';
+import { ConfirmUnpaidSelectionDialogComponent } from '../confirm-unpaid-selection-dialog/confirm-unpaid-selection-dialog.component';
 
 @Component({
     selector: 'vs-edit-pay-cycle',

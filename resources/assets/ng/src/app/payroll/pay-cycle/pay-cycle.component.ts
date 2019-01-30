@@ -2,24 +2,19 @@ import {Component, OnInit} from '@angular/core';
 import { User, ICampaign, DailySale, PayrollDetails, Payroll } from '@app/models';
 import { SessionService } from '@app/session.service';
 import { MatDialog } from '@angular/material';
-import { FloatBtnService } from '@app/fab-float-btn/float-btn.service';
 import { CampaignService } from '@app/campaigns/campaign.service';
 import { FormBuilder } from '@angular/forms';
 import { MessageService } from '@app/message.service';
-import { PayCycleService } from '@app/pay-cycle/pay-cycle.service';
 import { PayCycle } from '@app/models/pay-cycle.model';
 import { Router } from '@angular/router';
-import { Subject, BehaviorSubject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { PayCycleDialogComponent } from './components/pay-cycle-dialog/pay-cycle-dialog.component';
 import { Moment } from 'moment';
 import * as moment from 'moment';
-import { switchMap, map, filter } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { PayrollService } from '@app/payroll/payroll.service';
+import { PayCycleService } from './pay-cycle.service';
 
-interface GroupedSaleByCampaign {
-    campaignId:number,
-    sale:DailySale[]
-}
 
 @Component({
     selector: 'vs-pay-cycle',
@@ -41,12 +36,12 @@ export class PayCycleComponent implements OnInit {
         private payrollService:PayrollService,
         private dialog:MatDialog,
         private campaignService:CampaignService,
-        private fb:FormBuilder,
         private msg:MessageService,
         private router:Router
     ) {}
 
     ngOnInit() {
+        this.session.showLoader();
         this.session.userItem.subscribe(user => {
             if(user == null || this.user != null) return;
             this.user = user;
@@ -58,6 +53,8 @@ export class PayCycleComponent implements OnInit {
                 .subscribe(cycles => {
                     this._cycles = cycles;
                     this.getActive();
+
+                    this.session.hideLoader();
                 });
         });
     }
