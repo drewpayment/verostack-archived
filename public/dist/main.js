@@ -6887,57 +6887,54 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MaterialModule", function() { return MaterialModule; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/fesm5/common.js");
-/* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/material */ "./node_modules/@angular/material/esm5/material.es5.js");
-/* harmony import */ var _angular_material_moment_adapter__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/material-moment-adapter */ "./node_modules/@angular/material-moment-adapter/esm5/material-moment-adapter.es5.js");
+/* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/material */ "./node_modules/@angular/material/esm5/material.es5.js");
+/* harmony import */ var _angular_material_moment_adapter__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/material-moment-adapter */ "./node_modules/@angular/material-moment-adapter/esm5/material-moment-adapter.es5.js");
 
 
 
 
-
+var modules = [
+    _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatAutocompleteModule"],
+    _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatBadgeModule"],
+    _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatButtonModule"],
+    _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatButtonToggleModule"],
+    _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatCardModule"],
+    _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatCheckboxModule"],
+    _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatChipsModule"],
+    _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatDatepickerModule"],
+    _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatDialogModule"],
+    _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatExpansionModule"],
+    _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatGridListModule"],
+    _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatIconModule"],
+    _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatInputModule"],
+    _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatListModule"],
+    _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatMenuModule"],
+    _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatNativeDateModule"],
+    _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatPaginatorModule"],
+    _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatProgressBarModule"],
+    _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatProgressSpinnerModule"],
+    _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatRadioModule"],
+    _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatRippleModule"],
+    _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatSelectModule"],
+    _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatSidenavModule"],
+    _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatSliderModule"],
+    _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatSlideToggleModule"],
+    _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatSnackBarModule"],
+    _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatSortModule"],
+    _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatTableModule"],
+    _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatTabsModule"],
+    _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatToolbarModule"],
+    _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatTooltipModule"],
+    _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatStepperModule"],
+    _angular_material_moment_adapter__WEBPACK_IMPORTED_MODULE_3__["MatMomentDateModule"]
+];
 var MaterialModule = /** @class */ (function () {
     function MaterialModule() {
     }
     MaterialModule = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["NgModule"])({
-            exports: [
-                _angular_material__WEBPACK_IMPORTED_MODULE_3__["MatAutocompleteModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_3__["MatBadgeModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_3__["MatButtonModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_3__["MatButtonToggleModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_3__["MatCardModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_3__["MatCheckboxModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_3__["MatChipsModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_3__["MatDatepickerModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_3__["MatDialogModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_3__["MatExpansionModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_3__["MatGridListModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_3__["MatIconModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_3__["MatInputModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_3__["MatListModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_3__["MatMenuModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_3__["MatNativeDateModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_3__["MatPaginatorModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_3__["MatProgressBarModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_3__["MatProgressSpinnerModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_3__["MatRadioModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_3__["MatRippleModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_3__["MatSelectModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_3__["MatSidenavModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_3__["MatSliderModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_3__["MatSlideToggleModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_3__["MatSnackBarModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_3__["MatSortModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_3__["MatTableModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_3__["MatTabsModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_3__["MatToolbarModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_3__["MatTooltipModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_3__["MatStepperModule"],
-                _angular_material_moment_adapter__WEBPACK_IMPORTED_MODULE_4__["MatMomentDateModule"]
-            ],
-            imports: [
-                _angular_common__WEBPACK_IMPORTED_MODULE_2__["CommonModule"]
-            ]
+            imports: [],
+            exports: modules.slice()
         })
     ], MaterialModule);
     return MaterialModule;
@@ -7173,7 +7170,7 @@ var PaidStatusType;
 /*!*********************************!*\
   !*** ./src/app/models/index.ts ***!
   \*********************************/
-/*! exports provided: AgentSale, PaidStatusType, PayrollFilterType */
+/*! exports provided: AgentSale, PayrollFilterType, PaidStatusType */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -8716,7 +8713,7 @@ var PayCycleService = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n<div class=\"container\">\n    <div class=\"row mb-4\">\n        <div class=\"col-md-12\">\n            <mat-card class=\"page-header-accent\">\n                <mat-card-content class=\"d-flex justify-content-between\">\n                    <h3>\n                        Paycheck List\n                    </h3>\n\n                    <!-- FILTERING/CONTROLS AREA\n                    <div>\n                        <mat-slide-toggle \n                            [checked]=\"showClosed\" \n                            (change)=\"switchDisplay()\"\n                            class=\"my-0 mr-2\"\n                        >\n                            Show Closed\n                        </mat-slide-toggle>\n                        <button type=\"button\" mat-stroked-button color=\"primary\" (click)=\"addPayCycle()\">\n                            <mat-icon inline=\"true\">add</mat-icon>\n                            <span>Payroll</span>\n                        </button>\n                    </div> -->\n                </mat-card-content>\n            </mat-card>\n        </div>\n    </div>\n</div>"
+module.exports = "\n<div class=\"container\">\n    <div class=\"row mb-4\">\n        <div class=\"col-md-12\">\n            <mat-card class=\"page-header-accent\">\n                <mat-card-content class=\"d-flex justify-content-between\">\n                    <h3>\n                        Paycheck List\n                    </h3>\n\n                    <!-- FILTERING/CONTROLS AREA\n                    <div>\n                        <mat-slide-toggle \n                            [checked]=\"showClosed\" \n                            (change)=\"switchDisplay()\"\n                            class=\"my-0 mr-2\"\n                        >\n                            Show Closed\n                        </mat-slide-toggle>\n                        <button type=\"button\" mat-stroked-button color=\"primary\" (click)=\"addPayCycle()\">\n                            <mat-icon inline=\"true\">add</mat-icon>\n                            <span>Payroll</span>\n                        </button>\n                    </div> -->\n                    <!-- <div>\n                        <mat-form-field class=\"w-100\">\n                            <input matInput \n                                placeholder=\"Search Agents\" \n                                aria-label=\"Search Agents\" \n                                [matAutoComplete]=\"searchAgents\" \n                                [formControl]=\"searchAgentsCtrl\" />\n                            <mat-autocomplete #searchAgents=\"matAutocomplete\">\n                                <mat-option *ngFor=\"\"></mat-option>\n                            </mat-autocomplete>\n                        </mat-form-field>\n                    </div> -->\n                </mat-card-content>\n            </mat-card>\n        </div>\n    </div>\n</div>"
 
 /***/ }),
 
@@ -8743,12 +8740,24 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PaycheckListComponent", function() { return PaycheckListComponent; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _paycheck_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./paycheck.service */ "./src/app/payroll/paycheck-list/paycheck.service.ts");
+/* harmony import */ var _app_session_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @app/session.service */ "./src/app/session.service.ts");
+
+
 
 
 var PaycheckListComponent = /** @class */ (function () {
-    function PaycheckListComponent() {
+    function PaycheckListComponent(session, service) {
+        this.session = session;
+        this.service = service;
     }
     PaycheckListComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this.session.getUserItem().subscribe(function (user) {
+            _this.user = user;
+            _this.service.getPaychecks(user.sessionUser.sessionClient, 4, 1)
+                .subscribe(function (paychecks) { return console.dir(paychecks); });
+        });
     };
     PaycheckListComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
@@ -8756,9 +8765,60 @@ var PaycheckListComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./paycheck-list.component.html */ "./src/app/payroll/paycheck-list/paycheck-list.component.html"),
             styles: [__webpack_require__(/*! ./paycheck-list.component.scss */ "./src/app/payroll/paycheck-list/paycheck-list.component.scss")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_app_session_service__WEBPACK_IMPORTED_MODULE_3__["SessionService"],
+            _paycheck_service__WEBPACK_IMPORTED_MODULE_2__["PaycheckService"]])
     ], PaycheckListComponent);
     return PaycheckListComponent;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/payroll/paycheck-list/paycheck.service.ts":
+/*!***********************************************************!*\
+  !*** ./src/app/payroll/paycheck-list/paycheck.service.ts ***!
+  \***********************************************************/
+/*! exports provided: PaycheckService */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PaycheckService", function() { return PaycheckService; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
+/* harmony import */ var _env_environment__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @env/environment */ "./src/environments/environment.ts");
+
+
+
+
+var PaycheckService = /** @class */ (function () {
+    function PaycheckService(http) {
+        this.http = http;
+        this.api = _env_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].apiUrl + 'api';
+    }
+    PaycheckService.prototype.getPaychecks = function (clientId, page, resultsPerPage) {
+        if (page === void 0) { page = 1; }
+        var url = this.api + "/clients/" + clientId + "/payroll-details";
+        var params = new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpParams"]().set('page', page.toString());
+        if (resultsPerPage)
+            params = params.append('resultsPerPage', resultsPerPage.toString());
+        return this.http.get(url, { params: params });
+    };
+    PaycheckService.prototype.getPaychecksByDetail = function (clientId, payrollDetailsId, page) {
+        if (page === void 0) { page = 1; }
+        var url = this.api + "/clients/" + clientId + "/payroll-details/" + payrollDetailsId;
+        var params = new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpParams"]().set('page', page.toString());
+        return this.http.get(url, { params: params });
+    };
+    PaycheckService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
+            providedIn: 'root'
+        }),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"]])
+    ], PaycheckService);
+    return PaycheckService;
 }());
 
 
@@ -9522,16 +9582,16 @@ var PayrollModule = /** @class */ (function () {
     PayrollModule = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["NgModule"])({
             imports: [
+                _angular_platform_browser__WEBPACK_IMPORTED_MODULE_4__["BrowserModule"],
                 _angular_platform_browser_animations__WEBPACK_IMPORTED_MODULE_3__["BrowserAnimationsModule"],
                 _angular_common__WEBPACK_IMPORTED_MODULE_2__["CommonModule"],
-                _angular_platform_browser__WEBPACK_IMPORTED_MODULE_4__["BrowserModule"],
-                _app_core__WEBPACK_IMPORTED_MODULE_5__["CoreModule"],
+                _angular_forms__WEBPACK_IMPORTED_MODULE_10__["ReactiveFormsModule"],
+                _angular_forms__WEBPACK_IMPORTED_MODULE_10__["FormsModule"],
                 _app_material_material_module__WEBPACK_IMPORTED_MODULE_6__["MaterialModule"],
+                _app_core__WEBPACK_IMPORTED_MODULE_5__["CoreModule"],
                 ngx_loading__WEBPACK_IMPORTED_MODULE_7__["LoadingModule"],
                 _app_fab_float_btn_fab_float_btn_module__WEBPACK_IMPORTED_MODULE_8__["FabFloatBtnModule"],
                 _app_pipes_pipes_module__WEBPACK_IMPORTED_MODULE_9__["PipesModule"],
-                _angular_forms__WEBPACK_IMPORTED_MODULE_10__["ReactiveFormsModule"],
-                _angular_forms__WEBPACK_IMPORTED_MODULE_10__["FormsModule"],
                 _app_directives_directives_module__WEBPACK_IMPORTED_MODULE_11__["DirectivesModule"],
                 _angular_router__WEBPACK_IMPORTED_MODULE_25__["RouterModule"].forChild(routes)
             ],
@@ -9551,19 +9611,20 @@ var PayrollModule = /** @class */ (function () {
                 _pay_cycle_components_confirm_unpaid_selection_dialog_confirm_unpaid_selection_dialog_component__WEBPACK_IMPORTED_MODULE_23__["ConfirmUnpaidSelectionDialogComponent"]
             ],
             exports: [
-                _pay_cycle_components_pay_cycle_dialog_pay_cycle_dialog_component__WEBPACK_IMPORTED_MODULE_24__["PayCycleDialogComponent"],
-                _payroll_dialog_payroll_dialog_component__WEBPACK_IMPORTED_MODULE_12__["PayrollDialogComponent"],
-                _payroll_list_payroll_list_component__WEBPACK_IMPORTED_MODULE_13__["PayrollListComponent"],
-                _payroll_filter_dialog_payroll_filter_dialog_component__WEBPACK_IMPORTED_MODULE_14__["PayrollFilterDialogComponent"],
-                _override_expense_dialog_override_expense_dialog_component__WEBPACK_IMPORTED_MODULE_15__["OverrideExpenseDialogComponent"],
-                _schedule_auto_release_dialog_schedule_auto_release_dialog_component__WEBPACK_IMPORTED_MODULE_16__["ScheduleAutoReleaseDialogComponent"],
-                _confirm_autorelease_date_dialog_confirm_autorelease_date_dialog_component__WEBPACK_IMPORTED_MODULE_17__["ConfirmAutoreleaseDateDialogComponent"],
-                _confirm_release_dialog_confirm_release_dialog_component__WEBPACK_IMPORTED_MODULE_18__["ConfirmReleaseDialogComponent"],
-                _confirm_release_dialog_gross_total_release_amount_pipe__WEBPACK_IMPORTED_MODULE_19__["GrossTotalReleaseAmountPipe"],
-                _paycheck_list_paycheck_list_component__WEBPACK_IMPORTED_MODULE_20__["PaycheckListComponent"],
-                _pay_cycle_pay_cycle_component__WEBPACK_IMPORTED_MODULE_21__["PayCycleComponent"],
-                _pay_cycle_components_edit_pay_cycle_edit_pay_cycle_component__WEBPACK_IMPORTED_MODULE_22__["EditPayCycleComponent"],
-                _pay_cycle_components_confirm_unpaid_selection_dialog_confirm_unpaid_selection_dialog_component__WEBPACK_IMPORTED_MODULE_23__["ConfirmUnpaidSelectionDialogComponent"]
+            // not sure why i was exporting these??? 
+            // PayCycleDialogComponent,
+            // PayrollDialogComponent,
+            // PayrollListComponent,
+            // PayrollFilterDialogComponent,
+            // OverrideExpenseDialogComponent,
+            // ScheduleAutoReleaseDialogComponent,
+            // ConfirmAutoreleaseDateDialogComponent,
+            // ConfirmReleaseDialogComponent,
+            // GrossTotalReleaseAmountPipe,
+            // PaycheckListComponent,
+            // PayCycleComponent,
+            // EditPayCycleComponent,
+            // ConfirmUnpaidSelectionDialogComponent
             ],
             entryComponents: [
                 _pay_cycle_components_pay_cycle_dialog_pay_cycle_dialog_component__WEBPACK_IMPORTED_MODULE_24__["PayCycleDialogComponent"],
@@ -10396,13 +10457,27 @@ var SessionService = /** @class */ (function () {
 /*!*********************************!*\
   !*** ./src/app/shared/index.ts ***!
   \*********************************/
-/*! exports provided: SharedModule */
+/*! exports provided: States, MomentInclusivity, MomentExtensions, QuillConfig, SharedModule */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _shared_module__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./shared.module */ "./src/app/shared/shared.module.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SharedModule", function() { return _shared_module__WEBPACK_IMPORTED_MODULE_0__["SharedModule"]; });
+/* harmony import */ var _models_state_model__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./models/state.model */ "./src/app/shared/models/state.model.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "States", function() { return _models_state_model__WEBPACK_IMPORTED_MODULE_0__["States"]; });
+
+/* harmony import */ var _moment_extensions__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./moment-extensions */ "./src/app/shared/moment-extensions.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "MomentInclusivity", function() { return _moment_extensions__WEBPACK_IMPORTED_MODULE_1__["MomentInclusivity"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "MomentExtensions", function() { return _moment_extensions__WEBPACK_IMPORTED_MODULE_1__["MomentExtensions"]; });
+
+/* harmony import */ var _quill_config__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./quill-config */ "./src/app/shared/quill-config.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "QuillConfig", function() { return _quill_config__WEBPACK_IMPORTED_MODULE_2__["QuillConfig"]; });
+
+/* harmony import */ var _shared_module__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./shared.module */ "./src/app/shared/shared.module.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SharedModule", function() { return _shared_module__WEBPACK_IMPORTED_MODULE_3__["SharedModule"]; });
+
+
+
 
 
 

@@ -1,11 +1,10 @@
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { CoreModule } from '@app/core';
 import { MaterialModule } from '@app/material/material.module';
 import { LoadingModule } from 'ngx-loading';
-import { AppRoutingModule } from '@app/app-routing.module';
 import { FabFloatBtnModule } from '@app/fab-float-btn/fab-float-btn.module';
 import { PipesModule } from '@app/pipes/pipes.module';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
@@ -38,16 +37,16 @@ const routes:Route[] = [{
 
 @NgModule({
     imports: [
+        BrowserModule,
         BrowserAnimationsModule,
         CommonModule,
-        BrowserModule,
-        CoreModule,
+        ReactiveFormsModule,
+        FormsModule,
         MaterialModule,
+        CoreModule,
         LoadingModule,
         FabFloatBtnModule,
         PipesModule,
-        ReactiveFormsModule,
-        FormsModule,
         DirectivesModule,
 
         RouterModule.forChild(routes)
@@ -68,19 +67,20 @@ const routes:Route[] = [{
         ConfirmUnpaidSelectionDialogComponent
     ],
     exports: [
-        PayCycleDialogComponent,
-        PayrollDialogComponent,
-        PayrollListComponent,
-        PayrollFilterDialogComponent,
-        OverrideExpenseDialogComponent,
-        ScheduleAutoReleaseDialogComponent,
-        ConfirmAutoreleaseDateDialogComponent,
-        ConfirmReleaseDialogComponent,
-        GrossTotalReleaseAmountPipe,
-        PaycheckListComponent,
-        PayCycleComponent,
-        EditPayCycleComponent,
-        ConfirmUnpaidSelectionDialogComponent
+        // not sure why i was exporting these??? 
+        // PayCycleDialogComponent,
+        // PayrollDialogComponent,
+        // PayrollListComponent,
+        // PayrollFilterDialogComponent,
+        // OverrideExpenseDialogComponent,
+        // ScheduleAutoReleaseDialogComponent,
+        // ConfirmAutoreleaseDateDialogComponent,
+        // ConfirmReleaseDialogComponent,
+        // GrossTotalReleaseAmountPipe,
+        // PaycheckListComponent,
+        // PayCycleComponent,
+        // EditPayCycleComponent,
+        // ConfirmUnpaidSelectionDialogComponent
     ],
     entryComponents: [
         PayCycleDialogComponent,
