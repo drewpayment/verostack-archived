@@ -7170,7 +7170,7 @@ var PaidStatusType;
 /*!*********************************!*\
   !*** ./src/app/models/index.ts ***!
   \*********************************/
-/*! exports provided: AgentSale, PayrollFilterType, PaidStatusType */
+/*! exports provided: AgentSale, PaidStatusType, PayrollFilterType */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -8713,7 +8713,7 @@ var PayCycleService = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n<div class=\"container\">\n    <div class=\"row mb-4\">\n        <div class=\"col-md-12\">\n            <mat-card class=\"page-header-accent\">\n                <mat-card-content class=\"d-flex justify-content-between\">\n                    <h3>\n                        Paycheck List\n                    </h3>\n\n                    <!-- FILTERING/CONTROLS AREA\n                    <div>\n                        <mat-slide-toggle \n                            [checked]=\"showClosed\" \n                            (change)=\"switchDisplay()\"\n                            class=\"my-0 mr-2\"\n                        >\n                            Show Closed\n                        </mat-slide-toggle>\n                        <button type=\"button\" mat-stroked-button color=\"primary\" (click)=\"addPayCycle()\">\n                            <mat-icon inline=\"true\">add</mat-icon>\n                            <span>Payroll</span>\n                        </button>\n                    </div> -->\n                    <!-- <div>\n                        <mat-form-field class=\"w-100\">\n                            <input matInput \n                                placeholder=\"Search Agents\" \n                                aria-label=\"Search Agents\" \n                                [matAutoComplete]=\"searchAgents\" \n                                [formControl]=\"searchAgentsCtrl\" />\n                            <mat-autocomplete #searchAgents=\"matAutocomplete\">\n                                <mat-option *ngFor=\"\"></mat-option>\n                            </mat-autocomplete>\n                        </mat-form-field>\n                    </div> -->\n                </mat-card-content>\n            </mat-card>\n        </div>\n    </div>\n</div>"
+module.exports = "\n<div class=\"container\">\n    <div class=\"row mb-2\">\n        <div class=\"col-md-12\">\n            <mat-card class=\"page-header-accent\">\n                <mat-card-content class=\"d-flex justify-content-between\">\n                    <h3>\n                        Paycheck List\n                    </h3>\n\n                    <!-- FILTERING/CONTROLS AREA\n                    <div>\n                        <mat-slide-toggle \n                            [checked]=\"showClosed\" \n                            (change)=\"switchDisplay()\"\n                            class=\"my-0 mr-2\"\n                        >\n                            Show Closed\n                        </mat-slide-toggle>\n                        <button type=\"button\" mat-stroked-button color=\"primary\" (click)=\"addPayCycle()\">\n                            <mat-icon inline=\"true\">add</mat-icon>\n                            <span>Payroll</span>\n                        </button>\n                    </div> -->\n                    <!-- <div>\n                        <mat-form-field class=\"w-100\">\n                            <input matInput \n                                placeholder=\"Search Agents\" \n                                aria-label=\"Search Agents\" \n                                [matAutoComplete]=\"searchAgents\" \n                                [formControl]=\"searchAgentsCtrl\" />\n                            <mat-autocomplete #searchAgents=\"matAutocomplete\">\n                                <mat-option *ngFor=\"\"></mat-option>\n                            </mat-autocomplete>\n                        </mat-form-field>\n                    </div> -->\n                </mat-card-content>\n            </mat-card>\n        </div>\n    </div>\n\n    <div class=\"row\">\n        <div class=\"col-md-12\">\n            <mat-card>\n                <mat-card-content>\n                    <ng-container *ngLet=\"paychecks$|async as paychecks\">\n                        <mat-list>\n                            <mat-list-item *ngFor=\"let p of paychecks\">\n                                {{p.agent.firstName}} {{p.agent.lastName}}\n                            </mat-list-item>\n                        </mat-list>\n                    </ng-container>\n                </mat-card-content>\n                \n                <mat-card-actions>\n                    <ng-container>\n                        <mat-paginator\n                            #paging\n                            [pageSizeOptions]=\"[1, 5, 10, 25]\"\n                            showFirstLastButtons=\"true\"\n                        ></mat-paginator>\n                    </ng-container>\n                </mat-card-actions>\n            </mat-card>\n        </div>\n    </div>\n</div>"
 
 /***/ }),
 
@@ -8742,6 +8742,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _paycheck_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./paycheck.service */ "./src/app/payroll/paycheck-list/paycheck.service.ts");
 /* harmony import */ var _app_session_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @app/session.service */ "./src/app/session.service.ts");
+/* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/material */ "./node_modules/@angular/material/esm5/material.es5.js");
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
+
+
 
 
 
@@ -8750,15 +8754,33 @@ var PaycheckListComponent = /** @class */ (function () {
     function PaycheckListComponent(session, service) {
         this.session = session;
         this.service = service;
+        this.paychecks$ = new rxjs__WEBPACK_IMPORTED_MODULE_5__["BehaviorSubject"](null);
     }
     PaycheckListComponent.prototype.ngOnInit = function () {
         var _this = this;
+        this.paging.pageSize = 5;
         this.session.getUserItem().subscribe(function (user) {
             _this.user = user;
-            _this.service.getPaychecks(user.sessionUser.sessionClient, 4, 1)
-                .subscribe(function (paychecks) { return console.dir(paychecks); });
+            _this.getPaychecks();
+        });
+        this.paging.page.subscribe(function (event) { return _this.getPaychecks(); });
+    };
+    PaycheckListComponent.prototype.getPaychecks = function (page, pageSize, startDate, endDate) {
+        var _this = this;
+        if (page === void 0) { page = this.paging.pageIndex; }
+        if (pageSize === void 0) { pageSize = this.paging.pageSize; }
+        page++; // we need to increment the value of "page" because matpaginator uses 0-based indexing and laravel pagination starts at 1
+        this.service.getPaychecks(this.user.sessionUser.sessionClient, page, pageSize, startDate, endDate)
+            .subscribe(function (paginator) {
+            _this.paginator = paginator;
+            _this.paging.length = _this.paginator.total;
+            _this.paychecks$.next(_this.paginator.data);
         });
     };
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewChild"])('paging'),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", _angular_material__WEBPACK_IMPORTED_MODULE_4__["MatPaginator"])
+    ], PaycheckListComponent.prototype, "paging", void 0);
     PaycheckListComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
             selector: 'vs-paycheck-list',
@@ -8798,12 +8820,18 @@ var PaycheckService = /** @class */ (function () {
         this.http = http;
         this.api = _env_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].apiUrl + 'api';
     }
-    PaycheckService.prototype.getPaychecks = function (clientId, page, resultsPerPage) {
+    PaycheckService.prototype.getPaychecks = function (clientId, page, resultsPerPage, startDate, endDate) {
         if (page === void 0) { page = 1; }
         var url = this.api + "/clients/" + clientId + "/payroll-details";
         var params = new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpParams"]().set('page', page.toString());
         if (resultsPerPage)
             params = params.append('resultsPerPage', resultsPerPage.toString());
+        if (startDate || endDate) {
+            if (startDate == null || endDate == null)
+                throw new Error('Both start date and end date are required if you select one.');
+            params = params.append('startDate', startDate.toString());
+            params = params.append('endDate', endDate.toString());
+        }
         return this.http.get(url, { params: params });
     };
     PaycheckService.prototype.getPaychecksByDetail = function (clientId, payrollDetailsId, page) {
@@ -10457,7 +10485,7 @@ var SessionService = /** @class */ (function () {
 /*!*********************************!*\
   !*** ./src/app/shared/index.ts ***!
   \*********************************/
-/*! exports provided: States, MomentInclusivity, MomentExtensions, QuillConfig, SharedModule */
+/*! exports provided: MomentInclusivity, MomentExtensions, States, QuillConfig, SharedModule */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";

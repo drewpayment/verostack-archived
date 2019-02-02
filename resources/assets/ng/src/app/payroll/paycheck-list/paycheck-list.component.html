@@ -1,6 +1,6 @@
 
 <div class="container">
-    <div class="row mb-4">
+    <div class="row mb-2">
         <div class="col-md-12">
             <mat-card class="page-header-accent">
                 <mat-card-content class="d-flex justify-content-between">
@@ -35,6 +35,32 @@
                         </mat-form-field>
                     </div> -->
                 </mat-card-content>
+            </mat-card>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <mat-card>
+                <mat-card-content>
+                    <ng-container *ngLet="paychecks$|async as paychecks">
+                        <mat-list>
+                            <mat-list-item *ngFor="let p of paychecks">
+                                {{p.agent.firstName}} {{p.agent.lastName}}
+                            </mat-list-item>
+                        </mat-list>
+                    </ng-container>
+                </mat-card-content>
+                
+                <mat-card-actions>
+                    <ng-container>
+                        <mat-paginator
+                            #paging
+                            [pageSizeOptions]="[1, 5, 10, 25]"
+                            showFirstLastButtons="true"
+                        ></mat-paginator>
+                    </ng-container>
+                </mat-card-actions>
             </mat-card>
         </div>
     </div>

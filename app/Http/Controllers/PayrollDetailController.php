@@ -27,7 +27,7 @@ class PayrollDetailController extends Controller
 		if($result->hasError)
 			return $result->throwApiException()->getResponse();
 
-        $this->service->getPaychecksPaged($request->page, $request->resultsPerPage)->mergeInto($result);
+        $this->service->getPaychecksPaged($request)->mergeInto($result);
 
         return $result->throwApiException()->getResponse();
     }

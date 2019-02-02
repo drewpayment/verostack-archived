@@ -4,8 +4,10 @@ namespace App\Http\Services;
 
 use App\Http\Helpers;
 use App\PayrollDetail;
+use Illuminate\Http\Request;
 use App\Http\Resources\ApiResource;
 use Illuminate\Support\Facades\Auth;
+use App\PayCycle;
 
 class PayrollDetailsService 
 {
@@ -56,12 +58,37 @@ class PayrollDetailsService
         return $result->setData($details);
     }
 
-    public function getPaychecksPaged($page, $resultsPerPage)
+    public function getPaychecksPaged(Request $request)
     {
         $result = new ApiResource();
 
+        // $cycles = PayCycle::with(['payroll.details.agent', 'payroll.details.overrides', 'payroll.details.expenses'])
+        //     ->when($request->startDate, function($query, $request) {
+        //         return $query->byDates($request->startDate, $request->endDate);
+        //     })
+        //     ->paginate($resultsPerPage, ['*'], 'page', $request->page)
+        //     ->transform(function($item, $key) {
+        //         $details = [];
+        //         $payrolls = $item->data->payrolls;
+        //         foreach($payrolls as $p) {
+        //             $scopeDetails = $p->details;
+        //             $p->payCycle = $item;
+
+        //             foreach($scopeDetails as $d) { $d->payroll = $p; }
+
+        //             $details = array_merge($details, $scopeDetails);
+        //         }
+        //         return $details;
+        //     });
+
+        /**
+         * Need to update this so that the user can pass in filtering options to filter by a range of dates of the pay cycle.
+         * However, the start/end dates are on the pay cycle object which is a relationship through the Payroll entity. In order to check this,
+         * we're going to need to write a fairly complex conditional where clause using this: 
+         * https://laravel.com/docs/5.7/eloquent-relationships#querying-relationship-existence
+         */
         $details = PayrollDetail::with(['payroll.payCycle', 'agent', 'overrides', 'expenses'])
-            ->paginate($resultsPerPage, ['*'], 'page', $page);
+            ->paginate($resultsPerPage, ['*'], 'page', $request->page);
 
         return $result->setData($details);
     }

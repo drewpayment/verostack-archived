@@ -62,6 +62,12 @@ class PayCycle extends Model
         return $query->where('pay_cycle_id', $id);
     }
 
+    public function scopeByDates($query, $start, $end)
+    {
+        return $query->whereDate('start_date', '>=', $start)
+            ->whereDate('end_date', '<=', $end);
+    }
+
     /**
      * Scope to include/exclude closed cycles.
      * 
