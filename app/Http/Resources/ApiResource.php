@@ -130,10 +130,10 @@ class ApiResource {
 	 *
 	 * @return $this \App\Http\Resources\ApiResource
 	 */
-	public function setToFail()
+	public function setToFail($status = Response::HTTP_BAD_REQUEST)
 	{
 		$this->hasError = true;
-		$this->status = Response::HTTP_BAD_REQUEST;
+		$this->status = $status;
 		$this->response = $this->buildResponse();
 		return $this;
 	}
@@ -144,11 +144,12 @@ class ApiResource {
 	 *
 	 * @return $this|\Illuminate\Http\JsonResponse
 	 */
-	public function throwApiException($exceptionMsg = null)
+	public function throwApiException($exceptionMsg = null, $status = Response::HTTP_INTERNAL_SERVER_ERROR)
 	{
 		if($this->hasError)
 		{
-			$this->status = Response::HTTP_INTERNAL_SERVER_ERROR;
+            if($this->status != Response::HTTP_OK)
+			    $this->status = $status;
 
             if(is_null($exceptionMsg)) {
                 $this->response = $this->buildResponse([

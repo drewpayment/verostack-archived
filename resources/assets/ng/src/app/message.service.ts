@@ -26,9 +26,9 @@ export class MessageService {
 
     dismissSnackBar = () => this.openBar.dismiss();
 
-    showWebApiError = (e: HttpErrorResponse): void => {
+    showWebApiError = (e: HttpErrorResponse, duration:number = 6500): void => {
         let msg = e != null ? e.error.message : e.statusText != null ? e.statusText : e.message;
-        this.openBar = this.bar.open(msg, 'dismiss');
+        this.openBar = this.bar.open(msg, 'dismiss', { duration: duration });
         this.session.hideLoader();
     };
 

@@ -314,6 +314,7 @@ export class PayrollListComponent implements OnInit {
     }
 
     private applyFilters() {
+        if(!this._payrolls.length) return;
 
         /** let's set our initial filter dates based on what came back from the api */
         if((this.filters.startDate == null || this.filters.endDate == null) && this._payrolls.length) {

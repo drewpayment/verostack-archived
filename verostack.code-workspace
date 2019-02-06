@@ -8,6 +8,7 @@
 		}
 	],
 	"settings": {
-		"prettier.tabWidth": 4
+		"prettier.tabWidth": 4,
+        "typescript.tsdk": "resources/assets/ng/node_modules/typescript/lib"
 	}
 }

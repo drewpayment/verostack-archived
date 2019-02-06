@@ -47,10 +47,11 @@ export class UserService {
         this.agents = this.agents$.asObservable();
 
         this.session.userItem.subscribe((user: User) => {
+            const detail = user == null ? null : user.detail;
             this.user$.next(user);
             this.dataStore.user = user;
-            this.dataStore.detail = user.detail;
-            this.userDetail$.next(user.detail);
+            this.dataStore.detail = detail;
+            this.userDetail$.next(detail);
         });
     }
 

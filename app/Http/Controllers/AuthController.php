@@ -3,13 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use App\Http\Helpers;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use App\Http\Resources\ApiResource;
 use Illuminate\Support\Facades\Auth;
 use Psr\Http\Message\ServerRequestInterface;
 use Laravel\Passport\Http\Controllers\AccessTokenController;
-use App\Http\Helpers;
 
 class AuthController extends Controller
 {
@@ -40,7 +41,9 @@ class AuthController extends Controller
         $authenticated = Auth::attempt(['username' => $request['username'], 'password' => $request['password']]);
 
         if(!$authenticated)
-            return $result->setToFail()->throwApiException()->getResponse();
+            return $result->setToFail()
+                ->throwApiException('We were unable to verify that username and password.', Response::HTTP_UNAUTHORIZED)
+                ->getResponse();
 
         $user = Auth::user();
 

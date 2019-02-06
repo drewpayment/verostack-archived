@@ -6680,7 +6680,7 @@ var LoadingSpinnerService = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n<div class=\"row justify-content-center\">\n  <div class=\"col-sm-4\" [ngClass]=\"{'text-center': pageLoading}\">\n    <div class=\"card\">\n      <img class=\"card-img-top\" src=\"dist/assets/images/login.png\" alt=\"Login image\">\n      <div class=\"card-body\">\n        <form #f=\"ngForm\" (ngSubmit)=\"onSubmit(f)\" novalidate class=\"login-container\">\n          <mat-form-field floatLabel=\"true\" hintLabel=\"We'll never share your login credentials.\">\n            <input matInput name=\"username\" ngModel #username=\"ngModel\" placeholder=\"username\" required [disabled]=lockLoginInputs />\n            <mat-error *ngIf=\"username.invalid\">{{getErrorMessage()}}</mat-error>\n          </mat-form-field>\n          <mat-form-field floatLabel=\"password\">\n            <input matInput name=\"password\" ngModel #password=\"ngModel\" placeholder=\"password\" required type=\"password\" [disabled]=lockLoginInputs />\n            <mat-error *ngIf=\"password.invalid\">{{getErrorMessage()}}</mat-error>\n          </mat-form-field>\n          <button mat-button [disabled]=lockLoginInputs>Login</button>\n        </form>\n        <mat-progress-bar *ngIf=\"lockLoginInputs\" mode=\"indeterminate\"></mat-progress-bar>\n      </div>\n    </div>\n  </div>\n</div>\n"
+module.exports = "\n<div class=\"row justify-content-center\">\n  <div class=\"col-sm-4\" [ngClass]=\"{'text-center': pageLoading}\">\n    <div class=\"card\">\n      <img class=\"card-img-top\" src=\"dist/assets/images/login.png\" alt=\"Login image\">\n      <div class=\"card-body\">\n        <form #f=\"ngForm\" (ngSubmit)=\"onSubmit(f)\" novalidate class=\"login-container\">\n          <mat-form-field floatLabel=\"true\" hintLabel=\"We'll never share your login credentials.\">\n            <input matInput name=\"username\" \n                ngModel\n                #username=\"ngModel\" \n                placeholder=\"username\" \n                required \n                [disabled]=lockLoginInputs />\n            <mat-error *ngIf=\"username.invalid && (username.touched || formSubmitted)\">{{getErrorMessage()}}</mat-error>\n          </mat-form-field>\n          <mat-form-field floatLabel=\"password\">\n            <input matInput name=\"password\" \n                ngModel\n                #password=\"ngModel\"\n                placeholder=\"password\" \n                required \n                type=\"password\" \n                [disabled]=lockLoginInputs />\n            <mat-error *ngIf=\"password.invalid && (password.touched || formSubmitted)\">{{getErrorMessage()}}</mat-error>\n          </mat-form-field>\n          <button mat-button [disabled]=lockLoginInputs>Login</button>\n        </form>\n        <mat-progress-bar *ngIf=\"lockLoginInputs\" mode=\"indeterminate\"></mat-progress-bar>\n      </div>\n    </div>\n  </div>\n</div>\n"
 
 /***/ }),
 
@@ -6713,6 +6713,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_5__);
 /* harmony import */ var _user_features_user_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../user-features/user.service */ "./src/app/user-features/user.service.ts");
+/* harmony import */ var _app_message_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @app/message.service */ "./src/app/message.service.ts");
+
 
 
 
@@ -6721,12 +6723,14 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var LoginComponent = /** @class */ (function () {
-    function LoginComponent(authService, session, userService) {
+    function LoginComponent(authService, session, userService, msg) {
         this.authService = authService;
         this.session = session;
         this.userService = userService;
+        this.msg = msg;
         this.lockLoginInputs = false;
         this.redirectQueue = [];
+        this.formSubmitted = false;
         this.username = new _angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormControl"]('', [_angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].required]);
         this.password = new _angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormControl"]('', [_angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].required]);
     }
@@ -6744,13 +6748,10 @@ var LoginComponent = /** @class */ (function () {
     LoginComponent.prototype.onSubmit = function (f) {
         var _this = this;
         this.session.showLoader();
-        // this.usernameInput = f.value.username;
+        this.formSubmitted = true;
         var loginData = {
-            //   grant_type: 'password',
-            // client_id: 3,
-            //   client_secret: 'qHZzQxduSU92Vgb0hBwLcx4W4jjKWf5lykM0bxnm',
             username: f.value.username,
-            password: f.value.password,
+            password: f.value.password
         };
         if (f.form.valid) {
             this.lockLoginInputs = true;
@@ -6764,33 +6765,17 @@ var LoginComponent = /** @class */ (function () {
                 };
                 _this.session.login(sessionToken);
                 _this.userService.storeNgUser(response.user);
-            });
-            // this.authService
-            //     .login(loginData)
-            //     .then(data => {
-            //         this.pageLoading = false;
-            //         this.lockLoginInputs = false;
-            //         let token: ILocalStorage<IToken> = <ILocalStorage<IToken>>{
-            //             data: data,
-            //             expires: moment().valueOf() + 1000 * (60 * 24 * 3)
-            //         };
-            //         this.session.login(token);
-            //         this.userService.loadUser(this.usernameInput);
-            //         // TODO: this isn't working yet... need to re-work login routing
-            //         // this.session.navigateTo(this.session.navigateQueue[0]);
-            //     })
-            //     .catch(err => {
-            //         this.pageLoading = false;
-            //         this.lockLoginInputs = false;
-            //         this.session.clearStorage();
-            //         let friendlyResponse = ' Please check your credentials and try again.';
-            //         this.msg.addMessage(err.message + friendlyResponse, 'close');
-            //         this.session.hideLoader();
-            //     });
+            }, function (err) { return _this.httpErrorHandler(err); });
         }
     };
     LoginComponent.prototype.loginHandler = function () {
         this.pageLoading = false;
+    };
+    LoginComponent.prototype.httpErrorHandler = function (e) {
+        this.pageLoading = false;
+        this.lockLoginInputs = false;
+        this.password.setValue(null);
+        this.msg.showWebApiError(e);
     };
     LoginComponent.prototype.getErrorMessage = function () {
         return this.username.hasError('required')
@@ -6807,7 +6792,8 @@ var LoginComponent = /** @class */ (function () {
         }),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_auth_service__WEBPACK_IMPORTED_MODULE_3__["AuthService"],
             _session_service__WEBPACK_IMPORTED_MODULE_4__["SessionService"],
-            _user_features_user_service__WEBPACK_IMPORTED_MODULE_6__["UserService"]])
+            _user_features_user_service__WEBPACK_IMPORTED_MODULE_6__["UserService"],
+            _app_message_service__WEBPACK_IMPORTED_MODULE_7__["MessageService"]])
     ], LoginComponent);
     return LoginComponent;
 }());
@@ -6970,9 +6956,10 @@ var MessageService = /** @class */ (function () {
         this.messages = [];
         this.openBar = null;
         this.dismissSnackBar = function () { return _this.openBar.dismiss(); };
-        this.showWebApiError = function (e) {
+        this.showWebApiError = function (e, duration) {
+            if (duration === void 0) { duration = 6500; }
             var msg = e != null ? e.error.message : e.statusText != null ? e.statusText : e.message;
-            _this.openBar = _this.bar.open(msg, 'dismiss');
+            _this.openBar = _this.bar.open(msg, 'dismiss', { duration: duration });
             _this.session.hideLoader();
         };
     }
@@ -9412,6 +9399,8 @@ var PayrollListComponent = /** @class */ (function () {
     };
     PayrollListComponent.prototype.applyFilters = function () {
         var _this = this;
+        if (!this._payrolls.length)
+            return;
         /** let's set our initial filter dates based on what came back from the api */
         if ((this.filters.startDate == null || this.filters.endDate == null) && this._payrolls.length) {
             var mostRecentWeekending = moment__WEBPACK_IMPORTED_MODULE_10__(this._payrolls.sort(function (a, b) { return moment__WEBPACK_IMPORTED_MODULE_10__(a.weekEnding).isAfter(b.weekEnding, 'day') ? 1 : 0; })[0].weekEnding);
@@ -11231,10 +11220,11 @@ var UserService = /** @class */ (function () {
         this.userDetail = this.userDetail$.asObservable();
         this.agents = this.agents$.asObservable();
         this.session.userItem.subscribe(function (user) {
+            var detail = user == null ? null : user.detail;
             _this.user$.next(user);
             _this.dataStore.user = user;
-            _this.dataStore.detail = user.detail;
-            _this.userDetail$.next(user.detail);
+            _this.dataStore.detail = detail;
+            _this.userDetail$.next(detail);
         });
     }
     UserService.prototype.ngOnInit = function () {
