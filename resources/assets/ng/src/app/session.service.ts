@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {User} from './models/user.model';
-import {Observable, BehaviorSubject, Subject, ReplaySubject} from 'rxjs';
+import {Observable, BehaviorSubject, Subject, ReplaySubject, Observer} from 'rxjs';
 import {MatSidenav} from '@angular/material';
 import {LocalStorage, JSONSchema} from '@ngx-pwa/local-storage';
 import {ILocalStorage, IToken} from './models';
@@ -10,6 +10,7 @@ import {environment} from '../environments/environment';
 
 import * as moment from 'moment';
 import { filter } from 'rxjs/operators';
+import { UserService } from './user-features/user.service';
 
 declare var window: any;
 
@@ -21,10 +22,7 @@ const rootUrl = environment.rootUrl;
 })
 export class SessionService {
     static defaultUserUrl = 'my-information';
-
-    sessionUser: Observable<User>;
     private sidenav: MatSidenav;
-    opened$: Subject<boolean> = new Subject<boolean>();
 
     dataStore: {user: User; token: IToken} = {
         user: null,
@@ -34,11 +32,7 @@ export class SessionService {
     navigateQueue: string[] = [];
     loggedInService: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
     private userLoggedIn: boolean;
-
-    storageItem: Observable<any>;
-
-    private userItem$: Subject<User> = new ReplaySubject<User>(1);
-    userItem: Observable<User>;
+    userItem = new BehaviorSubject<User>(null);
 
     private tokenItem$: Subject<IToken> = new ReplaySubject<IToken>(1);
     tokenItem: Observable<IToken>;
@@ -52,14 +46,17 @@ export class SessionService {
     previousUrl:string = '';
     currentUrl:string = '';
 
-    constructor(private localStorage: LocalStorage, private router: Router) {
+    constructor(
+        private localStorage: LocalStorage, 
+        private router: Router,
+        private userService:UserService
+    ) {
         // make sure we're removing expired cookies on app boot
         this.pruneExpiredStorage();
         for (let p in this.dataStore) {
             this.getItem(p);
         }
 
-        this.userItem = this.userItem$.asObservable();
         this.tokenItem = this.tokenItem$.asObservable();
         this.loadingState = this.loading$.asObservable();
 
@@ -69,10 +66,6 @@ export class SessionService {
             this.previousUrl = this.currentUrl;
             this.currentUrl = e.url;
         });
-    }
-
-    get isUserLoggedIn(): boolean {
-        return this.userLoggedIn;
     }
 
     private hasToken(): boolean {
@@ -110,8 +103,20 @@ export class SessionService {
         window.location.href = rootUrl + '/#/login';
     }
 
-    getUserItem(): Observable<User> {
-        return this.userItem$.asObservable();
+    getUserItem():BehaviorSubject<User> {
+        const user = this.userItem.getValue();
+        if(!user.sessionUser) {
+            return BehaviorSubject.create((observer:Observer<User>) => {
+                this.userService.createNewSessionUser(user)
+                    .subscribe(user => {
+                        this.userItem.next(user);
+                        observer.next(user);
+                        observer.complete();
+                    });
+            });
+        } else {
+            return this.userItem;
+        }
     }
 
     get userHomePage() {
@@ -166,7 +171,7 @@ export class SessionService {
      * @param user
      */
     setUser(user: User) {
-        this.userItem$.next(user);
+        this.userItem.next(user);
     }
 
     /**
@@ -217,7 +222,7 @@ export class SessionService {
                 this.hasTokenSubject.next(true);
                 this.isLoginSubject.next(true);
                 this.dataStore.user = next.data;
-                this.userItem$.next(<User>next.data);
+                this.userItem.next(<User>next.data);
             } else if (itemName === 'token') {
                 this.hasTokenSubject.next(true);
                 this.isLoginSubject.next(true);
@@ -252,7 +257,7 @@ export class SessionService {
             } else {
                 this.userLoggedIn = true;
                 this.dataStore.user = item.data;
-                this.userItem$.next(item.data);
+                this.userItem.next(item.data);
             }
 
             this.loggedInService.next(this.userLoggedIn);
@@ -353,7 +358,7 @@ export class SessionService {
 
     clearStorage(): void {
         this.localStorage.clearSubscribe();
-        this.userItem$.next(null);
+        this.userItem.next(null);
         this.tokenItem$.next(null);
     }
 

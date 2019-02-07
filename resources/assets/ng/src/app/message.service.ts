@@ -15,10 +15,10 @@ export class MessageService {
     /**
      * @param message string
      * @param action string @default 'dismiss'
-     * @param duration number @default null Results in message that will not disappear until 
-     * explicitly closed by the user. 
+     * @param duration number @default null Results in message that will not disappear until
+     * explicitly closed by the user.
      */
-    addMessage(message: string, action:string = 'dismiss', duration:number = null): void {
+    addMessage(message:string, action:string = 'dismiss', duration:number = null): void {
         let options = duration > 0 ? {duration: duration} : {};
         this.openBar = this.bar.open(message, action, options);
         this.session.hideLoader();
@@ -26,7 +26,7 @@ export class MessageService {
 
     dismissSnackBar = () => this.openBar.dismiss();
 
-    showWebApiError = (e: HttpErrorResponse, duration:number = 6500): void => {
+    showWebApiError = (e:HttpErrorResponse, duration:number = 6500): void => {
         let msg = e != null ? e.error.message : e.statusText != null ? e.statusText : e.message;
         this.openBar = this.bar.open(msg, 'dismiss', { duration: duration });
         this.session.hideLoader();

@@ -88,7 +88,7 @@ class PayrollDetailsService
          * https://laravel.com/docs/5.7/eloquent-relationships#querying-relationship-existence
          */
         $details = PayrollDetail::with(['payroll.payCycle', 'agent', 'overrides', 'expenses'])
-            ->paginate($resultsPerPage, ['*'], 'page', $request->page);
+            ->paginate($request->resultsPerPage, ['*'], 'page', $request->page);
 
         return $result->setData($details);
     }

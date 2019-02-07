@@ -36,7 +36,7 @@ export class ClientSelectorComponent implements OnInit {
   }
 
   onClientChange() {
-    this.userService.updateUser(this.user, null);
+    this.userService.updateUser(this.user, null).subscribe();
     this.cancel();
   }
 

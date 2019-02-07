@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {User, IUserDetail, IAgent, ILocalStorage} from '../models/index';
-import {Observable, ReplaySubject, Subject, BehaviorSubject} from 'rxjs';
+import {Observable, ReplaySubject, Subject, BehaviorSubject, of} from 'rxjs';
 
 import {SessionService} from '../session.service';
 
@@ -10,7 +10,7 @@ import * as moment from 'moment';
 import {environment} from '@env/environment';
 import {IUserDetailInfo} from '@app/models/user-detail-info.model';
 import {IRole} from '@app/models/role.model';
-import { catchError } from 'rxjs/operators';
+import { catchError, tap, map } from 'rxjs/operators';
 
 interface DataStore {
     user: User;
@@ -40,7 +40,10 @@ export class UserService {
     userDetail: Observable<IUserDetail>;
     userDetail$: Subject<IUserDetail> = new ReplaySubject<IUserDetail>(1);
 
-    constructor(private http: HttpClient, private session: SessionService) {
+    constructor(
+        private http:HttpClient, 
+        private session:SessionService
+    ) {
         this.user = this.user$.asObservable();
         this.users = this.users$.asObservable();
         this.userDetail = this.userDetail$.asObservable();
@@ -219,23 +222,48 @@ export class UserService {
         this.setLocalStorageUser(this.dataStore.user);
     }
 
-    updateUser(user: User, detail: IUserDetail): void {
-        this.http.post(this.apiUrl + 'api/users/' + user.id, {user: user, detail: detail}).subscribe((data: any) => {
-            if (data.user) {
-                this.dataStore.user = data.user;
-                this.session.setUser(this.dataStore.user);
-            } else {
-                this.dataStore.user = data;
-            }
+    createNewSessionUser(user:User):Observable<User> {
+        user.sessionUser = {
+            id:null,
+            sessionClient: user.clients[0].clientId,
+            client: user.clients[0],
+            userId: user.id
+        };
 
-            if (data.detail != null) {
-                this.dataStore.detail = data.detail;
-                this.userDetail$.next(this.dataStore.detail);
-            }
+        return this.updateUser(user, user.detail);
+    }
 
-            this.user$.next(this.dataStore.user);
-            this.setLocalStorageUser(this.dataStore.user);
-        });
+    updateUser(user: User, detail: IUserDetail):Observable<User> {
+        const url = `${this.api}users/${user.id}`;
+        const body = { 
+            user: user,
+            detail: detail
+        };
+        return this.http.post<User>(url, body)
+            .pipe(
+                tap((data:any) => {
+                    if(data.user) {
+                        this.dataStore.user = data.user;
+                        this.session.setUser(this.dataStore.user);
+                    } else {
+                        this.dataStore.user = data;
+                    }
+
+                    if(data.detail) {
+                        this.dataStore.detail = data.detail;
+                        this.userDetail$.next(this.dataStore.detail);
+                    }
+
+                    this.user$.next(this.dataStore.user);
+                    this.setLocalStorageUser(this.dataStore.user);
+                }),
+                map((resp:any) => {
+                    if(resp.user)
+                        return resp.user as User;
+                    else
+                        return resp as User;
+                })
+            );
     }
 
     updateUserEntity(user: User): Promise<User> {

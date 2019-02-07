@@ -3377,7 +3377,7 @@ var ClientSelectorComponent = /** @class */ (function () {
         this.dialogRef.close();
     };
     ClientSelectorComponent.prototype.onClientChange = function () {
-        this.userService.updateUser(this.user, null);
+        this.userService.updateUser(this.user, null).subscribe();
         this.cancel();
     };
     ClientSelectorComponent.prototype.compareByValue = function (f1, f2) {
@@ -6764,7 +6764,16 @@ var LoginComponent = /** @class */ (function () {
                     expires: moment__WEBPACK_IMPORTED_MODULE_5__().valueOf() + 1000 * (60 * 24 * 3)
                 };
                 _this.session.login(sessionToken);
-                _this.userService.storeNgUser(response.user);
+                if (response.user.sessionUser) {
+                    _this.userService.storeNgUser(response.user);
+                }
+                else {
+                    _this.userService.createNewSessionUser(response.user)
+                        .subscribe(function (user) {
+                        response.user = user;
+                        _this.userService.storeNgUser(response.user);
+                    });
+                }
             }, function (err) { return _this.httpErrorHandler(err); });
         }
     };
@@ -7371,7 +7380,7 @@ var MyInformationComponent = /** @class */ (function () {
         this.spinner.show();
         // if account numbers are null, make them zeros to be inserted into db
         this.formatBankAccountNumbers();
-        this.userService.updateUser(this.user, this.detail);
+        this.userService.updateUser(this.user, this.detail).subscribe();
         f.reset();
         this.editProfile = !this.editProfile;
         this.msg.addMessage('Saved successfully.', 'dismiss', 6000);
@@ -9399,7 +9408,7 @@ var PayrollListComponent = /** @class */ (function () {
     };
     PayrollListComponent.prototype.applyFilters = function () {
         var _this = this;
-        if (!this._payrolls.length)
+        if (this._payrolls == null || !this._payrolls.length)
             return;
         /** let's set our initial filter dates based on what came back from the api */
         if ((this.filters.startDate == null || this.filters.endDate == null) && this._payrolls.length) {
@@ -10126,6 +10135,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_6__);
 /* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
+/* harmony import */ var _user_features_user_service__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./user-features/user.service */ "./src/app/user-features/user.service.ts");
+
 
 
 
@@ -10136,18 +10147,18 @@ __webpack_require__.r(__webpack_exports__);
 
 var rootUrl = _environments_environment__WEBPACK_IMPORTED_MODULE_5__["environment"].rootUrl;
 var SessionService = /** @class */ (function () {
-    function SessionService(localStorage, router) {
+    function SessionService(localStorage, router, userService) {
         var _this = this;
         this.localStorage = localStorage;
         this.router = router;
-        this.opened$ = new rxjs__WEBPACK_IMPORTED_MODULE_2__["Subject"]();
+        this.userService = userService;
         this.dataStore = {
             user: null,
             token: null
         };
         this.navigateQueue = [];
         this.loggedInService = new rxjs__WEBPACK_IMPORTED_MODULE_2__["BehaviorSubject"](false);
-        this.userItem$ = new rxjs__WEBPACK_IMPORTED_MODULE_2__["ReplaySubject"](1);
+        this.userItem = new rxjs__WEBPACK_IMPORTED_MODULE_2__["BehaviorSubject"](null);
         this.tokenItem$ = new rxjs__WEBPACK_IMPORTED_MODULE_2__["ReplaySubject"](1);
         this.loading$ = new rxjs__WEBPACK_IMPORTED_MODULE_2__["Subject"]();
         this.hasTokenSubject = new rxjs__WEBPACK_IMPORTED_MODULE_2__["ReplaySubject"](1);
@@ -10159,7 +10170,6 @@ var SessionService = /** @class */ (function () {
         for (var p in this.dataStore) {
             this.getItem(p);
         }
-        this.userItem = this.userItem$.asObservable();
         this.tokenItem = this.tokenItem$.asObservable();
         this.loadingState = this.loading$.asObservable();
         this.router.events.pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_7__["filter"])(function (event) { return event instanceof _angular_router__WEBPACK_IMPORTED_MODULE_4__["NavigationEnd"]; })).subscribe(function (e) {
@@ -10168,13 +10178,6 @@ var SessionService = /** @class */ (function () {
         });
     }
     SessionService_1 = SessionService;
-    Object.defineProperty(SessionService.prototype, "isUserLoggedIn", {
-        get: function () {
-            return this.userLoggedIn;
-        },
-        enumerable: true,
-        configurable: true
-    });
     SessionService.prototype.hasToken = function () {
         var _this = this;
         this.hasTokenSubject.subscribe(function (hasToken) {
@@ -10211,7 +10214,21 @@ var SessionService = /** @class */ (function () {
         window.location.href = rootUrl + '/#/login';
     };
     SessionService.prototype.getUserItem = function () {
-        return this.userItem$.asObservable();
+        var _this = this;
+        var user = this.userItem.getValue();
+        if (!user.sessionUser) {
+            return rxjs__WEBPACK_IMPORTED_MODULE_2__["BehaviorSubject"].create(function (observer) {
+                _this.userService.createNewSessionUser(user)
+                    .subscribe(function (user) {
+                    _this.userItem.next(user);
+                    observer.next(user);
+                    observer.complete();
+                });
+            });
+        }
+        else {
+            return this.userItem;
+        }
     };
     Object.defineProperty(SessionService.prototype, "userHomePage", {
         get: function () {
@@ -10263,7 +10280,7 @@ var SessionService = /** @class */ (function () {
      * @param user
      */
     SessionService.prototype.setUser = function (user) {
-        this.userItem$.next(user);
+        this.userItem.next(user);
     };
     /**
      * What is this doing????
@@ -10311,7 +10328,7 @@ var SessionService = /** @class */ (function () {
                 _this.hasTokenSubject.next(true);
                 _this.isLoginSubject.next(true);
                 _this.dataStore.user = next.data;
-                _this.userItem$.next(next.data);
+                _this.userItem.next(next.data);
             }
             else if (itemName === 'token') {
                 _this.hasTokenSubject.next(true);
@@ -10346,7 +10363,7 @@ var SessionService = /** @class */ (function () {
             else {
                 _this.userLoggedIn = true;
                 _this.dataStore.user = item.data;
-                _this.userItem$.next(item.data);
+                _this.userItem.next(item.data);
             }
             _this.loggedInService.next(_this.userLoggedIn);
         });
@@ -10440,7 +10457,7 @@ var SessionService = /** @class */ (function () {
     };
     SessionService.prototype.clearStorage = function () {
         this.localStorage.clearSubscribe();
-        this.userItem$.next(null);
+        this.userItem.next(null);
         this.tokenItem$.next(null);
     };
     /**
@@ -10461,7 +10478,9 @@ var SessionService = /** @class */ (function () {
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
             providedIn: 'root'
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_ngx_pwa_local_storage__WEBPACK_IMPORTED_MODULE_3__["LocalStorage"], _angular_router__WEBPACK_IMPORTED_MODULE_4__["Router"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_ngx_pwa_local_storage__WEBPACK_IMPORTED_MODULE_3__["LocalStorage"],
+            _angular_router__WEBPACK_IMPORTED_MODULE_4__["Router"],
+            _user_features_user_service__WEBPACK_IMPORTED_MODULE_8__["UserService"]])
     ], SessionService);
     return SessionService;
 }());
@@ -11190,6 +11209,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_6__);
 /* harmony import */ var _env_environment__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @env/environment */ "./src/environments/environment.ts");
+/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
+
 
 
 
@@ -11389,9 +11410,24 @@ var UserService = /** @class */ (function () {
         this.user$.next(this.dataStore.user);
         this.setLocalStorageUser(this.dataStore.user);
     };
+    UserService.prototype.createNewSessionUser = function (user) {
+        user.sessionUser = {
+            id: null,
+            sessionClient: user.clients[0].clientId,
+            client: user.clients[0],
+            userId: user.id
+        };
+        return this.updateUser(user, user.detail);
+    };
     UserService.prototype.updateUser = function (user, detail) {
         var _this = this;
-        this.http.post(this.apiUrl + 'api/users/' + user.id, { user: user, detail: detail }).subscribe(function (data) {
+        var url = this.api + "users/" + user.id;
+        var body = {
+            user: user,
+            detail: detail
+        };
+        return this.http.post(url, body)
+            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_8__["tap"])(function (data) {
             if (data.user) {
                 _this.dataStore.user = data.user;
                 _this.session.setUser(_this.dataStore.user);
@@ -11399,13 +11435,18 @@ var UserService = /** @class */ (function () {
             else {
                 _this.dataStore.user = data;
             }
-            if (data.detail != null) {
+            if (data.detail) {
                 _this.dataStore.detail = data.detail;
                 _this.userDetail$.next(_this.dataStore.detail);
             }
             _this.user$.next(_this.dataStore.user);
             _this.setLocalStorageUser(_this.dataStore.user);
-        });
+        }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_8__["map"])(function (resp) {
+            if (resp.user)
+                return resp.user;
+            else
+                return resp;
+        }));
     };
     UserService.prototype.updateUserEntity = function (user) {
         return this.http
@@ -11522,7 +11563,8 @@ var UserService = /** @class */ (function () {
     };
     UserService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])(),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"], _session_service__WEBPACK_IMPORTED_MODULE_4__["SessionService"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"],
+            _session_service__WEBPACK_IMPORTED_MODULE_4__["SessionService"]])
     ], UserService);
     return UserService;
 }());

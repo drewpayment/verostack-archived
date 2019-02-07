@@ -69,7 +69,18 @@ export class LoginComponent implements OnInit, AfterViewChecked, OnDestroy {
                 };
 
                 this.session.login(sessionToken);
-                this.userService.storeNgUser(response.user);
+
+                if(response.user.sessionUser) {
+                    this.userService.storeNgUser(response.user);
+                } else {
+                    this.userService.createNewSessionUser(response.user)
+                        .subscribe(user => {
+                            response.user = user;
+                            this.userService.storeNgUser(response.user);
+                        });
+                }
+                    
+
             }, (err: HttpErrorResponse) => this.httpErrorHandler(err));
         }
     }

@@ -120,7 +120,7 @@ export class MyInformationComponent implements OnInit {
         // if account numbers are null, make them zeros to be inserted into db
         this.formatBankAccountNumbers();
 
-        this.userService.updateUser(this.user, this.detail);
+        this.userService.updateUser(this.user, this.detail).subscribe();
         f.reset();
         this.editProfile = !this.editProfile;
         this.msg.addMessage('Saved successfully.', 'dismiss', 6000);
