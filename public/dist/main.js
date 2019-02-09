@@ -6507,8 +6507,10 @@ var HeaderComponent = /** @class */ (function () {
             }
         });
         this.session.userItem.subscribe(function (next) {
+            if (next == null)
+                return;
             _this.user = next;
-            _this.menuTitle.next(_this.user.sessionUser.client.name);
+            _this.menuTitle.next(_this.userService.getActiveClientName());
             _this.showClientSelector = _this.user.clients.length > 1 && _this.user.role.role > 5;
             _this.isAdmin = _this.user.role.role > 5;
         });
@@ -6764,16 +6766,7 @@ var LoginComponent = /** @class */ (function () {
                     expires: moment__WEBPACK_IMPORTED_MODULE_5__().valueOf() + 1000 * (60 * 24 * 3)
                 };
                 _this.session.login(sessionToken);
-                if (response.user.sessionUser) {
-                    _this.userService.storeNgUser(response.user);
-                }
-                else {
-                    _this.userService.createNewSessionUser(response.user)
-                        .subscribe(function (user) {
-                        response.user = user;
-                        _this.userService.storeNgUser(response.user);
-                    });
-                }
+                _this.userService.storeNgUser(response.user);
             }, function (err) { return _this.httpErrorHandler(err); });
         }
     };
@@ -7323,6 +7316,8 @@ var MyInformationComponent = /** @class */ (function () {
         var _this = this;
         this.session.showLoader();
         this.session.getUserItem().subscribe(function (user) {
+            if (user == null)
+                return;
             _this.user$ = Object(rxjs__WEBPACK_IMPORTED_MODULE_9__["of"])(user);
             _this.user = user;
             /** set onboarding options */
@@ -10135,8 +10130,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_6__);
 /* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
-/* harmony import */ var _user_features_user_service__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./user-features/user.service */ "./src/app/user-features/user.service.ts");
-
 
 
 
@@ -10147,11 +10140,10 @@ __webpack_require__.r(__webpack_exports__);
 
 var rootUrl = _environments_environment__WEBPACK_IMPORTED_MODULE_5__["environment"].rootUrl;
 var SessionService = /** @class */ (function () {
-    function SessionService(localStorage, router, userService) {
+    function SessionService(localStorage, router) {
         var _this = this;
         this.localStorage = localStorage;
         this.router = router;
-        this.userService = userService;
         this.dataStore = {
             user: null,
             token: null
@@ -10214,21 +10206,7 @@ var SessionService = /** @class */ (function () {
         window.location.href = rootUrl + '/#/login';
     };
     SessionService.prototype.getUserItem = function () {
-        var _this = this;
-        var user = this.userItem.getValue();
-        if (!user.sessionUser) {
-            return rxjs__WEBPACK_IMPORTED_MODULE_2__["BehaviorSubject"].create(function (observer) {
-                _this.userService.createNewSessionUser(user)
-                    .subscribe(function (user) {
-                    _this.userItem.next(user);
-                    observer.next(user);
-                    observer.complete();
-                });
-            });
-        }
-        else {
-            return this.userItem;
-        }
+        return this.userItem;
     };
     Object.defineProperty(SessionService.prototype, "userHomePage", {
         get: function () {
@@ -10479,8 +10457,7 @@ var SessionService = /** @class */ (function () {
             providedIn: 'root'
         }),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_ngx_pwa_local_storage__WEBPACK_IMPORTED_MODULE_3__["LocalStorage"],
-            _angular_router__WEBPACK_IMPORTED_MODULE_4__["Router"],
-            _user_features_user_service__WEBPACK_IMPORTED_MODULE_8__["UserService"]])
+            _angular_router__WEBPACK_IMPORTED_MODULE_4__["Router"]])
     ], SessionService);
     return SessionService;
 }());
@@ -11403,6 +11380,19 @@ var UserService = /** @class */ (function () {
         });
     };
     UserService.prototype.storeNgUser = function (user) {
+        var _this = this;
+        if (!user.sessionUser) {
+            this.createNewSessionUser(user)
+                .subscribe(function (sessionUser) {
+                user.sessionUser = sessionUser;
+                _this.storeUser(user);
+            });
+        }
+        else {
+            this.storeUser(user);
+        }
+    };
+    UserService.prototype.storeUser = function (user) {
         this.dataStore.detail = user.detail;
         this.userDetail$.next(user.detail);
         this.dataStore.user = user;
@@ -11411,13 +11401,14 @@ var UserService = /** @class */ (function () {
         this.setLocalStorageUser(this.dataStore.user);
     };
     UserService.prototype.createNewSessionUser = function (user) {
-        user.sessionUser = {
+        var dto = {
             id: null,
             sessionClient: user.clients[0].clientId,
             client: user.clients[0],
             userId: user.id
         };
-        return this.updateUser(user, user.detail);
+        var url = this.api + "user-session";
+        return this.http.post(url, dto);
     };
     UserService.prototype.updateUser = function (user, detail) {
         var _this = this;
@@ -11547,6 +11538,12 @@ var UserService = /** @class */ (function () {
         this.user$.next(null);
         this.dataStore.detail = null;
         this.userDetail$.next(null);
+    };
+    UserService.prototype.getActiveClientName = function () {
+        var currentUser = this.user$.getValue();
+        if (currentUser == null)
+            return '';
+        return currentUser.sessionUser.client.name;
     };
     /**
      * This sets the session user. It will save/overwrite any existing user information for the logged in

@@ -12,7 +12,9 @@ use App\Http\RoleService;
 use App\Http\UserService;
 use App\Http\AgentService;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use App\Http\Resources\ApiResource;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
@@ -435,6 +437,29 @@ class UserController extends Controller
         return $result
             ->setData($role)
             ->throwApiException()
+            ->getResponse();
+    }
+
+    public function saveNewSessionUser(Request $request)
+    {
+        $result = new ApiResource();
+
+        $su = new SessionUser;
+        $su->user_id = $request->userId;
+        $su->session_client = $request->sessionClient;
+        $res = $su->save();
+
+        if(!$res) 
+            return $result
+                ->setToFail()
+                ->throwApiException('Failed to save session, please reload the page.', Response::HTTP_INTERNAL_SERVER_ERROR)
+                ->getResponse();
+
+        $su = SessionUser::bySessionUserId($su->id)->first();
+
+        return $result
+            ->setData($su)
+            ->throwApiException('Failed to save session, please reload the page.', Response::HTTP_INTERNAL_SERVER_ERROR)
             ->getResponse();
     }
 

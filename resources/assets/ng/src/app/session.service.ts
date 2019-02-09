@@ -48,8 +48,7 @@ export class SessionService {
 
     constructor(
         private localStorage: LocalStorage, 
-        private router: Router,
-        private userService:UserService
+        private router: Router
     ) {
         // make sure we're removing expired cookies on app boot
         this.pruneExpiredStorage();
@@ -104,19 +103,7 @@ export class SessionService {
     }
 
     getUserItem():BehaviorSubject<User> {
-        const user = this.userItem.getValue();
-        if(!user.sessionUser) {
-            return BehaviorSubject.create((observer:Observer<User>) => {
-                this.userService.createNewSessionUser(user)
-                    .subscribe(user => {
-                        this.userItem.next(user);
-                        observer.next(user);
-                        observer.complete();
-                    });
-            });
-        } else {
-            return this.userItem;
-        }
+        return this.userItem;
     }
 
     get userHomePage() {

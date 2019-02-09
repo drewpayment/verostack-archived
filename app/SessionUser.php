@@ -33,6 +33,17 @@ class SessionUser extends Model
 		return $this->hasOne(Client::class, 'client_id', 'session_client');
 	}
 
+    /**
+	 * @param $query \Illuminate\Database\Eloquent\Builder
+	 * @param $id
+	 *
+	 * @return mixed \Illuminate\Database\Eloquent\Builder
+	 */
+    public function scopeBySessionUserId($query, $id)
+    {
+        return $query->where('id', $id);
+    }
+
 	/**
 	 * @param $query \Illuminate\Database\Eloquent\Builder
 	 * @param $id

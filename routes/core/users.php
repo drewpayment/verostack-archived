@@ -27,7 +27,7 @@ Route::group(['prefix' => 'users', 'middleware' => 'auth:api'], function() {
 
 //	Route::post('{userId}', 'UserController@updateUser');
 
-	Route::post('{userId:int}', 'UserController@updateUserInfo');
+	Route::post('{userId}', 'UserController@updateUserInfo');
 
 	Route::get('{userId}/roles/{roleId}', 'ApiController@getUsersByUserRole');
 

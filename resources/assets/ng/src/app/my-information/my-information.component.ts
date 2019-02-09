@@ -56,6 +56,7 @@ export class MyInformationComponent implements OnInit {
     ngOnInit() {
         this.session.showLoader();
         this.session.getUserItem().subscribe(user => {
+            if(user == null) return;
             this.user$ = of(user);
             this.user = user;
 

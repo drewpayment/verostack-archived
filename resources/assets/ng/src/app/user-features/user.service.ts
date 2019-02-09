@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {User, IUserDetail, IAgent, ILocalStorage} from '../models/index';
+import {User, IUserDetail, IAgent, ILocalStorage, SessionUser} from '../models/index';
 import {Observable, ReplaySubject, Subject, BehaviorSubject, of} from 'rxjs';
 
 import {SessionService} from '../session.service';
@@ -213,6 +213,19 @@ export class UserService {
     }
 
     storeNgUser(user: User): void {
+
+        if(!user.sessionUser) {
+            this.createNewSessionUser(user)
+                .subscribe(sessionUser => {
+                    user.sessionUser = sessionUser;
+                    this.storeUser(user);
+                });
+        } else {
+            this.storeUser(user);
+        }
+    }
+
+    private storeUser(user:User):void {
         this.dataStore.detail = user.detail;
         this.userDetail$.next(user.detail);
 
@@ -222,15 +235,16 @@ export class UserService {
         this.setLocalStorageUser(this.dataStore.user);
     }
 
-    createNewSessionUser(user:User):Observable<User> {
-        user.sessionUser = {
-            id:null,
+    createNewSessionUser(user:User):Observable<SessionUser> {
+        const dto:SessionUser = {
+            id: null,
             sessionClient: user.clients[0].clientId,
             client: user.clients[0],
             userId: user.id
         };
 
-        return this.updateUser(user, user.detail);
+        const url = `${this.api}user-session`;
+        return this.http.post<SessionUser>(url, dto);
     }
 
     updateUser(user: User, detail: IUserDetail):Observable<User> {
@@ -377,6 +391,12 @@ export class UserService {
         this.user$.next(null);
         this.dataStore.detail = null;
         this.userDetail$.next(null);
+    }
+
+    getActiveClientName():string {
+        const currentUser:User = this.user$.getValue();
+        if(currentUser == null) return '';
+        return currentUser.sessionUser.client.name;
     }
 
     /**
