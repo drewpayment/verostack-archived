@@ -2,7 +2,7 @@ import {Injectable, OnInit} from '@angular/core';
 import {HttpClient, HttpHeaders, HttpErrorResponse} from '@angular/common/http';
 import {ICampaign, Utility} from '../models';
 import {AuthService} from '../auth.service';
-import {throwError, Observable} from 'rxjs';
+import {throwError, Observable, Observer} from 'rxjs';
 import {catchError, tap} from 'rxjs/operators';
 
 @Injectable({
@@ -34,6 +34,23 @@ export class CampaignService {
     constructor(private http: HttpClient, private auth: AuthService) {
         this.apiUrl = this.auth.apiUrl + 'api/' || '';
         this.api = this.auth.apiUrl + 'api';
+    }
+
+    getCachedCampaigns(clientId:number, activeOnly:boolean = false):Observable<ICampaign[]> {
+        return Observable.create((observer:Observer<ICampaign[]>) => {
+            if(this._campaigns && this._campaigns.length) {
+                observer.next(this._campaigns);
+                observer.complete();
+            }
+            else {
+                this.getCampaigns(clientId, activeOnly)
+                    .then(campaigns => {
+                        this._campaigns = campaigns;
+                        observer.next(this._campaigns);
+                        observer.complete();
+                    });
+            }
+        });
     }
 
     // TODO: do I even use this anywhere?

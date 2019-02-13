@@ -25,3 +25,4 @@ export * from './payroll.model';
 export * from './payroll-detail.model';
 export * from './payroll-filter.model';
 export * from './paginator.model';
+export * from './user-type.enum';

@@ -8,6 +8,7 @@ import {ClientSelectorComponent} from '../client-selector/client-selector.compon
 import {Router} from '@angular/router';
 import {UserService} from '../user-features/user.service';
 import { SidenavService } from '@app/sidenav/sidenav.service';
+import { UserType } from '@app/models';
 
 @Component({
     selector: 'app-header',
@@ -43,8 +44,8 @@ export class HeaderComponent implements OnInit, AfterViewInit {
             if(next == null) return;
             this.user = next;
             this.menuTitle.next(this.userService.getActiveClientName());
-            this.showClientSelector = this.user.clients.length > 1 && this.user.role.role > 5;
-            this.isAdmin = this.user.role.role > 5;
+            this.showClientSelector = this.user.clients.length > 1 && this.user.role.role > UserType.HumanResources;
+            this.isAdmin = this.user.role.role > UserType.HumanResources;
         });
 
         this.navOpen = this.sidenavService.opened$.asObservable();

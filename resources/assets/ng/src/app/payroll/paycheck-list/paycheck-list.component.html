@@ -41,18 +41,36 @@
 
     <div class="row">
         <div class="col-md-12">
-            <mat-card>
-                <mat-card-content>
-                    <ng-container *ngLet="paychecks$|async as paychecks">
-                        <mat-list>
-                            <mat-list-item *ngFor="let p of paychecks">
+            <p class="text-muted font-italic">Displaying paychecks from ##/##/#### to ##/##/####.</p>
+        </div>  
+    </div>
+
+    <div class="row">
+        <ng-container *ngLet="paychecks$|async as paychecks">
+            <ng-container *ngFor="let p of paychecks">
+                <div class="col-md-4 py-2">
+                    <mat-card class="paystub">
+                        <mat-card-header>
+                            <mat-card-title>
                                 {{p.agent.firstName}} {{p.agent.lastName}}
-                            </mat-list-item>
-                        </mat-list>
-                    </ng-container>
-                </mat-card-content>
-                
-                <mat-card-actions>
+                            </mat-card-title>
+                            <mat-card-subtitle>{{p.payroll.campaign.name}}</mat-card-subtitle>
+                        </mat-card-header>
+                        <mat-card-content>
+                            <p class="h4 text-center">Net Total: {{p.netTotal | currency}}</p>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+            </ng-container>
+        </ng-container>
+    </div>
+
+    
+
+    <div class="row mt-3">
+        <div class="col-md-12">
+            <mat-card class="paginator p-0">
+                <mat-card-content>
                     <ng-container>
                         <mat-paginator
                             #paging
@@ -60,7 +78,7 @@
                             showFirstLastButtons="true"
                         ></mat-paginator>
                     </ng-container>
-                </mat-card-actions>
+                </mat-card-content>
             </mat-card>
         </div>
     </div>

@@ -1,11 +1,12 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { IAgent, PayrollDetails, User, Paginator } from '@app/models';
+import { IAgent, PayrollDetails, User, Paginator, ICampaign } from '@app/models';
 import { PaycheckService } from './paycheck.service';
 import { SessionService } from '@app/session.service';
 import { FormControl } from '@angular/forms';
 import { MatPaginator, PageEvent } from '@angular/material';
 import { BehaviorSubject } from 'rxjs';
 import { Moment } from '@app/shared';
+import { CampaignService } from '@app/campaigns/campaign.service';
 
 @Component({
     selector: 'vs-paycheck-list',
@@ -16,6 +17,7 @@ export class PaycheckListComponent implements OnInit {
 
     user:User;
     agents:IAgent[];
+    campaigns$ = new BehaviorSubject<ICampaign[]>(null);
     paginator:Paginator<PayrollDetails>;
     paychecks$ = new BehaviorSubject<PayrollDetails[]>(null);
     searchAgentsCtrl:FormControl;
@@ -23,7 +25,8 @@ export class PaycheckListComponent implements OnInit {
 
     constructor(
         private session:SessionService,
-        private service:PaycheckService
+        private service:PaycheckService,
+        private campaignService:CampaignService
     ) {}
 
     ngOnInit() {
@@ -31,7 +34,12 @@ export class PaycheckListComponent implements OnInit {
 
         this.session.getUserItem().subscribe(user => {
             this.user = user;
-            this.getPaychecks();
+
+            this.campaignService.getCachedCampaigns(user.sessionUser.sessionClient)
+                .subscribe(campaigns => {
+                    this.campaigns$.next(campaigns);
+                    this.getPaychecks();
+                });
         });
 
         this.paging.page.subscribe((event:PageEvent) => this.getPaychecks());
@@ -50,7 +58,26 @@ export class PaycheckListComponent implements OnInit {
                 this.paginator = paginator;
                 this.paging.length = this.paginator.total;
 
-                this.paychecks$.next(this.paginator.data);
+                let paychecks = this.paginator.data.sort((a, b) => {
+                    if(a.agent.lastName < b.agent.lastName)
+                        return -1;
+                    if(a.agent.lastName > b.agent.lastName)
+                        return 1;
+                    return 0;
+                }).sort((a, b) => {
+                    if(a.agent.firstName < b.agent.firstName)
+                        return -1;
+                    if(a.agent.firstName > b.agent.firstName)
+                        return 1;
+                    return 0;
+                });
+                
+                paychecks = paychecks.map(p => {
+                    p.payroll.campaign = this.campaigns$.value.find(c => c.campaignId == p.payroll.campaignId);
+                    return p;
+                });
+
+                this.paychecks$.next(paychecks);
             });
     }
 }

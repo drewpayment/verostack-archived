@@ -1,0 +1,52 @@
+@import "../../../scss/variables",
+        "../../../scss/colors",
+        "../../../scss/utilities";
+
+.paystub {
+    @extend .clickable;
+
+    padding: 0 0 1rem 0;
+    transition: 0.2s;
+
+    mat-card-header, mat-card-title {
+        color: $off-white;
+    }
+
+    /deep/ .mat-card-header-text {
+        width: 100%;
+    }
+
+    mat-card-subtitle {
+        color: darken($off-white, 10%);
+    }
+
+    mat-card-header {
+        padding: 0.5rem 0.25rem 0;
+        border-top-left-radius: 0.25rem;
+        border-top-right-radius: 0.25rem;
+
+        background-color: $charcoal;
+    }
+
+    mat-card-content {
+        color: $body-text;
+        padding: 0.5rem 1rem 0;
+        min-height: 3rem;
+
+        * {
+            color: $body-text;
+        }
+    }
+
+    &:hover {
+        box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    }
+}
+
+.paginator {
+    border-radius: 0.25rem;
+
+    mat-card-content, mat-paginator {
+        border-radius: 0.25rem;
+    }
+}
