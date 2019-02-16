@@ -50,3 +50,17 @@
         border-radius: 0.25rem;
     }
 }
+
+mat-header-row {
+    background-color: $mat-primary;
+    color: $off-white;
+    border-top-left-radius: 0.25rem;
+    border-top-right-radius: 0.25rem;
+
+    mat-header-cell {
+        color: inherit;
+        font-size: 1.25rem;
+        font-weight: 300;
+        letter-spacing: 1px;
+    }
+}

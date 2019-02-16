@@ -3,10 +3,11 @@ import { IAgent, PayrollDetails, User, Paginator, ICampaign } from '@app/models'
 import { PaycheckService } from './paycheck.service';
 import { SessionService } from '@app/session.service';
 import { FormControl } from '@angular/forms';
-import { MatPaginator, PageEvent } from '@angular/material';
+import { MatPaginator, PageEvent, MatSort, MatTable, MatTableDataSource } from '@angular/material';
 import { BehaviorSubject } from 'rxjs';
 import { Moment } from '@app/shared';
 import { CampaignService } from '@app/campaigns/campaign.service';
+import { PaycheckDetailService } from '../paycheck-detail/paycheck-detail.service';
 
 @Component({
     selector: 'vs-paycheck-list',
@@ -22,16 +23,21 @@ export class PaycheckListComponent implements OnInit {
     paychecks$ = new BehaviorSubject<PayrollDetails[]>(null);
     searchAgentsCtrl:FormControl;
     @ViewChild('paging') paging:MatPaginator;
+    @ViewChild(MatSort) sort:MatSort;
+    @ViewChild(MatTable) table:MatTable<PayrollDetails[]>;
+    startDate:Moment|Date|string;
+    endDate:Moment|Date|string;
+    hasSetSort:boolean = false;
 
     constructor(
         private session:SessionService,
         private service:PaycheckService,
-        private campaignService:CampaignService
-    ) {}
+        private campaignService:CampaignService,
+        private paycheckDetailService:PaycheckDetailService
+    ) {
+    }
 
     ngOnInit() {
-        this.paging.pageSize = 5;
-
         this.session.getUserItem().subscribe(user => {
             this.user = user;
 
@@ -41,8 +47,14 @@ export class PaycheckListComponent implements OnInit {
                     this.getPaychecks();
                 });
         });
+    }
 
-        this.paging.page.subscribe((event:PageEvent) => this.getPaychecks());
+    sortTable($event) {
+        console.dir($event);
+    }
+
+    clickPaystub(detail:PayrollDetails) {
+        this.paycheckDetailService.navigateToDetail(detail);
     }
 
     private getPaychecks(
@@ -77,6 +89,16 @@ export class PaycheckListComponent implements OnInit {
                     return p;
                 });
 
+                if(paychecks != null) {
+                    this.startDate = paychecks.sort((a,b) => {
+                        return <any>(Date.parse(<string>a.payroll.payCycle.startDate) > Date.parse(<string>b.payroll.payCycle.startDate));
+                    })[0].payroll.payCycle.startDate;
+
+                    this.endDate = paychecks.sort((a,b) => {
+                        return <any>(Date.parse(<string>a.payroll.payCycle.endDate) < Date.parse(<string>b.payroll.payCycle.endDate));
+                    })[0].payroll.payCycle.endDate;
+                }
+                
                 this.paychecks$.next(paychecks);
             });
     }

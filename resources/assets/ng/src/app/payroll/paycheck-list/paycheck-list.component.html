@@ -5,7 +5,7 @@
             <mat-card class="page-header-accent">
                 <mat-card-content class="d-flex justify-content-between">
                     <h3>
-                        Paycheck List
+                        Paychecks
                     </h3>
 
                     <!-- FILTERING/CONTROLS AREA
@@ -40,46 +40,67 @@
     </div>
 
     <div class="row">
-        <div class="col-md-12">
-            <p class="text-muted font-italic">Displaying paychecks from ##/##/#### to ##/##/####.</p>
+        <div class="col-md-12 d-flex" [class.justify-content-between]="startDate != null && endDate != null">
+            <div>
+                Filter Controls Here...                
+            </div>
+            <ng-container *ngIf="startDate != null && endDate != null">
+                <p class="text-muted font-italic">Displaying paychecks from {{startDate | date:'shortDate'}} to {{endDate | date:'shortDate'}}.</p>
+            </ng-container>
         </div>  
     </div>
 
     <div class="row">
-        <ng-container *ngLet="paychecks$|async as paychecks">
-            <ng-container *ngFor="let p of paychecks">
-                <div class="col-md-4 py-2">
-                    <mat-card class="paystub">
-                        <mat-card-header>
-                            <mat-card-title>
-                                {{p.agent.firstName}} {{p.agent.lastName}}
-                            </mat-card-title>
-                            <mat-card-subtitle>{{p.payroll.campaign.name}}</mat-card-subtitle>
-                        </mat-card-header>
-                        <mat-card-content>
-                            <p class="h4 text-center">Net Total: {{p.netTotal | currency}}</p>
-                        </mat-card-content>
-                    </mat-card>
+        <!-- <ng-container *ngLet="paychecks$|async as paychecks"> -->
+            <div class="col-md-12">
+                <div class="mat-elevation-z2">
+                    <mat-table [dataSource]="paychecks$|async" matSort (matSortChange)="sortTable($event)">
+                        <ng-container matColumnDef="agentName">
+                            <mat-header-cell *matHeaderCellDef mat-sort-header>Name</mat-header-cell>
+                            <mat-cell *matCellDef="let item">{{item.agent.firstName}} {{item.agent.lastName}}</mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="weekEnding">
+                            <mat-header-cell *matHeaderCellDef mat-sort-header>Invoice Date</mat-header-cell>
+                            <mat-cell *matCellDef="let item">{{item.payroll.weekEnding | date:'mediumDate'}}</mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="campaign">
+                            <mat-header-cell *matHeaderCellDef mat-sort-header>Campaign</mat-header-cell>
+                            <mat-cell *matCellDef="let item">{{item.payroll.campaign.name}}</mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="amount">
+                            <mat-header-cell *matHeaderCellDef>Amount</mat-header-cell>
+                            <mat-cell *matCellDef="let item">{{item.netTotal | currency}}</mat-cell>
+                        </ng-container>
+
+                        <mat-header-row *matHeaderRowDef="['agentName', 'weekEnding', 'campaign', 'amount']"></mat-header-row>
+                        <mat-row *matRowDef="let row; columns:['agentName', 'weekEnding', 'campaign', 'amount']"></mat-row>
+                    </mat-table>
+                    <mat-paginator
+                        #paging
+                        [pageSize]="5"
+                        [pageSizeOptions]="[1, 5, 10, 25]"
+                        showFirstLastButtons="true"
+                        (page)="getPaychecks()"
+                    ></mat-paginator>
                 </div>
-            </ng-container>
-        </ng-container>
+            </div>
+        <!-- </ng-container> -->
     </div>
 
     
 
-    <div class="row mt-3">
+    <!-- <div class="row mt-3">
         <div class="col-md-12">
             <mat-card class="paginator p-0">
                 <mat-card-content>
                     <ng-container>
-                        <mat-paginator
-                            #paging
-                            [pageSizeOptions]="[1, 5, 10, 25]"
-                            showFirstLastButtons="true"
-                        ></mat-paginator>
+                        
                     </ng-container>
                 </mat-card-content>
             </mat-card>
         </div>
-    </div>
+    </div> -->
 </div>

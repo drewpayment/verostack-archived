@@ -24,6 +24,8 @@ import { ConfirmUnpaidSelectionDialogComponent } from './pay-cycle/components/co
 import { PayCycleDialogComponent } from './pay-cycle/components/pay-cycle-dialog/pay-cycle-dialog.component';
 import { RouterModule, Route } from '@angular/router';
 import { AuthGuard } from '@app/auth.guard';
+import { PaycheckDetailComponent } from './paycheck-detail/paycheck-detail.component';
+import { PaycheckDetailService } from './paycheck-detail/paycheck-detail.service';
 
 const routes:Route[] = [{ 
     path: 'admin/pay', 
@@ -31,7 +33,13 @@ const routes:Route[] = [{
         { path: 'pay-cycles', component: PayCycleComponent, canActivate: [AuthGuard] },
         { path: 'pay-cycles/edit/:payCycleId', component: EditPayCycleComponent, canActivate: [AuthGuard] },
         { path: 'manage', component: PayrollListComponent, canActivate: [AuthGuard] },
-        { path: 'paycheck-list', component: PaycheckListComponent, canActivate: [AuthGuard] }
+        { path: 'paycheck-list', component: PaycheckListComponent, canActivate: [AuthGuard] },
+        { 
+            path: 'paycheck-detail', 
+            component: PaycheckDetailComponent, 
+            canActivate: [AuthGuard],
+            resolve: PaycheckDetailService
+        }
     ]
 }];
 
@@ -64,7 +72,8 @@ const routes:Route[] = [{
         PaycheckListComponent,
         PayCycleComponent,
         EditPayCycleComponent,
-        ConfirmUnpaidSelectionDialogComponent
+        ConfirmUnpaidSelectionDialogComponent,
+        PaycheckDetailComponent
     ],
     exports: [
         // not sure why i was exporting these??? 
@@ -91,6 +100,9 @@ const routes:Route[] = [{
         ScheduleAutoReleaseDialogComponent,
         ConfirmAutoreleaseDateDialogComponent,
         ConfirmReleaseDialogComponent
+    ],
+    providers: [
+        PaycheckDetailService
     ]
 })
 export class PayrollModule {}
