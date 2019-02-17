@@ -8871,7 +8871,7 @@ var PaycheckDetailService = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n<div class=\"container\">\n    <div class=\"row mb-2\">\n        <div class=\"col-md-12\">\n            <mat-card class=\"page-header-accent\">\n                <mat-card-content class=\"d-flex justify-content-between\">\n                    <h3>\n                        Paychecks\n                    </h3>\n\n                    <!-- FILTERING/CONTROLS AREA\n                    <div>\n                        <mat-slide-toggle \n                            [checked]=\"showClosed\" \n                            (change)=\"switchDisplay()\"\n                            class=\"my-0 mr-2\"\n                        >\n                            Show Closed\n                        </mat-slide-toggle>\n                        <button type=\"button\" mat-stroked-button color=\"primary\" (click)=\"addPayCycle()\">\n                            <mat-icon inline=\"true\">add</mat-icon>\n                            <span>Payroll</span>\n                        </button>\n                    </div> -->\n                    <!-- <div>\n                        <mat-form-field class=\"w-100\">\n                            <input matInput \n                                placeholder=\"Search Agents\" \n                                aria-label=\"Search Agents\" \n                                [matAutoComplete]=\"searchAgents\" \n                                [formControl]=\"searchAgentsCtrl\" />\n                            <mat-autocomplete #searchAgents=\"matAutocomplete\">\n                                <mat-option *ngFor=\"\"></mat-option>\n                            </mat-autocomplete>\n                        </mat-form-field>\n                    </div> -->\n                    <ng-container *ngIf=\"startDate != null && endDate != null\">\n                        <p class=\"text-muted font-italic m-0 p-0\">Displaying paychecks from {{startDate | date:'shortDate'}} to {{endDate | date:'shortDate'}}.</p>\n                    </ng-container>\n                </mat-card-content>\n            </mat-card>\n        </div>\n    </div>\n\n    <div class=\"row\">\n        <div class=\"col-md-12\">\n            <mat-form-field class=\"ml-2\">\n                <input type=\"text\" \n                    matInput \n                    placeholder=\"Filter\"\n                    (keyup)=\"filterTable($event.target.value)\" />\n            </mat-form-field>\n        </div>  \n    </div>\n\n    <div class=\"row\">\n        <!-- <ng-container *ngLet=\"paychecks$|async as paychecks\"> -->\n            <div class=\"col-md-12\">\n                <div class=\"mat-elevation-z2\">\n                    <mat-table [dataSource]=\"paychecks$\" matSort (matSortChange)=\"sortTable($event)\">\n                        <ng-container matColumnDef=\"agentName\">\n                            <mat-header-cell *matHeaderCellDef mat-sort-header>Name</mat-header-cell>\n                            <mat-cell *matCellDef=\"let item\">{{item.agent.firstName}} {{item.agent.lastName}}</mat-cell>\n                        </ng-container>\n\n                        <ng-container matColumnDef=\"weekEnding\">\n                            <mat-header-cell *matHeaderCellDef mat-sort-header>Invoice Date</mat-header-cell>\n                            <mat-cell *matCellDef=\"let item\">{{item.payroll.weekEnding | date:'mediumDate'}}</mat-cell>\n                        </ng-container>\n\n                        <ng-container matColumnDef=\"campaign\">\n                            <mat-header-cell *matHeaderCellDef mat-sort-header>Campaign</mat-header-cell>\n                            <mat-cell *matCellDef=\"let item\">{{item.payroll.campaign.name}}</mat-cell>\n                        </ng-container>\n\n                        <ng-container matColumnDef=\"amount\">\n                            <mat-header-cell *matHeaderCellDef mat-sort-header>Amount</mat-header-cell>\n                            <mat-cell *matCellDef=\"let item\">{{item.grossTotal | currency}}</mat-cell>\n                        </ng-container>\n\n                        <mat-header-row *matHeaderRowDef=\"['agentName', 'weekEnding', 'campaign', 'amount']\"></mat-header-row>\n                        <mat-row *matRowDef=\"let row; columns:['agentName', 'weekEnding', 'campaign', 'amount']\"></mat-row>\n                    </mat-table>\n                    <mat-paginator\n                        #paging\n                        [pageSize]=\"5\"\n                        [pageSizeOptions]=\"[1, 5, 10, 25]\"\n                        showFirstLastButtons=\"true\"\n                        (page)=\"getPaychecks()\"\n                    ></mat-paginator>\n                </div>\n            </div>\n        <!-- </ng-container> -->\n    </div>\n\n    \n\n    <!-- <div class=\"row mt-3\">\n        <div class=\"col-md-12\">\n            <mat-card class=\"paginator p-0\">\n                <mat-card-content>\n                    <ng-container>\n                        \n                    </ng-container>\n                </mat-card-content>\n            </mat-card>\n        </div>\n    </div> -->\n</div>"
+module.exports = "\n<div class=\"container\">\n    <div class=\"row mb-2\">\n        <div class=\"col-md-12\">\n            <mat-card class=\"page-header-accent\">\n                <mat-card-content class=\"d-flex justify-content-between\">\n                    <h3>Paychecks</h3>\n                    <ng-container *ngIf=\"startDate != null && endDate != null\">\n                        <p class=\"text-muted font-italic m-0 p-0\">Displaying paychecks from {{startDate | date:'shortDate'}} to {{endDate | date:'shortDate'}}.</p>\n                    </ng-container>\n                </mat-card-content>\n            </mat-card>\n        </div>\n    </div>\n\n    <div class=\"row\">\n        <div class=\"col-md-12\">\n            <mat-form-field class=\"ml-2\">\n                <input type=\"text\" \n                    matInput \n                    placeholder=\"Filter\"\n                    [formControl]=\"searchInput\" />\n            </mat-form-field>\n        </div>  \n    </div>\n\n    <div class=\"row\">\n        <!-- <ng-container *ngLet=\"paychecks$|async as paychecks\"> -->\n            <div class=\"col-md-12\">\n                <div class=\"mat-elevation-z2\">\n                    <mat-table [dataSource]=\"paychecks$\" matSort (matSortChange)=\"sortTable($event)\">\n                        <ng-container matColumnDef=\"agentName\">\n                            <mat-header-cell *matHeaderCellDef mat-sort-header>Name</mat-header-cell>\n                            <mat-cell *matCellDef=\"let item\">{{item.agent.firstName}} {{item.agent.lastName}}</mat-cell>\n                        </ng-container>\n\n                        <ng-container matColumnDef=\"weekEnding\">\n                            <mat-header-cell *matHeaderCellDef mat-sort-header>Invoice Date</mat-header-cell>\n                            <mat-cell *matCellDef=\"let item\">{{item.payroll.weekEnding | date:'mediumDate'}}</mat-cell>\n                        </ng-container>\n\n                        <ng-container matColumnDef=\"campaign\">\n                            <mat-header-cell *matHeaderCellDef mat-sort-header>Campaign</mat-header-cell>\n                            <mat-cell *matCellDef=\"let item\">{{item.payroll.campaign.name}}</mat-cell>\n                        </ng-container>\n\n                        <ng-container matColumnDef=\"amount\">\n                            <mat-header-cell *matHeaderCellDef mat-sort-header>Amount</mat-header-cell>\n                            <mat-cell *matCellDef=\"let item\">{{item.grossTotal | currency}}</mat-cell>\n                        </ng-container>\n\n                        <mat-header-row *matHeaderRowDef=\"['agentName', 'weekEnding', 'campaign', 'amount']\"></mat-header-row>\n                        <mat-row *matRowDef=\"let row; columns:['agentName', 'weekEnding', 'campaign', 'amount']\"></mat-row>\n                    </mat-table>\n                    <mat-paginator\n                        #paging\n                        [pageSize]=\"5\"\n                        [pageSizeOptions]=\"[1, 5, 10, 25]\"\n                        showFirstLastButtons=\"true\"\n                        (page)=\"getPaychecks()\"\n                    ></mat-paginator>\n                </div>\n            </div>\n        <!-- </ng-container> -->\n    </div>\n\n    \n\n    <!-- <div class=\"row mt-3\">\n        <div class=\"col-md-12\">\n            <mat-card class=\"paginator p-0\">\n                <mat-card-content>\n                    <ng-container>\n                        \n                    </ng-container>\n                </mat-card-content>\n            </mat-card>\n        </div>\n    </div> -->\n</div>"
 
 /***/ }),
 
@@ -8900,11 +8900,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _paycheck_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./paycheck.service */ "./src/app/payroll/paycheck-list/paycheck.service.ts");
 /* harmony import */ var _app_session_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @app/session.service */ "./src/app/session.service.ts");
-/* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/material */ "./node_modules/@angular/material/esm5/material.es5.js");
-/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
-/* harmony import */ var _app_campaigns_campaign_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @app/campaigns/campaign.service */ "./src/app/campaigns/campaign.service.ts");
-/* harmony import */ var _paycheck_detail_paycheck_detail_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../paycheck-detail/paycheck-detail.service */ "./src/app/payroll/paycheck-detail/paycheck-detail.service.ts");
-/* harmony import */ var _app_utils__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @app/utils */ "./src/app/utils/index.ts");
+/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
+/* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @angular/material */ "./node_modules/@angular/material/esm5/material.es5.js");
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
+/* harmony import */ var _app_campaigns_campaign_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @app/campaigns/campaign.service */ "./src/app/campaigns/campaign.service.ts");
+/* harmony import */ var _paycheck_detail_paycheck_detail_service__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../paycheck-detail/paycheck-detail.service */ "./src/app/payroll/paycheck-detail/paycheck-detail.service.ts");
+/* harmony import */ var _app_utils__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @app/utils */ "./src/app/utils/index.ts");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_10__);
+/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
+
+
+
 
 
 
@@ -8920,12 +8927,15 @@ var PaycheckListComponent = /** @class */ (function () {
         this.service = service;
         this.campaignService = campaignService;
         this.paycheckDetailService = paycheckDetailService;
-        this.campaigns$ = new rxjs__WEBPACK_IMPORTED_MODULE_5__["BehaviorSubject"](null);
-        this.paychecks$ = new rxjs__WEBPACK_IMPORTED_MODULE_5__["BehaviorSubject"](null);
+        this.campaigns$ = new rxjs__WEBPACK_IMPORTED_MODULE_6__["BehaviorSubject"](null);
+        this.paychecks$ = new rxjs__WEBPACK_IMPORTED_MODULE_6__["BehaviorSubject"](null);
         this.hasSetSort = false;
+        this.searchInput = new _angular_forms__WEBPACK_IMPORTED_MODULE_4__["FormControl"]('');
     }
     PaycheckListComponent.prototype.ngOnInit = function () {
         var _this = this;
+        this.searchInput.valueChanges
+            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_11__["debounceTime"])(250), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_11__["distinctUntilChanged"])()).subscribe(function (val) { return _this.filterTable(val); });
         this.session.getUserItem().subscribe(function (user) {
             _this.user = user;
             _this.campaignService.getCachedCampaigns(user.sessionUser.sessionClient)
@@ -8940,7 +8950,19 @@ var PaycheckListComponent = /** @class */ (function () {
         this.paychecks$.next(result);
     };
     PaycheckListComponent.prototype.filterTable = function (filterValue) {
-        this.table.dataSource.filter = filterValue.trim().toLowerCase();
+        if (filterValue == null)
+            return this.paychecks$.next(this._paychecks);
+        filterValue = filterValue.trim().toLowerCase();
+        var paychecks = this._paychecks;
+        var firstNameResults = paychecks.filter(function (p) { return p.agent.firstName.toLowerCase().indexOf(filterValue) > -1; });
+        var lastNameResults = paychecks.filter(function (p) { return p.agent.lastName.toLowerCase().indexOf(filterValue) > -1; });
+        var weekEndingResults = paychecks.filter(function (p) {
+            return moment__WEBPACK_IMPORTED_MODULE_10__(p.payroll.weekEnding).format('MMM d, YYYY').indexOf(filterValue) > -1;
+        });
+        var campaignResults = paychecks.filter(function (p) { return p.payroll.campaign.name.indexOf(filterValue) > -1; });
+        var amountResults = paychecks.filter(function (p) { return p.grossTotal.toString().indexOf(filterValue) > -1; });
+        var result = Object.assign({}, firstNameResults, lastNameResults, weekEndingResults, campaignResults, amountResults);
+        this.paychecks$.next(result);
     };
     PaycheckListComponent.prototype.sortPaychecksBy = function (prop, direction) {
         var lessThanType = direction == 'asc' ? -1 : 1;
@@ -9026,24 +9048,25 @@ var PaycheckListComponent = /** @class */ (function () {
                     return (Date.parse(a.payroll.payCycle.endDate) < Date.parse(b.payroll.payCycle.endDate));
                 })[0].payroll.payCycle.endDate;
             }
+            _this._paychecks = paychecks;
             _this.paychecks$.next(paychecks);
         });
     };
     PaycheckListComponent.prototype.calculateGrossTotal = function (detail) {
-        var amount = Object(_app_utils__WEBPACK_IMPORTED_MODULE_8__["coerceNumberProperty"])(detail.grossTotal);
+        var amount = Object(_app_utils__WEBPACK_IMPORTED_MODULE_9__["coerceNumberProperty"])(detail.grossTotal);
         var expensesTotal = 0;
         var overridesTotal = 0;
-        detail.expenses.forEach(function (e) { return expensesTotal += Object(_app_utils__WEBPACK_IMPORTED_MODULE_8__["coerceNumberProperty"])(e.amount); });
-        detail.overrides.forEach(function (o) { return overridesTotal += Object(_app_utils__WEBPACK_IMPORTED_MODULE_8__["coerceNumberProperty"])(o.amount); });
+        detail.expenses.forEach(function (e) { return expensesTotal += Object(_app_utils__WEBPACK_IMPORTED_MODULE_9__["coerceNumberProperty"])(e.amount); });
+        detail.overrides.forEach(function (o) { return overridesTotal += Object(_app_utils__WEBPACK_IMPORTED_MODULE_9__["coerceNumberProperty"])(o.amount); });
         return amount + expensesTotal + overridesTotal;
     };
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewChild"])('paging'),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", _angular_material__WEBPACK_IMPORTED_MODULE_4__["MatPaginator"])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", _angular_material__WEBPACK_IMPORTED_MODULE_5__["MatPaginator"])
     ], PaycheckListComponent.prototype, "paging", void 0);
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewChild"])(_angular_material__WEBPACK_IMPORTED_MODULE_4__["MatTable"]),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", _angular_material__WEBPACK_IMPORTED_MODULE_4__["MatTable"])
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewChild"])(_angular_material__WEBPACK_IMPORTED_MODULE_5__["MatTable"]),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", _angular_material__WEBPACK_IMPORTED_MODULE_5__["MatTable"])
     ], PaycheckListComponent.prototype, "table", void 0);
     PaycheckListComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
@@ -9053,8 +9076,8 @@ var PaycheckListComponent = /** @class */ (function () {
         }),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_app_session_service__WEBPACK_IMPORTED_MODULE_3__["SessionService"],
             _paycheck_service__WEBPACK_IMPORTED_MODULE_2__["PaycheckService"],
-            _app_campaigns_campaign_service__WEBPACK_IMPORTED_MODULE_6__["CampaignService"],
-            _paycheck_detail_paycheck_detail_service__WEBPACK_IMPORTED_MODULE_7__["PaycheckDetailService"]])
+            _app_campaigns_campaign_service__WEBPACK_IMPORTED_MODULE_7__["CampaignService"],
+            _paycheck_detail_paycheck_detail_service__WEBPACK_IMPORTED_MODULE_8__["PaycheckDetailService"]])
     ], PaycheckListComponent);
     return PaycheckListComponent;
 }());

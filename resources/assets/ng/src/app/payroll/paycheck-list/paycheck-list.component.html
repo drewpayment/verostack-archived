@@ -4,36 +4,7 @@
         <div class="col-md-12">
             <mat-card class="page-header-accent">
                 <mat-card-content class="d-flex justify-content-between">
-                    <h3>
-                        Paychecks
-                    </h3>
-
-                    <!-- FILTERING/CONTROLS AREA
-                    <div>
-                        <mat-slide-toggle 
-                            [checked]="showClosed" 
-                            (change)="switchDisplay()"
-                            class="my-0 mr-2"
-                        >
-                            Show Closed
-                        </mat-slide-toggle>
-                        <button type="button" mat-stroked-button color="primary" (click)="addPayCycle()">
-                            <mat-icon inline="true">add</mat-icon>
-                            <span>Payroll</span>
-                        </button>
-                    </div> -->
-                    <!-- <div>
-                        <mat-form-field class="w-100">
-                            <input matInput 
-                                placeholder="Search Agents" 
-                                aria-label="Search Agents" 
-                                [matAutoComplete]="searchAgents" 
-                                [formControl]="searchAgentsCtrl" />
-                            <mat-autocomplete #searchAgents="matAutocomplete">
-                                <mat-option *ngFor=""></mat-option>
-                            </mat-autocomplete>
-                        </mat-form-field>
-                    </div> -->
+                    <h3>Paychecks</h3>
                     <ng-container *ngIf="startDate != null && endDate != null">
                         <p class="text-muted font-italic m-0 p-0">Displaying paychecks from {{startDate | date:'shortDate'}} to {{endDate | date:'shortDate'}}.</p>
                     </ng-container>
@@ -48,7 +19,7 @@
                 <input type="text" 
                     matInput 
                     placeholder="Filter"
-                    (keyup)="filterTable($event.target.value)" />
+                    [formControl]="searchInput" />
             </mat-form-field>
         </div>  
     </div>

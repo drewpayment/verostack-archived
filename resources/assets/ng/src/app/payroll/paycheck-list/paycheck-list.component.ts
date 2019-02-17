@@ -9,6 +9,8 @@ import { Moment } from '@app/shared';
 import { CampaignService } from '@app/campaigns/campaign.service';
 import { PaycheckDetailService } from '../paycheck-detail/paycheck-detail.service';
 import { coerceNumberProperty } from '@app/utils';
+import * as moment from 'moment';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 
 @Component({
@@ -22,6 +24,7 @@ export class PaycheckListComponent implements OnInit {
     agents:IAgent[];
     campaigns$ = new BehaviorSubject<ICampaign[]>(null);
     paginator:Paginator<PayrollDetails>;
+    private _paychecks:PayrollDetails[];
     paychecks$ = new BehaviorSubject<PayrollDetails[]>(null);
     searchAgentsCtrl:FormControl;
     @ViewChild('paging') paging:MatPaginator;
@@ -30,6 +33,7 @@ export class PaycheckListComponent implements OnInit {
     endDate:Moment|Date|string;
     hasSetSort:boolean = false;
 
+    searchInput = new FormControl('');
 
 
     constructor(
@@ -41,6 +45,12 @@ export class PaycheckListComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.searchInput.valueChanges
+            .pipe(
+                debounceTime(250),
+                distinctUntilChanged()
+            ).subscribe(val => this.filterTable(val));
+
         this.session.getUserItem().subscribe(user => {
             this.user = user;
 
@@ -58,7 +68,20 @@ export class PaycheckListComponent implements OnInit {
     }
 
     filterTable(filterValue:string):void {
-        (<MatTableDataSource<PayrollDetails>>this.table.dataSource).filter = filterValue.trim().toLowerCase();
+        if(filterValue == null) 
+            return this.paychecks$.next(this._paychecks);
+        filterValue = filterValue.trim().toLowerCase();
+        const paychecks = this._paychecks;
+        const firstNameResults = paychecks.filter(p => p.agent.firstName.toLowerCase().indexOf(filterValue) > -1);
+        const lastNameResults = paychecks.filter(p => p.agent.lastName.toLowerCase().indexOf(filterValue) > -1);
+        const weekEndingResults = paychecks.filter(p => {
+            return moment(p.payroll.weekEnding).format('MMM d, YYYY').indexOf(filterValue) > -1;
+        });
+        const campaignResults = paychecks.filter(p => p.payroll.campaign.name.indexOf(filterValue) > -1);
+        const amountResults = paychecks.filter(p => p.grossTotal.toString().indexOf(filterValue) > -1);
+
+        const result = Object.assign({}, firstNameResults, lastNameResults, weekEndingResults, campaignResults, amountResults);
+        this.paychecks$.next(result);
     }
 
     sortPaychecksBy(prop:string, direction:SortDirection):PayrollDetails[] {
@@ -159,6 +182,7 @@ export class PaycheckListComponent implements OnInit {
                     })[0].payroll.payCycle.endDate;
                 }
                 
+                this._paychecks = paychecks;
                 this.paychecks$.next(paychecks);
             });
     }
