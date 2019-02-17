@@ -8871,7 +8871,7 @@ var PaycheckDetailService = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n<div class=\"container\">\n    <div class=\"row mb-2\">\n        <div class=\"col-md-12\">\n            <mat-card class=\"page-header-accent\">\n                <mat-card-content class=\"d-flex justify-content-between\">\n                    <h3>\n                        Paychecks\n                    </h3>\n\n                    <!-- FILTERING/CONTROLS AREA\n                    <div>\n                        <mat-slide-toggle \n                            [checked]=\"showClosed\" \n                            (change)=\"switchDisplay()\"\n                            class=\"my-0 mr-2\"\n                        >\n                            Show Closed\n                        </mat-slide-toggle>\n                        <button type=\"button\" mat-stroked-button color=\"primary\" (click)=\"addPayCycle()\">\n                            <mat-icon inline=\"true\">add</mat-icon>\n                            <span>Payroll</span>\n                        </button>\n                    </div> -->\n                    <!-- <div>\n                        <mat-form-field class=\"w-100\">\n                            <input matInput \n                                placeholder=\"Search Agents\" \n                                aria-label=\"Search Agents\" \n                                [matAutoComplete]=\"searchAgents\" \n                                [formControl]=\"searchAgentsCtrl\" />\n                            <mat-autocomplete #searchAgents=\"matAutocomplete\">\n                                <mat-option *ngFor=\"\"></mat-option>\n                            </mat-autocomplete>\n                        </mat-form-field>\n                    </div> -->\n                </mat-card-content>\n            </mat-card>\n        </div>\n    </div>\n\n    <div class=\"row\">\n        <div class=\"col-md-12 d-flex\" [class.justify-content-between]=\"startDate != null && endDate != null\">\n            <div>\n                Filter Controls Here...                \n            </div>\n            <ng-container *ngIf=\"startDate != null && endDate != null\">\n                <p class=\"text-muted font-italic\">Displaying paychecks from {{startDate | date:'shortDate'}} to {{endDate | date:'shortDate'}}.</p>\n            </ng-container>\n        </div>  \n    </div>\n\n    <div class=\"row\">\n        <!-- <ng-container *ngLet=\"paychecks$|async as paychecks\"> -->\n            <div class=\"col-md-12\">\n                <div class=\"mat-elevation-z2\">\n                    <mat-table [dataSource]=\"paychecks$|async\" matSort (matSortChange)=\"sortTable($event)\">\n                        <ng-container matColumnDef=\"agentName\">\n                            <mat-header-cell *matHeaderCellDef mat-sort-header>Name</mat-header-cell>\n                            <mat-cell *matCellDef=\"let item\">{{item.agent.firstName}} {{item.agent.lastName}}</mat-cell>\n                        </ng-container>\n\n                        <ng-container matColumnDef=\"weekEnding\">\n                            <mat-header-cell *matHeaderCellDef mat-sort-header>Invoice Date</mat-header-cell>\n                            <mat-cell *matCellDef=\"let item\">{{item.payroll.weekEnding | date:'mediumDate'}}</mat-cell>\n                        </ng-container>\n\n                        <ng-container matColumnDef=\"campaign\">\n                            <mat-header-cell *matHeaderCellDef mat-sort-header>Campaign</mat-header-cell>\n                            <mat-cell *matCellDef=\"let item\">{{item.payroll.campaign.name}}</mat-cell>\n                        </ng-container>\n\n                        <ng-container matColumnDef=\"amount\">\n                            <mat-header-cell *matHeaderCellDef>Amount</mat-header-cell>\n                            <mat-cell *matCellDef=\"let item\">{{item.netTotal | currency}}</mat-cell>\n                        </ng-container>\n\n                        <mat-header-row *matHeaderRowDef=\"['agentName', 'weekEnding', 'campaign', 'amount']\"></mat-header-row>\n                        <mat-row *matRowDef=\"let row; columns:['agentName', 'weekEnding', 'campaign', 'amount']\"></mat-row>\n                    </mat-table>\n                    <mat-paginator\n                        #paging\n                        [pageSize]=\"5\"\n                        [pageSizeOptions]=\"[1, 5, 10, 25]\"\n                        showFirstLastButtons=\"true\"\n                        (page)=\"getPaychecks()\"\n                    ></mat-paginator>\n                </div>\n            </div>\n        <!-- </ng-container> -->\n    </div>\n\n    \n\n    <!-- <div class=\"row mt-3\">\n        <div class=\"col-md-12\">\n            <mat-card class=\"paginator p-0\">\n                <mat-card-content>\n                    <ng-container>\n                        \n                    </ng-container>\n                </mat-card-content>\n            </mat-card>\n        </div>\n    </div> -->\n</div>"
+module.exports = "\n<div class=\"container\">\n    <div class=\"row mb-2\">\n        <div class=\"col-md-12\">\n            <mat-card class=\"page-header-accent\">\n                <mat-card-content class=\"d-flex justify-content-between\">\n                    <h3>\n                        Paychecks\n                    </h3>\n\n                    <!-- FILTERING/CONTROLS AREA\n                    <div>\n                        <mat-slide-toggle \n                            [checked]=\"showClosed\" \n                            (change)=\"switchDisplay()\"\n                            class=\"my-0 mr-2\"\n                        >\n                            Show Closed\n                        </mat-slide-toggle>\n                        <button type=\"button\" mat-stroked-button color=\"primary\" (click)=\"addPayCycle()\">\n                            <mat-icon inline=\"true\">add</mat-icon>\n                            <span>Payroll</span>\n                        </button>\n                    </div> -->\n                    <!-- <div>\n                        <mat-form-field class=\"w-100\">\n                            <input matInput \n                                placeholder=\"Search Agents\" \n                                aria-label=\"Search Agents\" \n                                [matAutoComplete]=\"searchAgents\" \n                                [formControl]=\"searchAgentsCtrl\" />\n                            <mat-autocomplete #searchAgents=\"matAutocomplete\">\n                                <mat-option *ngFor=\"\"></mat-option>\n                            </mat-autocomplete>\n                        </mat-form-field>\n                    </div> -->\n                    <ng-container *ngIf=\"startDate != null && endDate != null\">\n                        <p class=\"text-muted font-italic m-0 p-0\">Displaying paychecks from {{startDate | date:'shortDate'}} to {{endDate | date:'shortDate'}}.</p>\n                    </ng-container>\n                </mat-card-content>\n            </mat-card>\n        </div>\n    </div>\n\n    <div class=\"row\">\n        <div class=\"col-md-12\">\n            <mat-form-field class=\"ml-2\">\n                <input type=\"text\" \n                    matInput \n                    placeholder=\"Filter\"\n                    (keyup)=\"filterTable($event.target.value)\" />\n            </mat-form-field>\n        </div>  \n    </div>\n\n    <div class=\"row\">\n        <!-- <ng-container *ngLet=\"paychecks$|async as paychecks\"> -->\n            <div class=\"col-md-12\">\n                <div class=\"mat-elevation-z2\">\n                    <mat-table [dataSource]=\"paychecks$\" matSort (matSortChange)=\"sortTable($event)\">\n                        <ng-container matColumnDef=\"agentName\">\n                            <mat-header-cell *matHeaderCellDef mat-sort-header>Name</mat-header-cell>\n                            <mat-cell *matCellDef=\"let item\">{{item.agent.firstName}} {{item.agent.lastName}}</mat-cell>\n                        </ng-container>\n\n                        <ng-container matColumnDef=\"weekEnding\">\n                            <mat-header-cell *matHeaderCellDef mat-sort-header>Invoice Date</mat-header-cell>\n                            <mat-cell *matCellDef=\"let item\">{{item.payroll.weekEnding | date:'mediumDate'}}</mat-cell>\n                        </ng-container>\n\n                        <ng-container matColumnDef=\"campaign\">\n                            <mat-header-cell *matHeaderCellDef mat-sort-header>Campaign</mat-header-cell>\n                            <mat-cell *matCellDef=\"let item\">{{item.payroll.campaign.name}}</mat-cell>\n                        </ng-container>\n\n                        <ng-container matColumnDef=\"amount\">\n                            <mat-header-cell *matHeaderCellDef mat-sort-header>Amount</mat-header-cell>\n                            <mat-cell *matCellDef=\"let item\">{{item.grossTotal | currency}}</mat-cell>\n                        </ng-container>\n\n                        <mat-header-row *matHeaderRowDef=\"['agentName', 'weekEnding', 'campaign', 'amount']\"></mat-header-row>\n                        <mat-row *matRowDef=\"let row; columns:['agentName', 'weekEnding', 'campaign', 'amount']\"></mat-row>\n                    </mat-table>\n                    <mat-paginator\n                        #paging\n                        [pageSize]=\"5\"\n                        [pageSizeOptions]=\"[1, 5, 10, 25]\"\n                        showFirstLastButtons=\"true\"\n                        (page)=\"getPaychecks()\"\n                    ></mat-paginator>\n                </div>\n            </div>\n        <!-- </ng-container> -->\n    </div>\n\n    \n\n    <!-- <div class=\"row mt-3\">\n        <div class=\"col-md-12\">\n            <mat-card class=\"paginator p-0\">\n                <mat-card-content>\n                    <ng-container>\n                        \n                    </ng-container>\n                </mat-card-content>\n            </mat-card>\n        </div>\n    </div> -->\n</div>"
 
 /***/ }),
 
@@ -8904,6 +8904,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
 /* harmony import */ var _app_campaigns_campaign_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @app/campaigns/campaign.service */ "./src/app/campaigns/campaign.service.ts");
 /* harmony import */ var _paycheck_detail_paycheck_detail_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../paycheck-detail/paycheck-detail.service */ "./src/app/payroll/paycheck-detail/paycheck-detail.service.ts");
+/* harmony import */ var _app_utils__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @app/utils */ "./src/app/utils/index.ts");
+
 
 
 
@@ -8933,8 +8935,58 @@ var PaycheckListComponent = /** @class */ (function () {
             });
         });
     };
-    PaycheckListComponent.prototype.sortTable = function ($event) {
-        console.dir($event);
+    PaycheckListComponent.prototype.sortTable = function (sort) {
+        var result = this.sortPaychecksBy(sort.active, sort.direction);
+        this.paychecks$.next(result);
+    };
+    PaycheckListComponent.prototype.filterTable = function (filterValue) {
+        this.table.dataSource.filter = filterValue.trim().toLowerCase();
+    };
+    PaycheckListComponent.prototype.sortPaychecksBy = function (prop, direction) {
+        var lessThanType = direction == 'asc' ? -1 : 1;
+        var greaterThanType = direction == 'asc' ? 1 : -1;
+        if (prop == 'agentName') {
+            return this.paychecks$.getValue().sort(function (a, b) {
+                if (a.agent.lastName < b.agent.lastName)
+                    return lessThanType;
+                if (a.agent.lastName > b.agent.lastName)
+                    return greaterThanType;
+                return 0;
+            }).sort(function (a, b) {
+                if (a.agent.firstName < b.agent.firstName)
+                    return lessThanType;
+                if (a.agent.firstName > b.agent.firstName)
+                    return greaterThanType;
+                return 0;
+            });
+        }
+        if (prop == 'weekEnding') {
+            return this.paychecks$.getValue().sort(function (a, b) {
+                if (Date.parse(a.payroll.weekEnding) < Date.parse(b.payroll.weekEnding))
+                    return lessThanType;
+                if (Date.parse(a.payroll.weekEnding) > Date.parse(b.payroll.weekEnding))
+                    return greaterThanType;
+                return 0;
+            });
+        }
+        if (prop == 'campaign') {
+            return this.paychecks$.getValue().sort(function (a, b) {
+                if (a.payroll.campaign.name < b.payroll.campaign.name)
+                    return lessThanType;
+                if (a.payroll.campaign.name > b.payroll.campaign.name)
+                    return greaterThanType;
+                return 0;
+            });
+        }
+        if (prop == 'amount') {
+            return this.paychecks$.getValue().sort(function (a, b) {
+                if (a.grossTotal < b.grossTotal)
+                    return lessThanType;
+                if (a.grossTotal > b.grossTotal)
+                    return greaterThanType;
+                return 0;
+            });
+        }
     };
     PaycheckListComponent.prototype.clickPaystub = function (detail) {
         this.paycheckDetailService.navigateToDetail(detail);
@@ -8963,11 +9015,12 @@ var PaycheckListComponent = /** @class */ (function () {
             });
             paychecks = paychecks.map(function (p) {
                 p.payroll.campaign = _this.campaigns$.value.find(function (c) { return c.campaignId == p.payroll.campaignId; });
+                p.grossTotal = _this.calculateGrossTotal(p);
                 return p;
             });
             if (paychecks != null) {
                 _this.startDate = paychecks.sort(function (a, b) {
-                    return (Date.parse(a.payroll.payCycle.startDate) > Date.parse(b.payroll.payCycle.startDate));
+                    return (Date.parse(a.payroll.payCycle.startDate) < Date.parse(b.payroll.payCycle.startDate));
                 })[0].payroll.payCycle.startDate;
                 _this.endDate = paychecks.sort(function (a, b) {
                     return (Date.parse(a.payroll.payCycle.endDate) < Date.parse(b.payroll.payCycle.endDate));
@@ -8976,14 +9029,18 @@ var PaycheckListComponent = /** @class */ (function () {
             _this.paychecks$.next(paychecks);
         });
     };
+    PaycheckListComponent.prototype.calculateGrossTotal = function (detail) {
+        var amount = Object(_app_utils__WEBPACK_IMPORTED_MODULE_8__["coerceNumberProperty"])(detail.grossTotal);
+        var expensesTotal = 0;
+        var overridesTotal = 0;
+        detail.expenses.forEach(function (e) { return expensesTotal += Object(_app_utils__WEBPACK_IMPORTED_MODULE_8__["coerceNumberProperty"])(e.amount); });
+        detail.overrides.forEach(function (o) { return overridesTotal += Object(_app_utils__WEBPACK_IMPORTED_MODULE_8__["coerceNumberProperty"])(o.amount); });
+        return amount + expensesTotal + overridesTotal;
+    };
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewChild"])('paging'),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", _angular_material__WEBPACK_IMPORTED_MODULE_4__["MatPaginator"])
     ], PaycheckListComponent.prototype, "paging", void 0);
-    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewChild"])(_angular_material__WEBPACK_IMPORTED_MODULE_4__["MatSort"]),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", _angular_material__WEBPACK_IMPORTED_MODULE_4__["MatSort"])
-    ], PaycheckListComponent.prototype, "sort", void 0);
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewChild"])(_angular_material__WEBPACK_IMPORTED_MODULE_4__["MatTable"]),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", _angular_material__WEBPACK_IMPORTED_MODULE_4__["MatTable"])
@@ -11798,6 +11855,61 @@ var UserService = /** @class */ (function () {
     return UserService;
 }());
 
+
+
+/***/ }),
+
+/***/ "./src/app/utils/index.ts":
+/*!********************************!*\
+  !*** ./src/app/utils/index.ts ***!
+  \********************************/
+/*! exports provided: coerceNumberProperty, _isNumberValue */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _number_property__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./number-property */ "./src/app/utils/number-property.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "coerceNumberProperty", function() { return _number_property__WEBPACK_IMPORTED_MODULE_0__["coerceNumberProperty"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "_isNumberValue", function() { return _number_property__WEBPACK_IMPORTED_MODULE_0__["_isNumberValue"]; });
+
+
+
+
+/***/ }),
+
+/***/ "./src/app/utils/number-property.ts":
+/*!******************************************!*\
+  !*** ./src/app/utils/number-property.ts ***!
+  \******************************************/
+/*! exports provided: coerceNumberProperty, _isNumberValue */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "coerceNumberProperty", function() { return coerceNumberProperty; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "_isNumberValue", function() { return _isNumberValue; });
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+function coerceNumberProperty(value, fallbackValue) {
+    if (fallbackValue === void 0) { fallbackValue = 0; }
+    return _isNumberValue(value) ? Number(value) : fallbackValue;
+}
+/**
+ * Whether the provided value is considered a number.
+ * @docs-private
+ */
+function _isNumberValue(value) {
+    // parseFloat(value) handles most of the cases we're interested in (it treats null, empty string,
+    // and other non-number values as NaN, where Number just uses 0) but it considers the string
+    // '123hello' to be a valid number. Therefore we also check if Number(value) is NaN.
+    return !isNaN(parseFloat(value)) && !isNaN(Number(value));
+}
 
 
 /***/ }),
