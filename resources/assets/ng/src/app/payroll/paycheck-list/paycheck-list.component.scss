@@ -64,3 +64,14 @@ mat-header-row {
         letter-spacing: 1px;
     }
 }
+
+.search-input {
+    min-width: 240px;
+}
+
+.paycheck-detail-row {
+
+    &:hover {
+        background-color: $gray-200;
+    }
+}

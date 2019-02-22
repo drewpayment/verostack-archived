@@ -38,7 +38,9 @@ const routes:Route[] = [{
             path: 'paycheck-detail', 
             component: PaycheckDetailComponent, 
             canActivate: [AuthGuard],
-            resolve: PaycheckDetailService
+            resolve: {
+                data: PaycheckDetailService
+            }
         }
     ]
 }];

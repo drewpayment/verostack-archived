@@ -20,4 +20,44 @@
             </mat-card>
         </div>
     </div>
+
+    <ng-container *ngLet="detail$|async as detail">
+        <div class="row mx-2">
+            <div class="col-md-12">
+                <mat-card class="border-top-primary">
+                    <mat-card-subtitle>
+                        <h4 class="text-body pb-3 w-100 d-flex justify-content-between">
+                            <span>{{client?.name}}</span>
+                            <small>{{detail?.payroll?.campaign?.name}}</small>
+                        </h4>
+                        <div class="d-flex justify-content-between">
+                            <address>
+                                {{client?.name}}<br />
+                                {{client?.street}}<br />
+                                {{client?.city}} {{client?.state}} {{client?.zip}}
+                            </address>
+                            <div>
+                                <div>
+                                    <strong>Weekending:</strong> 
+                                    {{detail?.payroll?.weekEnding | date:'shortDate'}}
+                                </div>
+                                <div>
+                                    <strong>Invoice Date:</strong>
+                                    {{detail?.payroll?.payCycle?.endDate | date:'shortDate'}}
+                                </div>
+                                <br />
+                                <div>
+                                    <strong>Payable To:</strong>
+                                    {{detail?.agent?.firstName}} {{detail?.agent?.lastName}}
+                                </div>
+                            </div>
+                        </div>
+                    </mat-card-subtitle>
+                    <mat-card-content>
+                        Table with actual pay data will go right here...
+                    </mat-card-content>
+                </mat-card>
+            </div>
+        </div>
+    </ng-container>
 </div>

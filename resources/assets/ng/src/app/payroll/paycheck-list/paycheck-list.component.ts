@@ -3,7 +3,7 @@ import { IAgent, PayrollDetails, User, Paginator, ICampaign } from '@app/models'
 import { PaycheckService } from './paycheck.service';
 import { SessionService } from '@app/session.service';
 import { FormControl } from '@angular/forms';
-import { MatPaginator, PageEvent, MatSort, MatTable, MatTableDataSource, SortDirection } from '@angular/material';
+import { MatPaginator, PageEvent, MatSort, MatTable, MatTableDataSource, SortDirection, MatChipInputEvent } from '@angular/material';
 import { BehaviorSubject } from 'rxjs';
 import { Moment } from '@app/shared';
 import { CampaignService } from '@app/campaigns/campaign.service';
@@ -34,6 +34,7 @@ export class PaycheckListComponent implements OnInit {
     hasSetSort:boolean = false;
 
     searchInput = new FormControl('');
+    inputs:string[] = [];
 
 
     constructor(
@@ -68,20 +69,54 @@ export class PaycheckListComponent implements OnInit {
     }
 
     filterTable(filterValue:string):void {
-        if(filterValue == null) 
-            return this.paychecks$.next(this._paychecks);
+        if(filterValue == null) {
+            this.paychecks$.next(this._paychecks);
+            return;
+        }
+            
         filterValue = filterValue.trim().toLowerCase();
+
         const paychecks = this._paychecks;
-        const firstNameResults = paychecks.filter(p => p.agent.firstName.toLowerCase().indexOf(filterValue) > -1);
-        const lastNameResults = paychecks.filter(p => p.agent.lastName.toLowerCase().indexOf(filterValue) > -1);
+        const firstNameResults = paychecks.filter(p => p.agent.firstName.trim().toLowerCase().indexOf(filterValue) > -1);
+        const lastNameResults = paychecks.filter(p => p.agent.lastName.trim().toLowerCase().indexOf(filterValue) > -1);
         const weekEndingResults = paychecks.filter(p => {
             return moment(p.payroll.weekEnding).format('MMM d, YYYY').indexOf(filterValue) > -1;
         });
-        const campaignResults = paychecks.filter(p => p.payroll.campaign.name.indexOf(filterValue) > -1);
-        const amountResults = paychecks.filter(p => p.grossTotal.toString().indexOf(filterValue) > -1);
+        const campaignResults = paychecks.filter(p => p.payroll.campaign.name.trim().toLowerCase().indexOf(filterValue) > -1);
+        const amountResults = paychecks.filter(p => p.grossTotal.toString().trim().toLowerCase().indexOf(filterValue) > -1);
 
-        const result = Object.assign({}, firstNameResults, lastNameResults, weekEndingResults, campaignResults, amountResults);
+        let result:PayrollDetails[] = [];
+        result = result.concat(firstNameResults, lastNameResults, weekEndingResults, campaignResults, amountResults) as PayrollDetails[];
+        result = Array.from(new Set(result.map(r => r.payrollDetailsId)))
+            .map(id => {
+                return result.find(pd => pd.payrollDetailsId == id);
+            });
+        console.dir(result);
         this.paychecks$.next(result);
+    }
+
+    removeInput(input:string):void {
+        this.inputs.splice(this.inputs.indexOf(input), 1);
+    }
+
+    addInput(event:MatChipInputEvent):void {
+        const input = event.input;
+        const value = event.value;
+
+        // add our search input
+        if((value || '').trim()) {
+            this.inputs.push(value.trim());
+            this.filterTable(value.trim());
+        }
+
+        // clear our input value
+        if(input) {
+            input.value = '';
+        }
+    }
+
+    goToPaycheckDetail(paycheck:PayrollDetails) {
+        this.paycheckDetailService.navigateToDetail(paycheck);
     }
 
     sortPaychecksBy(prop:string, direction:SortDirection):PayrollDetails[] {

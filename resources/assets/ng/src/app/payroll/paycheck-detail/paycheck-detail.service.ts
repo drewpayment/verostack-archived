@@ -21,6 +21,7 @@ export class PaycheckDetailService implements Resolve<PayrollDetails> {
         return Observable.create((observer:Observer<PayrollDetails>) => {
             if(this.payrollDetails == null) {
                 console.error('No payroll details, please reload the page and try again.');
+                this.router.navigate(['/admin/pay/paycheck-list']);
                 observer.next(null);
                 observer.complete();
             } else {
