@@ -164,7 +164,7 @@ export class EditPayCycleComponent implements OnInit {
         this.service.updateDailySaleWithPayCycle(this.user.sessionUser.sessionClient, this._cycle.payCycleId, this._sales)
             .subscribe(sales => {
                 this.msg.addMessage('Saved successfully!', 'dismiss', 1500);
-                setTimeout(() => this.router.navigate(['admin/pay']), 1500);
+                setTimeout(() => this.router.navigate(['admin/pay/pay-cycles']), 1500);
             });
     }
 }

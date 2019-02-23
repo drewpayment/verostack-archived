@@ -76,6 +76,30 @@ class DailySaleController extends Controller
     }
 
 	/**
+	 * Get a list of daily sales specifically by the related pay cycle entity.
+	 *
+	 * @param int $clientId
+	 * @param int $payCycleId
+	 * @return ApiResource
+	 */
+	public function getPaycheckDetailSales($clientId, $payCycleId)
+	{
+		$result = new ApiResource();
+
+		$result
+            ->checkAccessByClient($clientId, Auth::user()->id)
+            ->mergeInto($result);
+
+        if($result->hasError)
+            return $result->throwApiException()->getResponse();
+
+		return $this->service->getSalesRelatedByPayCycle($payCycleId)
+			->mergeInto($result)
+			->throwApiException()
+			->getResponse();
+	}
+
+	/**
 	 * @param $clientId
 	 * @param $agentId
 	 * @param $startDate

@@ -1,6 +1,7 @@
 import { Moment } from "moment";
 import { Remark, IAgent } from "@app/models";
 import { Contact } from './contact.model';
+import { SaleStatus } from './sale-status.model';
 
 export enum PaidStatusType {
   unpaid,
@@ -35,5 +36,6 @@ export interface DailySale {
   notes?:string
   remarks:Remark[],
   agent?:IAgent,
-  contact?:Contact
+  contact?:Contact,
+  saleStatus?:SaleStatus
 }

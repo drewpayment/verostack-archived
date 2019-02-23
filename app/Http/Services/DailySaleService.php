@@ -15,6 +15,7 @@ use App\Http\Resources\ApiResource;
 use App\Remark;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use App\PayCycle;
 
 class DailySaleService {
 
@@ -69,6 +70,13 @@ class DailySaleService {
                 ->get()
         );
     }
+
+	public function getSalesRelatedByPayCycle($payCycleId)
+	{
+		$result = new ApiResource();
+		$cycleWithDailySales = PayCycle::with(['dailySales.saleStatus', 'dailySales.contact', 'dailySales.campaign'])->byPayCycle($payCycleId)->first();
+		return $result->setData($cycleWithDailySales->dailySales);
+	}
 
 	/**
 	 * @param $agentId

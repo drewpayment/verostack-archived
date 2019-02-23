@@ -2424,6 +2424,7 @@ var CampaignDetailComponent = /** @class */ (function () {
         this.fb = fb;
         this.router = router;
         this.campaign = new rxjs__WEBPACK_IMPORTED_MODULE_5__["BehaviorSubject"]({});
+        this.form = this.createForm();
         this.modules = _app_shared_quill_config__WEBPACK_IMPORTED_MODULE_6__["QuillConfig"].DEFAULT_MODULE;
         this.route.params.subscribe(function (params) {
             _this.campaignId = params.campaignId;
@@ -2431,7 +2432,6 @@ var CampaignDetailComponent = /** @class */ (function () {
     }
     CampaignDetailComponent.prototype.ngOnInit = function () {
         var _this = this;
-        this.createForm();
         this.session.userItem.subscribe(function (u) {
             _this.user = u;
             _this.service.getCampaign(_this.user.sessionUser.sessionClient, _this.campaignId)
@@ -2458,7 +2458,7 @@ var CampaignDetailComponent = /** @class */ (function () {
         return value % 2 == 0;
     };
     CampaignDetailComponent.prototype.createForm = function () {
-        this.form = this.fb.group({
+        return this.fb.group({
             mdDetails: this.fb.control(''),
             mdOnboarding: this.fb.control(''),
             mdOther: this.fb.control(''),
@@ -2472,7 +2472,7 @@ var CampaignDetailComponent = /** @class */ (function () {
             mdOnboarding: this._campaign.mdOnboarding,
             mdOther: this._campaign.mdOther,
             compensation: this._campaign.compensation,
-            utilities: this._campaign.utilities
+            utilities: this._campaign.utilities != null ? this._campaign.utilities : []
         });
     };
     CampaignDetailComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
@@ -2559,11 +2559,11 @@ var UtilityDetailComponent = /** @class */ (function () {
     }
     UtilityDetailComponent.prototype.ngOnInit = function () {
         var _this = this;
-        this.utility = this.campaignService.utility;
-        this.campaign = this.campaignService.campaign;
-        if (this.utility == null) {
-            this.session.getUserItem().subscribe(function (user) {
-                _this.user = user;
+        this.session.getUserItem().subscribe(function (u) {
+            _this.user = u;
+            _this.utility = _this.campaignService.utility;
+            _this.campaign = _this.campaignService.campaign;
+            if (_this.utility == null) {
                 _this.route.paramMap
                     .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_7__["switchMap"])(function (params) {
                     var utilityId = params.get('utilityId');
@@ -2583,11 +2583,11 @@ var UtilityDetailComponent = /** @class */ (function () {
                     _this.campaign = utility.campaign;
                     _this.patchForm();
                 });
-            });
-        }
-        else {
-            this.patchForm();
-        }
+            }
+            else {
+                _this.patchForm();
+            }
+        });
     };
     UtilityDetailComponent.prototype.cancel = function () {
         this.campaignService.utility = null;
@@ -4980,6 +4980,10 @@ var DailySaleTrackerService = /** @class */ (function () {
         var url = this.url + "/clients/" + clientId + "/daily-sales/agents/" + agentId + "/from/" + startDate + "/to/" + endDate;
         return this.http.get(url)
             .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["catchError"])(this.handleError));
+    };
+    DailySaleTrackerService.prototype.getPaycheckDetailSales = function (clientId, payCycleId) {
+        var url = this.url + "/clients/" + clientId + "/pay-cycles/" + payCycleId + "/daily-sales";
+        return this.http.get(url);
     };
     DailySaleTrackerService.prototype.createDailySale = function (clientId, dto) {
         var url = this.url + "/clients/" + clientId + "/daily-sales";
@@ -8207,7 +8211,7 @@ var EditPayCycleComponent = /** @class */ (function () {
         this.service.updateDailySaleWithPayCycle(this.user.sessionUser.sessionClient, this._cycle.payCycleId, this._sales)
             .subscribe(function (sales) {
             _this.msg.addMessage('Saved successfully!', 'dismiss', 1500);
-            setTimeout(function () { return _this.router.navigate(['admin/pay']); }, 1500);
+            setTimeout(function () { return _this.router.navigate(['admin/pay/pay-cycles']); }, 1500);
         });
     };
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
@@ -8515,7 +8519,7 @@ var PayCycleComponent = /** @class */ (function () {
     };
     PayCycleComponent.prototype.editPayCycle = function (cycle) {
         this.payCycleService.cycle = cycle;
-        this.router.navigate(['admin/pay/edit', cycle.payCycleId]);
+        this.router.navigate(['admin/pay/pay-cycles/edit', cycle.payCycleId]);
     };
     PayCycleComponent.prototype.closePayCycle = function (cycle) {
         this.session.showLoader();
@@ -8752,7 +8756,7 @@ var PayCycleService = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n<div class=\"container\">\n    <div class=\"row\">\n        <div class=\"col-md-12\">\n            <mat-card class=\"page-header-accent\">\n                <mat-card-content class=\"d-flex justify-content-between\">\n                    <h3>\n                        Income Statement\n                    </h3>\n                    <!-- <div>\n                        <mat-slide-toggle [checked]=\"showClosed\" (change)=\"switchDisplay()\" class=\"my-0 mr-2\">\n                            Show Closed\n                        </mat-slide-toggle>\n                        <button type=\"button\" mat-stroked-button color=\"primary\" (click)=\"addPayCycle()\">\n                            <mat-icon inline=\"true\">add</mat-icon>\n                            <span>Payroll</span>\n                        </button>\n                    </div> -->\n                </mat-card-content>\n            </mat-card>\n        </div>\n    </div>\n\n    <ng-container *ngLet=\"detail$|async as detail\">\n        <div class=\"row mx-2\">\n            <div class=\"col-md-12\">\n                <mat-card class=\"border-top-primary\">\n                    <mat-card-subtitle>\n                        <h4 class=\"text-body pb-3 w-100 d-flex justify-content-between\">\n                            <span>{{client?.name}}</span>\n                            <small>{{detail?.payroll?.campaign?.name}}</small>\n                        </h4>\n                        <div class=\"d-flex justify-content-between\">\n                            <address>\n                                {{client?.name}}<br />\n                                {{client?.street}}<br />\n                                {{client?.city}} {{client?.state}} {{client?.zip}}\n                            </address>\n                            <div>\n                                <div>\n                                    <strong>Weekending:</strong> \n                                    {{detail?.payroll?.weekEnding | date:'shortDate'}}\n                                </div>\n                                <div>\n                                    <strong>Invoice Date:</strong>\n                                    {{detail?.payroll?.payCycle?.endDate | date:'shortDate'}}\n                                </div>\n                                <br />\n                                <div>\n                                    <strong>Payable To:</strong>\n                                    {{detail?.agent?.firstName}} {{detail?.agent?.lastName}}\n                                </div>\n                            </div>\n                        </div>\n                    </mat-card-subtitle>\n                    <mat-card-content>\n                        Table with actual pay data will go right here...\n                    </mat-card-content>\n                </mat-card>\n            </div>\n        </div>\n    </ng-container>\n</div>"
+module.exports = "\n<div class=\"container\">\n    <div class=\"row\">\n        <div class=\"col-md-12\">\n            <mat-card class=\"page-header-accent\">\n                <mat-card-content class=\"d-flex justify-content-between\">\n                    <h3>\n                        Income Statement\n                    </h3>\n                    <!-- <div>\n                        <mat-slide-toggle [checked]=\"showClosed\" (change)=\"switchDisplay()\" class=\"my-0 mr-2\">\n                            Show Closed\n                        </mat-slide-toggle>\n                        <button type=\"button\" mat-stroked-button color=\"primary\" (click)=\"addPayCycle()\">\n                            <mat-icon inline=\"true\">add</mat-icon>\n                            <span>Payroll</span>\n                        </button>\n                    </div> -->\n                </mat-card-content>\n            </mat-card>\n        </div>\n    </div>\n\n    <ng-container *ngLet=\"detail$|async as detail\">\n        <div class=\"row mx-2\">\n            <div class=\"col-md-12\">\n                <mat-card class=\"border-top-primary\">\n                    <mat-card-subtitle>\n                        <h4 class=\"text-body pb-3 w-100 d-flex justify-content-between\">\n                            <span>{{client?.name}}</span>\n                            <small>Campaign: {{detail?.payroll?.campaign?.name}}</small>\n                        </h4>\n                        <div class=\"d-flex justify-content-between\">\n                            <address>\n                                {{client?.name}}<br />\n                                {{client?.street}}<br />\n                                {{client?.city}} {{client?.state}} {{client?.zip}}\n                            </address>\n                            <div>\n                                <div>\n                                    <strong>Weekending:</strong> \n                                    {{detail?.payroll?.weekEnding | date:'shortDate'}}\n                                </div>\n                                <div>\n                                    <strong>Invoice Date:</strong>\n                                    {{detail?.payroll?.payCycle?.endDate | date:'shortDate'}}\n                                </div>\n                                <br />\n                                <div>\n                                    <strong>Payable To:</strong>\n                                    {{detail?.agent?.firstName}} {{detail?.agent?.lastName}}\n                                </div>\n                            </div>\n                        </div>\n                    </mat-card-subtitle>\n                    <mat-card-content>\n                        <!-- SALES DETAILS -->\n                        <mat-table [dataSource]=\"sales\">\n                            <ng-container matColumnDef=\"no\">\n                                <mat-header-cell *matHeaderCellDef> No. </mat-header-cell>\n                                <mat-cell *matCellDef=\"let item; let i = index\">\n                                    {{ i + 1 }}\n                                </mat-cell>\n                            </ng-container>\n\n                            <ng-container matColumnDef=\"saleDate\">\n                                <mat-header-cell *matHeaderCellDef>Date</mat-header-cell>\n                                <mat-cell *matCellDef=\"let item\">\n                                    {{ item.saleDate | date:'shortDate' }}\n                                </mat-cell>\n                            </ng-container>\n\n                            <ng-container matColumnDef=\"customerName\">\n                                <mat-header-cell *matHeaderCellDef>Customer Name</mat-header-cell>\n                                <mat-cell *matCellDef=\"let item\">\n                                    Need Contact Info\n                                </mat-cell>\n                            </ng-container>\n\n                            <ng-container matColumnDef=\"address\">\n                                <mat-header-cell *matHeaderCellDef>Address</mat-header-cell>\n                                <mat-cell *matCellDef=\"let item\">\n                                    Need Contact Info\n                                </mat-cell>\n                            </ng-container>\n\n                            <ng-container matColumnDef=\"commissionable\">\n                                <mat-header-cell *matHeaderCellDef>Status</mat-header-cell>\n                                <mat-cell *matCellDef=\"let item\">\n                                    {{ item.saleStatus.name }}\n                                </mat-cell>\n                            </ng-container>\n\n                            <ng-container matColumnDef=\"amount\">\n                                <mat-header-cell *matHeaderCellDef>Amount</mat-header-cell>\n                                <mat-cell *matCellDef=\"let item\">\n                                    {{ item.campaign?.compensation != null ? item.campaign?.compensation : 0 | currency }}\n                                </mat-cell>\n                            </ng-container>\n\n                            <mat-header-row *matHeaderRowDef=\"saleColumns\"></mat-header-row>\n                            <mat-row *matRowDef=\"let row; columns: saleColumns;\"></mat-row>\n                        </mat-table>\n\n\n                    </mat-card-content>\n                </mat-card>\n            </div>\n        </div>\n    </ng-container>\n</div>"
 
 /***/ }),
 
@@ -8782,33 +8786,52 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
 /* harmony import */ var _app_session_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @app/session.service */ "./src/app/session.service.ts");
+/* harmony import */ var _app_daily_sale_tracker_daily_sale_tracker_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @app/daily-sale-tracker/daily-sale-tracker.service */ "./src/app/daily-sale-tracker/daily-sale-tracker.service.ts");
+
 
 
 
 
 
 var PaycheckDetailComponent = /** @class */ (function () {
-    function PaycheckDetailComponent(route, session) {
-        var _this = this;
+    function PaycheckDetailComponent(route, session, dailySaleService) {
         this.route = route;
         this.session = session;
+        this.dailySaleService = dailySaleService;
         this.detail$ = new rxjs__WEBPACK_IMPORTED_MODULE_3__["BehaviorSubject"](null);
-        this.session.getUserItem().subscribe(function (u) {
-            _this.user = u;
-            _this.client = _this.user.clients.find(function (c) { return c.clientId == _this.user.sessionUser.sessionClient; });
-        });
-        this.route.data.subscribe(function (data) {
-            _this.detail$.next(data.data);
-        });
+        this.saleColumns = ['no', 'saleDate', 'customerName', 'address', 'commissionable', 'amount'];
     }
-    PaycheckDetailComponent.prototype.ngOnInit = function () { };
+    PaycheckDetailComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this.route.data.subscribe(function (data) {
+            var detailData = data.data;
+            _this.detail$.next(data.data);
+            _this.session.getUserItem().subscribe(function (u) {
+                _this.user = u;
+                _this.client = _this.user.clients.find(function (c) { return c.clientId == _this.user.sessionUser.sessionClient; });
+                _this.dailySaleService.getPaycheckDetailSales(_this.user.sessionUser.sessionClient, detailData.payroll.payCycleId).subscribe(function (sales) {
+                    _this.sales = sales;
+                });
+                // this.dailySaleService.getDailySalesByAgent(
+                //     this.user.sessionUser.sessionClient, 
+                //     detailData.agentId,
+                //     <string>detailData.payroll.payCycle.startDate,
+                //     <string>detailData.payroll.payCycle.endDate
+                // ).subscribe(sales => {
+                //     this.sales = sales;
+                // });
+            });
+        });
+    };
     PaycheckDetailComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
             selector: 'vs-paycheck-detail',
             template: __webpack_require__(/*! ./paycheck-detail.component.html */ "./src/app/payroll/paycheck-detail/paycheck-detail.component.html"),
             styles: [__webpack_require__(/*! ./paycheck-detail.component.scss */ "./src/app/payroll/paycheck-detail/paycheck-detail.component.scss")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_router__WEBPACK_IMPORTED_MODULE_2__["ActivatedRoute"], _app_session_service__WEBPACK_IMPORTED_MODULE_4__["SessionService"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_router__WEBPACK_IMPORTED_MODULE_2__["ActivatedRoute"],
+            _app_session_service__WEBPACK_IMPORTED_MODULE_4__["SessionService"],
+            _app_daily_sale_tracker_daily_sale_tracker_service__WEBPACK_IMPORTED_MODULE_5__["DailySaleTrackerService"]])
     ], PaycheckDetailComponent);
     return PaycheckDetailComponent;
 }());

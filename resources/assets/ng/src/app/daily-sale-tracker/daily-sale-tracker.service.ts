@@ -29,6 +29,11 @@ export class DailySaleTrackerService {
       );
   }
 
+  getPaycheckDetailSales(clientId:number, payCycleId:number):Observable<DailySale[]> {
+    const url = `${this.url}/clients/${clientId}/pay-cycles/${payCycleId}/daily-sales`;
+    return this.http.get<DailySale[]>(url);
+  }
+
   createDailySale(clientId:number, dto:DailySale):Observable<DailySale> {
     const url = `${this.url}/clients/${clientId}/daily-sales`;
     return this.http.post<DailySale>(url, dto);

@@ -160,4 +160,9 @@ class Agent extends Model
         return $this->hasManyThrough(Payroll::class, PayrollDetail::class);
     }
 
+	public function sales()
+	{
+		return $this->hasMany(DailySale::class, 'agent_id');
+	}
+
 }

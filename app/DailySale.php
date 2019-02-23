@@ -68,6 +68,16 @@ class DailySale extends Model
         return $this->belongsTo(PayCycle::class, 'pay_cycle_id');
     }
 
+	public function saleStatus()
+	{
+		return $this->hasOne(SaleStatus::class, 'sale_status_id', 'status');
+	}
+
+	public function campaign()
+	{
+		return $this->hasOne(Campaign::class, 'campaign_id');
+	}
+
     /**
 	 * Filter entities by pay cycle id. This query also returns sales that have a null
      * pay cycle id. Primarily used to build a list of sales for selection attaching new sales to 

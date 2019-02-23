@@ -133,7 +133,7 @@ export class PayCycleComponent implements OnInit {
 
     editPayCycle(cycle:PayCycle):void {
         this.payCycleService.cycle = cycle;
-        this.router.navigate(['admin/pay/edit', cycle.payCycleId]);
+        this.router.navigate(['admin/pay/pay-cycles/edit', cycle.payCycleId]);
     }
 
     closePayCycle(cycle:PayCycle):void {

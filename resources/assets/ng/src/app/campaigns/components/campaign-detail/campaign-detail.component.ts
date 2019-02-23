@@ -18,7 +18,7 @@ export class CampaignDetailComponent implements OnInit {
     campaignId:number;
     private _campaign:ICampaign;
     campaign:BehaviorSubject<ICampaign> = new BehaviorSubject<ICampaign>({} as ICampaign);
-    form:FormGroup;
+    form:FormGroup = this.createForm();
 
     modules = QuillConfig.DEFAULT_MODULE;
 
@@ -35,8 +35,6 @@ export class CampaignDetailComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.createForm();
-
         this.session.userItem.subscribe(u => {
             this.user = u;
 
@@ -68,8 +66,8 @@ export class CampaignDetailComponent implements OnInit {
         return value % 2 == 0;
     }
 
-    private createForm() {
-        this.form = this.fb.group({
+    private createForm():FormGroup {
+        return this.fb.group({
             mdDetails: this.fb.control(''),
             mdOnboarding: this.fb.control(''),
             mdOther: this.fb.control(''),
@@ -84,7 +82,7 @@ export class CampaignDetailComponent implements OnInit {
             mdOnboarding: this._campaign.mdOnboarding,
             mdOther: this._campaign.mdOther,
             compensation: this._campaign.compensation,
-            utilities: this._campaign.utilities
+            utilities: this._campaign.utilities != null ? this._campaign.utilities : []
         });
     }
 

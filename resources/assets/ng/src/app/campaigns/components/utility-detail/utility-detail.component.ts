@@ -34,12 +34,12 @@ export class UtilityDetailComponent implements OnInit {
     ) {}
 
     ngOnInit() {
-        this.utility = this.campaignService.utility;
-        this.campaign = this.campaignService.campaign;
-        
-        if(this.utility == null) {
-            this.session.getUserItem().subscribe(user => {
-                this.user = user;
+        this.session.getUserItem().subscribe(u => {
+            this.user = u;
+            this.utility = this.campaignService.utility;
+            this.campaign = this.campaignService.campaign;
+
+            if(this.utility == null) {
                 this.route.paramMap
                     .pipe(
                         switchMap((params:ParamMap) => {
@@ -60,10 +60,11 @@ export class UtilityDetailComponent implements OnInit {
                         this.campaign = utility.campaign;
                         this.patchForm();
                     });
-            });
-        } else {
-            this.patchForm();
-        }
+
+            } else {
+                this.patchForm();
+            }
+        });
     }
 
     cancel():void {

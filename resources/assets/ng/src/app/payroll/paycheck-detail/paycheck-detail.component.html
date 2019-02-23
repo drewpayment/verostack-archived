@@ -28,7 +28,7 @@
                     <mat-card-subtitle>
                         <h4 class="text-body pb-3 w-100 d-flex justify-content-between">
                             <span>{{client?.name}}</span>
-                            <small>{{detail?.payroll?.campaign?.name}}</small>
+                            <small>Campaign: {{detail?.payroll?.campaign?.name}}</small>
                         </h4>
                         <div class="d-flex justify-content-between">
                             <address>
@@ -54,7 +54,55 @@
                         </div>
                     </mat-card-subtitle>
                     <mat-card-content>
-                        Table with actual pay data will go right here...
+                        <!-- SALES DETAILS -->
+                        <mat-table [dataSource]="sales">
+                            <ng-container matColumnDef="no">
+                                <mat-header-cell *matHeaderCellDef> No. </mat-header-cell>
+                                <mat-cell *matCellDef="let item; let i = index">
+                                    {{ i + 1 }}
+                                </mat-cell>
+                            </ng-container>
+
+                            <ng-container matColumnDef="saleDate">
+                                <mat-header-cell *matHeaderCellDef>Date</mat-header-cell>
+                                <mat-cell *matCellDef="let item">
+                                    {{ item.saleDate | date:'shortDate' }}
+                                </mat-cell>
+                            </ng-container>
+
+                            <ng-container matColumnDef="customerName">
+                                <mat-header-cell *matHeaderCellDef>Customer Name</mat-header-cell>
+                                <mat-cell *matCellDef="let item">
+                                    Need Contact Info
+                                </mat-cell>
+                            </ng-container>
+
+                            <ng-container matColumnDef="address">
+                                <mat-header-cell *matHeaderCellDef>Address</mat-header-cell>
+                                <mat-cell *matCellDef="let item">
+                                    Need Contact Info
+                                </mat-cell>
+                            </ng-container>
+
+                            <ng-container matColumnDef="commissionable">
+                                <mat-header-cell *matHeaderCellDef>Status</mat-header-cell>
+                                <mat-cell *matCellDef="let item">
+                                    {{ item.saleStatus.name }}
+                                </mat-cell>
+                            </ng-container>
+
+                            <ng-container matColumnDef="amount">
+                                <mat-header-cell *matHeaderCellDef>Amount</mat-header-cell>
+                                <mat-cell *matCellDef="let item">
+                                    {{ item.campaign?.compensation != null ? item.campaign?.compensation : 0 | currency }}
+                                </mat-cell>
+                            </ng-container>
+
+                            <mat-header-row *matHeaderRowDef="saleColumns"></mat-header-row>
+                            <mat-row *matRowDef="let row; columns: saleColumns;"></mat-row>
+                        </mat-table>
+
+
                     </mat-card-content>
                 </mat-card>
             </div>
