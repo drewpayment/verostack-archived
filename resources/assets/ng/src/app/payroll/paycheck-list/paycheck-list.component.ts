@@ -174,7 +174,7 @@ export class PaycheckListComponent implements OnInit {
         this.paycheckDetailService.navigateToDetail(detail);
     }
 
-    private getPaychecks(
+    getPaychecks(
         page:number = this.paging.pageIndex, 
         pageSize:number = this.paging.pageSize,
         startDate?:Moment|string,
