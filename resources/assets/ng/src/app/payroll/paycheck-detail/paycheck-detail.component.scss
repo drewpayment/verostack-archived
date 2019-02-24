@@ -3,7 +3,7 @@
         "../../../scss/utilities";
 
 
-mat-card {
+mat-card.invoice-card {
     padding: 0;
 
     mat-card-subtitle {
@@ -18,3 +18,20 @@ mat-card {
     }
 }
 
+.adjustment-titles {
+    font-size: 1rem;
+    font-weight: 200;
+    letter-spacing: 0.07rem;
+}
+
+/deep/ .mat-column-amount, .mat-column-total, .mat-column-date, .mat-column-saleDate, .mat-column-titleColumn {
+    max-width: 100px;
+}
+
+/deep/ .mat-column-title {
+    max-width: 250px;
+}
+
+/deep/ .mat-column-no {
+    max-width: 80px;
+}

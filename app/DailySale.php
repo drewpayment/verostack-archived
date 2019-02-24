@@ -3,8 +3,10 @@
 namespace App;
 
 use App\Contact;
+use App\Campaign;
 use App\PayCycle;
 use Carbon\Carbon;
+use App\SaleStatus;
 use Illuminate\Database\Eloquent\Model;
 
 class DailySale extends Model
@@ -75,7 +77,7 @@ class DailySale extends Model
 
 	public function campaign()
 	{
-		return $this->hasOne(Campaign::class, 'campaign_id');
+		return $this->hasOne(Campaign::class, 'campaign_id', 'campaign_id');
 	}
 
     /**

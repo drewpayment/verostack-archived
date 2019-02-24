@@ -86,7 +86,7 @@
                                 <button type="button"
                                     mat-button
                                     color="primary"
-                                    *ngIf="cycle.isPending && !cycle.isClosed"
+                                    *ngIf="cycle.isPending && !cycle.isClosed && cycle?.payrolls?.length < 1"
                                     (click)="processPayroll(cycle)"
                                 >
                                     <mat-icon>sync</mat-icon>

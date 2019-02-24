@@ -87,7 +87,7 @@ class PayrollDetailsService
          * we're going to need to write a fairly complex conditional where clause using this: 
          * https://laravel.com/docs/5.7/eloquent-relationships#querying-relationship-existence
          */
-        $details = PayrollDetail::with(['payroll.payCycle', 'agent', 'overrides', 'expenses'])
+        $details = PayrollDetail::with(['payroll.payCycle', 'agent', 'overrides.agent', 'expenses'])
             ->paginate($request->resultsPerPage, ['*'], 'page', $request->page);
 
         return $result->setData($details);

@@ -228,7 +228,7 @@ export class PaycheckListComponent implements OnInit {
         let overridesTotal:number = 0;
 
         detail.expenses.forEach(e => expensesTotal += coerceNumberProperty(e.amount));
-        detail.overrides.forEach(o => overridesTotal += coerceNumberProperty(o.amount));
+        detail.overrides.forEach(o => overridesTotal += (coerceNumberProperty(o.amount) * coerceNumberProperty(o.units)));
 
         return amount + expensesTotal + overridesTotal;
     }

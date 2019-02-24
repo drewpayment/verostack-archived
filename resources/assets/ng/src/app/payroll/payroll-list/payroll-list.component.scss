@@ -1,27 +1,32 @@
 @import '../../../scss/colors';
 // $mat-primary: #3f51b5 !default;
 
-table {
-    width: 100%;
+
+.detail-row {
+    background-color: lighten($mat-primary, 50%);
+    // display: none;
+
+    // * {
+    //     display: none;
+    // }
 }
 
-tr.detail-row {
-    height: 0;
-}
-
-tr.element-row:not(.expanded-row):hover {
+.element-row:not(.expanded-row):hover {
     background: #f5f5f5;
 }
 
-tr.element-row:not(.expanded-row):active {
+.element-row:not(.expanded-row):active {
     background: #efefef;
 }
 
-.element-row td {
+.element-row {
     border-bottom-width: 0;
 }
 
 .element-detail {
+    margin: 0.5rem 0 0 0;
+    width: 100%;
+
     min-height: 48px;
     overflow:hidden;
     display:flex;
@@ -29,12 +34,33 @@ tr.element-row:not(.expanded-row):active {
 
 .expanded {
     background: lighten($mat-primary, 50%);
+    height: auto;
 }
 
 .released {
 
-    td {
+    mat-cell {
         color: $gray-600;
         background-color: $gray-100;
     }
+}
+
+.action-row {
+    margin: 0.5rem 0;
+
+    * {
+        margin: 0 0.5rem 0;
+
+        &:first-child {
+            margin: 0 0.5rem 0 0;
+        }
+
+        &:last-child {
+            margin: 0 0 0 0.5rem;
+        }
+    }
+}
+
+.border-top-primary {
+    border-radius: 0.25rem;
 }

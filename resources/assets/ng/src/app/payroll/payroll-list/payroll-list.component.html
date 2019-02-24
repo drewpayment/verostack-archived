@@ -1,6 +1,6 @@
 
 <div class="container">
-    <div class="row mb-4">
+    <div class="row mb-2">
         <div class="col-md-12">
             <mat-card class="page-header-accent">
                 <mat-card-content>
@@ -19,30 +19,58 @@
                             </button>
                         </div>
                     </div>
-                    <div class="text-muted d-flex align-items-center">
-                        <span class="font-weight-bold mr-2">
-                            Narrowed to
+                    <div class="text-muted d-flex align-items-center justify-content-between">
+                        <div class="flex-grow-1">
+                            <span class="font-weight-bold">
+                                Narrowed to:
+                            </span>
+                            <mat-chip-list #matChipList>
+                                <mat-chip *ngIf="filters.startDate" [removable]="false" [selectable]="false" 
+                                    (click)="filterBtnClick()" class="clickable">
+                                    <span>Start: {{filters.startDate | date:'shortDate'}}</span>
+                                </mat-chip>
+                                <mat-chip *ngIf="filters.endDate" [removable]="false" [selectable]="false" 
+                                    (click)="filterBtnClick()" class="clickable">
+                                    <span>End: {{filters.endDate | date:'shortDate'}}</span>
+                                </mat-chip>
+                                <mat-chip *ngIf="filters.campaignId" (removed)="removeFilter(3)" [selectable]="false" color="accent">
+                                    <ng-container *ngLet="getFilteredCampaign(filters.campaignId) as c">
+                                        <span>Campaign: {{c.name}}</span>
+                                        <mat-icon matChipRemove>cancel</mat-icon>
+                                    </ng-container>
+                                </mat-chip>
+                                <mat-chip *ngIf="filters.agentId" (removed)="removeFilter(2)" [selectable]="false" color="accent">
+                                    <ng-container *ngLet="getFilteredAgent(filters.agentId) as a">
+                                        <span>{{a.firstName}} {{a.lastName}}</span>
+                                        <mat-icon matChipRemove>cancel</mat-icon>
+                                    </ng-container>
+                                </mat-chip>
+                            </mat-chip-list>
+                        </div>
+                        <span class="text-muted">
+                            {{displayingResults}}
                         </span>
-                        <mat-chip-list #matChipList>
-                            <mat-chip class="bg-transparent" *ngIf="filters.startDate" [removable]="false" [selectable]="false">
-                                <span>Start: {{filters.startDate | date:'shortDate'}}</span>
-                            </mat-chip>
-                            <mat-chip class="bg-transparent" *ngIf="filters.endDate" [removable]="false" [selectable]="false">
-                                <span>End: {{filters.endDate | date:'shortDate'}}</span>
-                            </mat-chip>
-                            <mat-chip class="bg-transparent" *ngIf="filters.campaignId" (removed)="removeFilter(3)" [selectable]="false">
-                                <ng-container *ngLet="getFilteredCampaign(filters.campaignId) as c">
-                                    <span>Campaign: {{c.name}}</span>
-                                    <mat-icon matChipRemove>cancel</mat-icon>
-                                </ng-container>
-                            </mat-chip>
-                            <mat-chip class="bg-transparent" *ngIf="filters.agentId" (removed)="removeFilter(2)" [selectable]="false">
-                                <ng-container *ngLet="getFilteredAgent(filters.agentId) as a">
-                                    <span>{{a.firstName}} {{a.lastName}}</span>
-                                    <mat-icon matChipRemove>cancel</mat-icon>
-                                </ng-container>
-                            </mat-chip>
-                        </mat-chip-list>
+                    </div>
+                    <hr />
+                    <div class="action-row">
+                        <button type="button" mat-raised-button 
+                            color="primary" 
+                            (click)="showReleaseConfirm()"
+                            [disabled]="disableRelease"
+                        >
+                            <mat-icon inline="true">send</mat-icon> Release
+                        </button>
+                        <button type="button" mat-raised-button
+                            color="accent"
+                            (click)="autoReleaseDatepicker.open()"
+                            [disabled]="disableRelease"
+                        >
+                            <mat-icon inline="true">date_range</mat-icon> Schedule Auto-Release
+                        </button>
+                        <mat-form-field [style.visibility]="'hidden'" class="d-none">
+                            <input matInput [matDatepicker]="autoReleaseDatepicker" (dateChange)="dateChanged($event)" />
+                            <mat-datepicker touchUi="true" #autoReleaseDatepicker></mat-datepicker>
+                        </mat-form-field>
                     </div>
                 </mat-card-content>
             </mat-card>
@@ -52,196 +80,173 @@
     <div class="row">
         <div class="col-md-12">
             <ng-container *ngIf="(payrolls$|async) != null && (payrolls$|async).length; else noPayrolls">
-                <mat-card class="border-top-primary">
-                    <mat-card-subtitle class="d-flex justify-content-between">
-                        <div>
-                            <button type="button" mat-button 
-                                color="primary" 
-                                (click)="showReleaseConfirm()"
-                                [disabled]="disableRelease"
-                            >
-                                <mat-icon inline="true">send</mat-icon> Release
-                            </button>
-                            <button type="button" mat-button
-                                color="accent"
-                                (click)="autoReleaseDatepicker.open()"
-                                [disabled]="disableRelease"
-                            >
-                                <mat-icon inline="true">date_range</mat-icon> Schedule Auto-Release
-                            </button>
-                            <mat-form-field [style.visibility]="'hidden'">
-                                <input matInput [matDatepicker]="autoReleaseDatepicker" (dateChange)="dateChanged($event)" />
-                                <mat-datepicker touchUi="true" #autoReleaseDatepicker></mat-datepicker>
-                            </mat-form-field>
-                        </div>
-                        <p class="text-muted">
-                            {{displayingResults}}
-                        </p>
-                    </mat-card-subtitle>
-                    <mat-card-content>
-                        <ng-container *ngLet="payrolls$|async as payrolls">
-                            <table mat-table #tableRef [dataSource]="payrolls" multiTemplateDataRows class="mat-elevation-z8">
+                <ng-container *ngLet="payrolls$|async as payrolls">
+                    <mat-table #tableRef [dataSource]="payrolls" multiTemplateDataRows class="border-top-primary mat-elevation-z1">
 
-                                <!-- SELECTED -->
-                                <ng-container matColumnDef="selected">
-                                    <th mat-header-cell *matHeaderCellDef>
-                                        <mat-checkbox (change)="$event ? masterToggle() : null"
-                                            [checked]="selection.hasValue() && isAllSelected()"
-                                            [indeterminate]="selection.hasValue() && !isAllSelected()"
-                                        ></mat-checkbox>
-                                    </th>
-                                    <td mat-cell *matCellDef="let item">
-                                        <mat-checkbox
-                                            (click)="$event.stopPropagation()"
-                                            (change)="$event ? selection.toggle(item) : null"
-                                            [checked]="selection.isSelected(item)"
-                                            [disabled]="item.payCycle.isClosed || item.isReleased"
-                                        ></mat-checkbox>
-                                    </td>
-                                </ng-container>
-
-                                <!-- CAMPAIGN -->
-                                <ng-container matColumnDef="campaign">
-                                    <th mat-header-cell *matHeaderCellDef>Campaign</th>
-                                    <td mat-cell *matCellDef="let item">{{getCampaignDescById(item.campaignId)}}</td>
-                                </ng-container>
-
-                                <!-- CYCLE START DATE -->
-                                <ng-container matColumnDef="cycleStart">
-                                    <th mat-header-cell *matHeaderCellDef>Start</th>
-                                    <td mat-cell *matCellDef="let item">{{item.payCycle.startDate | date:'shortDate'}}</td>
-                                </ng-container>
-
-                                <!-- CYCLE END DATE -->
-                                <ng-container matColumnDef="cycleEnd">
-                                    <th mat-header-cell *matHeaderCellDef>End</th>
-                                    <td mat-cell *matCellDef="let item">{{item.payCycle.endDate | date:'shortDate'}}</td>
-                                </ng-container>
-
-                                <!-- IS AUTOMATED -->
-                                <ng-container matColumnDef="isAutomated">
-                                    <th mat-header-cell *matHeaderCellDef>Auto Release</th>
-                                    <td mat-cell *matCellDef="let item">
-                                        <mat-checkbox [checked]="item.isAutomated" 
-                                            [disabled]="!(item.isAutomated && !item.isReleased)"
-                                            (change)="removeAutoRelease($event, item)"
-                                            (click)="$event.stopPropagation()"
-                                        ></mat-checkbox>
-                                    </td>
-                                </ng-container>
-
-                                <!-- AUTOMATIC RELEASE DATE -->
-                                <ng-container matColumnDef="automatedRelease">
-                                    <th mat-header-cell *matHeaderCellDef>Release Date</th>
-                                    <td mat-cell *matCellDef="let item">
-                                        {{item.automatedRelease | date:'shortDate'}}
-                                    </td>
-                                </ng-container>
-
-                                <!-- IS RELEASED -->
-                                <ng-container matColumnDef="isReleased">
-                                    <th mat-header-cell *matHeaderCellDef>Released</th>
-                                    <td *matCellDef="let item">
-                                        <mat-checkbox [checked]="item.isReleased" [disabled]="true"></mat-checkbox>
-                                    </td>
-                                </ng-container>
-
-                                <!-- PAYROLL STATUS -->
-                                <ng-container matColumnDef="status">
-                                    <th mat-header-cell *matHeaderCellDef>Status</th>
-                                    <td mat-cell *matCellDef="let item">
-                                        <ng-container *ngLet="getPayrollStatus(item) as desc">
-                                            {{desc}}
-                                        </ng-container>
-                                    </td>
-                                </ng-container>
-
-                                <!-- EXPANDED DETAIL -->
-                                <ng-container matColumnDef="expandedDetail">
-                                    <td mat-cell *matCellDef="let item" 
-                                        [attr.colspan]="displayColumns.length" 
-                                    >
-                                        <div class="element-detail"
-                                            [@detailExpand]="item == expandedItem ? 'expanded' : 'collapsed'"
-                                            [class.pb-2]="item == expandedItem"
-                                        >
-                                            <div class="row w-100">
-                                                <div class="col-md-12">                                                    
-                                                    <ul class="list-group">
-                                                        <li class="list-group-item">
-                                                            <div class="row">
-                                                                <div class="col-md-3">
-                                                                    <span class="font-weight-bold">Agent</span>
-                                                                </div>
-                                                                <div class="col-md-2">
-                                                                    <span class="font-weight-bold">Sales</span>
-                                                                </div>
-                                                                <div class="col-md-2">
-                                                                    <span class="font-weight-bold">Gross</span>
-                                                                </div>
-                                                                <div class="col-md-2">
-                                                                    <span class="font-weight-bold">Taxes</span>
-                                                                </div>
-                                                                <div class="col-md-2">
-                                                                    <span class="font-weight-bold">Net</span>
-                                                                </div>
-                                                                <div class="col-md-auto">
-                                                                    <span>&nbsp;</span>
-                                                                </div>
-                                                            </div>
-                                                        </li>
-                                                        <li *ngFor="let detail of item.details" class="list-group-item">
-                                                            <div class="row align-middle">
-                                                                <div class="col-md-3">
-                                                                    {{detail.agent.firstName}} {{detail.agent.lastName}}
-                                                                </div>
-                                                                <div class="col-md-2">
-                                                                    {{detail.sales}}
-                                                                </div>
-                                                                <div class="col-md-2">
-                                                                    {{detail | payrollDetailTotals:'grossTotal' | currency}}
-                                                                </div>
-                                                                <div class="col-md-2">
-                                                                    {{detail.taxes | currency}}
-                                                                </div>
-                                                                <div class="col-md-2">
-                                                                    {{detail | payrollDetailTotals:'netTotal' | currency}}
-                                                                </div>
-                                                                <div class="col-md-auto">
-                                                                    <button type="button" mat-icon-button 
-                                                                        color="primary"
-                                                                        (click)="showExpensesAndOverrides(detail)"
-                                                                        [disabled]="item.isReleased || item.payCycle.isClosed"
-                                                                    >
-                                                                        <mat-icon>settings</mat-icon>
-                                                                    </button>
-                                                                </div>
-                                                            </div>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </ng-container>
-
-                                <tr mat-header-row *matHeaderRowDef="displayColumns"></tr>
-                                <tr mat-row *matRowDef="let item; columns: displayColumns"
-                                    class="element-row clickable"
-                                    [class.expanded-row]="expandedItem === item"
-                                    [class.expanded]="expandedItem === item"
-                                    [class.released]="item.isReleased"
-                                    (click)="expandedItem = expandedItem === item ? null : item;"
-                                ></tr>
-                                <tr mat-row 
-                                    *matRowDef="let row; columns: ['expandedDetail']" 
-                                    class="detail-row"
-                                    [class.expanded]="row == expandedItem"
-                                ></tr>
-                            </table>
+                        <!-- SELECTED -->
+                        <ng-container matColumnDef="selected">
+                            <mat-header-cell *matHeaderCellDef>
+                                <mat-checkbox (change)="$event ? masterToggle() : null"
+                                    [checked]="selection.hasValue() && isAllSelected()"
+                                    [indeterminate]="selection.hasValue() && !isAllSelected()"
+                                ></mat-checkbox>
+                            </mat-header-cell>
+                            <mat-cell *matCellDef="let item">
+                                <mat-checkbox
+                                    (click)="$event.stopPropagation()"
+                                    (change)="$event ? selection.toggle(item) : null"
+                                    [checked]="selection.isSelected(item)"
+                                    [disabled]="item.payCycle.isClosed || item.isReleased"
+                                ></mat-checkbox>
+                            </mat-cell>
                         </ng-container>
-                    </mat-card-content>
-                </mat-card>
+
+                        <!-- CAMPAIGN -->
+                        <ng-container matColumnDef="campaign">
+                            <mat-header-cell *matHeaderCellDef>Campaign</mat-header-cell>
+                            <mat-cell *matCellDef="let item">{{getCampaignDescById(item.campaignId)}}</mat-cell>
+                        </ng-container>
+
+                        <!-- CYCLE START DATE -->
+                        <ng-container matColumnDef="cycleStart">
+                            <mat-header-cell *matHeaderCellDef>Start</mat-header-cell>
+                            <mat-cell *matCellDef="let item">{{item.payCycle.startDate | date:'shortDate'}}</mat-cell>
+                        </ng-container>
+
+                        <!-- CYCLE END DATE -->
+                        <ng-container matColumnDef="cycleEnd">
+                            <mat-header-cell *matHeaderCellDef>End</mat-header-cell>
+                            <mat-cell *matCellDef="let item">{{item.payCycle.endDate | date:'shortDate'}}</mat-cell>
+                        </ng-container>
+
+                        <!-- IS AUTOMATED -->
+                        <ng-container matColumnDef="isAutomated">
+                            <mat-header-cell *matHeaderCellDef>Auto Release</mat-header-cell>
+                            <mat-cell *matCellDef="let item">
+                                <mat-checkbox [checked]="item.isAutomated" 
+                                    [disabled]="!(item.isAutomated && !item.isReleased)"
+                                    (change)="removeAutoRelease($event, item)"
+                                    (click)="$event.stopPropagation()"
+                                ></mat-checkbox>
+                            </mat-cell>
+                        </ng-container>
+
+                        <!-- AUTOMATIC RELEASE DATE -->
+                        <ng-container matColumnDef="automatedRelease">
+                            <mat-header-cell *matHeaderCellDef>Release Date</mat-header-cell>
+                            <mat-cell *matCellDef="let item">
+                                {{item.automatedRelease | date:'shortDate'}}
+                            </mat-cell>
+                        </ng-container>
+
+                        <!-- IS RELEASED -->
+                        <ng-container matColumnDef="isReleased">
+                            <mat-header-cell *matHeaderCellDef>Released</mat-header-cell>
+                            <mat-cell *matCellDef="let item">
+                                <mat-checkbox [checked]="item.isReleased" [disabled]="true"></mat-checkbox>
+                            </mat-cell>
+                        </ng-container>
+
+                        <!-- PAYROLL STATUS -->
+                        <ng-container matColumnDef="status">
+                            <mat-header-cell *matHeaderCellDef>Status</mat-header-cell>
+                            <mat-cell *matCellDef="let item">
+                                <ng-container *ngLet="getPayrollStatus(item) as desc">
+                                    {{desc}}
+                                </ng-container>
+                            </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="collapsedState">
+                            <mat-header-cell *matHeaderCellDef>&nbsp;</mat-header-cell>
+                            <mat-cell *matCellDef="let item" class="max-width-40">
+                                <mat-icon
+                                    [@collapseIcon]="item == expandedItem ? 'expanded' : 'collapsed'"
+                                >
+                                    keyboard_arrow_up
+                                </mat-icon>
+                            </mat-cell>
+                        </ng-container>
+
+                        <!-- EXPANDED DETAIL -->
+                        <ng-container matColumnDef="expandedDetail">
+                            <mat-cell *matCellDef="let item" class="detail-mat-cell">
+                                <div class="element-detail" [class.pb-2]="item == expandedItem">
+                                    <div class="row w-100">
+                                        <div class="col-md-12">                                                    
+                                            <ul class="list-group">
+                                                <li class="list-group-item">
+                                                    <div class="row">
+                                                        <div class="col-md-3">
+                                                            <span class="font-weight-bold">Agent</span>
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <span class="font-weight-bold">Sales</span>
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <span class="font-weight-bold">Gross</span>
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <span class="font-weight-bold">Taxes</span>
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <span class="font-weight-bold">Net</span>
+                                                        </div>
+                                                        <div class="col-md-auto">
+                                                            <span>&nbsp;</span>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li *ngFor="let detail of item.details" class="list-group-item">
+                                                    <div class="row align-middle">
+                                                        <div class="col-md-3">
+                                                            {{detail.agent.firstName}} {{detail.agent.lastName}}
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            {{detail.sales}}
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            {{detail | payrollDetailTotals:'grossTotal' | currency}}
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            {{detail.taxes | currency}}
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            {{detail | payrollDetailTotals:'netTotal' | currency}}
+                                                        </div>
+                                                        <div class="col-md-auto">
+                                                            <button type="button" mat-icon-button 
+                                                                color="primary"
+                                                                (click)="showExpensesAndOverrides(detail)"
+                                                                [disabled]="item.isReleased || item.payCycle.isClosed"
+                                                            >
+                                                                <mat-icon>settings</mat-icon>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </mat-cell>
+                        </ng-container>
+
+                        <mat-header-row *matHeaderRowDef="displayColumns"></mat-header-row>
+                        <mat-row *matRowDef="let item; columns: displayColumns"
+                            class="element-row clickable"
+                            [class.expanded-row]="expandedItem === item"
+                            [class.expanded]="expandedItem === item"
+                            [class.released]="item.isReleased"
+                            (click)="expandedItem = expandedItem === item ? null : item;"
+                        ></mat-row>
+                        <mat-row 
+                            *matRowDef="let row; columns: ['expandedDetail']" 
+                            class="detail-row"
+                            [@detailExpand]="row == expandedItem ? 'expanded' : 'collapsed'"
+                        ></mat-row>
+                    </mat-table>
+                </ng-container>
             </ng-container>
             <ng-template #noPayrolls>
                 <p class="text-center text-muted font-italic h4">

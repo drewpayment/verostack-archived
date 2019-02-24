@@ -16426,7 +16426,7 @@ a.nostyle:visited {
   text-decoration: inherit;
   color: inherit; }
 .clickable {
-  cursor: pointer; }
+  cursor: pointer !important; }
 .header-card {
   color: rgba(0, 0, 0, 0.87); }
 .header-card > h3 {
@@ -17265,6 +17265,204 @@ mat-toolbar-row button.vs-toolbar-icon .mat-button-wrapper mat-icon {
   width: 299px; }
 .wx-300 {
   width: 300px; }
+.max-width-1 {
+  max-width: 1px; }
+.max-width-2 {
+  max-width: 2px; }
+.max-width-3 {
+  max-width: 3px; }
+.max-width-4 {
+  max-width: 4px; }
+.max-width-5 {
+  max-width: 5px; }
+.max-width-6 {
+  max-width: 6px; }
+.max-width-7 {
+  max-width: 7px; }
+.max-width-8 {
+  max-width: 8px; }
+.max-width-9 {
+  max-width: 9px; }
+.max-width-10 {
+  max-width: 10px; }
+.max-width-11 {
+  max-width: 11px; }
+.max-width-12 {
+  max-width: 12px; }
+.max-width-13 {
+  max-width: 13px; }
+.max-width-14 {
+  max-width: 14px; }
+.max-width-15 {
+  max-width: 15px; }
+.max-width-16 {
+  max-width: 16px; }
+.max-width-17 {
+  max-width: 17px; }
+.max-width-18 {
+  max-width: 18px; }
+.max-width-19 {
+  max-width: 19px; }
+.max-width-20 {
+  max-width: 20px; }
+.max-width-21 {
+  max-width: 21px; }
+.max-width-22 {
+  max-width: 22px; }
+.max-width-23 {
+  max-width: 23px; }
+.max-width-24 {
+  max-width: 24px; }
+.max-width-25 {
+  max-width: 25px; }
+.max-width-26 {
+  max-width: 26px; }
+.max-width-27 {
+  max-width: 27px; }
+.max-width-28 {
+  max-width: 28px; }
+.max-width-29 {
+  max-width: 29px; }
+.max-width-30 {
+  max-width: 30px; }
+.max-width-31 {
+  max-width: 31px; }
+.max-width-32 {
+  max-width: 32px; }
+.max-width-33 {
+  max-width: 33px; }
+.max-width-34 {
+  max-width: 34px; }
+.max-width-35 {
+  max-width: 35px; }
+.max-width-36 {
+  max-width: 36px; }
+.max-width-37 {
+  max-width: 37px; }
+.max-width-38 {
+  max-width: 38px; }
+.max-width-39 {
+  max-width: 39px; }
+.max-width-40 {
+  max-width: 40px; }
+.max-width-41 {
+  max-width: 41px; }
+.max-width-42 {
+  max-width: 42px; }
+.max-width-43 {
+  max-width: 43px; }
+.max-width-44 {
+  max-width: 44px; }
+.max-width-45 {
+  max-width: 45px; }
+.max-width-46 {
+  max-width: 46px; }
+.max-width-47 {
+  max-width: 47px; }
+.max-width-48 {
+  max-width: 48px; }
+.max-width-49 {
+  max-width: 49px; }
+.max-width-50 {
+  max-width: 50px; }
+.max-width-51 {
+  max-width: 51px; }
+.max-width-52 {
+  max-width: 52px; }
+.max-width-53 {
+  max-width: 53px; }
+.max-width-54 {
+  max-width: 54px; }
+.max-width-55 {
+  max-width: 55px; }
+.max-width-56 {
+  max-width: 56px; }
+.max-width-57 {
+  max-width: 57px; }
+.max-width-58 {
+  max-width: 58px; }
+.max-width-59 {
+  max-width: 59px; }
+.max-width-60 {
+  max-width: 60px; }
+.max-width-61 {
+  max-width: 61px; }
+.max-width-62 {
+  max-width: 62px; }
+.max-width-63 {
+  max-width: 63px; }
+.max-width-64 {
+  max-width: 64px; }
+.max-width-65 {
+  max-width: 65px; }
+.max-width-66 {
+  max-width: 66px; }
+.max-width-67 {
+  max-width: 67px; }
+.max-width-68 {
+  max-width: 68px; }
+.max-width-69 {
+  max-width: 69px; }
+.max-width-70 {
+  max-width: 70px; }
+.max-width-71 {
+  max-width: 71px; }
+.max-width-72 {
+  max-width: 72px; }
+.max-width-73 {
+  max-width: 73px; }
+.max-width-74 {
+  max-width: 74px; }
+.max-width-75 {
+  max-width: 75px; }
+.max-width-76 {
+  max-width: 76px; }
+.max-width-77 {
+  max-width: 77px; }
+.max-width-78 {
+  max-width: 78px; }
+.max-width-79 {
+  max-width: 79px; }
+.max-width-80 {
+  max-width: 80px; }
+.max-width-81 {
+  max-width: 81px; }
+.max-width-82 {
+  max-width: 82px; }
+.max-width-83 {
+  max-width: 83px; }
+.max-width-84 {
+  max-width: 84px; }
+.max-width-85 {
+  max-width: 85px; }
+.max-width-86 {
+  max-width: 86px; }
+.max-width-87 {
+  max-width: 87px; }
+.max-width-88 {
+  max-width: 88px; }
+.max-width-89 {
+  max-width: 89px; }
+.max-width-90 {
+  max-width: 90px; }
+.max-width-91 {
+  max-width: 91px; }
+.max-width-92 {
+  max-width: 92px; }
+.max-width-93 {
+  max-width: 93px; }
+.max-width-94 {
+  max-width: 94px; }
+.max-width-95 {
+  max-width: 95px; }
+.max-width-96 {
+  max-width: 96px; }
+.max-width-97 {
+  max-width: 97px; }
+.max-width-98 {
+  max-width: 98px; }
+.max-width-99 {
+  max-width: 99px; }
 /*************************************************
  * ^^^ COMPONENTS ^^^                            *
 *************************************************/

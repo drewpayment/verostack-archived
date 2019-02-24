@@ -35,7 +35,6 @@ class PayrollDetailController extends Controller
     public function getPaychecksByDetail(Request $request, $clientId, $payrollDetailsId)
     {
         $result = new ApiResource();
-        dump($request);
 
         $result
 			->checkAccessByClient($clientId, Auth::user()->id)

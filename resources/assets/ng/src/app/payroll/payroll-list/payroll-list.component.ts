@@ -9,7 +9,7 @@ import { PayrollFilterDialogComponent } from '../payroll-filter-dialog/payroll-f
 import { Moment, MomentInclusivity } from '@app/shared/moment-extensions';
 import * as moment from 'moment';
 import { CampaignService } from '@app/campaigns/campaign.service';
-import { trigger, state, style, transition, animate } from '@angular/animations';
+import { trigger, state, style, transition, animate, sequence, query } from '@angular/animations';
 import { SelectionModel } from '@angular/cdk/collections';
 import { OverrideExpenseDialogComponent } from '../override-expense-dialog/override-expense-dialog.component';
 import { ScheduleAutoReleaseDialogComponent } from '../schedule-auto-release-dialog/schedule-auto-release-dialog.component';
@@ -25,7 +25,27 @@ import * as _ from 'lodash';
         trigger('detailExpand', [
             state('collapsed', style({height: '0px', minHeight: '0', display: 'none'})),
             state('expanded', style({height: '*'})),
-            transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)'))
+            transition('collapsed => expanded', [
+                sequence([
+                    animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)'),
+                    query('.detail-mat-cell', [
+                        style({ height: '*' })
+                    ])
+                ])
+            ]),
+            transition('expanded => collapsed', [
+                sequence([
+                    query('.detail-mat-cell', [
+                        style({ height: '0px', minHeight: '0', display: 'none' })
+                    ]),
+                    animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')
+                ])
+            ])
+        ]),
+        trigger('collapseIcon', [
+            state('collapsed', style({ transform: 'rotate(0)' })),
+            state('expanded', style({ transform: 'rotate(180deg)' })),
+            transition('collapsed <=> expanded', animate('400ms ease-in-out'))
         ])
     ]
 })
@@ -50,7 +70,7 @@ export class PayrollListComponent implements OnInit {
 
     displayColumns = [
         'selected', 'campaign', 'cycleStart', 'cycleEnd', 'isAutomated', 
-        'isReleased', 'automatedRelease', 'status'
+        'isReleased', 'automatedRelease', 'status', 'collapsedState'
     ];
     detailColumns = ['agent', 'sales', 'gross', 'taxes', 'net'];
     expandedItem:Payroll;
@@ -318,9 +338,10 @@ export class PayrollListComponent implements OnInit {
 
         /** let's set our initial filter dates based on what came back from the api */
         if((this.filters.startDate == null || this.filters.endDate == null) && this._payrolls.length) {
-            const mostRecentWeekending = moment(this._payrolls.sort((a, b) => moment(a.weekEnding).isAfter(b.weekEnding, 'day') ? 1 : 0)[0].weekEnding);
-            this.filters.endDate = moment(mostRecentWeekending.clone().add(7, 'days')).toDate();
-            this.filters.startDate = moment(mostRecentWeekending.clone().subtract(7, 'days')).toDate();
+            const sortedPayrolls = this._payrolls.sort((a, b) => moment(a.weekEnding).isAfter(b.weekEnding, 'day') ? 1 : 0);
+            const mostRecentWeekending = sortedPayrolls[sortedPayrolls.length - 1].weekEnding;
+            this.filters.endDate = moment(mostRecentWeekending).add(7, 'days');
+            this.filters.startDate = moment(mostRecentWeekending).subtract(7, 'days');
         }
 
         let filteredPayrolls:Payroll[] = [];

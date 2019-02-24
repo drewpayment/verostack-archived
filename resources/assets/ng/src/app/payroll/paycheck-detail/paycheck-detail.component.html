@@ -3,11 +3,13 @@
     <div class="row">
         <div class="col-md-12">
             <mat-card class="page-header-accent">
-                <mat-card-content class="d-flex justify-content-between">
+                <h3 mat-card-title>Income Statement</h3>
+                <mat-card-content></mat-card-content>
+                <!-- <mat-card-content class="d-flex justify-content-between">
                     <h3>
                         Income Statement
                     </h3>
-                    <!-- <div>
+                    <div>
                         <mat-slide-toggle [checked]="showClosed" (change)="switchDisplay()" class="my-0 mr-2">
                             Show Closed
                         </mat-slide-toggle>
@@ -15,8 +17,8 @@
                             <mat-icon inline="true">add</mat-icon>
                             <span>Payroll</span>
                         </button>
-                    </div> -->
-                </mat-card-content>
+                    </div>
+                </mat-card-content> -->
             </mat-card>
         </div>
     </div>
@@ -24,8 +26,8 @@
     <ng-container *ngLet="detail$|async as detail">
         <div class="row mx-2">
             <div class="col-md-12">
-                <mat-card class="border-top-primary">
-                    <mat-card-subtitle>
+                <mat-card class="border-top-primary invoice-card">
+                    <mat-card-subtitle class="px-4">
                         <h4 class="text-body pb-3 w-100 d-flex justify-content-between">
                             <span>{{client?.name}}</span>
                             <small>Campaign: {{detail?.payroll?.campaign?.name}}</small>
@@ -73,14 +75,14 @@
                             <ng-container matColumnDef="customerName">
                                 <mat-header-cell *matHeaderCellDef>Customer Name</mat-header-cell>
                                 <mat-cell *matCellDef="let item">
-                                    Need Contact Info
+                                    {{ item.contact?.firstName }} {{ item.contact?.lastName }}
                                 </mat-cell>
                             </ng-container>
 
                             <ng-container matColumnDef="address">
                                 <mat-header-cell *matHeaderCellDef>Address</mat-header-cell>
                                 <mat-cell *matCellDef="let item">
-                                    Need Contact Info
+                                    {{ item.contact?.city }} {{ item.contact?.state }}
                                 </mat-cell>
                             </ng-container>
 
@@ -94,7 +96,7 @@
                             <ng-container matColumnDef="amount">
                                 <mat-header-cell *matHeaderCellDef>Amount</mat-header-cell>
                                 <mat-cell *matCellDef="let item">
-                                    {{ item.campaign?.compensation != null ? item.campaign?.compensation : 0 | currency }}
+                                    {{ (item.campaign?.compensation != null ? item.campaign?.compensation : 0) | currency }}
                                 </mat-cell>
                             </ng-container>
 
@@ -102,7 +104,99 @@
                             <mat-row *matRowDef="let row; columns: saleColumns;"></mat-row>
                         </mat-table>
 
+                        <div class="my-4" *ngIf="overrides.length">
+                            <p class="adjustment-titles">Overrides</p>
+                            <mat-table [dataSource]="overrides">
+                                <ng-container matColumnDef="agentName">
+                                    <mat-header-cell *matHeaderCellDef>Agent</mat-header-cell>
+                                    <mat-cell *matCellDef="let item">
+                                        {{ item.agent?.firstName }} {{ item.agent?.lastName }}
+                                    </mat-cell>
+                                </ng-container>
 
+                                <ng-container matColumnDef="noSales">
+                                    <mat-header-cell *matHeaderCellDef>No. Sales</mat-header-cell>
+                                    <mat-cell *matCellDef="let item">
+                                        {{ item.units }}
+                                    </mat-cell>
+                                </ng-container>
+
+                                <ng-container matColumnDef="commission">
+                                    <mat-header-cell *matHeaderCellDef>Commission</mat-header-cell>
+                                    <mat-cell *matCellDef="let item">
+                                        {{ item.amount | currency }}
+                                    </mat-cell>
+                                </ng-container>
+
+                                <ng-container matColumnDef="total">
+                                    <mat-header-cell *matHeaderCellDef>Total</mat-header-cell>
+                                    <mat-cell *matCellDef="let item">
+                                        {{ (item.amount * item.units) | currency }}
+                                    </mat-cell>
+                                </ng-container>
+
+                                <mat-header-row *matHeaderRowDef="overrideColumns"></mat-header-row>
+                                <mat-row *matRowDef="let row; columns: overrideColumns"></mat-row>
+                            </mat-table>
+                        </div>
+
+                        <div class="my-4" *ngIf="expenses.length">
+                            <p class="adjustment-titles">Expenses</p>
+                            <mat-table [dataSource]="expenses">
+                                <ng-container matColumnDef="date">
+                                    <mat-header-cell *matHeaderCellDef>Date</mat-header-cell>
+                                    <mat-cell *matCellDef="let item">
+                                        {{ item.expenseDate | date:'shortDate' }}
+                                    </mat-cell>
+                                </ng-container>
+
+                                <ng-container matColumnDef="title">
+                                    <mat-header-cell *matHeaderCellDef>Title</mat-header-cell>
+                                    <mat-cell *matCellDef="let item" class="text-truncate">
+                                        {{ item.title }}
+                                    </mat-cell>
+                                </ng-container>
+
+                                <ng-container matColumnDef="description">
+                                    <mat-header-cell *matHeaderCellDef>Description</mat-header-cell>
+                                    <mat-cell *matCellDef="let item" class="text-truncate">
+                                        {{ item.description }}
+                                    </mat-cell>
+                                </ng-container>
+
+                                <ng-container matColumnDef="amount">
+                                    <mat-header-cell *matHeaderCellDef>Amount</mat-header-cell>
+                                    <mat-cell *matCellDef="let item">
+                                        {{ item.amount | currency }}
+                                    </mat-cell>
+                                </ng-container>
+
+                                <mat-header-row *matHeaderRowDef="expenseColumns"></mat-header-row>
+                                <mat-row *matRowDef="let row; columns: expenseColumns"></mat-row>
+                            </mat-table>
+                        </div>
+
+                        <mat-table [dataSource]="summary" class="mt-4">
+                            <ng-container matColumnDef="spacer">
+                                <mat-header-cell *matHeaderCellDef>&nbsp;</mat-header-cell>
+                                <mat-cell *matCellDef="let item">&nbsp;</mat-cell>
+                            </ng-container>
+
+                            <ng-container matColumnDef="titleColumn">
+                                <mat-header-cell *matHeaderCellDef>&nbsp;</mat-header-cell>
+                                <mat-cell *matCellDef="let item" class="text-muted">Net Total</mat-cell>
+                            </ng-container>
+
+                            <ng-container matColumnDef="total">
+                                <mat-header-cell *matHeaderCellDef>&nbsp;</mat-header-cell>
+                                <mat-cell *matCellDef="let item">
+                                    {{ item.grossTotal | currency }}
+                                </mat-cell>
+                            </ng-container>
+
+                            <mat-header-row *matHeaderRowDef="summaryColumns"></mat-header-row>
+                            <mat-row *matRowDef="let row; columns: summaryColumns"></mat-row>
+                        </mat-table>
                     </mat-card-content>
                 </mat-card>
             </div>

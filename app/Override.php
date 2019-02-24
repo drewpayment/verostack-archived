@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Agent;
 use App\PayrollDetail;
 use Illuminate\Database\Eloquent\Model;
 
@@ -26,6 +27,11 @@ class Override extends Model
     public function payrollDetails()
     {
         return $this->belongsTo(PayrollDetail::class, 'payroll_details_id');
+    }
+
+    public function agent()
+    {
+        return $this->hasOne(Agent::class, 'agent_id', 'agent_id');
     }
 
     public function scopeByOverride($query, $id)

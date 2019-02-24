@@ -197,7 +197,7 @@ export class PayCycleComponent implements OnInit {
                         const uniqueAgents = filteredSales.map(fs => fs.agentId).filter((fs, i, a) => a.indexOf(fs) === i);
                         
                         uniqueAgents.forEach(ua => {
-                            const agentSales = filteredSales.filter(fs => fs.agentId == ua);
+                            const agentSales = filteredSales.filter(fs => fs.agentId == ua && fs.payCycleId == cycle.payCycleId);
                             const grossTotal = agentSales.length * (campaign.compensation || 0);
                             /** 
                              * how do we figure this out? this might need to be a server side calc if 
@@ -230,7 +230,7 @@ export class PayCycleComponent implements OnInit {
             .subscribe(sales => {
                 this.payrollService.savePayrollList(this.user.sessionUser.sessionClient, sales)
                     .subscribe(payrolls => {
-                        this.msg.addMessage('Successfully process payroll.');
+                        this.msg.addMessage('Successfully processed payroll.');
                         
                         if(cycle.payrolls.length)
                             cycle.payrolls.concat(payrolls);

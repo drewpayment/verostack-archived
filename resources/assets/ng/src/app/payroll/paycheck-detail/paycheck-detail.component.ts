@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRouteSnapshot, ActivatedRoute } from '@angular/router';
-import { PayrollDetails, User, IClient, DailySale } from '@app/models';
+import { PayrollDetails, User, IClient, DailySale, IOverride, IExpense } from '@app/models';
 import { BehaviorSubject } from 'rxjs';
 import { SessionService } from '@app/session.service';
 import { DailySaleTrackerService } from '@app/daily-sale-tracker/daily-sale-tracker.service';
@@ -19,6 +19,15 @@ export class PaycheckDetailComponent implements OnInit {
     sales:DailySale[];
     saleColumns = ['no', 'saleDate', 'customerName', 'address', 'commissionable', 'amount'];
 
+    overrides:IOverride[];
+    overrideColumns = ['agentName', 'noSales', 'commission', 'total'];
+
+    expenses:IExpense[];
+    expenseColumns = ['date', 'title', 'description', 'amount'];
+
+    summary:PayrollDetails[];
+    summaryColumns = ['spacer', 'titleColumn', 'total'];
+
     constructor(
         private route:ActivatedRoute, 
         private session:SessionService, 
@@ -29,6 +38,9 @@ export class PaycheckDetailComponent implements OnInit {
         this.route.data.subscribe(data => {
             const detailData:PayrollDetails = data.data;
             this.detail$.next(data.data);
+            this.overrides = detailData.overrides;
+            this.expenses = detailData.expenses;
+            this.summary = [detailData];
 
             this.session.getUserItem().subscribe(u => {
                 this.user = u;
@@ -40,14 +52,6 @@ export class PaycheckDetailComponent implements OnInit {
                 ).subscribe(sales => {
                     this.sales = sales;
                 });
-                // this.dailySaleService.getDailySalesByAgent(
-                //     this.user.sessionUser.sessionClient, 
-                //     detailData.agentId,
-                //     <string>detailData.payroll.payCycle.startDate,
-                //     <string>detailData.payroll.payCycle.endDate
-                // ).subscribe(sales => {
-                //     this.sales = sales;
-                // });
             });
         });
     }
