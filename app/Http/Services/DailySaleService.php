@@ -46,7 +46,7 @@ class DailySaleService {
                 ->byClient($clientId)
 				->byCampaign($campaignId)
                 ->byDateRange($startDate, $endDate)
-                ->filterPaid()
+                // ->filterPaid()
 				->with(['remarks', 'remarks.user'])
 	            ->get());
 	}
