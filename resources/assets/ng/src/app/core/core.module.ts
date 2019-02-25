@@ -17,6 +17,7 @@ import { AddSaleDialog } from '@app/daily-sale-tracker/dialogs/add-sale.componen
 import { DailySaleTrackerComponent } from '@app/daily-sale-tracker/daily-sale-tracker.component';
 import { DeleteSaleDialog } from '@app/daily-sale-tracker/dialogs/delete-sale.component';
 import { RouterModule } from '@angular/router';
+import { DirectivesModule } from '@app/directives/directives.module';
 
 @NgModule({
   imports: [
@@ -29,7 +30,8 @@ import { RouterModule } from '@angular/router';
     ReactiveFormsModule,
     MomentModule,
     FabFloatBtnModule,
-    RouterModule
+    RouterModule,
+    DirectivesModule
   ],
   declarations: [
     MessagesComponent,

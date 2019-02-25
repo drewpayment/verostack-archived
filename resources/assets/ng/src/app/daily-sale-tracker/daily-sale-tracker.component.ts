@@ -39,6 +39,11 @@ interface PaidStatus {
             state('collapsed', style({height: '0px', minHeight: '0', display: 'none'})),
             state('expanded', style({height: '*'})),
             transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)'))
+        ]),
+        trigger('collapseIcon', [
+            state('collapsed', style({ transform: 'rotate(0)' })),
+            state('expanded', style({ transform: 'rotate(180deg)' })),
+            transition('collapsed <=> expanded', animate('400ms ease-in-out'))
         ])
     ],
     providers: [FloatBtnService]
@@ -164,6 +169,7 @@ export class DailySaleTrackerComponent implements OnInit {
     }
 
     expandedRowHover(row: any): void {
+        if(row.remarks.length < 1) return;
         row.showNotes = row.showNotes == null ? true : !row.showNotes;
         this.showNotes = !this.showNotes;
         row = this.showNotes ? row : null;
@@ -189,13 +195,15 @@ export class DailySaleTrackerComponent implements OnInit {
             .subscribe((result: any) => {
                 this.floatBtnService.close();
                 if (result == null) return;
-                let dto: DailySale = result;
+
+                let dto:DailySale = result;
                 dto.clientId = this.userInfo.sessionUser.sessionClient;
                 dto.saleDate = this.formatSqlDate(dto.saleDate as Moment, true);
 
-                this.trackerService.createDailySale(dto.clientId, dto).subscribe(() => {
-                    this.refreshDailySales(this.startDate, this.endDate);
-                });
+                this.trackerService.saveSaleWithContactInfo(dto.clientId, dto.campaignId, dto)
+                    .subscribe(sale => {
+                        this.refreshDailySales(this.startDate, this.endDate);
+                    });
             });
     }
 
@@ -373,6 +381,9 @@ export class DailySaleTrackerComponent implements OnInit {
             )
             .subscribe(sales => {
                 this.store.sales = _.orderBy(sales, ['saleDate'], ['desc']);
+
+                this.store.sales.forEach(s => s.readonly = s.payCycleId != null && s.payCycleId > 0);
+
                 this.tableEmpty = sales.length < 1;
                 this.dataSource$.next(this.store.sales);
                 this.createForm();

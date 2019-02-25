@@ -38,4 +38,7 @@ export interface DailySale {
   agent?:IAgent,
   contact?:Contact,
   saleStatus?:SaleStatus
+
+  // UI ONLY PROPERTIES 
+  readonly?:boolean
 }

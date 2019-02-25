@@ -1,7 +1,7 @@
-import {Component, OnInit, Inject, ViewChild, SimpleChanges} from '@angular/core';
+import {Component, OnInit, Inject, ViewChild, SimpleChanges, AfterViewInit} from '@angular/core';
 import {MatDialogRef, MAT_DIALOG_DATA, MatTooltip} from '@angular/material';
-import {FormBuilder, FormGroup, Validators, FormArray, FormControl} from '@angular/forms';
-import {SaleStatus, IAgent, ICampaign, DailySale, User, Remark, PaidStatusType} from '@app/models';
+import {FormBuilder, FormGroup, Validators, FormArray, FormControl, ValidatorFn, AbstractControl} from '@angular/forms';
+import {SaleStatus, IAgent, ICampaign, DailySale, User, Remark, PaidStatusType, Utility} from '@app/models';
 
 import * as moment from 'moment';
 import * as _ from 'lodash';
@@ -11,6 +11,8 @@ import {CampaignService} from '@app/campaigns/campaign.service';
 import {Router} from '@angular/router';
 import { Contact } from '@app/models/contact.model';
 import { ContactService } from '@app/contact/contact.service';
+import { tap } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs';
 
 interface DialogData {
     statuses: SaleStatus[];
@@ -30,7 +32,7 @@ interface ViewRemark extends Remark {
     templateUrl: './add-sale.component.html',
     styleUrls: ['./add-sale.component.scss']
 })
-export class AddSaleDialog implements OnInit {
+export class AddSaleDialog implements OnInit, AfterViewInit {
     form: FormGroup;
     contactForm:FormGroup;
     statuses: SaleStatus[];
@@ -50,6 +52,13 @@ export class AddSaleDialog implements OnInit {
     remarkControl: FormGroup;
     isExistingSale: boolean;
     showEditContactForm:boolean = false;
+    contacts:Contact[];
+    showNewContactFields:boolean = false;
+    showSetContactUI:boolean = false;
+
+    /** internal use only, keeps track of all available utilities */
+    private _utilities:Utility[];
+    utilities:BehaviorSubject<Utility[]> = new BehaviorSubject<Utility[]>(null);
 
     constructor(
         public ref: MatDialogRef<AddSaleDialog>,
@@ -72,6 +81,9 @@ export class AddSaleDialog implements OnInit {
         this.selectedCampaign = this.data.selectedCampaign;
         this.user = this.data.user;
 
+        this.contactService.getContactsByClient(this.user.sessionUser.sessionClient)
+            .subscribe(contacts => this.contacts = contacts);
+
         if (this.isExistingSale && this.data.campaigns == null) {
             this.campaignService.getCampaigns(this.user.sessionUser.sessionClient, false).then(results => {
                 this.campaigns = results;
@@ -89,9 +101,39 @@ export class AddSaleDialog implements OnInit {
     onNoClick(): void {
         this.ref.close();
     }
+    
+    ngAfterViewInit() {
+        /** watch for form changes to campaign id and update utility dropdown options accordingly */
+        this.form.controls.campaign.valueChanges.subscribe(val => {
+            const campaign = this.campaigns.find(c => c.campaignId == val);
+            const filteredUtils = campaign.utilities;
+            
+            if(!filteredUtils.length) {
+                this.form.patchValue({ utilityId: null });
+                this.form.controls.utilityId.reset();
+            }
+                
+            this.utilities.next(filteredUtils);
+        });
+    }
+
+    navigateToUtilitySetup() {
+        this.router.navigate(['/campaigns', this.form.get('campaign').value]);
+    }
 
     saveDialog(): void {
         this.submitted = true;
+        
+        /**
+         * Check to see if the user selected and existing contact or if they used the "new contact"
+         * form to create a new contact and then revalidate the sale form.
+         */
+        if(this.form.get('existingContact').dirty && this.form.get('existingContact').valid) {
+            delete this.form.controls['contact'];
+        } else if(this.form.get('contact').dirty && this.form.get('contact').valid) {
+            delete this.form.controls['existingContact'];
+        }
+
         this.form.updateValueAndValidity();
         if (this.form.invalid) return;
 
@@ -99,22 +141,70 @@ export class AddSaleDialog implements OnInit {
         this.ref.close(dto);
     }
 
-    editContact(contact:Contact) {
-
-        this.contactForm = this.createContactForm(contact);
-        this.showEditContactForm = true;
+    validateContactInput(event:any) {
+        const input = event.target.value;
+        let exists:boolean = false;
+        this.contacts.forEach(c => {
+            if(c.firstName.includes(input))
+                return exists = true;
+            if(c.lastName.includes(input))
+                return exists = true;
+        });
+        if(!exists)
+            this.form.get('existingContact').setErrors({ nonExistent: true });
     }
 
-    cancelContactForm() {
-        this.contactForm.reset();
-        this.showEditContactForm = false;
+    showNewContactForm():void {
+        this.resetContactForm('contact');
+        this.showNewContactFields = !this.showNewContactFields;
     }
 
-    saveContactForm() {
-        const model = this.prepareContactModel();
-        console.dir(model);
+    setNewContact():void {
+        this.setControlsTouched(this.form.get('contact') as FormGroup);
+        if(this.form.get('contact').invalid) return;
 
-        /** SEND THE FORM AND SAVE TO API */
+        this.showNewContactFields = false;
+        this.showSetContactUI = true;
+    }
+
+    unsetNewContact(formGroupName:string):void {
+        this.resetContactForm(formGroupName);
+        this.showNewContactFields = false;
+        this.showSetContactUI = false;
+    }
+
+    private resetContactForm(formGroupName:string):void {
+        (<FormGroup>this.form.controls[formGroupName]).patchValue({
+            firstName: '',
+            lastName: '',
+            prefix: '',
+            ssn: '',
+            dob: '',
+            street: '',
+            street2: '',
+            city: '',
+            state: '',
+            zip: '',
+            phone: '',
+            email: '',
+            fax: ''
+        });
+        this.form.get(formGroupName).reset();
+    }
+
+    private setControlsTouched(group:FormGroup) {
+        for(var c in group.controls) {
+            group.controls[c].markAsTouched();
+            if(this.hasProperty(group.controls[c], 'controls')) {
+                this.setControlsTouched(group.controls[c]['controls']);
+            }
+        }
+    }
+
+    private hasProperty(obj, prop):boolean {
+        var proto = obj.__proto__ || obj.constructor.prototype;
+        return (prop in obj) &&
+            (!(prop in proto) || proto[prop] !== obj[prop]);
     }
 
     navigateToSaleDetail() {
@@ -186,45 +276,16 @@ export class AddSaleDialog implements OnInit {
         this.form.patchValue({activityDate: newActivityValue});
     }
 
-    private createContactForm(contact:Contact = {} as Contact):FormGroup {
-        return this.fb.group({
-            contactId: this.fb.control(contact.contactId || ''),
-            prefix: this.fb.control(contact.prefix || ''),
-            firstName: this.fb.control(contact.firstName || '', [Validators.required]),
-            lastName: this.fb.control(contact.lastName || '', [Validators.required]),
-            suffix: this.fb.control(contact.suffix || ''),
-            street: this.fb.control(contact.street || '', [Validators.required]),
-            street2: this.fb.control(contact.street2 || ''),
-            city: this.fb.control(contact.city || '', [Validators.required]),
-            state: this.fb.control(contact.state || '', [Validators.required]),
-            zip: this.fb.control(contact.zip || '', [Validators.required]),
-            email: this.fb.control(contact.email || '', [Validators.required]),
-            phone: this.fb.control(contact.phone || '', [Validators.required]),
-            fax: this.fb.control(contact.fax || ''),
-            ssn: this.fb.control(contact.ssn || ''),
-            dob: this.fb.control(contact.dob || '', [Validators.required])
-        });
+    displayFn(contact:Contact):string {
+        return typeof contact === 'object' && contact != null
+            ? `${contact.firstName} ${contact.lastName}`
+            : '';
     }
 
-    private prepareContactModel():Contact {
-        const form = this.contactForm.value;
-        return {
-            contactId: form.contactId,
-            firstName: form.firstName,
-            lastName: form.lastName,
-            street: form.street,
-            street2: form.street2,
-            city: form.city,
-            state: form.state,
-            zip: form.zip,
-            email: form.email,
-            phone: form.phone,
-            fax: form.fax,
-            ssn: form.ssn,
-            clientId: this.user.sessionUser.sessionClient,
-            prefix: form.prefix,
-            suffix: form.suffix,
-            dob: form.dob
+    private contactValidatorFn():ValidatorFn {
+        return (control:AbstractControl): {[key:string]:any} | null => {
+            const invalid = control.value == null && this.form.get('contact').invalid;
+            return invalid ? {'required': { value: control.value } } : null;
         }
     }
 
@@ -239,20 +300,34 @@ export class AddSaleDialog implements OnInit {
             saleDate: this.fb.control(this.existingSale.saleDate || this.today, [Validators.required]),
             agent: this.fb.control(this.existingSale.agentId || '', [Validators.required]),
             campaign: this.fb.control({value: campaignValue, disabled: this.isExistingSale}, [Validators.required]),
+            utilityId: this.fb.control('', [Validators.required]),
             account: this.fb.control(this.existingSale.podAccount || '', [Validators.required]),
-            firstName: this.fb.control(this.existingSale.firstName || '', [Validators.required]),
-            lastName: this.fb.control(this.existingSale.lastName || '', [Validators.required]),
-            address: this.fb.control(this.existingSale.street || '', [Validators.required]),
-            address2: this.fb.control(this.existingSale.street2 || ''),
-            city: this.fb.control(this.existingSale.city || '', [Validators.required]),
-            state: this.fb.control(this.existingSale.state || '', [Validators.required]),
-            zip: this.fb.control(this.existingSale.zip || '', [Validators.required]),
             status: this.fb.control(this.existingSale.status || '', [Validators.required]),
             paidStatus: this.fb.control(this.formatPaidStatus() || '', [Validators.required]),
             paidDate: this.fb.control(this.existingSale.paidDate || ''),
             chargeDate: this.fb.control(this.existingSale.chargeDate || ''),
             repaidDate: this.fb.control(this.existingSale.repaidDate || ''),
-            remarks: this.createRemarksFormArray()
+            remarks: this.createRemarksFormArray(),
+            existingContact: this.fb.control('', [this.contactValidatorFn]),
+            contact: this.fb.group({
+                contactId: this.fb.control(''),
+                clientId: this.fb.control(''),
+                firstName: this.fb.control('', [Validators.required]),
+                lastName: this.fb.control('', [Validators.required]),
+                middleName: this.fb.control(''),
+                prefix: this.fb.control(''),
+                suffix: this.fb.control(''),
+                ssn: this.fb.control(''),
+                dob: this.fb.control('', [Validators.required]),
+                street: this.fb.control('', [Validators.required]),
+                street2: this.fb.control(''),
+                city: this.fb.control('', [Validators.required]),
+                state: this.fb.control('', [Validators.required]),
+                zip: this.fb.control('', [Validators.required]),
+                phone: this.fb.control('', [Validators.required, Validators.pattern('[0-9]+')]),
+                email: this.fb.control(''),
+                fax: this.fb.control('')
+            })
         });
     }
 
@@ -274,14 +349,8 @@ export class AddSaleDialog implements OnInit {
             dailySaleId: this.existingSale.dailySaleId || null,
             agentId: this.form.value.agent,
             campaignId: this.form.value.campaign,
+            utilityId: this.form.value.utilityId,
             clientId: this.user.sessionUser.sessionClient,
-            firstName: this.form.value.firstName,
-            lastName: this.form.value.lastName,
-            street: this.form.value.address,
-            street2: this.form.value.address2,
-            city: this.form.value.city,
-            state: this.form.value.state,
-            zip: this.form.value.zip,
             status: this.form.value.status,
             paidStatus: this.form.value.paidStatus,
             paidDate: this.setActivityDateProperty(this.form.value.paidStatus, 'paidDate'),
@@ -289,7 +358,28 @@ export class AddSaleDialog implements OnInit {
             repaidDate: this.setActivityDateProperty(this.form.value.paidStatus, 'repaidDate'),
             saleDate: this.form.value.saleDate,
             podAccount: this.form.value.account,
-            remarks: this.newRemarks
+            remarks: this.newRemarks,
+            contact: typeof this.form.value.existingContact === 'object'
+                ? this.form.value.existingContact
+                : {
+                    contactId: this.form.value.contactId,
+                    clientId: this.user.sessionUser.sessionClient,
+                    firstName: this.form.value.contact.firstName,
+                    lastName: this.form.value.contact.lastName,
+                    middleName: this.form.value.contact.middleName,
+                    prefix: this.form.value.contact.prefix,
+                    suffix: this.form.value.contact.suffix,
+                    ssn: this.form.value.contact.ssn,
+                    dob: this.form.value.contact.dob,
+                    street: this.form.value.contact.street,
+                    street2: this.form.value.contact.street2,
+                    city: this.form.value.contact.city,
+                    state: this.form.value.contact.state,
+                    zip: this.form.value.contact.zip,
+                    phone: this.form.value.contact.phone,
+                    email: this.form.value.contact.email,
+                    fax: this.form.value.contact.fax
+                }
         };
     }
 

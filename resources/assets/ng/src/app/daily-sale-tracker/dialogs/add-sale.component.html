@@ -27,6 +27,38 @@
                     </mat-error>
                 </mat-form-field>
             </div>
+            <div class="col-md-6">
+                <ng-container *ngIf="form.get('campaign').value > 0">
+                    <ng-container *ngLet="utilities|async as utils">
+                        <mat-form-field *ngIf="utils != null && utils.length; else noUtilitiesMsg" class="w-100">
+                            <mat-select placeholder="Utility" formControlName="utilityId" required>
+                                <mat-option *ngFor="let u of utils" [value]="u?.utilityId">
+                                    {{ u.utilityName }}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="form.get('utilityId').hasError('required') && (form.get('utilityId').touched || submitted)">
+                                Please select a utility
+                            </mat-error>
+                        </mat-form-field>
+                        <ng-template #noUtilitiesMsg>
+                            <p *ngIf="user.role.role > 5; else empRoleType">
+                                Uh oh! It looks like you're missing utilities. This is required before you can save sales. Please
+                                head over 
+                                <button class="btn btn-link" (click)="navigateToUtilitySetup()">here</button>
+                                to add your 
+                                first utility for this campaign now.
+                            </p>
+                            <ng-template #empRoleType>
+                                <p>
+                                    It looks like your organization has not fully setup their campaigns. Please let your direct 
+                                    supervisor know, so they can help you resolve this issue before you start completing sales 
+                                    entries.
+                                </p>
+                            </ng-template>
+                        </ng-template>
+                    </ng-container>
+                </ng-container>
+            </div>
         </div>
 
         <!-- AGENT AND SALE DATE -->
@@ -116,54 +148,197 @@
             </div>
         </div>
 
-        <ng-container *ngIf="existingSale?.contact != null; else addContactInfoLink">
-            <div class="row my-4">
-                <div class="col-md-12">
-                    <span>Customer Information</span>
-                    <mat-divider></mat-divider>
-                </div>
-            </div>
-
-            <div class="row" *ngIf="existingSale.contact != null">
-                <div class="col-md-12 d-flex justify-content-between">
-                    <div>
-                        <span class="font-weight-bold">
-                            {{existingSale.contact.firstName}} {{existingSale.contact.lastName}}
-                        </span>
-                        <address>
-                            {{existingSale.contact.street}} <br />
-                            <ng-container *ngIf="existingSale.contact.street2 != null">
-                                {{existingSale.contact.street2}} <br />
-                            </ng-container>
-                            {{existingSale.contact.city}} {{existingSale.contact.state}} {{existingSale.contact.zip}}
-                            <br /><br />
-                            <span class="font-weight-bold">
-                                Date of Birth
-                            </span>
-                            <br />
-                            {{existingSale.contact.dob | date:'mediumDate'}}
-                            <br /><br />
-                            <span class="font-weight-bold">Email</span>
-                            <br />
-                            {{existingSale.contact.email}}
-                        </address>
-                    </div>
-                    <div>
-                        <button type="button" mat-button (click)="editContact(existingSale.contact)">
-                            <mat-icon inline="true">edit</mat-icon>
-                            <span>Edit</span>
+        <div class="row my-4" *ngIf="!showNewContactFields && !showSetContactUI">
+            <div class="col-md-5">
+                <!-- <span (click)="navigateToSaleDetail()">Click here</span> to add contact info. -->
+                <mat-form-field>
+                    <input matInput placeholder="Customer" 
+                        [matAutocomplete]="autocontact" formControlName="existingContact" 
+                        (keyup)="validateContactInput($event)" required />
+                    <mat-autocomplete #autocontact="matAutocomplete" [displayWith]="displayFn">
+                        <mat-option *ngFor="let c of contacts" [value]="c">
+                            <mat-icon inline="true">person</mat-icon>
+                            <span>{{c.firstName}} {{c.lastName}} </span>
+                            <small>{{c.street}} {{c.city}} {{c.state}}</small>
+                        </mat-option>
+                    </mat-autocomplete>
+                    <mat-error *ngIf="form.get('existingContact').hasError('required')">
+                        Please select a contact or click the button to add a new one
+                    </mat-error>
+                    <mat-error *ngIf="form.get('existingContact').hasError('nonExistent')">
+                        Please select a contact from the search or create a new one
+                    </mat-error>
+                </mat-form-field>
+                <ng-container *ngIf="showSetContactUI">
+                    <div class="w-100">
+                        <span class="font-weight-bold">New Contact: </span>
+                        <span>{{form.get('contact').get('firstName').value}} </span>
+                        <span>{{form.get('contact').get('lastName').value}}</span>
+                        <button type="button" mat-icon-button (click)="unsetNewContact()">
+                            <mat-icon>clear</mat-icon>
                         </button>
+                        <p class="text-muted">
+                            This contact will be added when you save the sale. Please make sure you're not duplicating contacts.
+                        </p>
+                    </div>
+                </ng-container>
+            </div>
+            <div class="col-md-3">
+                <button type="button" mat-button 
+                    color="primary" 
+                    (click)="showNewContactForm()"
+                    [disabled]="showNewContactFields || showSetContactUI"
+                >
+                    <mat-icon inline="true">add</mat-icon>
+                    <span>New Contact</span>
+                </button>
+            </div>
+        </div>
+
+        <ng-container *ngIf="showNewContactFields">
+            <!-- CREATE NEW CONTACT FORM HERE & continue with rest of form -->
+            <hr />
+            <p class="font-weight-bold">Create New Customer</p>
+            <div formGroupName="contact" class="new-customer-form">
+                <div class="row">
+                    <div class="col-md-1">
+                        <mat-form-field class="w-100">
+                            <mat-select placeholder="Prefix" formControlName="prefix">
+                                <mat-option value=""></mat-option>
+                                <mat-option value="Dr">Dr</mat-option>
+                                <mat-option value="Mr">Mr</mat-option>
+                                <mat-option value="Mrs">Mrs</mat-option>
+                                <mat-option value="Ms">Ms</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-4">
+                        <mat-form-field class="w-100">
+                            <input matInput type="text" placeholder="First Name" formControlName="firstName" required />
+                            <mat-error *ngIf="form.get('contact').get('firstName').hasError('required')">
+                                Please enter a first name
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-5">
+                        <mat-form-field class="w-100">
+                            <input matInput type="text" placeholder="Last Name" formControlName="lastName" required />
+                            <mat-error *ngIf="form.get('contact').get('lastName').hasError('required')">
+                                Please enter a last name
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-2">
+                        <mat-form-field class="w-100">
+                            <input matInput [matDatepicker]="dobPicker" placeholder="Birthdate" formControlName="dob" required />
+                            <mat-datepicker-toggle matSuffix [for]="dobPicker"></mat-datepicker-toggle>
+                            <mat-datepicker #dobPicker></mat-datepicker>
+                            <mat-error *ngIf="form.get('contact').get('dob').hasError('required')">
+                                Please select a date
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-7">
+                        <mat-form-field class="w-100">
+                            <input matInput type="text" placeholder="Address" formControlName="street" required />
+                            <mat-error *ngIf="form.get('contact').get('street').hasError('required')">
+                                Please enter a street address
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-2">
+                        <mat-form-field class="w-100">
+                            <input matInput type="text" placeholder="Apt/Suite/Unit" formControlName="street2" />
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-3">
+                        <mat-form-field class="w-100">
+                            <input matInput type="text" #ssn placeholder="SSN" formControlName="ssn" maxlength="9" />
+                            <mat-hint align="end">{{ssn.value.length}} / 9</mat-hint>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-7">
+                        <mat-form-field class="w-100">
+                            <input matInput type="text" placeholder="City" formControlName="city" required />
+                            <mat-error *ngIf="form.get('contact').get('city').hasError('required')">
+                                Please enter a city
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-3">
+                        <mat-form-field class="w-100">
+                            <mat-select placeholder="State" formControlName="state" required>
+                                <mat-option *ngFor="let s of states" [value]="s.abbreviation">{{s.name}}</mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="form.get('contact').get('state').hasError('required')">
+                                Please select a state
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-2">
+                        <mat-form-field class="w-100">
+                            <input matInput type="text" 
+                                #postalCode
+                                placeholder="zip" 
+                                formControlName="zip" 
+                                maxlength="5"
+                                required 
+                            />
+                            <mat-hint>{{postalCode.value.length}} / 5</mat-hint>
+                            <mat-error *ngIf="form.get('contact').get('zip').hasError('required')">
+                                Please enter a postal code
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <mat-form-field class="w-100">
+                            <input matInput type="text" placeholder="Email" formControlName="email" required />
+                            <mat-error *ngIf="form.get('contact').get('email').hasError('required')">
+                                Please enter an email
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-3">
+                        <mat-form-field class="w-100">
+                            <input matInput type="text" 
+                                placeholder="Phone" 
+                                formControlName="phone" 
+                                #phone
+                                maxlength="10"
+                                required 
+                            />
+                            <mat-hint>{{phone.value.length}} / 10</mat-hint>
+                            <mat-error *ngIf="form.get('contact').get('phone').hasError('required')">
+                                Please enter a phone
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-3">
+                        <mat-form-field class="w-100">
+                            <input matInput type="text" 
+                                placeholder="Fax" 
+                                formControlName="fax" 
+                                #fax
+                                maxlength="10"
+                            />
+                            <mat-hint>{{fax.value.length}} / 10</mat-hint>
+                        </mat-form-field>
                     </div>
                 </div>
             </div>
+            <button type="button" mat-button (click)="unsetNewContact('existingContact')">Cancel</button>
+            <!-- <button type="button" mat-button color="primary" (click)="setNewContact()">
+                <mat-icon inline="true">save</mat-icon>
+                <span>Save</span>
+            </button> -->
+            <hr />
         </ng-container>
-        <ng-template #addContactInfoLink>
-            <div class="row my-4">
-                <div class="col-md-12">
-                    <span (click)="navigateToSaleDetail()">Click here</span> to add contact info.
-                </div>
-            </div>
-        </ng-template>
 
         <div class="row">
             <div class="col-12">
@@ -208,115 +383,6 @@
     </form>
     <div class="float-right">
         <button mat-button (click)="onNoClick()">Cancel</button>
-        <button mat-raised-button (click)="saveDialog()" color="primary" [disabled]="form.invalid">Save</button>
-    </div>
-</div>
-<div class="modal-body" *ngIf="showEditContactForm">
-    <div [formGroup]="contactForm">
-        <div class="row">
-            <div class="col-md-5">
-                <mat-form-field class="w-100 mr-1">
-                    <input matInput type="text" formControlName="firstName" placeholder="First Name" required />
-                    <mat-error *ngIf="contactForm.get('firstName').hasError('required')">
-                        Please enter contact first name.
-                    </mat-error>
-                </mat-form-field>
-            </div>
-            <div class="col-md-7">
-                <mat-form-field class="w-100 ml-1">
-                    <input matInput type="text" formControlName="lastName" placeholder="Last Name" required />
-                    <mat-error *ngIf="contactForm.get('lastName').hasError('required')">
-                        Please enter a contact last name.
-                    </mat-error>
-                </mat-form-field>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-8">
-                <mat-form-field class="w-100 mr-1">
-                    <input matInput type="text" formControlName="street" placeholder="Street Address" required />
-                    <mat-error *ngIf="contactForm.get('street').hasError('required')">
-                        Please enter a street address.
-                    </mat-error>
-                </mat-form-field>
-            </div>
-            <div class="col-md-4">
-                <mat-form-field class="w-100 ml-1">
-                    <input matInput type="text" formControlName="street2" placeholder="Apt/Unit" />
-                </mat-form-field>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6">
-                <mat-form-field class="w-100 mr-1">
-                    <input matInput type="text" formControlName="city" placeholder="City" required />
-                    <mat-error *ngIf="contactForm.get('city').hasError('required')">
-                        Please enter a city.
-                    </mat-error>
-                </mat-form-field>
-            </div>
-            <div class="col-md-2">
-                <mat-form-field class="w-100 mx-1">
-                    <mat-select placeholder="State" formControlName="state" required>
-                        <mat-option *ngFor="let s of states" [value]="s.abbreviation">
-                            {{s.name}}
-                        </mat-option>
-                    </mat-select>
-                    <mat-error *ngIf="contactForm.get('state').hasError('required')">
-                        Please select a state.
-                    </mat-error>
-                </mat-form-field>
-            </div>
-            <div class="col-md-4">
-                <mat-form-field class="w-100 ml-1">
-                    <input matInput type="text" formControlName="zip" placeholder="Zip" required />
-                    <mat-error *ngIf="contactForm.get('zip').hasError('required')">
-                        Please enter a zip code.
-                    </mat-error>
-                </mat-form-field>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-4">
-                <mat-form-field class="w-100 mr-1">
-                    <input matInput type="text" formControlName="phone" placeholder="Phone" required/>
-                    <mat-error *ngIf="contactForm.get('phone').hasError('required')">
-                        Please enter a phone number.
-                    </mat-error>
-                </mat-form-field>
-            </div>
-            <div class="col-md-5">
-                <mat-form-field class="w-100 mx-1">
-                    <input matInput type="text" formControlName="email" placeholder="Email" required />
-                    <mat-error *ngIf="contactForm.get('email').hasError('required')">
-                        Please enter an email address.
-                    </mat-error>
-                </mat-form-field>
-            </div>
-            <div class="col-md-3">
-                <mat-form-field class="w-100 ml-1">
-                    <input matInput [matDatepicker]="dobPicker" formControlName="dob" placeholder="Date of Birth" required />
-                    <mat-datepicker-toggle [for]="dobPicker" matSuffix>
-                        <mat-icon>date_range</mat-icon>
-                    </mat-datepicker-toggle>
-                    <mat-datepicker #dobPicker></mat-datepicker>
-                    <mat-error *ngIf="contactForm.get('dob').hasError('required')">
-                        Please pick a date of birth.
-                    </mat-error>
-                </mat-form-field>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12 d-flex justify-content-between">
-                <button type="button" mat-button (click)="cancelContactForm()">
-                    <mat-icon inline="true">reply</mat-icon>
-                    <span>Go Back</span>
-                </button>
-                <button type="button" mat-button color="primary" (click)="saveContactForm()">
-                    <mat-icon inline="true">save</mat-icon>
-                    <span>Save</span>
-                </button>
-            </div>
-        </div>
+        <button mat-button (click)="saveDialog()" color="primary">Save</button>
     </div>
 </div>
