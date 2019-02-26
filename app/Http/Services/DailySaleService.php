@@ -126,13 +126,6 @@ class DailySaleService {
         $s->utility_id = $sale->utilityId;
         $s->contact_id = $sale->contactId;
 		$s->pod_account = $sale->podAccount;
-		// $s->first_name = $sale->firstName;
-		// $s->last_name = $sale->lastName;
-		// $s->street = $sale->street;
-		// $s->street2 = $sale->street2;
-		// $s->city = $sale->city;
-		// $s->state = $sale->state;
-		// $s->zip = $sale->zip;
 		$s->status = $sale->status;
 		$s->paid_status = $sale->paidStatus;
 		$s->paid_date = $sale->paidDate;

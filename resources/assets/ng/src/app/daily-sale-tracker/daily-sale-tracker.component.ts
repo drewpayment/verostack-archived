@@ -187,7 +187,7 @@ export class DailySaleTrackerComponent implements OnInit {
                     statuses: this.store.statuses,
                     agents: this.agents,
                     selectedCampaign: this.selectedCampaign,
-                    campaigns: this.campaigns,
+                    campaigns: this.campaigns.filter(c => c.active),
                     user: this.userInfo
                 }
             })

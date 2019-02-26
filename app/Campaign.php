@@ -70,11 +70,11 @@ class Campaign extends Model
 	 *
 	 * @return \Illuminate\Database\Eloquent\Builder
 	 */
-    public function scopeActive($query, $activeOnly = true)
+    public function scopeActive($query, $activeOnly = false)
     {
     	if(is_null($activeOnly))
 	    {
-	    	$activeOnly = true;
+	    	$activeOnly = false;
 	    }
 	    else if (is_string($activeOnly))
 	    {

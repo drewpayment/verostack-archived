@@ -65,13 +65,16 @@
         <div class="row">
             <div class="col-md-6">
                 <mat-form-field>
-                    <mat-select placeholder="Agent" formControlName="agent" required>
-                        <mat-option *ngFor="let a of agents" [value]="a.agentId">
-                            {{a.firstName}} {{a.lastName}}
+                    <input matInput placeholder="Agent" formControlName="agent" [matAutocomplete]="agentAc" 
+                        (keyup)="_filterAgents($event)" required />
+                    <mat-autocomplete #agentAc="matAutocomplete" [displayWith]="displayAgentFn">
+                        <mat-option *ngFor="let a of agents$|async" [value]="a">
+                            <mat-icon inline="true">person</mat-icon>
+                            <span>{{a.firstName}} {{a.lastName}}</span>
                         </mat-option>
-                    </mat-select>
-                    <mat-error *ngIf="form.get('agent').hasError('required') && (form.get('agent').touched || submitted)">
-                        Please select an Agent
+                    </mat-autocomplete>
+                    <mat-error *ngIf="(form.get('agent').hasError('required') || form.get('agent').hasError('nonExistent')) && (form.get('agent').touched || submitted)">
+                        Please select an agent
                     </mat-error>
                 </mat-form-field>
             </div>
@@ -156,7 +159,7 @@
                         [matAutocomplete]="autocontact" formControlName="existingContact" 
                         (keyup)="validateContactInput($event)" required />
                     <mat-autocomplete #autocontact="matAutocomplete" [displayWith]="displayFn">
-                        <mat-option *ngFor="let c of contacts" [value]="c">
+                        <mat-option *ngFor="let c of contacts$|async" [value]="c">
                             <mat-icon inline="true">person</mat-icon>
                             <span>{{c.firstName}} {{c.lastName}} </span>
                             <small>{{c.street}} {{c.city}} {{c.state}}</small>
@@ -164,9 +167,6 @@
                     </mat-autocomplete>
                     <mat-error *ngIf="form.get('existingContact').hasError('required')">
                         Please select a contact or click the button to add a new one
-                    </mat-error>
-                    <mat-error *ngIf="form.get('existingContact').hasError('nonExistent')">
-                        Please select a contact from the search or create a new one
                     </mat-error>
                 </mat-form-field>
                 <ng-container *ngIf="showSetContactUI">

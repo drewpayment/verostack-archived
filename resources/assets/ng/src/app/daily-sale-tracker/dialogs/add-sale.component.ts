@@ -11,8 +11,8 @@ import {CampaignService} from '@app/campaigns/campaign.service';
 import {Router} from '@angular/router';
 import { Contact } from '@app/models/contact.model';
 import { ContactService } from '@app/contact/contact.service';
-import { tap } from 'rxjs/operators';
-import { BehaviorSubject } from 'rxjs';
+import { tap, startWith, map } from 'rxjs/operators';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 
 interface DialogData {
     statuses: SaleStatus[];
@@ -34,17 +34,17 @@ interface ViewRemark extends Remark {
 })
 export class AddSaleDialog implements OnInit, AfterViewInit {
     form: FormGroup;
-    contactForm:FormGroup;
-    statuses: SaleStatus[];
-    agents: IAgent[];
-    selectedCampaign: ICampaign;
-    today: moment.Moment;
-    states: IState[] = States.$get();
-    existingSale: DailySale;
-    remarks: ViewRemark[];
-    newRemarks: Remark[];
-    campaigns: ICampaign[];
-    user: User;
+    statuses:SaleStatus[] = [];
+    agents:IAgent[] = [];
+    agents$:Observable<IAgent[]>;
+    selectedCampaign:ICampaign;
+    today:moment.Moment;
+    states:IState[] = States.$get();
+    existingSale:DailySale;
+    remarks:ViewRemark[] = [];
+    newRemarks:Remark[];
+    campaigns:ICampaign[]= [];
+    user:User;
     hideTooltip: boolean = false;
     showAddRemarkInput: boolean = false;
     newRemarkInputValue: FormControl;
@@ -53,6 +53,7 @@ export class AddSaleDialog implements OnInit, AfterViewInit {
     isExistingSale: boolean;
     showEditContactForm:boolean = false;
     contacts:Contact[];
+    contacts$:Observable<Contact[]>;
     showNewContactFields:boolean = false;
     showSetContactUI:boolean = false;
 
@@ -76,22 +77,26 @@ export class AddSaleDialog implements OnInit, AfterViewInit {
         this.isExistingSale = this.data.sale != null;
         this.remarks = this.data.sale != null ? this.data.sale.remarks : [];
         this.sortRemarks();
-        this.statuses = this.data.statuses;
+        this.statuses = this.data.statuses.filter(s => s.isActive);
         this.agents = this.data.agents;
         this.selectedCampaign = this.data.selectedCampaign;
         this.user = this.data.user;
 
         this.contactService.getContactsByClient(this.user.sessionUser.sessionClient)
-            .subscribe(contacts => this.contacts = contacts);
+            .subscribe(contacts => {
+                this.contacts = contacts;
+
+                this._setObservables();
+            });
 
         if (this.isExistingSale && this.data.campaigns == null) {
             this.campaignService.getCampaigns(this.user.sessionUser.sessionClient, false).then(results => {
                 this.campaigns = results;
             });
         } else {
-            this.campaigns = _.cloneDeep(this.data.campaigns);
+            this.campaigns = this.data.campaigns;
             // remove "all campaigns" option, so that the user has to be pick a valid campaign
-            _.remove(this.campaigns, {campaignId: 0});
+            if(this.campaigns[0].campaignId == 0) this.campaigns.shift();
         }
 
         this.createForm();
@@ -115,6 +120,23 @@ export class AddSaleDialog implements OnInit, AfterViewInit {
                 
             this.utilities.next(filteredUtils);
         });
+    }
+
+    private _setObservables() {
+        this.agents$ = of(this.agents);
+        this.contacts$ = of(this.contacts);
+    }
+
+    _filterAgents(event):void {
+        const filterValue = event.target.value.toLowerCase();
+        const filtered = this.agents.filter(agent => {
+            if(agent.firstName.toLowerCase().indexOf(filterValue) === 0)
+                return true;
+            if(agent.lastName.toLowerCase().indexOf(filterValue) === 0)
+                return true;
+            return false;
+        });
+        this.agents$ = of(filtered);
     }
 
     navigateToUtilitySetup() {
@@ -142,16 +164,28 @@ export class AddSaleDialog implements OnInit, AfterViewInit {
     }
 
     validateContactInput(event:any) {
-        const input = event.target.value;
+        const input = event.target.value.toLowerCase();
         let exists:boolean = false;
-        this.contacts.forEach(c => {
-            if(c.firstName.includes(input))
+        const filtered = this.contacts.filter(c => {
+            if(c.firstName.toLowerCase().indexOf(input) === 0 || c.lastName.toLowerCase().indexOf(input) === 0) {
+                exists = (!exists) ? true : exists;
+                return true;
+            }
+            return false;
+        });
+        this.contacts$ = of(filtered);
+    }
+
+    validateAgentInput(event) {
+        const input = event.target.value.trim().toLowerCase();
+        let exists:boolean = false;
+        this.agents.forEach(a => {
+            if(a.firstName.includes(input))
                 return exists = true;
-            if(c.lastName.includes(input))
+            if(a.lastName.includes(input))
                 return exists = true;
         });
-        if(!exists)
-            this.form.get('existingContact').setErrors({ nonExistent: true });
+        if(!exists) this.form.get('agent').setErrors({ nonExistent: true });
     }
 
     showNewContactForm():void {
@@ -251,6 +285,13 @@ export class AddSaleDialog implements OnInit, AfterViewInit {
 
     cancelNewRemark(): void {
         this.showAddRemarkInput = false;
+
+        let i = 0;
+        while((<FormArray>this.form.controls.remarks).controls.length) {
+            (<FormArray>this.form.controls.remarks).removeAt(i);
+            i++;
+        }
+        this.form.controls.remarks.reset();
     }
 
     handlePaidStatusChange(event): void {
@@ -282,6 +323,12 @@ export class AddSaleDialog implements OnInit, AfterViewInit {
             : '';
     }
 
+    displayAgentFn(agent:IAgent):string {
+        return typeof agent === 'object' && agent != null
+            ? `${agent.firstName} ${agent.lastName}`
+            : '';
+    }
+
     private contactValidatorFn():ValidatorFn {
         return (control:AbstractControl): {[key:string]:any} | null => {
             const invalid = control.value == null && this.form.get('contact').invalid;
@@ -300,6 +347,7 @@ export class AddSaleDialog implements OnInit, AfterViewInit {
             saleDate: this.fb.control(this.existingSale.saleDate || this.today, [Validators.required]),
             agent: this.fb.control(this.existingSale.agentId || '', [Validators.required]),
             campaign: this.fb.control({value: campaignValue, disabled: this.isExistingSale}, [Validators.required]),
+            contactId: this.fb.control(''),
             utilityId: this.fb.control('', [Validators.required]),
             account: this.fb.control(this.existingSale.podAccount || '', [Validators.required]),
             status: this.fb.control(this.existingSale.status || '', [Validators.required]),
@@ -331,7 +379,7 @@ export class AddSaleDialog implements OnInit, AfterViewInit {
         });
     }
 
-    private createRemarksFormArray(): FormArray {
+    private createRemarksFormArray():FormArray {
         let result = this.fb.array([]);
         this.remarks.forEach(r => {
             result.push(
@@ -345,10 +393,32 @@ export class AddSaleDialog implements OnInit, AfterViewInit {
     }
 
     private prepareModel(): DailySale {
+        const contact = typeof this.form.value.existingContact === 'object'
+            ? this.form.value.existingContact
+            : {
+                contactId: this.form.value.contactId,
+                clientId: this.user.sessionUser.sessionClient,
+                firstName: this.form.value.contact.firstName,
+                lastName: this.form.value.contact.lastName,
+                middleName: this.form.value.contact.middleName,
+                prefix: this.form.value.contact.prefix,
+                suffix: this.form.value.contact.suffix,
+                ssn: this.form.value.contact.ssn,
+                dob: this.form.value.contact.dob,
+                street: this.form.value.contact.street,
+                street2: this.form.value.contact.street2,
+                city: this.form.value.contact.city,
+                state: this.form.value.contact.state,
+                zip: this.form.value.contact.zip,
+                phone: this.form.value.contact.phone,
+                email: this.form.value.contact.email,
+                fax: this.form.value.contact.fax
+            };
         return {
             dailySaleId: this.existingSale.dailySaleId || null,
-            agentId: this.form.value.agent,
+            agentId: this.form.value.agent.agentId,
             campaignId: this.form.value.campaign,
+            contactId: contact.contactId,
             utilityId: this.form.value.utilityId,
             clientId: this.user.sessionUser.sessionClient,
             status: this.form.value.status,
@@ -359,27 +429,7 @@ export class AddSaleDialog implements OnInit, AfterViewInit {
             saleDate: this.form.value.saleDate,
             podAccount: this.form.value.account,
             remarks: this.newRemarks,
-            contact: typeof this.form.value.existingContact === 'object'
-                ? this.form.value.existingContact
-                : {
-                    contactId: this.form.value.contactId,
-                    clientId: this.user.sessionUser.sessionClient,
-                    firstName: this.form.value.contact.firstName,
-                    lastName: this.form.value.contact.lastName,
-                    middleName: this.form.value.contact.middleName,
-                    prefix: this.form.value.contact.prefix,
-                    suffix: this.form.value.contact.suffix,
-                    ssn: this.form.value.contact.ssn,
-                    dob: this.form.value.contact.dob,
-                    street: this.form.value.contact.street,
-                    street2: this.form.value.contact.street2,
-                    city: this.form.value.contact.city,
-                    state: this.form.value.contact.state,
-                    zip: this.form.value.contact.zip,
-                    phone: this.form.value.contact.phone,
-                    email: this.form.value.contact.email,
-                    fax: this.form.value.contact.fax
-                }
+            contact: contact
         };
     }
 
