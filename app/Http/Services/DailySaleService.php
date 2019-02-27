@@ -196,14 +196,8 @@ class DailySaleService {
 		$c->agent_id = $sale->agentId;
         $c->client_id = $sale->clientId;
 		$c->campaign_id = $sale->campaignId;
+		$c->contact_id = $sale->contact['contactId'];
 		$c->pod_account = $sale->podAccount;
-		// $c->first_name = $sale->firstName;
-		// $c->last_name = $sale->lastName;
-		// $c->street = $sale->street;
-		// $c->street2 = $sale->street2;
-		// $c->city = $sale->city;
-		// $c->state = $sale->state;
-		// $c->zip = $sale->zip;
 		$c->status = $sale->status;
 		$c->paid_status = $sale->paidStatus;
 		$c->paid_date = $sale->paidDate;

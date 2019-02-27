@@ -1,5 +1,5 @@
-import {Component, OnInit, Inject, ViewChild, SimpleChanges, AfterViewInit} from '@angular/core';
-import {MatDialogRef, MAT_DIALOG_DATA, MatTooltip} from '@angular/material';
+import {Component, OnInit, Inject, ViewChild, SimpleChanges, AfterViewInit, ElementRef, ComponentRef} from '@angular/core';
+import {MatDialogRef, MAT_DIALOG_DATA, MatTooltip, MatAutocomplete} from '@angular/material';
 import {FormBuilder, FormGroup, Validators, FormArray, FormControl, ValidatorFn, AbstractControl} from '@angular/forms';
 import {SaleStatus, IAgent, ICampaign, DailySale, User, Remark, PaidStatusType, Utility} from '@app/models';
 
@@ -11,8 +11,8 @@ import {CampaignService} from '@app/campaigns/campaign.service';
 import {Router} from '@angular/router';
 import { Contact } from '@app/models/contact.model';
 import { ContactService } from '@app/contact/contact.service';
-import { tap, startWith, map } from 'rxjs/operators';
 import { BehaviorSubject, Observable, of } from 'rxjs';
+import { coerceNumberProperty } from '@app/utils';
 
 interface DialogData {
     statuses: SaleStatus[];
@@ -60,6 +60,7 @@ export class AddSaleDialog implements OnInit, AfterViewInit {
     /** internal use only, keeps track of all available utilities */
     private _utilities:Utility[];
     utilities:BehaviorSubject<Utility[]> = new BehaviorSubject<Utility[]>(null);
+    @ViewChild(MatAutocomplete) agentAutocomplete:MatAutocomplete;
 
     constructor(
         public ref: MatDialogRef<AddSaleDialog>,
@@ -73,7 +74,7 @@ export class AddSaleDialog implements OnInit, AfterViewInit {
     ngOnInit() {
         this.newRemarks = [];
         this.today = moment();
-        this.existingSale = this.data.sale || ({} as DailySale);
+        this.existingSale = this.data.sale || {} as DailySale;
         this.isExistingSale = this.data.sale != null;
         this.remarks = this.data.sale != null ? this.data.sale.remarks : [];
         this.sortRemarks();
@@ -94,13 +95,12 @@ export class AddSaleDialog implements OnInit, AfterViewInit {
                 this.campaigns = results;
             });
         } else {
-            this.campaigns = this.data.campaigns;
+            let campaigns = this.data.campaigns;
             // remove "all campaigns" option, so that the user has to be pick a valid campaign
-            if(this.campaigns[0].campaignId == 0) this.campaigns.shift();
+            this.campaigns = campaigns.filter(c => c.campaignId != 0);
         }
 
         this.createForm();
-        this.submitted = true;
     }
 
     onNoClick(): void {
@@ -108,18 +108,49 @@ export class AddSaleDialog implements OnInit, AfterViewInit {
     }
     
     ngAfterViewInit() {
+        const doNotEmit = { emitEvent: false };
+
         /** watch for form changes to campaign id and update utility dropdown options accordingly */
-        this.form.controls.campaign.valueChanges.subscribe(val => {
-            const campaign = this.campaigns.find(c => c.campaignId == val);
-            const filteredUtils = campaign.utilities;
-            
-            if(!filteredUtils.length) {
-                this.form.patchValue({ utilityId: null });
-                this.form.controls.utilityId.reset();
+        this.form.controls.campaign.valueChanges.subscribe(val => this._updateUtilities(val));
+
+        this.form.controls.paidDate.valueChanges.subscribe(val =>
+            this.form.patchValue({ paidStatus: val == null ? PaidStatusType.unpaid.toString() : PaidStatusType.paid.toString() }, doNotEmit));
+
+        this.form.controls.repaidDate.valueChanges.subscribe(val => 
+            this.form.patchValue({ paidStatus: val == null ? PaidStatusType.unpaid.toString() : PaidStatusType.repaid.toString() }, doNotEmit));
+
+        this.form.controls.chargeDate.valueChanges.subscribe(val =>
+            this.form.patchValue({ paidStatus: val == null ? PaidStatusType.unpaid.toString() : PaidStatusType.chargeback.toString() }, doNotEmit));
+
+        this.form.controls.paidStatus.valueChanges.subscribe((value:PaidStatusType) => {
+            switch(coerceNumberProperty(value)) {
+                case PaidStatusType.paid:
+                    this.form.patchValue({ paidDate: moment() });
+                    break;
+                case PaidStatusType.repaid:
+                    this.form.patchValue({ repaidDate: moment() }, doNotEmit);
+                    break;
+                case PaidStatusType.chargeback:
+                    this.form.patchValue({ chargeDate: moment() }, doNotEmit);
+                    break;
+                case PaidStatusType.unpaid:
+                default:
+                    this.form.patchValue({ paidDate: '', chargeDate: '', repaidDate: '' }, doNotEmit);
+                    break;    
             }
-                
-            this.utilities.next(filteredUtils);
         });
+    }
+
+    private _updateUtilities(campaignId:number):void {
+        const campaign = this.campaigns.find(c => c.campaignId == campaignId);
+        const filteredUtils = campaign.utilities;
+
+        if(!filteredUtils.length) {
+            this.form.patchValue({ utilityId: null });
+            this.form.controls.utilityId.reset();
+        }
+
+        this.utilities.next(filteredUtils);
     }
 
     private _setObservables() {
@@ -150,9 +181,9 @@ export class AddSaleDialog implements OnInit, AfterViewInit {
          * Check to see if the user selected and existing contact or if they used the "new contact"
          * form to create a new contact and then revalidate the sale form.
          */
-        if(this.form.get('existingContact').dirty && this.form.get('existingContact').valid) {
+        if(this.form.get('existingContact').value != null) {
             delete this.form.controls['contact'];
-        } else if(this.form.get('contact').dirty && this.form.get('contact').valid) {
+        } else {
             delete this.form.controls['existingContact'];
         }
 
@@ -294,29 +325,6 @@ export class AddSaleDialog implements OnInit, AfterViewInit {
         this.form.controls.remarks.reset();
     }
 
-    handlePaidStatusChange(event): void {
-        const selection: PaidStatusType = +event.value as PaidStatusType;
-        let newActivityValue;
-
-        switch (selection) {
-            case PaidStatusType.paid:
-                newActivityValue = this.existingSale.paidDate || null;
-                break;
-            case PaidStatusType.chargeback:
-                newActivityValue = this.existingSale.chargeDate || null;
-                break;
-            case PaidStatusType.repaid:
-                newActivityValue = this.existingSale.repaidDate || null;
-                break;
-            case PaidStatusType.unpaid:
-            default:
-                newActivityValue = null;
-                break;
-        }
-
-        this.form.patchValue({activityDate: newActivityValue});
-    }
-
     displayFn(contact:Contact):string {
         return typeof contact === 'object' && contact != null
             ? `${contact.firstName} ${contact.lastName}`
@@ -337,18 +345,11 @@ export class AddSaleDialog implements OnInit, AfterViewInit {
     }
 
     private createForm(): void {
-        let campaignValue =
-            this.existingSale.campaignId != null && this.existingSale.campaignId > 0
-                ? this.existingSale.campaignId
-                : this.selectedCampaign.campaignId > 0
-                ? this.selectedCampaign.campaignId
-                : '';
         this.form = this.fb.group({
             saleDate: this.fb.control(this.existingSale.saleDate || this.today, [Validators.required]),
-            agent: this.fb.control(this.existingSale.agentId || '', [Validators.required]),
-            campaign: this.fb.control({value: campaignValue, disabled: this.isExistingSale}, [Validators.required]),
-            contactId: this.fb.control(''),
-            utilityId: this.fb.control('', [Validators.required]),
+            agent: this.fb.control(this.agents.find(a => a.agentId == this.existingSale.agentId), [Validators.required]),
+            campaign: this.fb.control({ value: this.selectedCampaign.campaignId || '', disabled: this.isExistingSale}, [Validators.required]),
+            utilityId: this.fb.control(this.existingSale.utilityId || '', [Validators.required]),
             account: this.fb.control(this.existingSale.podAccount || '', [Validators.required]),
             status: this.fb.control(this.existingSale.status || '', [Validators.required]),
             paidStatus: this.fb.control(this.formatPaidStatus() || '', [Validators.required]),
@@ -356,7 +357,7 @@ export class AddSaleDialog implements OnInit, AfterViewInit {
             chargeDate: this.fb.control(this.existingSale.chargeDate || ''),
             repaidDate: this.fb.control(this.existingSale.repaidDate || ''),
             remarks: this.createRemarksFormArray(),
-            existingContact: this.fb.control('', [this.contactValidatorFn]),
+            existingContact: this.fb.control(this.existingSale.contact || '', [this.contactValidatorFn]),
             contact: this.fb.group({
                 contactId: this.fb.control(''),
                 clientId: this.fb.control(''),
@@ -377,6 +378,11 @@ export class AddSaleDialog implements OnInit, AfterViewInit {
                 fax: this.fb.control('')
             })
         });
+
+        const campaignId = this.form.get('campaign').value;
+        if(campaignId > 0) {
+            this._updateUtilities(campaignId);
+        }
     }
 
     private createRemarksFormArray():FormArray {
@@ -414,18 +420,18 @@ export class AddSaleDialog implements OnInit, AfterViewInit {
                 email: this.form.value.contact.email,
                 fax: this.form.value.contact.fax
             };
+        
         return {
             dailySaleId: this.existingSale.dailySaleId || null,
             agentId: this.form.value.agent.agentId,
-            campaignId: this.form.value.campaign,
-            contactId: contact.contactId,
+            campaignId: this.form.get('campaign').value,
             utilityId: this.form.value.utilityId,
             clientId: this.user.sessionUser.sessionClient,
             status: this.form.value.status,
             paidStatus: this.form.value.paidStatus,
-            paidDate: this.setActivityDateProperty(this.form.value.paidStatus, 'paidDate'),
-            chargeDate: this.setActivityDateProperty(this.form.value.paidStatus, 'chargeDate'),
-            repaidDate: this.setActivityDateProperty(this.form.value.paidStatus, 'repaidDate'),
+            paidDate: this.form.value.paidDate,
+            chargeDate: this.form.value.chargeDate,
+            repaidDate: this.form.value.repaidDate,
             saleDate: this.form.value.saleDate,
             podAccount: this.form.value.account,
             remarks: this.newRemarks,
@@ -434,29 +440,7 @@ export class AddSaleDialog implements OnInit, AfterViewInit {
     }
 
     private formatPaidStatus(): string {
-        return this.existingSale.paidStatus != null ? this.existingSale.paidStatus + '' : null;
-    }
-
-    private calculateActivityDate(sale: DailySale): Date | string | Moment {
-        let activityDate: Date | string | Moment;
-
-        switch (sale.paidStatus) {
-            case PaidStatusType.paid:
-                activityDate = sale.paidDate;
-                break;
-            case PaidStatusType.chargeback:
-                activityDate = sale.chargeDate;
-                break;
-            case PaidStatusType.repaid:
-                activityDate = sale.repaidDate;
-                break;
-            case PaidStatusType.unpaid:
-            default:
-                activityDate = null;
-                break;
-        }
-
-        return activityDate;
+        return this.existingSale.paidStatus != null ? this.existingSale.paidStatus.toString() : null;
     }
 
     private setActivityDateProperty(formPaidStatus: PaidStatusType, modelField: string): Date | string | Moment {

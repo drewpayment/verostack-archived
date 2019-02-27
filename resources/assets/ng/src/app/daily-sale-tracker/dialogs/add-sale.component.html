@@ -67,7 +67,7 @@
                 <mat-form-field>
                     <input matInput placeholder="Agent" formControlName="agent" [matAutocomplete]="agentAc" 
                         (keyup)="_filterAgents($event)" required />
-                    <mat-autocomplete #agentAc="matAutocomplete" [displayWith]="displayAgentFn">
+                    <mat-autocomplete #agentAc="matAutocomplete" [displayWith]="displayAgentFn" autoActiveFirstOption>
                         <mat-option *ngFor="let a of agents$|async" [value]="a">
                             <mat-icon inline="true">person</mat-icon>
                             <span>{{a.firstName}} {{a.lastName}}</span>

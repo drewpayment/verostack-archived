@@ -177,15 +177,15 @@ class DailySaleController extends Controller
 	{
 		$result = new ApiResource();
 
-		$result
-			->checkAccessByClient($clientId, Auth::user()->id)
-			->mergeInto($result);
-
 		if($dailySaleId < 1)
 			return $result
 				->setToFail()
 				->throwApiException()
 				->getResponse();
+
+		$result
+			->checkAccessByClient($clientId, Auth::user()->id)
+			->mergeInto($result);
 
 		if($result->hasError)
 			return $result->getResponse();

@@ -77,8 +77,8 @@ export class DailySaleTrackerComponent implements OnInit {
     dataSource$: BehaviorSubject<DailySale[]> = new BehaviorSubject<DailySale[]>(null);
     sales: Observable<DailySale[]>;
     agents: IAgent[];
-    startDate: moment.Moment;
-    endDate: moment.Moment;
+    startDate = moment().subtract(3, 'days');
+    endDate = moment();
     statuses: BehaviorSubject<SaleStatus[]> = new BehaviorSubject<SaleStatus[]>(null);
     campaigns: ICampaign[];
     selectedCampaign: ICampaign;
@@ -109,9 +109,6 @@ export class DailySaleTrackerComponent implements OnInit {
 
     ngOnInit() {
         this.createForm();
-        this.startDate = moment().add(-1, 'd');
-        this.endDate = moment();
-
         this.userService.user.subscribe(u => {
             this.userInfo = u;
 
@@ -367,17 +364,13 @@ export class DailySaleTrackerComponent implements OnInit {
     }
 
     private refreshDailySales(startDate: Moment, endDate: Moment): void {
-        let startRange = startDate.clone();
-        let endRange = endDate.clone();
-        startRange = startRange.add(-1, 'd');
-        endRange = endRange.add(1, 'd');
 
         this.trackerService
             .getDailySalesByDate(
                 this.userInfo.sessionUser.sessionClient,
                 this.selectedCampaign.campaignId,
-                this.formatSqlDate(startRange),
-                this.formatSqlDate(endRange)
+                startDate,
+                endDate
             )
             .subscribe(sales => {
                 this.store.sales = _.orderBy(sales, ['saleDate'], ['desc']);

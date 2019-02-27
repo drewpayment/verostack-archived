@@ -4,6 +4,7 @@ import { Observable, throwError } from 'rxjs';
 import { SaleStatus, DailySale, HttpErrorResponse } from '@app/models';
 import { HttpClient } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
+import { Moment } from 'moment';
 
 @Injectable({
     providedIn: 'root'
@@ -16,8 +17,8 @@ export class DailySaleTrackerService {
     this.url = `${this.auth.apiUrl}api`;
   }
 
-  getDailySalesByDate(clientId:number, campaignId:number, startDate:string, endDate:string):Observable<DailySale[]> {
-    const url = `${this.url}/clients/${clientId}/daily-sales/campaigns/${campaignId}/from/${startDate}/to/${endDate}`;
+  getDailySalesByDate(clientId:number, campaignId:number, startDate:Moment, endDate:Moment):Observable<DailySale[]> {
+    const url = `${this.url}/clients/${clientId}/daily-sales/campaigns/${campaignId}/from/${startDate.format('YYYY-MM-DD')}/to/${endDate.format('YYYY-MM-DD')}`;
     return this.http.get<DailySale[]>(url);
   }
 
