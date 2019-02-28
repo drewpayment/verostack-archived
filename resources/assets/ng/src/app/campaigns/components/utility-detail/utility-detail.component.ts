@@ -79,12 +79,8 @@ export class UtilityDetailComponent implements OnInit {
         this.campaignService.saveUtility(this.user.sessionUser.sessionClient, this.prepareModel())
             .subscribe(utility => {
                 this.utility = utility;
-                this.msg.addMessage('Saved successfully!', 'dismiss', 5000);
-
-                if(this.isNew)
-                    this.router.navigate(['/campaigns', this.utility.campaignId]);
-                else
-                    this.patchForm();
+                this.msg.addMessage('Saved Utility successfully!', 'dismiss', 3000);
+                this.router.navigate(['/campaigns', this.utility.campaignId]);
             });
     }
 
@@ -135,7 +131,8 @@ export class UtilityDetailComponent implements OnInit {
             price: this.form.value.price,
             term: this.form.value.term,
             unitOfMeasure: this.form.value.unitOfMeasure,
-            utilityName: this.form.value.utilityName
+            utilityName: this.form.value.utilityName,
+            isActive: this.form.value.isActive
         } as Utility;
     }
 

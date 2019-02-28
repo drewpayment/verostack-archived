@@ -4,6 +4,15 @@
         <div class="col-md-12">
             <mat-card class="page-header-accent">
                 <h3 mat-card-title>Edit Utility</h3>
+                <mat-card-subtitle>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a routerLink="/campaigns">Campaigns</a></li>
+                            <li class="breadcrumb-item"><a [routerLink]="['/campaigns', campaign.campaignId]">{{campaign.name}}</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Utility Detail</li>
+                        </ol>
+                    </nav>
+                </mat-card-subtitle>
             </mat-card>
         </div>
     </div>
