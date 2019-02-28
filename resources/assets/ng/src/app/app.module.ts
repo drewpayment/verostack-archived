@@ -59,7 +59,7 @@ import { environment } from '@env/environment';
 export class AppModule {
     constructor() {
         // <!-- Global site tag (gtag.js) - Google Analytics -->
-        if(!environment.production) {
+        if(environment.production) {
             let head = document.getElementsByTagName('head')[0];
             let gtagmgrNode = document.createElement('script');
             gtagmgrNode.src = 'https://www.googletagmanager.com/gtag/js?id=UA-135392629-1';
