@@ -19,6 +19,7 @@ import {AgentRulesDialogComponent} from './agent/agent-rules-dialog/agent-rules-
 import {NewSaleComponent} from './daily-sale-tracker/components/new-sale/new-sale.component';
 import {DirectivesModule} from './directives/directives.module';
 import { PayrollModule } from './payroll/payroll.module';
+import { environment } from '@env/environment';
 
 @NgModule({
     imports: [
@@ -55,4 +56,27 @@ import { PayrollModule } from './payroll/payroll.module';
     providers: [],
     bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule {
+    constructor() {
+        // <!-- Global site tag (gtag.js) - Google Analytics -->
+        if(!environment.production) {
+            let head = document.getElementsByTagName('head')[0];
+            let gtagmgrNode = document.createElement('script');
+            gtagmgrNode.src = 'https://www.googletagmanager.com/gtag/js?id=UA-135392629-1';
+            gtagmgrNode.async = true;
+            gtagmgrNode.charset = 'utf-8';
+
+            let gtagCodeNode = document.createElement('script');
+            gtagCodeNode.innerText = `
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+
+                gtag('config', 'UA-135392629-1');
+            `;
+            
+            head.prepend(gtagmgrNode);
+            head.insertBefore(gtagCodeNode, head.childNodes[1]);
+        }
+    }
+}
