@@ -219,11 +219,9 @@ class DailySaleService {
 			$r->dailySale()->attach($c);
 		}
 
-		return $result->setData(
-			DailySale::with('remarks.user')
-			         ->byDailySale($sale->dailySaleId)
-                     ->filterPaid()
-			         ->first());
+		$sale = DailySale::with(['remarks.user', 'contact'])->byDailySale($sale->dailySaleId)->first();
+
+		return $result->setData($sale);
 	}
 
 	/**

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, AfterViewInit} from '@angular/core';
 import {DailySale, IAgent, SaleStatus, User, ICampaign, Remark, PaidStatusType} from '@app/models';
 
 import * as moment from 'moment';
@@ -19,6 +19,7 @@ import {FormGroup, FormBuilder, FormArray, Validators, FormControl} from '@angul
 import {DeleteSaleDialog} from '@app/daily-sale-tracker/dialogs/delete-sale.component';
 import {trigger, style, state, transition, animate} from '@angular/animations';
 import {FloatBtnService} from '@app/fab-float-btn/float-btn.service';
+import { coerceNumberProperty } from '@app/utils';
 
 interface DataStore {
     statuses: SaleStatus[];
@@ -48,7 +49,7 @@ interface PaidStatus {
     ],
     providers: [FloatBtnService]
 })
-export class DailySaleTrackerComponent implements OnInit {
+export class DailySaleTrackerComponent implements OnInit, AfterViewInit {
     paidStatusOptions: PaidStatus[] = [
         {id: 0, name: 'Unpaid'},
         {id: 1, name: 'Paid'},
@@ -150,6 +151,12 @@ export class DailySaleTrackerComponent implements OnInit {
             .catch(this.msg.showWebApiError);
     }
 
+    ngAfterViewInit() {
+        this.form.valueChanges.subscribe(value => {
+            console.dir(value);
+        });
+    }
+
     handleDateChange($event: MatDatepickerInputEvent<Moment>, isStartDate: boolean): void {
         const mDate = $event.value;
 
@@ -186,7 +193,8 @@ export class DailySaleTrackerComponent implements OnInit {
                     selectedCampaign: this.selectedCampaign,
                     campaigns: this.campaigns.filter(c => c.active),
                     user: this.userInfo
-                }
+                },
+                autoFocus: false
             })
             .afterClosed()
             .subscribe((result: any) => {
@@ -235,12 +243,18 @@ export class DailySaleTrackerComponent implements OnInit {
 
         // if the user chose a paid status of "unpaid", let's call the method to handle this
         // which simply unsets the activity date
-        if (sale.value.paidStatus == PaidStatusType.unpaid) this.handleUnpaidSaleStatus(index);
+        if (sale.value.paidStatus == PaidStatusType.unpaid) this.unsetActivityDate(index);
 
         let dto = this.prepareModel(sale, index);
 
+        if(dto == null) {
+            this.form.setErrors({ missingContactInformation: true }, { emitEvent: false });
+            this.msg.addMessage('Failed to save. Please refresh and click the pencil to edit.', 'dismiss', 3500);
+            return;
+        }
+
         let changeType, changeDate;
-        switch (sale.value.paidStatus) {
+        switch (coerceNumberProperty(sale.value.paidStatus)) {
             case PaidStatusType.chargeback:
                 changeType = 'Chargeback';
                 changeDate = dto.chargeDate;
@@ -277,11 +291,11 @@ export class DailySaleTrackerComponent implements OnInit {
         this.trackerService.updateDailySale(dto.clientId, dto).subscribe(result => {
             this.store.sales[index] = result;
             this.patchFormSaleValue(result, index);
-            this.msg.addMessage('Saved!', 'dismiss', 3000);
+            this.msg.addMessage('Sale updated successfully.', 'dismiss', 3000);
         });
     }
 
-    private handleUnpaidSaleStatus(index: number): void {
+    private unsetActivityDate(index: number): void {
         (<FormControl>this.form.get('sales').get(index + '')).patchValue({
             activityDate: null
         });
@@ -312,7 +326,8 @@ export class DailySaleTrackerComponent implements OnInit {
                     statuses: this.store.statuses,
                     campaigns: this.campaigns,
                     user: this.userInfo
-                }
+                }, 
+                autoFocus: false
             })
             .afterClosed()
             .subscribe(dto => {
@@ -328,7 +343,7 @@ export class DailySaleTrackerComponent implements OnInit {
     }
 
     deleteSale(index: number): void {
-        const sale: FormGroup = this.form.get('sales').get(index + '') as FormGroup;
+        const sale = this.form.get('sales').get(index + '') as FormGroup;
 
         if (this.showNotes) this.expandedRowHover(null);
 
@@ -339,10 +354,12 @@ export class DailySaleTrackerComponent implements OnInit {
             .afterClosed()
             .subscribe(result => {
                 if (result == null) return;
-                const dto: DailySale = this.prepareModel(sale, index);
-                if (dto.dailySaleId < 1) return;
+                
+                const dailySaleId = sale.value.dailySaleId;
+                if (dailySaleId < 1) return;
+
                 this.trackerService
-                    .deleteDailySale(this.userInfo.sessionUser.sessionClient, dto.dailySaleId)
+                    .deleteDailySale(this.userInfo.sessionUser.sessionClient, dailySaleId)
                     .subscribe(() => {
                         this.msg.addMessage('Successfully deleted sale.', 'dismiss', 3000);
                         this.refreshDailySales(this.startDate, this.endDate);
@@ -409,6 +426,9 @@ export class DailySaleTrackerComponent implements OnInit {
                     status: this.fb.control(d.status || '', [Validators.required]),
                     paidStatus: this.fb.control(d.paidStatus, [Validators.required]),
                     saleDate: this.fb.control(d.saleDate || '', [Validators.required]),
+                    paidDate: this.fb.control(d.paidDate || ''),
+                    chargeDate: this.fb.control(d.chargeDate || ''),
+                    repaidDate: this.fb.control(d.repaidDate || ''),
                     activityDate: this.fb.control(this.calculateActivityDate(d)),
                     remarks: this.createRemarksFormArray(d.remarks)
                 })
@@ -420,7 +440,7 @@ export class DailySaleTrackerComponent implements OnInit {
     private calculateActivityDate(sale: DailySale): Date | string | Moment {
         let activityDate: Date | string | Moment;
 
-        switch (sale.paidStatus) {
+        switch (coerceNumberProperty(sale.paidStatus)) {
             case PaidStatusType.paid:
                 activityDate = sale.paidDate;
                 break;
@@ -487,11 +507,18 @@ export class DailySaleTrackerComponent implements OnInit {
     }
 
     private prepareModel(form: FormGroup, index: number = null): DailySale {
+        const contact = this.store.sales.find(s => s.dailySaleId == form.value.dailySaleId).contact;
+        if(contact == null) return null;
+
+        const paidStatus = coerceNumberProperty(form.value.paidStatus);
+
         return {
             dailySaleId: form.value.dailySaleId,
             agentId: form.value.agent,
             campaignId: this.resolveClientId(index),
             clientId: this.userInfo.sessionUser.sessionClient,
+            contactId: contact.contactId,
+            contact: contact,
             firstName: form.value.firstName,
             lastName: form.value.lastName,
             street: form.value.street,
@@ -501,12 +528,18 @@ export class DailySaleTrackerComponent implements OnInit {
             zip: form.value.zip,
             status: form.value.status,
             paidStatus: form.value.paidStatus,
-            paidDate: this.setActivityDateProperty(form.value.paidStatus, 'paidDate', index),
-            chargeDate: this.setActivityDateProperty(form.value.paidStatus, 'chargeDate', index),
-            repaidDate: this.setActivityDateProperty(form.value.paidStatus, 'repaidDate', index),
+            // paidDate: this.setActivityDateProperty(form.value.paidStatus, 'paidDate', index),
+            // chargeDate: this.setActivityDateProperty(form.value.paidStatus, 'chargeDate', index),
+            // repaidDate: this.setActivityDateProperty(form.value.paidStatus, 'repaidDate', index),
             remarks: this.prepareRemarks(index),
             saleDate: form.value.saleDate,
-            podAccount: form.value.account
+            podAccount: form.value.account,
+            paidDate: paidStatus == PaidStatusType.paid && form.value.paidDate == '' 
+                ? moment().format('YYYY-MM-DD') : form.value.paidDate,
+            chargeDate: paidStatus == PaidStatusType.chargeback && form.value.chargeDate == ''
+                ? moment().format('YYYY-MM-DD') : form.value.chargeDate,
+            repaidDate: paidStatus == PaidStatusType.repaid && form.value.repaidDate == ''
+                ? moment().format('YYYY-MM-DD') : form.value.repaidDate
         };
     }
 

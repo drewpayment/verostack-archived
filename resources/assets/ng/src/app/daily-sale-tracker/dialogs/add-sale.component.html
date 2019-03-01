@@ -1,12 +1,13 @@
-<div class="modal-header">
-    <h3 class="modal-title">
-        {{existingSale != null && existingSale.dailySaleId > 0 ? 'Edit Sale' : 'Add Sale'}}
+
+<div mat-dialog-title class="d-flex justify-content-between">
+    <h3>
+        {{ existingSale != null && existingSale.dailySaleId > 0 ? 'Edit Sale' : 'Add Sale' }}
     </h3>
-    <span class="clickable float-right">
-        <i class="material-icons" (click)="onNoClick()">clear</i>
-    </span>
+    <button type="button" mat-icon-button (click)="onNoClick()">
+        <mat-icon>clear</mat-icon>
+    </button>
 </div>
-<div class="modal-body" *ngIf="!showEditContactForm">
+<mat-dialog-content *ngIf="!showEditContactForm">
     <p class="text-muted">
         All fields denoted with * are required.
     </p>
@@ -381,8 +382,8 @@
         </div>
 
     </form>
-    <div class="float-right">
-        <button mat-button (click)="onNoClick()">Cancel</button>
-        <button mat-button (click)="saveDialog()" color="primary">Save</button>
-    </div>
-</div>
+</mat-dialog-content>
+<mat-dialog-actions class="d-flex justify-content-end">
+    <button mat-button (click)="onNoClick()">Cancel</button>
+    <button mat-button (click)="saveDialog()" color="primary">Save</button>
+</mat-dialog-actions>
