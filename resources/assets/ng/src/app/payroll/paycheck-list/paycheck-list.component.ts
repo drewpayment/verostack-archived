@@ -4,13 +4,14 @@ import { PaycheckService } from './paycheck.service';
 import { SessionService } from '@app/session.service';
 import { FormControl } from '@angular/forms';
 import { MatPaginator, PageEvent, MatSort, MatTable, MatTableDataSource, SortDirection, MatChipInputEvent } from '@angular/material';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, forkJoin, Observable, combineLatest } from 'rxjs';
 import { Moment } from '@app/shared';
 import { CampaignService } from '@app/campaigns/campaign.service';
 import { PaycheckDetailService } from '../paycheck-detail/paycheck-detail.service';
 import { coerceNumberProperty } from '@app/utils';
 import * as moment from 'moment';
-import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, map, take } from 'rxjs/operators';
+import { ActivatedRoute } from '@angular/router';
 
 
 @Component({
@@ -36,8 +37,13 @@ export class PaycheckListComponent implements OnInit {
     searchInput = new FormControl('');
     inputs:string[] = [];
 
+    startDateCtrl = new FormControl('');
+    endDateCtrl = new FormControl('');
+    pageLoadApiCallHappened:boolean = false;
+
 
     constructor(
+        private route:ActivatedRoute,
         private session:SessionService,
         private service:PaycheckService,
         private campaignService:CampaignService,
@@ -52,14 +58,25 @@ export class PaycheckListComponent implements OnInit {
                 distinctUntilChanged()
             ).subscribe(val => this.filterTable(val));
 
-        this.session.getUserItem().subscribe(user => {
+        combineLatest(
+            this.route.queryParams,
+            this.session.getUserItem()
+        ).subscribe(([params, user]) => {
+            if(this.pageLoadApiCallHappened) return;
+            this.startDate = params['startDate'] || null;
+            this.endDate = params['endDate'] || null;
             this.user = user;
+
+            this.startDateCtrl.setValue(this.startDate, { emitEvent: false });
+            this.endDateCtrl.setValue(this.endDate, { emitEvent: false });
 
             this.campaignService.getCachedCampaigns(user.sessionUser.sessionClient)
                 .subscribe(campaigns => {
                     this.campaigns$.next(campaigns);
                     this.getPaychecks();
                 });
+
+            this.pageLoadApiCallHappened = true;
         });
     }
 
@@ -91,7 +108,7 @@ export class PaycheckListComponent implements OnInit {
             .map(id => {
                 return result.find(pd => pd.payrollDetailsId == id);
             });
-        console.dir(result);
+            
         this.paychecks$.next(result);
     }
 
@@ -182,7 +199,17 @@ export class PaycheckListComponent implements OnInit {
     ):void {
         page++; // we need to increment the value of "page" because matpaginator uses 0-based indexing and laravel pagination starts at 1
 
-        this.service.getPaychecks(this.user.sessionUser.sessionClient, page, pageSize, startDate, endDate)
+        if(startDate && endDate) {
+            this.startDate = startDate;
+            this.endDate = endDate;
+            this.startDateCtrl.setValue(this.startDate, { emitEvent: false });
+            this.endDateCtrl.setValue(this.endDate, { emitEvent: false });
+        } else if(this.startDateCtrl.value && this.endDateCtrl.value) {
+            this.startDate = moment(this.startDateCtrl.value).format('YYYY-MM-DD');
+            this.endDate = moment(this.endDateCtrl.value).format('YYYY-MM-DD');
+        }
+
+        this.service.getPaychecks(this.user.sessionUser.sessionClient, page, pageSize, this.startDate, this.endDate)
             .subscribe(paginator => {
                 this.paginator = paginator;
                 this.paging.length = this.paginator.total;
@@ -199,6 +226,12 @@ export class PaycheckListComponent implements OnInit {
                     if(a.agent.firstName > b.agent.firstName)
                         return 1;
                     return 0;
+                }).sort((a, b) => {
+                    if(<any>(Date.parse(<string>a.payroll.weekEnding) > Date.parse(<string>b.payroll.weekEnding))) 
+                        return -1;
+                    if(<any>(Date.parse(<string>a.payroll.weekEnding) < Date.parse(<string>b.payroll.weekEnding)))
+                        return 1;
+                    return 0;
                 });
                 
                 paychecks = paychecks.map(p => {
@@ -207,15 +240,13 @@ export class PaycheckListComponent implements OnInit {
                     return p;
                 });
 
-                if(paychecks != null) {
-                    this.startDate = paychecks.sort((a,b) => {
-                        return <any>(Date.parse(<string>a.payroll.payCycle.startDate) < Date.parse(<string>b.payroll.payCycle.startDate));
-                    })[0].payroll.payCycle.startDate;
+                // if(paychecks != null && this.startDate == null && this.endDate == null) {
+                //     this.startDate = paychecks[paychecks.length - 1].payroll.payCycle.startDate;
+                //     this.endDate = paychecks[0].payroll.payCycle.endDate;
 
-                    this.endDate = paychecks.sort((a,b) => {
-                        return <any>(Date.parse(<string>a.payroll.payCycle.endDate) < Date.parse(<string>b.payroll.payCycle.endDate));
-                    })[0].payroll.payCycle.endDate;
-                }
+                //     this.startDateCtrl.setValue(this.startDate, { emitEvent: false });
+                //     this.endDateCtrl.setValue(this.endDate, { emitEvent: false });
+                // }
                 
                 this._paychecks = paychecks;
                 this.paychecks$.next(paychecks);

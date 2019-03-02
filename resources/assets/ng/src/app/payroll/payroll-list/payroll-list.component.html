@@ -152,13 +152,22 @@
                             <mat-header-cell *matHeaderCellDef>Status</mat-header-cell>
                             <mat-cell *matCellDef="let item">
                                 <ng-container *ngLet="getPayrollStatus(item) as desc">
-                                    {{desc}}
+                                    <ng-container *ngIf="item.isReleased; else notReleased">
+                                        <a [routerLink]="['/admin/pay/paycheck-list']" class="link-unstyled"
+                                            [queryParams]="{ startDate: item?.payCycle?.startDate, endDate: item?.payCycle?.endDate }">
+                                            <span>{{desc}}</span>
+                                            <mat-icon inline="true">launch</mat-icon>
+                                        </a>
+                                    </ng-container>
+                                    <ng-template #notReleased>
+                                        {{desc}}
+                                    </ng-template>
                                 </ng-container>
                             </mat-cell>
                         </ng-container>
 
                         <ng-container matColumnDef="collapsedState">
-                            <mat-header-cell *matHeaderCellDef>&nbsp;</mat-header-cell>
+                            <mat-header-cell *matHeaderCellDef class="max-width-40">&nbsp;</mat-header-cell>
                             <mat-cell *matCellDef="let item" class="max-width-40">
                                 <mat-icon
                                     [@collapseIcon]="item == expandedItem ? 'expanded' : 'collapsed'"

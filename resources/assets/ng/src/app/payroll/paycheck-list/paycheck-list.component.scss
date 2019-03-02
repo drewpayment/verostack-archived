@@ -75,3 +75,7 @@ mat-header-row {
         background-color: $gray-200;
     }
 }
+
+/deep/ .mat-sort-header-arrow {
+    color: $white;
+}

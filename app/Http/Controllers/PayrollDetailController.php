@@ -32,21 +32,21 @@ class PayrollDetailController extends Controller
         return $result->throwApiException()->getResponse();
     }
 
-    public function getPaychecksByDetail(Request $request, $clientId, $payrollDetailsId)
-    {
-        $result = new ApiResource();
+    // public function getPaychecksByDetail(Request $request, $clientId, $payrollDetailsId)
+    // {
+    //     $result = new ApiResource();
 
-        $result
-			->checkAccessByClient($clientId, Auth::user()->id)
-			->mergeInto($result);
+    //     $result
+	// 		->checkAccessByClient($clientId, Auth::user()->id)
+	// 		->mergeInto($result);
 
-		if($result->hasError)
-			return $result->throwApiException()->getResponse();
+	// 	if($result->hasError)
+	// 		return $result->throwApiException()->getResponse();
 
-        $this->service->getPaychecksByDetailPaged($payrollDetailsId, $request->page)
-            ->mergeInto($result);
+    //     $this->service->getPaychecksByDetailPaged($payrollDetailsId, $request->page)
+    //         ->mergeInto($result);
 
-        return $result->throwApiException()->getResponse();
-    }
+    //     return $result->throwApiException()->getResponse();
+    // }
 
 }

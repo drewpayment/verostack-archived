@@ -14,7 +14,7 @@
     </div>
 
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-12 d-flex justify-content-between">
             <mat-form-field class="search-input ml-2">
                 <mat-chip-list #chipList>
                     <mat-chip *ngFor="let input of inputs" selectable="false" removable="true" (removed)="removeInput(input)">
@@ -30,6 +30,20 @@
                         (matChipInputTokenEnd)="addInput($event)" />
                 </mat-chip-list>
             </mat-form-field>
+            <div>
+                <mat-form-field class="mr-2">
+                    <input matInput [matDatepicker]="startDatepicker" placeholder="Start Date" 
+                        [formControl]="startDateCtrl" (dateChange)="getPaychecks()" />
+                    <mat-datepicker-toggle matSuffix [for]="startDatepicker"></mat-datepicker-toggle>
+                    <mat-datepicker #startDatepicker></mat-datepicker>
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput [matDatepicker]="endDatepicker" placeholder="End Date" 
+                        [formControl]="endDateCtrl" (dateChange)="getPaychecks()" />
+                    <mat-datepicker-toggle matSuffix [for]="endDatepicker"></mat-datepicker-toggle>
+                    <mat-datepicker #endDatepicker></mat-datepicker>
+                </mat-form-field>
+            </div>
         </div>  
     </div>
 
@@ -37,14 +51,14 @@
         <!-- <ng-container *ngLet="paychecks$|async as paychecks"> -->
             <div class="col-md-12">
                 <div class="mat-elevation-z2">
-                    <mat-table [dataSource]="paychecks$" matSort (matSortChange)="sortTable($event)">
+                    <mat-table [dataSource]="paychecks$" matSort (matSortChange)="sortTable($event)" matSortActive="weekEnding" matSortDirection="desc">
                         <ng-container matColumnDef="agentName">
                             <mat-header-cell *matHeaderCellDef mat-sort-header>Name</mat-header-cell>
                             <mat-cell *matCellDef="let item">{{item.agent.firstName}} {{item.agent.lastName}}</mat-cell>
                         </ng-container>
 
                         <ng-container matColumnDef="weekEnding">
-                            <mat-header-cell *matHeaderCellDef mat-sort-header>Invoice Date</mat-header-cell>
+                            <mat-header-cell *matHeaderCellDef mat-sort-header start="desc">Invoice Date</mat-header-cell>
                             <mat-cell *matCellDef="let item">{{item.payroll.weekEnding | date:'mediumDate'}}</mat-cell>
                         </ng-container>
 

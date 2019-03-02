@@ -47,47 +47,40 @@ class PayrollDetailsService
         return $result->setData($d);
     }
 
-    public function getPaychecksByDetailPaged($payrollDetailsId, $page = 1)
-    {
-        $result = new ApiResource();
+    // public function getPaychecksByDetailPaged($payrollDetailsId, $page = 1)
+    // {
+    //     $result = new ApiResource();
 
-        $details = PayrollDetail::with(['payroll.payCycle', 'agent', 'overrides', 'expenses'])
-            ->byPayrollDetailsId($payrollDetailsId)
-            ->paginate(10);
+    //     $details = PayrollDetail::with(['payroll.payCycle', 'agent', 'overrides', 'expenses'])
+    //         ->byPayrollDetailsId($payrollDetailsId)
+    //         ->paginate(10);
 
-        return $result->setData($details);
-    }
+    //     return $result->setData($details);
+    // }
 
     public function getPaychecksPaged(Request $request)
     {
         $result = new ApiResource();
-
-        // $cycles = PayCycle::with(['payroll.details.agent', 'payroll.details.overrides', 'payroll.details.expenses'])
-        //     ->when($request->startDate, function($query, $request) {
-        //         return $query->byDates($request->startDate, $request->endDate);
-        //     })
-        //     ->paginate($resultsPerPage, ['*'], 'page', $request->page)
-        //     ->transform(function($item, $key) {
-        //         $details = [];
-        //         $payrolls = $item->data->payrolls;
-        //         foreach($payrolls as $p) {
-        //             $scopeDetails = $p->details;
-        //             $p->payCycle = $item;
-
-        //             foreach($scopeDetails as $d) { $d->payroll = $p; }
-
-        //             $details = array_merge($details, $scopeDetails);
-        //         }
-        //         return $details;
-        //     });
 
         /**
          * Need to update this so that the user can pass in filtering options to filter by a range of dates of the pay cycle.
          * However, the start/end dates are on the pay cycle object which is a relationship through the Payroll entity. In order to check this,
          * we're going to need to write a fairly complex conditional where clause using this: 
          * https://laravel.com/docs/5.7/eloquent-relationships#querying-relationship-existence
+         * 
+         * UPDATE: This is working for now... feels like EGG SHELLS. 
          */
+        $filterByDates = !is_null($request->startDate) && !is_null($request->endDate);
+
         $details = PayrollDetail::with(['payroll.payCycle', 'agent', 'overrides.agent', 'expenses'])
+            ->when($filterByDates, function($qry) use ($request) {
+                $qry->whereHas('payroll', function($pq) use ($request) {
+                    $pq->whereHas('payCycle', function($pc) use ($request) {
+                        $pc->whereDate('start_date', '>=', $request->startDate)
+                            ->whereDate('end_date', '<=', $request->endDate);
+                    });
+                });
+            })
             ->paginate($request->resultsPerPage, ['*'], 'page', $request->page);
 
         return $result->setData($details);
