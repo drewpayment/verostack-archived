@@ -12,7 +12,7 @@ import { coerceNumberProperty } from '@app/utils';
 import * as moment from 'moment';
 import { debounceTime, distinctUntilChanged, map, take } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
-import { trigger, state, style, animate, keyframes, transition } from '@angular/animations';
+import { trigger, state, style, animate, keyframes, transition, sequence, query, animateChild, group } from '@angular/animations';
 
 
 @Component({
@@ -20,24 +20,46 @@ import { trigger, state, style, animate, keyframes, transition } from '@angular/
     templateUrl: './paycheck-list.component.html',
     styleUrls: ['./paycheck-list.component.scss'],
     animations: [
-        trigger('dateFilter', [
-            state('hide', style({width: '0px', minWidth: '0', display: 'none'})),
-            state('show', style({ width: '*' })),
-            transition('hide <=> show', [
-                animate('2s', keyframes([
-                    style({ transform: 'translateX(150%)' }),
-                    style({ transform: 'translateX(-8%)' }),
-                    style({ transform: 'translateX(4%)' }),
-                    style({ transform: 'translateX(-4%)' }),
-                    style({ transform: 'translateX(2%)' }),
-                    style({ transform: 'translateX(0%)' })
-                ]))
-            ])
+        trigger('slideInOutControls', [
+            state('true', style({ transform: 'translateX(0)', opacity: 1 })),
+            state('false', style({ transform: 'translateX(100%)', display: 'none', opacity: 0 })),
+            transition('false => true', animate(500)),
+            transition('true => false', animate(500))
+        ]),
+        trigger('slideInOutTrigger', [
+            state('false', style({ transform: 'translateX(0)', opacity: 1 })),
+            state('true', style({ transform: 'translateX(100%)', display: 'none', opacity: 0 })),
+            transition('true => false', animate(500)),
+            transition('false => true', animate(500))
+        ]),
+        trigger('slideInOut', [
+            state('true', style({})),
+            state('false', style({})),
+            transition('false => true', [
+                sequence([
+                    query('@slideInOutTrigger', animateChild()),
+                    query('@slideInOutControls', animateChild())
+                ])
+            ]),
+            transition('true => false', [
+                sequence([
+                    query('@slideInOutControls', animateChild()),
+                    query('@slideInOutTrigger', animateChild())
+                ])
+            ]),
+
+            // transition('void => *', [
+            //     style({ transform: 'translateX(-40%)' }),
+            //     animate(1000)
+            // ]),
+            // transition('* => void', [
+            //     animate(1000, style({ transform: 'translateX(100%)' }))
+            // ])
         ])
+        
     ]
 })
 export class PaycheckListComponent implements OnInit {
-
     user:User;
     agents:IAgent[];
     campaigns$ = new BehaviorSubject<ICampaign[]>(null);
@@ -99,6 +121,10 @@ export class PaycheckListComponent implements OnInit {
         });
     }
 
+    toggleState(target:string):void {
+        this.showTrigger = !this.showTrigger;
+    }
+
     sortTable(sort:{ active:'agentName'|'releaseDate'|'campaign'|'amount', direction:SortDirection }) {
         const result = this.sortPaychecksBy(sort.active, sort.direction);
         this.paychecks$.next(result);
@@ -121,6 +147,7 @@ export class PaycheckListComponent implements OnInit {
         this.endDateCtrl.reset();
 
         this.getPaychecks();
+        this.showChangeDateControls = !this.showChangeDateControls;
     }
 
     filterTable(filterValue:string):void {

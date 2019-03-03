@@ -14,7 +14,7 @@
     </div>
 
     <div class="row">
-        <div class="col-md-12 d-flex justify-content-between">
+        <div class="col-md-12 d-flex justify-content-between" [@slideInOut]="showChangeDateControls">
             <mat-form-field class="search-input ml-2">
                 <mat-icon matPrefix class="text-muted">search</mat-icon>
                 <mat-chip-list #chipList>
@@ -31,7 +31,10 @@
                         (matChipInputTokenEnd)="addInput($event)" />
                 </mat-chip-list>
             </mat-form-field>
-            <div [@dateFilter]="showChangeDateControls ? 'show' : 'hide'">
+            <div [@slideInOutControls]="showChangeDateControls">
+                <button type="button" mat-icon-button class="text-muted p-2 m-2" (click)="showChangeDateControls=!showChangeDateControls">
+                    <mat-icon>keyboard_arrow_right</mat-icon>
+                </button>
                 <mat-form-field class="mr-2">
                     <input matInput [matDatepicker]="startDatepicker" placeholder="Start Date" 
                         [formControl]="startDateCtrl" />
@@ -53,9 +56,10 @@
                     Clear
                 </button>
             </div>
-            <button type="button" mat-button class="text-muted p-2 m-2" 
-                *ngIf="!showChangeDateControls" (click)="showChangeDateControls=!showChangeDateControls;">
-                <mat-icon>keyboard_arrow_left</mat-icon> Change Date Filter
+            <button type="button" mat-button class="text-muted p-2 m-2" [@slideInOutTrigger]="showChangeDateControls"
+                (click)="showChangeDateControls=!showChangeDateControls">
+                <mat-icon>keyboard_arrow_left</mat-icon>
+                <mat-icon>date_range</mat-icon>
             </button>
         </div>  
     </div>
