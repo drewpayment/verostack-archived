@@ -2,12 +2,13 @@
 
 namespace App\Http\Services;
 
+use App\PayCycle;
 use App\Http\Helpers;
 use App\PayrollDetail;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Resources\ApiResource;
 use Illuminate\Support\Facades\Auth;
-use App\PayCycle;
 
 class PayrollDetailsService 
 {
@@ -73,12 +74,17 @@ class PayrollDetailsService
         $filterByDates = !is_null($request->startDate) && !is_null($request->endDate);
 
         $details = PayrollDetail::with(['payroll.payCycle', 'agent', 'overrides.agent', 'expenses'])
+            ->select('payroll_details.*', DB::raw('(SELECT release_date FROM payrolls WHERE payroll_details.payroll_id = payrolls.payroll_id) as release_date'))
+            ->latest('release_date', 'desc')
             ->when($filterByDates, function($qry) use ($request) {
                 $qry->whereHas('payroll', function($pq) use ($request) {
-                    $pq->whereHas('payCycle', function($pc) use ($request) {
-                        $pc->whereDate('start_date', '>=', $request->startDate)
-                            ->whereDate('end_date', '<=', $request->endDate);
-                    });
+                    $pq->where('is_released', 1)
+                        ->whereBetween('release_date', [$request->startDate, $request->endDate]);
+                });
+            })
+            ->when(!$filterByDates, function($query) {
+                $query->whereHas('payroll', function($pq) {
+                    $pq->where('is_released', 1);
                 });
             })
             ->paginate($request->resultsPerPage, ['*'], 'page', $request->page);

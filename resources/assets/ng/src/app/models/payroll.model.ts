@@ -12,6 +12,7 @@ export interface Payroll {
     utilityId:number,
     weekEnding?:Date|Moment|string,
     isReleased:boolean,
+    releaseDate?:Date|Moment|string,
     isAutomated:boolean,
     automatedRelease?:Date|Moment|string,
     modifiedBy?:number,

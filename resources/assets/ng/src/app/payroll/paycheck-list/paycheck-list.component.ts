@@ -12,12 +12,29 @@ import { coerceNumberProperty } from '@app/utils';
 import * as moment from 'moment';
 import { debounceTime, distinctUntilChanged, map, take } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
+import { trigger, state, style, animate, keyframes, transition } from '@angular/animations';
 
 
 @Component({
     selector: 'vs-paycheck-list',
     templateUrl: './paycheck-list.component.html',
-    styleUrls: ['./paycheck-list.component.scss']
+    styleUrls: ['./paycheck-list.component.scss'],
+    animations: [
+        trigger('dateFilter', [
+            state('hide', style({width: '0px', minWidth: '0', display: 'none'})),
+            state('show', style({ width: '*' })),
+            transition('hide <=> show', [
+                animate('2s', keyframes([
+                    style({ transform: 'translateX(150%)' }),
+                    style({ transform: 'translateX(-8%)' }),
+                    style({ transform: 'translateX(4%)' }),
+                    style({ transform: 'translateX(-4%)' }),
+                    style({ transform: 'translateX(2%)' }),
+                    style({ transform: 'translateX(0%)' })
+                ]))
+            ])
+        ])
+    ]
 })
 export class PaycheckListComponent implements OnInit {
 
@@ -40,6 +57,8 @@ export class PaycheckListComponent implements OnInit {
     startDateCtrl = new FormControl('');
     endDateCtrl = new FormControl('');
     pageLoadApiCallHappened:boolean = false;
+
+    showChangeDateControls:boolean = false;
 
 
     constructor(
@@ -80,9 +99,28 @@ export class PaycheckListComponent implements OnInit {
         });
     }
 
-    sortTable(sort:{ active:'agentName'|'weekEnding'|'campaign'|'amount', direction:SortDirection }) {
+    sortTable(sort:{ active:'agentName'|'releaseDate'|'campaign'|'amount', direction:SortDirection }) {
         const result = this.sortPaychecksBy(sort.active, sort.direction);
         this.paychecks$.next(result);
+    }
+
+    filterTableByDates():void {
+        if(this.startDateCtrl.value)
+            this.startDate = this.startDateCtrl.value;
+        if(this.endDateCtrl.value)
+            this.endDate = this.endDateCtrl.value;
+
+        if(this.startDateCtrl.invalid) return;
+        if(this.endDateCtrl.invalid) return;
+
+        this.getPaychecks();
+    }
+
+    clearDates() {
+        this.startDateCtrl.reset();
+        this.endDateCtrl.reset();
+
+        this.getPaychecks();
     }
 
     filterTable(filterValue:string):void {
@@ -156,11 +194,11 @@ export class PaycheckListComponent implements OnInit {
             });
         }
         
-        if(prop == 'weekEnding') {
+        if(prop == 'releaseDate') {
             return this.paychecks$.getValue().sort((a,b) => {
-                if(Date.parse(<string>a.payroll.weekEnding) < Date.parse(<string>b.payroll.weekEnding))
+                if(Date.parse(<string>a.payroll.releaseDate) < Date.parse(<string>b.payroll.releaseDate))
                     return lessThanType;
-                if(Date.parse(<string>a.payroll.weekEnding) > Date.parse(<string>b.payroll.weekEnding))
+                if(Date.parse(<string>a.payroll.releaseDate) > Date.parse(<string>b.payroll.releaseDate))
                     return greaterThanType;
                 return 0;
             });
@@ -199,20 +237,30 @@ export class PaycheckListComponent implements OnInit {
     ):void {
         page++; // we need to increment the value of "page" because matpaginator uses 0-based indexing and laravel pagination starts at 1
 
-        if(startDate && endDate) {
-            this.startDate = startDate;
-            this.endDate = endDate;
-            this.startDateCtrl.setValue(this.startDate, { emitEvent: false });
-            this.endDateCtrl.setValue(this.endDate, { emitEvent: false });
-        } else if(this.startDateCtrl.value && this.endDateCtrl.value) {
-            this.startDate = moment(this.startDateCtrl.value).format('YYYY-MM-DD');
-            this.endDate = moment(this.endDateCtrl.value).format('YYYY-MM-DD');
+        // if(startDate && endDate) {
+        //     this.startDate = startDate;
+        //     this.endDate = endDate;
+        //     this.startDateCtrl.setValue(this.startDate, { emitEvent: false });
+        //     this.endDateCtrl.setValue(this.endDate, { emitEvent: false });
+        // } else {
+            
+        // }
+
+        if(this.startDateCtrl.value && this.endDateCtrl.value) {
+            startDate = moment(this.startDateCtrl.value).format('YYYY-MM-DD');
+            endDate = moment(this.endDateCtrl.value).format('YYYY-MM-DD');
         }
 
-        this.service.getPaychecks(this.user.sessionUser.sessionClient, page, pageSize, this.startDate, this.endDate)
+        this.service.getPaychecks(this.user.sessionUser.sessionClient, page, pageSize, startDate, endDate)
             .subscribe(paginator => {
                 this.paginator = paginator;
                 this.paging.length = this.paginator.total;
+
+                if(this.paginator.data == null) {
+                    this._paychecks = [];
+                    this.paychecks$.next(this._paychecks);
+                    return;
+                }
 
                 let paychecks = this.paginator.data.sort((a, b) => {
                     if(a.agent.lastName < b.agent.lastName)
@@ -227,9 +275,9 @@ export class PaycheckListComponent implements OnInit {
                         return 1;
                     return 0;
                 }).sort((a, b) => {
-                    if(<any>(Date.parse(<string>a.payroll.weekEnding) > Date.parse(<string>b.payroll.weekEnding))) 
+                    if(<any>(Date.parse(<string>a.payroll.releaseDate) > Date.parse(<string>b.payroll.releaseDate))) 
                         return -1;
-                    if(<any>(Date.parse(<string>a.payroll.weekEnding) < Date.parse(<string>b.payroll.weekEnding)))
+                    if(<any>(Date.parse(<string>a.payroll.releaseDate) < Date.parse(<string>b.payroll.releaseDate)))
                         return 1;
                     return 0;
                 });
@@ -240,13 +288,10 @@ export class PaycheckListComponent implements OnInit {
                     return p;
                 });
 
-                // if(paychecks != null && this.startDate == null && this.endDate == null) {
-                //     this.startDate = paychecks[paychecks.length - 1].payroll.payCycle.startDate;
-                //     this.endDate = paychecks[0].payroll.payCycle.endDate;
-
-                //     this.startDateCtrl.setValue(this.startDate, { emitEvent: false });
-                //     this.endDateCtrl.setValue(this.endDate, { emitEvent: false });
-                // }
+                if(paychecks != null && this.startDate == null && this.endDate == null) {
+                    this.startDate = paychecks[paychecks.length - 1].payroll.payCycle.startDate;
+                    this.endDate = paychecks[0].payroll.payCycle.endDate;
+                }
                 
                 this._paychecks = paychecks;
                 this.paychecks$.next(paychecks);

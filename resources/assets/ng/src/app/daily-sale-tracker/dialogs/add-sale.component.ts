@@ -424,7 +424,7 @@ export class AddSaleDialog implements OnInit, AfterViewInit {
         return {
             dailySaleId: this.existingSale.dailySaleId || null,
             agentId: this.form.value.agent.agentId,
-            campaignId: this.form.value.campaign,
+            campaignId: this.form.value.campaign || this.form.get('campaign').value,
             utilityId: this.form.value.utilityId,
             clientId: this.user.sessionUser.sessionClient,
             status: this.form.value.status,

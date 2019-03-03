@@ -16,6 +16,7 @@
     <div class="row">
         <div class="col-md-12 d-flex justify-content-between">
             <mat-form-field class="search-input ml-2">
+                <mat-icon matPrefix class="text-muted">search</mat-icon>
                 <mat-chip-list #chipList>
                     <mat-chip *ngFor="let input of inputs" selectable="false" removable="true" (removed)="removeInput(input)">
                         {{input}}
@@ -30,20 +31,32 @@
                         (matChipInputTokenEnd)="addInput($event)" />
                 </mat-chip-list>
             </mat-form-field>
-            <div>
+            <div [@dateFilter]="showChangeDateControls ? 'show' : 'hide'">
                 <mat-form-field class="mr-2">
                     <input matInput [matDatepicker]="startDatepicker" placeholder="Start Date" 
-                        [formControl]="startDateCtrl" (dateChange)="getPaychecks()" />
+                        [formControl]="startDateCtrl" />
                     <mat-datepicker-toggle matSuffix [for]="startDatepicker"></mat-datepicker-toggle>
                     <mat-datepicker #startDatepicker></mat-datepicker>
                 </mat-form-field>
                 <mat-form-field>
                     <input matInput [matDatepicker]="endDatepicker" placeholder="End Date" 
-                        [formControl]="endDateCtrl" (dateChange)="getPaychecks()" />
+                        [formControl]="endDateCtrl" />
                     <mat-datepicker-toggle matSuffix [for]="endDatepicker"></mat-datepicker-toggle>
                     <mat-datepicker #endDatepicker></mat-datepicker>
                 </mat-form-field>
+                <button type="button" class="p-2 m-2" mat-raised-button color="primary" 
+                    [disabled]="startDateCtrl.invalid || endDateCtrl.invalid" (click)="filterTableByDates()">
+                    GO
+                </button>
+                <button type="button" class="p-2 m-2" mat-flat-button color="accent"
+                    [disabled]="startDateCtrl.value == null || endDateCtrl.value == null" (click)="clearDates()">
+                    Clear
+                </button>
             </div>
+            <button type="button" mat-button class="text-muted p-2 m-2" 
+                *ngIf="!showChangeDateControls" (click)="showChangeDateControls=!showChangeDateControls;">
+                <mat-icon>keyboard_arrow_left</mat-icon> Change Date Filter
+            </button>
         </div>  
     </div>
 
@@ -53,13 +66,13 @@
                 <div class="mat-elevation-z2">
                     <mat-table [dataSource]="paychecks$" matSort (matSortChange)="sortTable($event)" matSortActive="weekEnding" matSortDirection="desc">
                         <ng-container matColumnDef="agentName">
-                            <mat-header-cell *matHeaderCellDef mat-sort-header>Name</mat-header-cell>
+                            <mat-header-cell *matHeaderCellDef mat-sort-header>Receivable</mat-header-cell>
                             <mat-cell *matCellDef="let item">{{item.agent.firstName}} {{item.agent.lastName}}</mat-cell>
                         </ng-container>
 
-                        <ng-container matColumnDef="weekEnding">
-                            <mat-header-cell *matHeaderCellDef mat-sort-header start="desc">Invoice Date</mat-header-cell>
-                            <mat-cell *matCellDef="let item">{{item.payroll.weekEnding | date:'mediumDate'}}</mat-cell>
+                        <ng-container matColumnDef="releaseDate">
+                            <mat-header-cell *matHeaderCellDef mat-sort-header start="desc">Advice Date</mat-header-cell>
+                            <mat-cell *matCellDef="let item">{{item.payroll.releaseDate | date:'mediumDate'}}</mat-cell>
                         </ng-container>
 
                         <ng-container matColumnDef="campaign">
@@ -68,20 +81,20 @@
                         </ng-container>
 
                         <ng-container matColumnDef="amount">
-                            <mat-header-cell *matHeaderCellDef mat-sort-header>Amount</mat-header-cell>
+                            <mat-header-cell *matHeaderCellDef mat-sort-header>Total</mat-header-cell>
                             <mat-cell *matCellDef="let item">{{item.grossTotal | currency}}</mat-cell>
                         </ng-container>
 
-                        <mat-header-row *matHeaderRowDef="['agentName', 'weekEnding', 'campaign', 'amount']"></mat-header-row>
-                        <mat-row *matRowDef="let row; columns:['agentName', 'weekEnding', 'campaign', 'amount']"
+                        <mat-header-row *matHeaderRowDef="['agentName', 'releaseDate', 'campaign', 'amount']"></mat-header-row>
+                        <mat-row *matRowDef="let row; columns:['agentName', 'releaseDate', 'campaign', 'amount']"
                             class="clickable paycheck-detail-row"
                             (click)="goToPaycheckDetail(row)"
                         ></mat-row>
                     </mat-table>
                     <mat-paginator
                         #paging
-                        [pageSize]="5"
-                        [pageSizeOptions]="[1, 5, 10, 25]"
+                        [pageSize]="10"
+                        [pageSizeOptions]="[5, 10, 25, 50]"
                         showFirstLastButtons="true"
                         (page)="getPaychecks()"
                     ></mat-paginator>
