@@ -121,10 +121,6 @@ export class PaycheckListComponent implements OnInit {
         });
     }
 
-    toggleState(target:string):void {
-        this.showTrigger = !this.showTrigger;
-    }
-
     sortTable(sort:{ active:'agentName'|'releaseDate'|'campaign'|'amount', direction:SortDirection }) {
         const result = this.sortPaychecksBy(sort.active, sort.direction);
         this.paychecks$.next(result);
