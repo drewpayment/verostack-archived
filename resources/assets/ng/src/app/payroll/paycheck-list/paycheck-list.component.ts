@@ -260,15 +260,6 @@ export class PaycheckListComponent implements OnInit {
     ):void {
         page++; // we need to increment the value of "page" because matpaginator uses 0-based indexing and laravel pagination starts at 1
 
-        // if(startDate && endDate) {
-        //     this.startDate = startDate;
-        //     this.endDate = endDate;
-        //     this.startDateCtrl.setValue(this.startDate, { emitEvent: false });
-        //     this.endDateCtrl.setValue(this.endDate, { emitEvent: false });
-        // } else {
-            
-        // }
-
         if(this.startDateCtrl.value && this.endDateCtrl.value) {
             startDate = moment(this.startDateCtrl.value).format('YYYY-MM-DD');
             endDate = moment(this.endDateCtrl.value).format('YYYY-MM-DD');

@@ -205,6 +205,8 @@ export class DailySaleTrackerComponent implements OnInit, AfterViewInit {
                 dto.clientId = this.userInfo.sessionUser.sessionClient;
                 dto.saleDate = this.formatSqlDate(dto.saleDate as Moment, true);
 
+                console.dir(dto); return;
+
                 this.trackerService.saveSaleWithContactInfo(dto.clientId, dto.campaignId, dto)
                     .subscribe(sale => {
                         this.refreshDailySales(this.startDate, this.endDate);

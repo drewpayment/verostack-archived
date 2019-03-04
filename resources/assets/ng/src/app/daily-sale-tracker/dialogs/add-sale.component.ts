@@ -1,7 +1,7 @@
 import {Component, OnInit, Inject, ViewChild, SimpleChanges, AfterViewInit, ElementRef, ComponentRef} from '@angular/core';
-import {MatDialogRef, MAT_DIALOG_DATA, MatTooltip, MatAutocomplete} from '@angular/material';
+import {MatDialogRef, MAT_DIALOG_DATA, MatTooltip, MatAutocomplete, MatButtonToggleChange} from '@angular/material';
 import {FormBuilder, FormGroup, Validators, FormArray, FormControl, ValidatorFn, AbstractControl} from '@angular/forms';
-import {SaleStatus, IAgent, ICampaign, DailySale, User, Remark, PaidStatusType, Utility} from '@app/models';
+import {SaleStatus, IAgent, ICampaign, DailySale, User, Remark, PaidStatusType, Utility, ContactType} from '@app/models';
 
 import * as moment from 'moment';
 import * as _ from 'lodash';
@@ -12,7 +12,7 @@ import {Router} from '@angular/router';
 import { Contact } from '@app/models/contact.model';
 import { ContactService } from '@app/contact/contact.service';
 import { BehaviorSubject, Observable, of } from 'rxjs';
-import { coerceNumberProperty } from '@app/utils';
+import { coerceNumberProperty, showFieldAnimation } from '@app/utils';
 
 interface DialogData {
     statuses: SaleStatus[];
@@ -30,7 +30,8 @@ interface ViewRemark extends Remark {
 @Component({
     selector: 'vs-add-daily-sale',
     templateUrl: './add-sale.component.html',
-    styleUrls: ['./add-sale.component.scss']
+    styleUrls: ['./add-sale.component.scss'],
+    animations: [...showFieldAnimation]
 })
 export class AddSaleDialog implements OnInit, AfterViewInit {
     form: FormGroup;
@@ -56,6 +57,7 @@ export class AddSaleDialog implements OnInit, AfterViewInit {
     contacts$:Observable<Contact[]>;
     showNewContactFields:boolean = false;
     showSetContactUI:boolean = false;
+    showBusinessNameField:boolean = false;
 
     /** internal use only, keeps track of all available utilities */
     private _utilities:Utility[];
@@ -181,7 +183,7 @@ export class AddSaleDialog implements OnInit, AfterViewInit {
          * Check to see if the user selected and existing contact or if they used the "new contact"
          * form to create a new contact and then revalidate the sale form.
          */
-        if(this.form.get('existingContact').value != null) {
+        if(this.form.get('existingContact').value.contactId != null && this.form.get('existingContact').value.contactId > 0) {
             delete this.form.controls['contact'];
         } else {
             delete this.form.controls['existingContact'];
@@ -337,6 +339,20 @@ export class AddSaleDialog implements OnInit, AfterViewInit {
             : '';
     }
 
+    handleContactTypeChange(event:MatButtonToggleChange):void {
+        if(event.value == ContactType.business) {
+            this.form.get('contact.contactType').setValue(2, { emitEvent: false })
+            this.form.get('contact.businessName').setValidators([Validators.required]);
+            this.showBusinessNameField = true;
+        } else {
+            this.form.get('contact.contactType').setValue(1, { emitEvent: false })
+            this.form.get('contact.businessName').setValidators(null);
+            this.showBusinessNameField = false;
+        }
+
+        this.form.get('contact.businessName').reset();
+    }
+
     private contactValidatorFn():ValidatorFn {
         return (control:AbstractControl): {[key:string]:any} | null => {
             const invalid = control.value == null && this.form.get('contact').invalid;
@@ -345,6 +361,11 @@ export class AddSaleDialog implements OnInit, AfterViewInit {
     }
 
     private createForm(): void {
+        const contactType = this.existingSale != null && this.existingSale.contact != null 
+            && this.existingSale.contact.contactType != null
+                ? this.existingSale.contact.contactType.toString()
+                : ContactType.residential.toString();
+
         this.form = this.fb.group({
             saleDate: this.fb.control(this.existingSale.saleDate || this.today, [Validators.required]),
             agent: this.fb.control(this.agents.find(a => a.agentId == this.existingSale.agentId), [Validators.required]),
@@ -361,13 +382,15 @@ export class AddSaleDialog implements OnInit, AfterViewInit {
             contact: this.fb.group({
                 contactId: this.fb.control(''),
                 clientId: this.fb.control(''),
+                contactType: this.fb.control(contactType),
+                businessName: this.fb.control(''),
                 firstName: this.fb.control('', [Validators.required]),
                 lastName: this.fb.control('', [Validators.required]),
                 middleName: this.fb.control(''),
                 prefix: this.fb.control(''),
                 suffix: this.fb.control(''),
                 ssn: this.fb.control(''),
-                dob: this.fb.control('', [Validators.required]),
+                dob: this.fb.control(''),
                 street: this.fb.control('', [Validators.required]),
                 street2: this.fb.control(''),
                 city: this.fb.control('', [Validators.required]),
@@ -404,6 +427,8 @@ export class AddSaleDialog implements OnInit, AfterViewInit {
             : {
                 contactId: this.form.value.contactId,
                 clientId: this.user.sessionUser.sessionClient,
+                contactType: this.form.value.contact.contactType,
+                businessName: this.form.value.contact.businessName,
                 firstName: this.form.value.contact.firstName,
                 lastName: this.form.value.contact.lastName,
                 middleName: this.form.value.contact.middleName,
