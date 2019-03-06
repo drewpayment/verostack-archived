@@ -33,6 +33,8 @@ class ContactService
             $dto = Contact::byContact($c->contactId)->first();
 
         $dto->client_id = $c->clientId;
+        $dto->contact_type = $c->contactType;
+        $dto->business_name = $c->businessName;
         $dto->first_name = $c->firstName;
         $dto->last_name = $c->lastName;
         if(!is_null($c->middleName))

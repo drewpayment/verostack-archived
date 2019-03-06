@@ -10,7 +10,7 @@ import {DataSource} from '@angular/cdk/table';
 import {ClientService} from '@app/client-information/client.service';
 import {UserService} from '@app/user-features/user.service';
 import {DailySaleTrackerService} from './daily-sale-tracker.service';
-import {MatDatepickerInputEvent, MatDialog, MatSelectChange} from '@angular/material';
+import {MatDatepickerInputEvent, MatDialog, MatSelectChange, MatChipInputEvent} from '@angular/material';
 import {Moment} from 'moment';
 import {AddSaleDialog} from '@app/daily-sale-tracker/dialogs/add-sale.component';
 import {CampaignService} from '@app/campaigns/campaign.service';
@@ -20,6 +20,7 @@ import {DeleteSaleDialog} from '@app/daily-sale-tracker/dialogs/delete-sale.comp
 import {trigger, style, state, transition, animate} from '@angular/animations';
 import {FloatBtnService} from '@app/fab-float-btn/float-btn.service';
 import { coerceNumberProperty } from '@app/utils';
+import { startWith, map, distinctUntilChanged, debounceTime } from 'rxjs/operators';
 
 interface DataStore {
     statuses: SaleStatus[];
@@ -77,7 +78,7 @@ export class DailySaleTrackerComponent implements OnInit, AfterViewInit {
     userInfo: User;
     dataSource$: BehaviorSubject<DailySale[]> = new BehaviorSubject<DailySale[]>(null);
     sales: Observable<DailySale[]>;
-    agents: IAgent[];
+    agents: IAgent[] = [];
     startDate = moment().subtract(3, 'days');
     endDate = moment();
     statuses: BehaviorSubject<SaleStatus[]> = new BehaviorSubject<SaleStatus[]>(null);
@@ -88,6 +89,9 @@ export class DailySaleTrackerComponent implements OnInit, AfterViewInit {
     form: FormGroup;
     expandedElement: DailySale;
     showNotes: boolean = false;
+    searchAgentsCtrl = new FormControl('');
+    filteredAgents:Observable<IAgent[]>;
+    agentInputs:string[] = [];
 
     constructor(
         private agentService: AgentsService,
@@ -106,6 +110,41 @@ export class DailySaleTrackerComponent implements OnInit, AfterViewInit {
             this.sales = of(next);
         });
         this.floatIsOpen = this.floatBtnService.opened$.asObservable();
+
+        this.searchAgentsCtrl.valueChanges
+            .pipe(
+                debounceTime(250),
+                distinctUntilChanged()
+            ).subscribe(agent => this.filteredAgents = of(agent ? this._filterAgents(agent) : this.agents.slice()));
+    }
+
+    private _filterAgents(value:string):IAgent[] {
+        if(value == null) {
+            this.filteredAgents = of(this.agents);
+            return;
+        }
+        const filterValue = value.toString().trim().toLowerCase();
+        return this.agents.filter(agent => agent.firstName.toLowerCase().indexOf(filterValue) === 0 ||
+            agent.lastName.toLowerCase().indexOf(filterValue) === 0);
+    }
+
+    removeChip(input:string):void {
+        this.agentInputs.splice(this.agentInputs.indexOf(input), 1);
+    }
+
+    addChip(event:MatChipInputEvent):void {
+        const input = event.input;
+        const value = event.value;
+
+        if((value || '').trim()) {
+            this.agentInputs.push(value.trim());
+            this._filterAgents(value.trim());
+        }
+
+        // clear
+        if(input) {
+            input.value = '';
+        }
     }
 
     ngOnInit() {
@@ -147,6 +186,7 @@ export class DailySaleTrackerComponent implements OnInit, AfterViewInit {
             .getAgents(true)
             .then(agents => {
                 this.agents = agents;
+                this.filteredAgents = of(this.agents);
             })
             .catch(this.msg.showWebApiError);
     }
@@ -202,10 +242,9 @@ export class DailySaleTrackerComponent implements OnInit, AfterViewInit {
                 if (result == null) return;
 
                 let dto:DailySale = result;
+                dto.contact.contactId = dto.contact.contactId != null ? dto.contact.contactId : null;
                 dto.clientId = this.userInfo.sessionUser.sessionClient;
                 dto.saleDate = this.formatSqlDate(dto.saleDate as Moment, true);
-
-                console.dir(dto); return;
 
                 this.trackerService.saveSaleWithContactInfo(dto.clientId, dto.campaignId, dto)
                     .subscribe(sale => {
@@ -486,6 +525,17 @@ export class DailySaleTrackerComponent implements OnInit, AfterViewInit {
     }
 
     private patchFormSaleValue(sale: DailySale, index: number): void {
+        const formSale = this.form.get('sales').get(index.toString()) as FormGroup;
+        const remarks = formSale.get('remarks') as FormArray;
+
+        for(let i = 0; i < remarks.length; i++) {
+            remarks.removeAt(i);
+        }
+
+        const remarksArray = this.createRemarksFormArray(sale.remarks);
+
+        remarksArray.controls.forEach(r => (<FormArray>formSale.get('remarks')).push(r));
+
         this.form
             .get('sales')
             .get(index + '')
@@ -503,8 +553,7 @@ export class DailySaleTrackerComponent implements OnInit, AfterViewInit {
                 status: sale.status,
                 paidStatus: +sale.paidStatus,
                 activityDate: this.calculateActivityDate(sale),
-                saleDate: sale.saleDate,
-                remarks: sale.remarks
+                saleDate: sale.saleDate
             });
     }
 

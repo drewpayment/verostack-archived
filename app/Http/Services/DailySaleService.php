@@ -122,8 +122,6 @@ class DailySaleService {
 		$s = new DailySale;
 		$s->agent_id = $sale->agentId;
 		$s->client_id = $sale->clientId;
-		$s->contact_type = $sale->contactType;
-		$s->business_name = $sale->businessName;
 		$s->campaign_id = $sale->campaignId;
         $s->utility_id = $sale->utilityId;
         $s->contact_id = $sale->contactId;
@@ -197,8 +195,6 @@ class DailySaleService {
 
 		$c->agent_id = $sale->agentId;
         $c->client_id = $sale->clientId;
-		$c->contact_type = $sale->contactType;
-		$c->business_name = $sale->businessName;
 		$c->campaign_id = $sale->campaignId;
 		$c->contact_id = $sale->contact['contactId'];
 		$c->pod_account = $sale->podAccount;
