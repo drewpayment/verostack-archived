@@ -6,24 +6,15 @@
     "arrow-return-shorthand": true,
     "callable-types": true,
     "class-name": true,
-    // "comment-format": [
-    //   true,
-    //   "check-space"
-    // ],
-    // "curly": true,
-    "deprecation": {
-      "severity": "warn"
-    },
+    // "deprecation": {
+    //   "severity": "warn"
+    // },
     "eofline": true,
-    // "forin": true,
-    // "import-blacklist": [
-    //   true,
-    //   "rxjs/Rx"
-    // ],
     "import-spacing": true,
     "indent": [
       true,
-      "spaces"
+      "spaces",
+      4
     ],
     "interface-over-type-literal": true,
     "label-position": true,
@@ -32,19 +23,7 @@
       140
     ],
     "member-access": false,
-    // "member-ordering": [
-    //   true,
-    //   {
-    //     "order": [
-    //       "static-field",
-    //       "instance-field",
-    //       "static-method",
-    //       "instance-method"
-    //     ]
-    //   }
-    // ],
     "no-arg": true,
-    // "no-bitwise": true,
     "no-console": [
       true,
       "debug",
@@ -69,7 +48,7 @@
     "no-string-literal": false,
     "no-string-throw": true,
     "no-switch-case-fall-through": true,
-    "no-trailing-whitespace": true,
+    "no-trailing-whitespace": false,
     "no-unnecessary-initializer": true,
     "no-unused-expression": true,
     "no-use-before-declare": true,
@@ -92,10 +71,6 @@
       true,
       "always"
     ],
-    // "triple-equals": [
-    //   true,
-    //   "allow-null-check"
-    // ],
     "typedef-whitespace": [
       true,
       {
@@ -113,19 +88,18 @@
       "check-branch",
       "check-decl",
       "check-operator",
-      "check-separator",
-    //   "check-type"
+      "check-separator"
     ],
     "directive-selector": [
-      true,
+      false,
       "attribute",
-      "app",
+      "vs",
       "camelCase"
     ],
     "component-selector": [
-      true,
+      false,
       "element",
-      "app",
+      "vs",
       "kebab-case"
     ],
     "no-output-on-prefix": true,

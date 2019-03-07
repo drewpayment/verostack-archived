@@ -46,6 +46,9 @@ export class SessionService {
     previousUrl:string = '';
     currentUrl:string = '';
 
+    private _navigationTitle:string = environment.defaultTitle;
+    navigationTitle$ = new BehaviorSubject<string>(this._navigationTitle);
+
     constructor(
         private localStorage: LocalStorage, 
         private router: Router
@@ -65,6 +68,12 @@ export class SessionService {
             this.previousUrl = this.currentUrl;
             this.currentUrl = e.url;
         });
+    }
+
+    setNavigationTitle(value:string) {
+        if (typeof value !== 'string' || value == null) return;
+        this._navigationTitle = value;
+        this.navigationTitle$.next(this._navigationTitle);
     }
 
     private hasToken(): boolean {

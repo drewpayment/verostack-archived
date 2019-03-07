@@ -286,21 +286,33 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
   !*** ./src/$$_lazy_route_resource lazy namespace object ***!
   \**********************************************************/
 /*! no static exports found */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-function webpackEmptyAsyncContext(req) {
-	// Here Promise.resolve().then() is used instead of new Promise() to prevent
-	// uncaught exception popping up in devtools
-	return Promise.resolve().then(function() {
-		var e = new Error("Cannot find module '" + req + "'");
-		e.code = 'MODULE_NOT_FOUND';
-		throw e;
+var map = {
+	"./contact/contact.module": [
+		"./src/app/contact/contact.module.ts",
+		"contact-contact-module"
+	]
+};
+function webpackAsyncContext(req) {
+	var ids = map[req];
+	if(!ids) {
+		return Promise.resolve().then(function() {
+			var e = new Error("Cannot find module '" + req + "'");
+			e.code = 'MODULE_NOT_FOUND';
+			throw e;
+		});
+	}
+	return __webpack_require__.e(ids[1]).then(function() {
+		var id = ids[0];
+		return __webpack_require__(id);
 	});
 }
-webpackEmptyAsyncContext.keys = function() { return []; };
-webpackEmptyAsyncContext.resolve = webpackEmptyAsyncContext;
-module.exports = webpackEmptyAsyncContext;
-webpackEmptyAsyncContext.id = "./src/$$_lazy_route_resource lazy recursive";
+webpackAsyncContext.keys = function webpackAsyncContextKeys() {
+	return Object.keys(map);
+};
+webpackAsyncContext.id = "./src/$$_lazy_route_resource lazy recursive";
+module.exports = webpackAsyncContext;
 
 /***/ }),
 
@@ -1174,6 +1186,7 @@ var routes = [
     { path: 'agents', component: _app_agent_agent_component__WEBPACK_IMPORTED_MODULE_10__["AgentComponent"], canActivate: [_auth_guard__WEBPACK_IMPORTED_MODULE_7__["AuthGuard"]] },
     { path: 'daily-tracker', component: _app_daily_sale_tracker_daily_sale_tracker_component__WEBPACK_IMPORTED_MODULE_9__["DailySaleTrackerComponent"], canActivate: [_auth_guard__WEBPACK_IMPORTED_MODULE_7__["AuthGuard"]] },
     { path: 'new-sale-contact', component: _daily_sale_tracker_components_new_sale_new_sale_component__WEBPACK_IMPORTED_MODULE_14__["NewSaleComponent"], canActivate: [_auth_guard__WEBPACK_IMPORTED_MODULE_7__["AuthGuard"]] },
+    { path: 'contacts', loadChildren: './contact/contact.module#ContactModule' },
     { path: '**', redirectTo: 'home' }
 ];
 var AppRoutingModule = /** @class */ (function () {
@@ -6708,7 +6721,7 @@ module.exports = ".toolbar-spacer {\n  flex: 1 1 auto;\n}\n\n.toolbar-icon {\n  
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<mat-toolbar color=\"primary\" class=\"app-header-bar\">\n  <mat-toolbar-row>\n    <span *ngIf=\"(loggedInStatus | async)\">\n      <button mat-icon-button (click)=\"toggleSidenav()\">\n        <mat-icon>{{(navOpen|async) ? 'arrow_back_ios' : 'menu'}}</mat-icon>\n      </button>\n    </span>\n    \n    <span routerLink=\"/\" class=\"font-weight-light h1 mb-0 d-flex align-items-center clickable\">\n        <img src=\"dist/assets/images/logo-notext.svg\" class=\"mr-2\" width=\"40\" height=\"40\" />\n        {{menuTitle | async}}\n    </span>\n    <span class=\"toolbar-spacer\"></span>\n    <button mat-icon-button [matMenuTriggerFor]=\"menu\" *ngIf=\"(loggedInStatus | async); else loggedOut\">\n      <mat-icon>more_vert</mat-icon>\n    </button>\n    <mat-menu #menu=\"matMenu\" class=\"mat-menu\">\n      <button mat-menu-item *ngIf=\"(loggedInStatus | async) && showClientSelector\" (click)=\"openDialog()\">Change Client</button>\n      <!-- <button mat-menu-item *ngIf=\"isAdmin\"></button> -->\n      <button mat-menu-item (click)=\"onLogout()\" *ngIf=\"(loggedInStatus | async)\">Logout</button>\n      <!-- <ng-template #loggedOut><button mat-menu-item routerLink=\"/login\"> Login </button></ng-template> -->\n    </mat-menu>\n    <ng-template #loggedOut>\n        <button type=\"button\" mat-icon-button [routerLink]=\"['/login']\">\n            <mat-icon>exit_to_app</mat-icon>\n        </button>\n    </ng-template>\n  </mat-toolbar-row>\n</mat-toolbar>\n"
+module.exports = "<mat-toolbar color=\"primary\" class=\"app-header-bar\" #toolbar>\n  <mat-toolbar-row>\n    <span *ngIf=\"(loggedInStatus | async)\">\n      <button mat-icon-button (click)=\"toggleSidenav()\">\n        <mat-icon>{{(navOpen|async) ? 'arrow_back_ios' : 'menu'}}</mat-icon>\n      </button>\n    </span>\n    \n    <span routerLink=\"/\" class=\"font-weight-light h1 mb-0 d-flex align-items-center clickable\">\n        <img src=\"dist/assets/images/logo-notext.svg\" class=\"mr-2\" width=\"40\" height=\"40\" />\n        {{menuTitle | async}}\n    </span>\n    <span class=\"toolbar-spacer\"></span>\n    <button mat-icon-button [matMenuTriggerFor]=\"menu\" *ngIf=\"(loggedInStatus | async); else loggedOut\">\n      <mat-icon>more_vert</mat-icon>\n    </button>\n    <mat-menu #menu=\"matMenu\" class=\"mat-menu\">\n      <button mat-menu-item *ngIf=\"(loggedInStatus | async) && showClientSelector\" (click)=\"openDialog()\">Change Client</button>\n      <!-- <button mat-menu-item *ngIf=\"isAdmin\"></button> -->\n      <button mat-menu-item (click)=\"onLogout()\" *ngIf=\"(loggedInStatus | async)\">Logout</button>\n      <!-- <ng-template #loggedOut><button mat-menu-item routerLink=\"/login\"> Login </button></ng-template> -->\n    </mat-menu>\n    <ng-template #loggedOut>\n        <button type=\"button\" mat-icon-button [routerLink]=\"['/login']\">\n            <mat-icon>exit_to_app</mat-icon>\n        </button>\n    </ng-template>\n  </mat-toolbar-row>\n</mat-toolbar>\n"
 
 /***/ }),
 
@@ -6724,15 +6737,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "HeaderComponent", function() { return HeaderComponent; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
-/* harmony import */ var _auth_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../auth.service */ "./src/app/auth.service.ts");
-/* harmony import */ var _session_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../session.service */ "./src/app/session.service.ts");
-/* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @angular/material */ "./node_modules/@angular/material/esm5/material.es5.js");
-/* harmony import */ var _client_selector_client_selector_component__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../client-selector/client-selector.component */ "./src/app/client-selector/client-selector.component.ts");
-/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
-/* harmony import */ var _user_features_user_service__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../user-features/user.service */ "./src/app/user-features/user.service.ts");
-/* harmony import */ var _app_sidenav_sidenav_service__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @app/sidenav/sidenav.service */ "./src/app/sidenav/sidenav.service.ts");
-/* harmony import */ var _app_models__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @app/models */ "./src/app/models/index.ts");
+/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/fesm5/common.js");
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
+/* harmony import */ var _auth_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../auth.service */ "./src/app/auth.service.ts");
+/* harmony import */ var _session_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../session.service */ "./src/app/session.service.ts");
+/* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @angular/material */ "./node_modules/@angular/material/esm5/material.es5.js");
+/* harmony import */ var _client_selector_client_selector_component__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../client-selector/client-selector.component */ "./src/app/client-selector/client-selector.component.ts");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+/* harmony import */ var _user_features_user_service__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../user-features/user.service */ "./src/app/user-features/user.service.ts");
+/* harmony import */ var _app_sidenav_sidenav_service__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @app/sidenav/sidenav.service */ "./src/app/sidenav/sidenav.service.ts");
+/* harmony import */ var _app_models__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @app/models */ "./src/app/models/index.ts");
+/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
+
+
 
 
 
@@ -6745,34 +6762,41 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var HeaderComponent = /** @class */ (function () {
-    function HeaderComponent(authService, userService, session, dialog, router, sidenavService) {
-        var _this = this;
+    function HeaderComponent(authService, userService, session, dialog, location, router, sidenavService) {
         this.authService = authService;
         this.userService = userService;
         this.session = session;
         this.dialog = dialog;
+        this.location = location;
         this.router = router;
         this.sidenavService = sidenavService;
         this.defaultTitle = 'Payment Dynamics';
-        this.menuTitle = new rxjs__WEBPACK_IMPORTED_MODULE_2__["BehaviorSubject"](this.defaultTitle);
-        this.loggedInStatus = this.session.isLoginSubject.asObservable();
-        this.loggedInStatus.subscribe(function (authenticated) {
-            if (!authenticated) {
-                _this.menuTitle.next(_this.defaultTitle);
-            }
-        });
-        this.session.userItem.subscribe(function (next) {
-            if (next == null)
-                return;
-            _this.user = next;
-            _this.menuTitle.next(_this.userService.getActiveClientName());
-            _this.showClientSelector = _this.user.clients.length > 1 && _this.user.role.role > _app_models__WEBPACK_IMPORTED_MODULE_10__["UserType"].HumanResources;
-            _this.isAdmin = _this.user.role.role > _app_models__WEBPACK_IMPORTED_MODULE_10__["UserType"].HumanResources;
-        });
-        this.navOpen = this.sidenavService.opened$.asObservable();
+        this.menuTitle = new rxjs__WEBPACK_IMPORTED_MODULE_3__["BehaviorSubject"](this.defaultTitle);
     }
     HeaderComponent.prototype.ngOnInit = function () {
-        this.session.getItem('user');
+        var _this = this;
+        this.router.events.pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_12__["filter"])(function (event) { return event instanceof _angular_router__WEBPACK_IMPORTED_MODULE_8__["NavigationEnd"]; })).subscribe(function () {
+            // we are on the contacts page if this is true
+            if (_this.location.path(true).includes('contacts')) {
+                _this.toolbar._elementRef.nativeElement.classList.add('bg-dark');
+            }
+            else {
+                _this.toolbar._elementRef.nativeElement.classList.remove('bg-dark');
+            }
+        });
+        this.session.getUserItem().subscribe(function (user) {
+            if (user == null)
+                return;
+            _this.user = user;
+            _this.session.setNavigationTitle(_this.userService.getActiveClientName());
+            _this.menuTitle = _this.session.navigationTitle$;
+            _this.showClientSelector = _this.user.clients.length > 1 && _this.user.role.role > _app_models__WEBPACK_IMPORTED_MODULE_11__["UserType"].HumanResources;
+            _this.isAdmin = _this.user.role.role > _app_models__WEBPACK_IMPORTED_MODULE_11__["UserType"].HumanResources;
+        });
+        this.session.isLoginSubject.subscribe(function (isAuthenticated) {
+            _this.loggedInStatus = Object(rxjs__WEBPACK_IMPORTED_MODULE_3__["of"])(isAuthenticated);
+        });
+        this.navOpen = this.sidenavService.opened$.asObservable();
     };
     HeaderComponent.prototype.ngAfterViewInit = function () {
         // this.sidenav.
@@ -6790,7 +6814,7 @@ var HeaderComponent = /** @class */ (function () {
         this.sidenavService.toggle();
     };
     HeaderComponent.prototype.openDialog = function () {
-        var dialogRef = this.dialog.open(_client_selector_client_selector_component__WEBPACK_IMPORTED_MODULE_6__["ClientSelectorComponent"], {
+        var dialogRef = this.dialog.open(_client_selector_client_selector_component__WEBPACK_IMPORTED_MODULE_7__["ClientSelectorComponent"], {
             width: '400px',
             data: this.user
         });
@@ -6798,18 +6822,23 @@ var HeaderComponent = /** @class */ (function () {
             // console.log('dialog was closed');
         });
     };
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewChild"])('toolbar'),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", _angular_material__WEBPACK_IMPORTED_MODULE_6__["MatToolbar"])
+    ], HeaderComponent.prototype, "toolbar", void 0);
     HeaderComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
             selector: 'app-header',
             template: __webpack_require__(/*! ./header.component.html */ "./src/app/header/header.component.html"),
             styles: [__webpack_require__(/*! ./header.component.css */ "./src/app/header/header.component.css")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_auth_service__WEBPACK_IMPORTED_MODULE_3__["AuthService"],
-            _user_features_user_service__WEBPACK_IMPORTED_MODULE_8__["UserService"],
-            _session_service__WEBPACK_IMPORTED_MODULE_4__["SessionService"],
-            _angular_material__WEBPACK_IMPORTED_MODULE_5__["MatDialog"],
-            _angular_router__WEBPACK_IMPORTED_MODULE_7__["Router"],
-            _app_sidenav_sidenav_service__WEBPACK_IMPORTED_MODULE_9__["SidenavService"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_auth_service__WEBPACK_IMPORTED_MODULE_4__["AuthService"],
+            _user_features_user_service__WEBPACK_IMPORTED_MODULE_9__["UserService"],
+            _session_service__WEBPACK_IMPORTED_MODULE_5__["SessionService"],
+            _angular_material__WEBPACK_IMPORTED_MODULE_6__["MatDialog"],
+            _angular_common__WEBPACK_IMPORTED_MODULE_2__["Location"],
+            _angular_router__WEBPACK_IMPORTED_MODULE_8__["Router"],
+            _app_sidenav_sidenav_service__WEBPACK_IMPORTED_MODULE_10__["SidenavService"]])
     ], HeaderComponent);
     return HeaderComponent;
 }());
@@ -10890,6 +10919,8 @@ var SessionService = /** @class */ (function () {
         this.isLoginSubject = new rxjs__WEBPACK_IMPORTED_MODULE_2__["BehaviorSubject"](this.hasToken());
         this.previousUrl = '';
         this.currentUrl = '';
+        this._navigationTitle = _environments_environment__WEBPACK_IMPORTED_MODULE_5__["environment"].defaultTitle;
+        this.navigationTitle$ = new rxjs__WEBPACK_IMPORTED_MODULE_2__["BehaviorSubject"](this._navigationTitle);
         // make sure we're removing expired cookies on app boot
         this.pruneExpiredStorage();
         for (var p in this.dataStore) {
@@ -10903,6 +10934,12 @@ var SessionService = /** @class */ (function () {
         });
     }
     SessionService_1 = SessionService;
+    SessionService.prototype.setNavigationTitle = function (value) {
+        if (typeof value !== 'string' || value == null)
+            return;
+        this._navigationTitle = value;
+        this.navigationTitle$.next(this._navigationTitle);
+    };
     SessionService.prototype.hasToken = function () {
         var _this = this;
         this.hasTokenSubject.subscribe(function (hasToken) {
@@ -11633,7 +11670,7 @@ var SharedModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<mat-toolbar color=\"primary\" *ngIf=\"user != null\">\n    <mat-toolbar-row>\n        <i class=\"material-icons md-48 mt-3\">account_circle</i>\n        <span class=\"fill-remaining-space\"></span>\n        <button mat-button (click)=\"toggleSidenav()\" class=\"sidenav-close\">\n            <i class=\"material-icons\">close</i>\n        </button>\n    </mat-toolbar-row>\n    <mat-toolbar-row class=\"d-flex flex-column align-items-start mb-2 mt-3\">\n        {{user.firstName}} {{user.lastName}}\n        <small>{{user.email}}</small>\n    </mat-toolbar-row>\n</mat-toolbar>\n\n<mat-nav-list *ngIf=\"user != null\" #navList>\n    <!-- all users -->\n    \n    <a mat-list-item routerLink=\"my-information\" routerLinkActive=\"mat-router-link-active\">\n        <mat-icon>info_outline</mat-icon>\n        <span>My Information</span>\n    </a>\n    <a mat-list-item \n        routerLink=\"daily-tracker\" \n        routerLinkActive=\"mat-router-link-active\"\n        *ngIf=\"user.role.role < roleType.companyAdmin && user.role.isSalesAdmin\"\n    >\n        <mat-icon>ballot</mat-icon>\n        <span>Daily Tracker</span>\n    </a>\n\n    <!-- agents only -->\n    <ng-template *ngIf=\"user.role.role < roleType.companyAdmin\">\n        <a mat-list-item routerLink=\"dashboard\" routerLinkActive=\"mat-router-link-active\">\n            <mat-icon>pie_chart</mat-icon>\n            <span>My Work</span>\n        </a>\n        <a mat-list-item class=\"hide\">\n            <mat-icon>monetization_on</mat-icon>\n            <span>My Pay</span>\n        </a>\n        <a mat-list-item class=\"hide\">\n            <mat-icon>library_books</mat-icon>\n            <span>My Documents</span>\n        </a>\n        <a mat-list-item class=\"hide\">\n            <mat-icon>chat_bubble</mat-icon>\n            <span>Messages</span>\n        </a>\n    </ng-template>\n\n    <!-- do we have hr level links? -->\n\n    <!-- company admin+ -->\n    <ng-container *ngIf=\"user.role.role >= roleType.companyAdmin\">\n        <!-- THIS WHOLE COMPONENT NEEDS TO BE REWORKED AFTER SO MANY SCHEMA CHANGES\n        <a mat-list-item routerLink=\"dashboard\" routerLinkActive=\"mat-router-link-active\">\n            <mat-icon>pie_chart</mat-icon>\n            <span>Analyze</span>\n        </a> -->\n        <a mat-list-item routerLink=\"daily-tracker\" routerLinkActive=\"mat-router-link-active\">\n            <mat-icon>ballot</mat-icon>\n            <span>Sales</span>\n        </a>\n        <a mat-list-item routerLink=\"client-information\" routerLinkActive=\"mat-router-link-active\">\n            <mat-icon>business</mat-icon>\n            <span>Organization</span>\n        </a>\n        <mat-accordion mat-list-item class=\"navigation-accordion\">\n            <mat-expansion-panel [expanded]=\"expandPayrollLinks\">\n                <mat-expansion-panel-header>\n                    <mat-panel-title>\n                        <mat-icon>account_balance</mat-icon>\n                        <span>Payroll</span>\n                    </mat-panel-title>\n                </mat-expansion-panel-header>\n\n                <mat-nav-list>\n                    <a mat-list-item routerLink=\"admin/pay/pay-cycles\" routerLinkActive=\"mat-router-link-active\">\n                        <mat-icon>assignment</mat-icon>\n                        <span>Pay Runs</span>\n                    </a>\n                    <a mat-list-item routerLink=\"admin/pay/manage\" routerLinkActive=\"mat-router-link-active\">\n                        <mat-icon>date_range</mat-icon>\n                        <span>Release Pay</span>\n                    </a>\n                    <a mat-list-item [routerLink]=\"['admin', 'pay', 'paycheck-list']\" routerLinkActive=\"mat-router-link-active\">\n                        <mat-icon>local_atm</mat-icon>\n                        <span>View Paychecks</span>\n                    </a>\n                </mat-nav-list>\n            </mat-expansion-panel>\n        </mat-accordion>\n        \n        <a mat-list-item class=\"hide\">\n            <mat-icon>dashboard</mat-icon>\n            <span>Blog</span>\n        </a>\n        <a mat-list-item routerLink=\"agents\" routerLinkActive=\"mat-router-link-active\">\n            <mat-icon>person</mat-icon>\n            <span>Agents</span>\n        </a>\n        <a mat-list-item class=\"hide\">\n            <mat-icon>monetization_on</mat-icon>\n            <span>Pay Status</span>\n        </a>\n        <!-- <a mat-list-item routerLink=\"payroll-tools\" routerLinkActive=\"mat-router-link-active\">\n      <mat-icon>build</mat-icon>\n      <span>Payroll Entry</span>\n    </a> -->\n        <a mat-list-item class=\"hide\">\n            <mat-icon>assignment_ind</mat-icon>\n            <span>Overrides</span>\n        </a>\n        <a mat-list-item routerLink=\"campaigns\" routerLinkActive=\"mat-router-link-active\">\n            <mat-icon>assignment</mat-icon>\n            <span>Campaigns</span>\n        </a>\n        <a mat-list-item class=\"hide\">\n            <mat-icon>library_books</mat-icon>\n            <span>Documents</span>\n        </a>\n        <a mat-list-item class=\"hide\">\n            <mat-icon>face</mat-icon>\n            <span>Customers</span>\n        </a>\n        <!-- end of admin links -->\n    </ng-container>\n\n    <!-- all users -->\n    <a mat-list-item class=\"hide\">\n        <mat-icon>info_outline</mat-icon>\n        <span>About</span>\n    </a>\n</mat-nav-list>"
+module.exports = "<mat-toolbar color=\"primary\" *ngIf=\"user != null\">\n    <mat-toolbar-row>\n        <i class=\"material-icons md-48 mt-3\">account_circle</i>\n        <span class=\"fill-remaining-space\"></span>\n        <button mat-button (click)=\"toggleSidenav()\" class=\"sidenav-close\">\n            <i class=\"material-icons\">close</i>\n        </button>\n    </mat-toolbar-row>\n    <mat-toolbar-row class=\"d-flex flex-column align-items-start mb-2 mt-3\">\n        {{user.firstName}} {{user.lastName}}\n        <small>{{user.email}}</small>\n    </mat-toolbar-row>\n</mat-toolbar>\n\n<mat-nav-list *ngIf=\"user != null\" #navList>\n    <!-- all users -->\n    \n    <a mat-list-item routerLink=\"my-information\" routerLinkActive=\"mat-router-link-active\">\n        <mat-icon>info_outline</mat-icon>\n        <span>My Information</span>\n    </a>\n    <a mat-list-item \n        routerLink=\"daily-tracker\" \n        routerLinkActive=\"mat-router-link-active\"\n        *ngIf=\"user.role.role < roleType.companyAdmin && user.role.isSalesAdmin\"\n    >\n        <mat-icon>ballot</mat-icon>\n        <span>Daily Tracker</span>\n    </a>\n\n    <!-- agents only -->\n    <ng-template *ngIf=\"user.role.role < roleType.companyAdmin\">\n        <a mat-list-item routerLink=\"dashboard\" routerLinkActive=\"mat-router-link-active\">\n            <mat-icon>pie_chart</mat-icon>\n            <span>My Work</span>\n        </a>\n        <a mat-list-item class=\"hide\">\n            <mat-icon>monetization_on</mat-icon>\n            <span>My Pay</span>\n        </a>\n        <a mat-list-item class=\"hide\">\n            <mat-icon>library_books</mat-icon>\n            <span>My Documents</span>\n        </a>\n        <a mat-list-item class=\"hide\">\n            <mat-icon>chat_bubble</mat-icon>\n            <span>Messages</span>\n        </a>\n    </ng-template>\n\n    <!-- do we have hr level links? -->\n\n    <!-- company admin+ -->\n    <ng-container *ngIf=\"user.role.role >= roleType.companyAdmin\">\n        <!-- THIS WHOLE COMPONENT NEEDS TO BE REWORKED AFTER SO MANY SCHEMA CHANGES\n        <a mat-list-item routerLink=\"dashboard\" routerLinkActive=\"mat-router-link-active\">\n            <mat-icon>pie_chart</mat-icon>\n            <span>Analyze</span>\n        </a> -->\n        <a mat-list-item routerLink=\"daily-tracker\" routerLinkActive=\"mat-router-link-active\">\n            <mat-icon>ballot</mat-icon>\n            <span>Sales</span>\n        </a>\n        <a mat-list-item routerLink=\"client-information\" routerLinkActive=\"mat-router-link-active\">\n            <mat-icon>business</mat-icon>\n            <span>Organization</span>\n        </a>\n        <mat-accordion mat-list-item class=\"navigation-accordion\">\n            <mat-expansion-panel [expanded]=\"expandPayrollLinks\" (opened)=\"expandPayrollLinks=!expandPayrollLinks;\"\n                (closed)=\"expandPayrollLinks=!expandPayrollLinks;\">\n                <mat-expansion-panel-header [class.expanded-menu-item]=\"expandPayrollLinks\">\n                    <mat-panel-title>\n                        <mat-icon>account_balance</mat-icon>\n                        <span>Payroll</span>\n                    </mat-panel-title>\n                </mat-expansion-panel-header>\n\n                <mat-nav-list>\n                    <a mat-list-item routerLink=\"admin/pay/pay-cycles\" routerLinkActive=\"mat-router-link-active\">\n                        <mat-icon>assignment</mat-icon>\n                        <span>Pay Runs</span>\n                    </a>\n                    <a mat-list-item routerLink=\"admin/pay/manage\" routerLinkActive=\"mat-router-link-active\">\n                        <mat-icon>date_range</mat-icon>\n                        <span>Release Pay</span>\n                    </a>\n                    <a mat-list-item [routerLink]=\"['admin', 'pay', 'paycheck-list']\" routerLinkActive=\"mat-router-link-active\">\n                        <mat-icon>local_atm</mat-icon>\n                        <span>View Paychecks</span>\n                    </a>\n                </mat-nav-list>\n            </mat-expansion-panel>\n        </mat-accordion>\n        \n        <!-- <a mat-list-item class=\"hide\">\n            <mat-icon>dashboard</mat-icon>\n            <span>Blog</span>\n        </a> -->\n        <mat-accordion mat-list-item class=\"navigation-accordion\">\n            <mat-expansion-panel [expanded]=\"expandPeopleLinks\" (opened)=\"expandPeopleLinks=!expandPeopleLinks;\" \n                (closed)=\"expandPeopleLinks=!expandPeopleLinks;\">\n                <mat-expansion-panel-header [class.expanded-menu-item]=\"expandPeopleLinks\">\n                    <mat-panel-title>\n                        <mat-icon>{{ expandPeopleLinks ? 'people_outline' : 'group_add' }}</mat-icon>\n                        <span>People</span>\n                    </mat-panel-title>\n                </mat-expansion-panel-header>\n\n                <mat-nav-list>\n                    <a mat-list-item routerLink=\"agents\" routerLinkActive=\"mat-router-link-active\">\n                        <mat-icon>person</mat-icon>\n                        <span>Agents</span>\n                    </a>\n\n                    <a mat-list-item [routerLink]=\"['/contacts']\" routerLinkActive=\"mat-router-link-active\">\n                        <mat-icon>contacts</mat-icon>\n                        <span>Contacts</span>\n                    </a>\n                </mat-nav-list>\n            </mat-expansion-panel>\n        </mat-accordion>\n        \n        <a mat-list-item class=\"hide\">\n            <mat-icon>monetization_on</mat-icon>\n            <span>Pay Status</span>\n        </a>\n        <!-- <a mat-list-item routerLink=\"payroll-tools\" routerLinkActive=\"mat-router-link-active\">\n      <mat-icon>build</mat-icon>\n      <span>Payroll Entry</span>\n    </a> -->\n        <a mat-list-item class=\"hide\">\n            <mat-icon>assignment_ind</mat-icon>\n            <span>Overrides</span>\n        </a>\n        <a mat-list-item routerLink=\"campaigns\" routerLinkActive=\"mat-router-link-active\">\n            <mat-icon>assignment</mat-icon>\n            <span>Campaigns</span>\n        </a>\n        <a mat-list-item class=\"hide\">\n            <mat-icon>library_books</mat-icon>\n            <span>Documents</span>\n        </a>\n        <a mat-list-item class=\"hide\">\n            <mat-icon>face</mat-icon>\n            <span>Customers</span>\n        </a>\n        <!-- end of admin links -->\n    </ng-container>\n\n    <!-- all users -->\n    <a mat-list-item class=\"hide\">\n        <mat-icon>info_outline</mat-icon>\n        <span>About</span>\n    </a>\n</mat-nav-list>"
 
 /***/ }),
 
@@ -11644,7 +11681,7 @@ module.exports = "<mat-toolbar color=\"primary\" *ngIf=\"user != null\">\n    <m
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "@media screen and (min-width: 481px) {\n  .sidenav-close {\n    display: none; } }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy9kcmV3cGF5bWVudC9kZXYvYWN0aXZlL3Zlcm9zdGFjay9yZXNvdXJjZXMvYXNzZXRzL25nL3NyYy9hcHAvc2lkZW5hdi9zaWRlbmF2LmNvbXBvbmVudC5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUtBO0VBQ0U7SUFDRSxjQUFhLEVBQ2QsRUFBQSIsImZpbGUiOiJzcmMvYXBwL3NpZGVuYXYvc2lkZW5hdi5jb21wb25lbnQuc2NzcyIsInNvdXJjZXNDb250ZW50IjpbIlxuLy8gbWF0LXRvb2xiYXIge1xuLy8gICBiYWNrZ3JvdW5kLWNvbG9yOiAjMDAwMDAwO1xuLy8gfVxuJGJyZWFrOiA0ODBweDtcbkBtZWRpYSBzY3JlZW4gYW5kIChtaW4td2lkdGg6ICRicmVhayArIDEpIHtcbiAgLnNpZGVuYXYtY2xvc2Uge1xuICAgIGRpc3BsYXk6IG5vbmU7XG4gIH1cbn1cbiJdfQ== */"
+module.exports = "@media screen and (min-width: 481px) {\n  .sidenav-close {\n    display: none; } }\n\n.expanded-menu-item {\n  background-color: rgba(0, 0, 0, 0.04) !important; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy9kcmV3cGF5bWVudC9kZXYvYWN0aXZlL3Zlcm9zdGFjay9yZXNvdXJjZXMvYXNzZXRzL25nL3NyYy9hcHAvc2lkZW5hdi9zaWRlbmF2LmNvbXBvbmVudC5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUtBO0VBQ0k7SUFDSSxjQUFhLEVBQ2hCLEVBQUE7O0FBR0w7RUFDSSxpREFBZ0QsRUFDbkQiLCJmaWxlIjoic3JjL2FwcC9zaWRlbmF2L3NpZGVuYXYuY29tcG9uZW50LnNjc3MiLCJzb3VyY2VzQ29udGVudCI6WyIvLyBtYXQtdG9vbGJhciB7XG4vLyAgIGJhY2tncm91bmQtY29sb3I6ICMwMDAwMDA7XG4vLyB9XG4kYnJlYWs6IDQ4MHB4O1xuXG5AbWVkaWEgc2NyZWVuIGFuZCAobWluLXdpZHRoOiAkYnJlYWsgKyAxKSB7XG4gICAgLnNpZGVuYXYtY2xvc2Uge1xuICAgICAgICBkaXNwbGF5OiBub25lO1xuICAgIH1cbn1cblxuLmV4cGFuZGVkLW1lbnUtaXRlbSB7XG4gICAgYmFja2dyb3VuZC1jb2xvcjogcmdiYSgwLCAwLCAwLCAwLjA0KSAhaW1wb3J0YW50O1xufSJdfQ== */"
 
 /***/ }),
 
@@ -11663,17 +11700,23 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _app_session_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @app/session.service */ "./src/app/session.service.ts");
 /* harmony import */ var _app_sidenav_sidenav_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @app/sidenav/sidenav.service */ "./src/app/sidenav/sidenav.service.ts");
 /* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/fesm5/common.js");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
+
+
 
 
 
 
 
 var SidenavComponent = /** @class */ (function () {
-    function SidenavComponent(session, navService, location) {
+    function SidenavComponent(session, navService, location, router, route) {
         var _this = this;
         this.session = session;
         this.navService = navService;
         this.location = location;
+        this.router = router;
+        this.route = route;
         this.roleType = {
             systemAdmin: 7,
             companyAdmin: 6,
@@ -11684,10 +11727,18 @@ var SidenavComponent = /** @class */ (function () {
             user: 1
         };
         this.expandPayrollLinks = false;
+        this.expandPeopleLinks = false;
         this.session.getUserItem().subscribe(function (u) { return (_this.user = u); });
     }
     SidenavComponent.prototype.ngOnInit = function () {
+        var _this = this;
         this.expandPayrollLinks = this.location.path(true).includes('admin/pay');
+        this.router.events.pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_6__["filter"])(function (event) { return event instanceof _angular_router__WEBPACK_IMPORTED_MODULE_5__["NavigationEnd"]; })).subscribe(function () {
+            // we are on the contacts page if this is true
+            if (_this.location.path(true).includes('contacts')) {
+                _this.navService.close();
+            }
+        });
     };
     SidenavComponent.prototype.toggleSidenav = function () {
         this.navService.toggle();
@@ -11700,7 +11751,9 @@ var SidenavComponent = /** @class */ (function () {
         }),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_app_session_service__WEBPACK_IMPORTED_MODULE_2__["SessionService"],
             _app_sidenav_sidenav_service__WEBPACK_IMPORTED_MODULE_3__["SidenavService"],
-            _angular_common__WEBPACK_IMPORTED_MODULE_4__["Location"]])
+            _angular_common__WEBPACK_IMPORTED_MODULE_4__["Location"],
+            _angular_router__WEBPACK_IMPORTED_MODULE_5__["Router"],
+            _angular_router__WEBPACK_IMPORTED_MODULE_5__["ActivatedRoute"]])
     ], SidenavComponent);
     return SidenavComponent;
 }());
@@ -12526,7 +12579,8 @@ __webpack_require__.r(__webpack_exports__);
 var environment = {
     production: false,
     rootUrl: 'http://verostack:8888',
-    apiUrl: 'http://verostack:8888/'
+    apiUrl: 'http://verostack:8888/',
+    defaultTitle: 'Payment Dyanmics'
 };
 
 

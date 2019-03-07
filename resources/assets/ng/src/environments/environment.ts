@@ -6,5 +6,6 @@
 export const environment = {
   production: false,
   rootUrl: 'http://verostack:8888',
-  apiUrl: 'http://verostack:8888/'
+  apiUrl: 'http://verostack:8888/',
+  defaultTitle: 'Payment Dyanmics'
 };

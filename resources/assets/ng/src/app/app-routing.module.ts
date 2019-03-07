@@ -29,6 +29,7 @@ const routes: Routes = [
     { path: 'agents', component: AgentComponent, canActivate: [AuthGuard] },
     { path: 'daily-tracker', component: DailySaleTrackerComponent, canActivate: [AuthGuard] },
     { path: 'new-sale-contact', component: NewSaleComponent, canActivate: [AuthGuard] },
+    { path: 'contacts', loadChildren: './contact/contact.module#ContactModule' },
     { path: '**', redirectTo: 'home' }
 ]
 

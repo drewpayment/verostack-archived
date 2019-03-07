@@ -1,4 +1,4 @@
-<mat-toolbar color="primary" class="app-header-bar">
+<mat-toolbar color="primary" class="app-header-bar" #toolbar>
   <mat-toolbar-row>
     <span *ngIf="(loggedInStatus | async)">
       <button mat-icon-button (click)="toggleSidenav()">
