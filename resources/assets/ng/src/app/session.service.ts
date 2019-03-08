@@ -9,7 +9,7 @@ import {Router, NavigationEnd} from '@angular/router';
 import {environment} from '../environments/environment';
 
 import * as moment from 'moment';
-import { filter } from 'rxjs/operators';
+import { filter, map } from 'rxjs/operators';
 import { UserService } from './user-features/user.service';
 
 declare var window: any;
@@ -68,6 +68,12 @@ export class SessionService {
             this.previousUrl = this.currentUrl;
             this.currentUrl = e.url;
         });
+
+        this.userItem.pipe(map(u => u.selectedClient = this._selectedClient));
+    }
+
+    private _selectedClient():number {
+        return this.userItem.getValue().sessionUser.sessionClient;
     }
 
     setNavigationTitle(value:string) {

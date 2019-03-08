@@ -19,5 +19,7 @@ export interface User {
     password?:string,
     createdAt?:any,
     udpatedAt?:any,
-    agent?:IAgent
+    agent?:IAgent,
+
+    selectedClient?:() => number
 }

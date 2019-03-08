@@ -16,8 +16,7 @@ export class ContactService {
     private api:string;
     _contacts:Contact[];
     constructor(
-        private http: HttpClient, 
-        private session:SessionService,
+        private http: HttpClient,
         private auth:AuthService,
         private msg:MessageService
     ) {
@@ -54,12 +53,12 @@ export class ContactService {
     }
 
     private handleError<T>(resp:LaravelErrorResponse, caught:Observable<T>):Observable<T> {
-        let keys = Object.keys(resp.error.errors);
+        const keys = Object.keys(resp.error.errors);
         let errorMsg:string = 'Errors: ';
 
         keys.forEach(key => {
-            let propErrors:string[] = resp.error.errors[key];
-            if(!_.isArray(propErrors)) return; /** if this isn't an array, it means we don't have any errors and need to bail */
+            const propErrors:string[] = resp.error.errors[key];
+            if (!_.isArray(propErrors)) return; /** if this isn't an array, it means we don't have any errors and need to bail */
             propErrors.forEach((pe:string, i:number) => {
                 errorMsg += `(${i+1}) ${pe}`;
             });

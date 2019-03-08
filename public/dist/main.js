@@ -3457,13 +3457,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
-/* harmony import */ var _app_session_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @app/session.service */ "./src/app/session.service.ts");
-/* harmony import */ var _app_auth_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @app/auth.service */ "./src/app/auth.service.ts");
-/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
-/* harmony import */ var _app_message_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @app/message.service */ "./src/app/message.service.ts");
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_7__);
-
+/* harmony import */ var _app_auth_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @app/auth.service */ "./src/app/auth.service.ts");
+/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
+/* harmony import */ var _app_message_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @app/message.service */ "./src/app/message.service.ts");
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_6__);
 
 
 
@@ -3472,9 +3470,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var ContactService = /** @class */ (function () {
-    function ContactService(http, session, auth, msg) {
+    function ContactService(http, auth, msg) {
         this.http = http;
-        this.session = session;
         this.auth = auth;
         this.msg = msg;
         this.api = this.auth.apiUrl + "api";
@@ -3487,7 +3484,7 @@ var ContactService = /** @class */ (function () {
     ContactService.prototype.getContactsByClient = function (clientId) {
         var _this = this;
         return this.http.get(this.api + "/clients/" + clientId + "/contacts")
-            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["tap"])(function (next) { return _this._contacts = next; }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["catchError"])(this.handleError));
+            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["tap"])(function (next) { return _this._contacts = next; }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["catchError"])(this.handleError));
     };
     /**
      * Save a contact entity.
@@ -3500,14 +3497,14 @@ var ContactService = /** @class */ (function () {
             ? this.api + "/clients/" + clientId + "/contacts/" + contact.contactId
             : this.api + "/clients/" + clientId + "/contacts";
         return this.http.post(url, contact)
-            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["catchError"])(this.handleError));
+            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["catchError"])(this.handleError));
     };
     ContactService.prototype.handleError = function (resp, caught) {
         var keys = Object.keys(resp.error.errors);
         var errorMsg = 'Errors: ';
         keys.forEach(function (key) {
             var propErrors = resp.error.errors[key];
-            if (!lodash__WEBPACK_IMPORTED_MODULE_7__["isArray"](propErrors))
+            if (!lodash__WEBPACK_IMPORTED_MODULE_6__["isArray"](propErrors))
                 return; /** if this isn't an array, it means we don't have any errors and need to bail */
             propErrors.forEach(function (pe, i) {
                 errorMsg += "(" + (i + 1) + ") " + pe;
@@ -3521,9 +3518,8 @@ var ContactService = /** @class */ (function () {
             providedIn: 'root'
         }),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"],
-            _app_session_service__WEBPACK_IMPORTED_MODULE_3__["SessionService"],
-            _app_auth_service__WEBPACK_IMPORTED_MODULE_4__["AuthService"],
-            _app_message_service__WEBPACK_IMPORTED_MODULE_6__["MessageService"]])
+            _app_auth_service__WEBPACK_IMPORTED_MODULE_3__["AuthService"],
+            _app_message_service__WEBPACK_IMPORTED_MODULE_5__["MessageService"]])
     ], ContactService);
     return ContactService;
 }());
@@ -10932,8 +10928,12 @@ var SessionService = /** @class */ (function () {
             _this.previousUrl = _this.currentUrl;
             _this.currentUrl = e.url;
         });
+        this.userItem.pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_7__["map"])(function (u) { return u.selectedClient = _this._selectedClient; }));
     }
     SessionService_1 = SessionService;
+    SessionService.prototype._selectedClient = function () {
+        return this.userItem.getValue().sessionUser.sessionClient;
+    };
     SessionService.prototype.setNavigationTitle = function (value) {
         if (typeof value !== 'string' || value == null)
             return;
