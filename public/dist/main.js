@@ -3376,7 +3376,7 @@ module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n<div>\n  <h2 mat-dialog-title>Current Client</h2>\n  <mat-dialog-content>\n    <mat-form-field class=\"w-100\">\n      <mat-select [(ngModel)]=\"user.sessionUser.sessionClient\">\n        <mat-option *ngFor=\"let c of data.clients\" [value]=\"c.clientId\">{{c.name}}</mat-option>\n      </mat-select>\n      <mat-error *ngIf=\"clientControl.hasError('required')\">Please choose a client.</mat-error>\n    </mat-form-field>\n  </mat-dialog-content>\n  <mat-dialog-actions class=\"d-flex justify-content-between\">\n    <button mat-button (click)=\"cancel()\">Cancel</button>\n    <button mat-raised-button color=\"primary\" (click)=\"onClientChange()\">Change Client</button>\n  </mat-dialog-actions>\n</div>\n"
+module.exports = "\n<div>\n  <h2 mat-dialog-title>Current Client</h2>\n  <mat-dialog-content>\n    <mat-form-field class=\"w-100\">\n      <mat-select [formControl]=\"clientControl\">\n        <mat-option *ngFor=\"let c of data.clients\" [value]=\"c.clientId\">{{c.name}}</mat-option>\n      </mat-select>\n      <mat-error *ngIf=\"clientControl.hasError('required')\">Please choose a client.</mat-error>\n    </mat-form-field>\n  </mat-dialog-content>\n  <mat-dialog-actions class=\"d-flex justify-content-between\">\n    <button mat-button (click)=\"cancel()\">Cancel</button>\n    <button mat-raised-button color=\"primary\" (click)=\"onClientChange()\">Change Client</button>\n  </mat-dialog-actions>\n</div>\n"
 
 /***/ }),
 
@@ -3396,6 +3396,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/material */ "./node_modules/@angular/material/esm5/material.es5.js");
 /* harmony import */ var _auth_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../auth.service */ "./src/app/auth.service.ts");
 /* harmony import */ var _user_features_user_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../user-features/user.service */ "./src/app/user-features/user.service.ts");
+/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/fesm5/common.js");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+
+
 
 
 
@@ -3403,11 +3407,13 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var ClientSelectorComponent = /** @class */ (function () {
-    function ClientSelectorComponent(dialogRef, data, auth, userService) {
+    function ClientSelectorComponent(dialogRef, data, auth, userService, location, router) {
         this.dialogRef = dialogRef;
         this.data = data;
         this.auth = auth;
         this.userService = userService;
+        this.location = location;
+        this.router = router;
         this.clientControl = new _angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormControl"]('', [_angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].required]);
         this.compareFn = this.compareByValue;
     }
@@ -3415,14 +3421,24 @@ var ClientSelectorComponent = /** @class */ (function () {
         var _this = this;
         this.userService.user.subscribe(function (next) {
             _this.user = next;
+            _this.clientControl.setValue(_this.user.sessionUser.sessionClient, { emitEvent: false });
         });
     };
     ClientSelectorComponent.prototype.cancel = function () {
         this.dialogRef.close();
     };
     ClientSelectorComponent.prototype.onClientChange = function () {
-        this.userService.updateUser(this.user, null).subscribe();
-        this.cancel();
+        var _this = this;
+        var clientId = this.clientControl.value;
+        if (clientId == null)
+            return;
+        this.userService.changeClient(clientId)
+            .subscribe(function (result) {
+            if (!result)
+                return;
+            location.reload();
+            _this.cancel();
+        });
     };
     ClientSelectorComponent.prototype.compareByValue = function (f1, f2) {
         return f1 && f2 && f1.clientId === f2.clientId;
@@ -3435,7 +3451,9 @@ var ClientSelectorComponent = /** @class */ (function () {
         }),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__param"](1, Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Inject"])(_angular_material__WEBPACK_IMPORTED_MODULE_3__["MAT_DIALOG_DATA"])),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_material__WEBPACK_IMPORTED_MODULE_3__["MatDialogRef"], Object, _auth_service__WEBPACK_IMPORTED_MODULE_4__["AuthService"],
-            _user_features_user_service__WEBPACK_IMPORTED_MODULE_5__["UserService"]])
+            _user_features_user_service__WEBPACK_IMPORTED_MODULE_5__["UserService"],
+            _angular_common__WEBPACK_IMPORTED_MODULE_6__["Location"],
+            _angular_router__WEBPACK_IMPORTED_MODULE_7__["Router"]])
     ], ClientSelectorComponent);
     return ClientSelectorComponent;
 }());
@@ -7157,6 +7175,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/material */ "./node_modules/@angular/material/esm5/material.es5.js");
 /* harmony import */ var _angular_material_moment_adapter__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/material-moment-adapter */ "./node_modules/@angular/material-moment-adapter/esm5/material-moment-adapter.es5.js");
+/* harmony import */ var _angular_cdk_drag_drop__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/cdk/drag-drop */ "./node_modules/@angular/cdk/esm5/drag-drop.es5.js");
+
 
 
 
@@ -7194,7 +7214,8 @@ var modules = [
     _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatToolbarModule"],
     _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatTooltipModule"],
     _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatStepperModule"],
-    _angular_material_moment_adapter__WEBPACK_IMPORTED_MODULE_3__["MatMomentDateModule"]
+    _angular_material_moment_adapter__WEBPACK_IMPORTED_MODULE_3__["MatMomentDateModule"],
+    _angular_cdk_drag_drop__WEBPACK_IMPORTED_MODULE_4__["DragDropModule"]
 ];
 var MaterialModule = /** @class */ (function () {
     function MaterialModule() {
@@ -8621,7 +8642,8 @@ var PayCycleDialogComponent = /** @class */ (function () {
             startDate: this.form.value.startDate.format('YYYY-MM-DD'),
             endDate: this.form.value.endDate.format('YYYY-MM-DD'),
             isPending: false,
-            isClosed: false
+            isClosed: false,
+            isLocked: false
         };
     };
     PayCycleDialogComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
@@ -8649,7 +8671,7 @@ var PayCycleDialogComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n<div class=\"container\">\n    <div class=\"row mb-4\">\n        <div class=\"col-md-12\">\n            <mat-card class=\"page-header-accent\">\n                <mat-card-content class=\"d-flex justify-content-between\">\n                    <h3>\n                        <span>Pay Runs</span>\n                    </h3>\n                    <div>\n                        <mat-slide-toggle \n                            [checked]=\"showClosed\" \n                            (change)=\"switchDisplay()\"\n                            class=\"my-0 mr-2\"\n                        >\n                            Show Closed\n                        </mat-slide-toggle>\n                        <button type=\"button\" mat-stroked-button color=\"primary\" (click)=\"addPayCycle()\">\n                            <mat-icon inline=\"true\">add</mat-icon>\n                            <span>Payroll</span>\n                        </button>\n                    </div>\n                </mat-card-content>\n            </mat-card>\n        </div>\n    </div>\n\n    <ng-container *ngIf=\"displayCycles != null && (displayCycles|async).length; else noCycles\">\n        <div class=\"row\" *ngFor=\"let cycle of displayCycles|async as cycles\">\n            <div class=\"col-md-12\">\n                <mat-card [ngClass]=\"getBorderColor(cycle, 'left')\">\n                    <mat-card-title class=\"d-flex justify-content-between\">\n                        <div [class.text-danger]=\"isPayCycleDue(cycle)\">\n                            <span class=\"font-weight-bold\">Status: </span>\n                            <small>{{getCycleStatus(cycle)}}</small>\n                        </div>\n                        <div class=\"d-flex justify-content-end\">\n                            <button type=\"button\" mat-button \n                                color=\"primary\" \n                                *ngIf=\"!cycle.isPending && !cycle.isClosed\"\n                                (click)=\"editPayCycle(cycle)\"\n                            >\n                                <mat-icon>play_arrow</mat-icon>\n                                <span>Start</span>\n                            </button>\n                            <ng-container *ngIf=\"!isBeforeEndDate(cycle); else payrollReadyToRun\">\n                                <button\n                                    type=\"button\" mat-button\n                                    color=\"primary\"\n                                    *ngIf=\"cycle.isPending && !cycle.isClosed\"\n                                    (click)=\"editPayCycle(cycle)\"\n                                >\n                                    <mat-icon>redo</mat-icon>\n                                    <span>Continue</span>\n                                </button>\n                                <button\n                                    type=\"button\" mat-button\n                                    color=\"accent\"\n                                    *ngIf=\"cycle.isPending && !cycle.isClosed\"\n                                    (click)=\"closePayCycle(cycle)\"\n                                >\n                                    <mat-icon>archive</mat-icon>\n                                    <span>Archive</span>\n                                </button>\n                                <button\n                                    type=\"button\" mat-button\n                                    color=\"primary\"\n                                    *ngIf=\"cycle.isClosed\"\n                                    (click)=\"openPayCycle(cycle)\"\n                                >\n                                    <mat-icon>unarchive</mat-icon>\n                                    <span>Re-Open</span>\n                                </button>\n                            </ng-container>\n                            <ng-template #payrollReadyToRun>\n                                <button type=\"button\"\n                                    mat-button\n                                    [color]=\"getEditButtonColor(cycle)\"\n                                    [class.text-muted]=\"cycle?.payrolls?.length > 0\"\n                                    *ngIf=\"cycle.isPending && !cycle.isClosed\"\n                                    (click)=\"editPayCycle(cycle)\"\n                                >\n                                    <mat-icon>create</mat-icon>\n                                    <span>Edit</span>\n                                </button>\n                                <button type=\"button\"\n                                    mat-button\n                                    color=\"primary\"\n                                    *ngIf=\"cycle.isPending && !cycle.isClosed && cycle?.payrolls?.length < 1\"\n                                    (click)=\"processPayroll(cycle)\"\n                                >\n                                    <mat-icon>sync</mat-icon>\n                                    <span>\n                                        {{ cycle?.payrolls?.length > 0 ? 'Reprocess' : 'Process' }}\n                                    </span>\n                                </button>\n                                <button\n                                    type=\"button\" mat-button\n                                    color=\"accent\"\n                                    *ngIf=\"cycle.isPending && !cycle.isClosed\"\n                                    (click)=\"closePayCycle(cycle)\"\n                                >\n                                    <mat-icon>archive</mat-icon>\n                                    <span>Archive</span>\n                                </button>\n                                <button\n                                    type=\"button\" mat-button\n                                    color=\"primary\"\n                                    *ngIf=\"cycle.isClosed\"\n                                    (click)=\"openPayCycle(cycle)\"\n                                >\n                                    <mat-icon>unarchive</mat-icon>\n                                    <span>Re-Open</span>\n                                </button>\n                            </ng-template>\n                        </div>\n                        <!-- <button type=\"button\" mat-icon-button color=\"primary\" (click)=\"editPayCycle(cycle)\">\n                            <mat-icon>edit</mat-icon>\n                        </button> -->\n                    </mat-card-title>\n                    <mat-card-content>\n                        <p>\n                            <span class=\"font-weight-bold\">Dates:</span> \n                            {{cycle.startDate | date:'shortDate'}} - {{cycle.endDate | date:'shortDate'}}\n                        </p>\n                        <p class=\"text-muted\" *ngIf=\"cycle?.payrolls?.length\">\n                            Payroll was processed {{getPayrollEditDate(cycle) | date:'short'}}\n                        </p>\n                    </mat-card-content>\n                </mat-card>\n            </div>\n        </div>\n    </ng-container>\n    <ng-template #noCycles>\n        <div class=\"row\">\n            <div class=\"col-md-12\">\n                <h5 class=\"text-center text-muted font-italic\">No Payroll Cycles to display.</h5>\n            </div>\n        </div>\n    </ng-template>\n    \n</div>"
+module.exports = "\n<div class=\"container\">\n    <div class=\"row mb-4\">\n        <div class=\"col-md-12\">\n            <mat-card class=\"page-header-accent\">\n                <mat-card-content class=\"d-flex justify-content-between\">\n                    <h3>\n                        <span>Pay Runs</span>\n                    </h3>\n                    <div>\n                        <button type=\"button\" mat-stroked-button color=\"primary\" (click)=\"addPayCycle()\">\n                            <mat-icon inline=\"true\">add</mat-icon>\n                            <span>Payroll</span>\n                        </button>\n                    </div>\n                </mat-card-content>\n            </mat-card>\n        </div>\n    </div>\n\n    <!-- DUE FOR RELEASE -->\n    <div class=\"row\" cdkDropListGroup>\n        <div class=\"col-md-4\" *ngIf=\"todoCycles\">\n            <mat-card class=\"border-top-primary\">\n                <mat-card-title class=\"d-flex justify-content-center mb-3 pb-2 border-bottom\">\n                    <mat-icon class=\"mr-2\">autorenew</mat-icon>\n                    <span>In Progress</span>\n                </mat-card-title>\n                <mat-card-content>\n                    <div class=\"list-group\" cdkDropList #todoList=\"cdkDropList\" [cdkDropListData]=\"todoCycles\"\n                        (cdkDropListDropped)=\"drop($event)\">\n                        <div *ngFor=\"let cycle of todoCycles as cycles\" class=\"list-group-item list-group-item-action\" cdkDrag>\n                            <!-- list group item heading -->\n                            <div class=\"d-flex w-100 justify-content-between\">\n                                <h5 class=\"mb-1\">{{ cycle.isPending ? 'Pending' : 'Not Started' }}</h5>\n                                <button type=\"button\" mat-icon-button (click)=\"editPayCycle(cycle)\">\n                                    <mat-icon>launch</mat-icon>\n                                </button>\n                            </div>\n                            <p class=\"mb-1\">From: {{ cycle.startDate | date:'shortDate' }}</p>\n                            <p class=\"mb-1\">To: {{ cycle.endDate | date:'shortDate' }}</p>\n                            <div class=\"d-flex w-100\" [class.justify-content-between]=\"cycle.payrolls.length\"\n                                [class.justify-content-end]=\"!cycle.payrolls.length\">\n                                <small *ngIf=\"cycle.payrolls.length\">\n                                    {{ cycle.payrolls.length }} Paychecks\n                                </small>\n                                <small>{{ getHumanReadableDuration(cycle) }}</small>\n                            </div>\n                        </div>\n                    </div>\n                    <!-- <ng-template #noTodoCycles>\n                        <h5 class=\"text-muted font-italic\">Click \"+ Payroll\" to Start.</h5>\n                    </ng-template> -->\n                </mat-card-content>\n            </mat-card>\n        </div>\n\n        <div class=\"col-md-4\" *ngIf=\"lockedCycles\">\n            <mat-card class=\"border-top-secondary\">\n                <mat-card-title class=\"d-flex justify-content-center pb-2 mb-3 border-bottom\">\n                    <mat-icon class=\"mr-2\">lock</mat-icon>\n                    <span>Locked</span>\n                </mat-card-title>\n                <mat-card-content>\n                    <div class=\"list-group\" cdkDropList #lockedList=\"cdkDropList\" [cdkDropListData]=\"lockedCycles\"\n                        (cdkDropListDropped)=\"drop($event)\">\n                        <a *ngFor=\"let cycle of lockedCycles as cycles\" [routerLink]=\"\" \n                            class=\"list-group-item list-group-item-action\" cdkDrag>\n                            <!-- list group item heading -->\n                            <div class=\"d-flex justify-content-between\">\n                                <h5 class=\"mb-1\">Locked</h5>\n                                <mat-icon>not_interested</mat-icon>\n                            </div>\n                            <p class=\"mb-1\">From: {{ cycle.startDate | date:'shortDate' }}</p>\n                            <p class=\"mb-1\">To: {{ cycle.endDate | date:'shortDate' }}</p>\n                            <div class=\"d-flex w-100\" [class.justify-content-between]=\"cycle.payrolls.length\"\n                                [class.justify-content-end]=\"!cycle.payrolls.length\">\n                                <small *ngIf=\"cycle.payrolls.length\">\n                                    {{ cycle.payrolls.length }} Paychecks\n                                </small>\n                                <small>{{ getHumanReadableDuration(cycle) }}</small>\n                            </div>\n                        </a>\n                    </div>\n                    <!-- <ng-template #noLockedCycles>\n                        <div class=\"d-flex w-100 justify-content-center\">\n                            <h5 class=\"text-muted font-italic\">No Locked Runs</h5>\n                        </div>\n                    </ng-template> -->\n                </mat-card-content>\n            </mat-card>\n        </div>\n\n        <div class=\"col-md-4\" *ngIf=\"closedCycles\">\n            <mat-card class=\"border-top-dark\">\n                <mat-card-title class=\"d-flex justify-content-center mb-3 pb-2 border-bottom\">\n                    <mat-icon class=\"mr-2\">done_all</mat-icon>\n                    <span>Completed</span>\n                </mat-card-title>\n                <mat-card-content>\n                    <div class=\"list-group\" *ngIf=\"closedCycles.length; else noClosedCycles\">\n                        <ng-container *ngFor=\"let cycle of closedCycles as cycles\">\n                            <div class=\"list-group-item list-group-item-action\">\n                                <!-- list group item heading -->\n                                <div class=\"d-flex w-100 justify-content-between\">\n                                    <h5 class=\"mb-1\">Closed</h5>\n                                    <mat-icon>check_circle</mat-icon>\n                                </div>\n                                <p class=\"mb-1\">From: {{ cycle.startDate | date:'shortDate' }}</p>\n                                <p class=\"mb-1\">To: {{ cycle.endDate | date:'shortDate' }}</p>\n                                <div class=\"d-flex w-100\" [class.justify-content-between]=\"cycle.payrolls.length\"\n                                    [class.justify-content-end]=\"!cycle.payrolls.length\">\n                                    <small *ngIf=\"cycle.payrolls.length\">\n                                        {{ cycle.payrolls.length }} Paychecks\n                                    </small>\n                                    <small>{{ getHumanReadableDuration(cycle) }}</small>\n                                </div>\n                                \n                            </div>\n                        </ng-container>\n                    </div>\n                    <ng-template #noClosedCycles>\n                        <div class=\"d-flex w-100 justify-content-center\">\n                            <h5 class=\"text-muted font-italic\">No Closed Runs</h5>\n                        </div>\n                    </ng-template>\n                </mat-card-content>\n            </mat-card>\n        </div>\n    </div>\n\n    <!-- <ng-container *ngIf=\"displayCycles != null && (displayCycles|async).length; else noCycles\">\n        <div class=\"row\" *ngFor=\"let cycle of displayCycles|async as cycles\">\n            <div class=\"col-md-12\">\n                <mat-card [ngClass]=\"getBorderColor(cycle, 'left')\">\n                    <mat-card-title class=\"d-flex justify-content-between\">\n                        <div [class.text-danger]=\"isPayCycleDue(cycle)\">\n                            <span class=\"font-weight-bold\">Status: </span>\n                            <small>{{getCycleStatus(cycle)}}</small>\n                        </div>\n                        <div class=\"d-flex justify-content-end\">\n                            <button type=\"button\" mat-button \n                                color=\"primary\" \n                                *ngIf=\"!cycle.isPending && !cycle.isClosed\"\n                                (click)=\"editPayCycle(cycle)\"\n                            >\n                                <mat-icon>play_arrow</mat-icon>\n                                <span>Start</span>\n                            </button>\n                            <ng-container *ngIf=\"!isBeforeEndDate(cycle); else payrollReadyToRun\">\n                                <button\n                                    type=\"button\" mat-button\n                                    color=\"primary\"\n                                    *ngIf=\"cycle.isPending && !cycle.isClosed\"\n                                    (click)=\"editPayCycle(cycle)\"\n                                >\n                                    <mat-icon>redo</mat-icon>\n                                    <span>Continue</span>\n                                </button>\n                                <button\n                                    type=\"button\" mat-button\n                                    color=\"accent\"\n                                    *ngIf=\"cycle.isPending && !cycle.isClosed\"\n                                    (click)=\"closePayCycle(cycle)\"\n                                >\n                                    <mat-icon>archive</mat-icon>\n                                    <span>Archive</span>\n                                </button>\n                                <button\n                                    type=\"button\" mat-button\n                                    color=\"primary\"\n                                    *ngIf=\"cycle.isClosed\"\n                                    (click)=\"openPayCycle(cycle)\"\n                                >\n                                    <mat-icon>unarchive</mat-icon>\n                                    <span>Re-Open</span>\n                                </button>\n                            </ng-container>\n                            <ng-template #payrollReadyToRun>\n                                <button type=\"button\"\n                                    mat-button\n                                    [color]=\"getEditButtonColor(cycle)\"\n                                    [class.text-muted]=\"cycle?.payrolls?.length > 0\"\n                                    *ngIf=\"cycle.isPending && !cycle.isClosed\"\n                                    (click)=\"editPayCycle(cycle)\"\n                                >\n                                    <mat-icon>create</mat-icon>\n                                    <span>Edit</span>\n                                </button>\n                                <button type=\"button\"\n                                    mat-button\n                                    color=\"primary\"\n                                    *ngIf=\"cycle.isPending && !cycle.isClosed && cycle?.payrolls?.length < 1\"\n                                    (click)=\"processPayroll(cycle)\"\n                                >\n                                    <mat-icon>sync</mat-icon>\n                                    <span>\n                                        {{ cycle?.payrolls?.length > 0 ? 'Reprocess' : 'Process' }}\n                                    </span>\n                                </button>\n                                <button\n                                    type=\"button\" mat-button\n                                    color=\"accent\"\n                                    *ngIf=\"cycle.isPending && !cycle.isClosed\"\n                                    (click)=\"closePayCycle(cycle)\"\n                                >\n                                    <mat-icon>archive</mat-icon>\n                                    <span>Archive</span>\n                                </button>\n                                <button\n                                    type=\"button\" mat-button\n                                    color=\"primary\"\n                                    *ngIf=\"cycle.isClosed\"\n                                    (click)=\"openPayCycle(cycle)\"\n                                >\n                                    <mat-icon>unarchive</mat-icon>\n                                    <span>Re-Open</span>\n                                </button>\n                            </ng-template>\n                        </div>\n                    </mat-card-title>\n                    <mat-card-content>\n                        <p>\n                            <span class=\"font-weight-bold\">Dates:</span> \n                            {{cycle.startDate | date:'shortDate'}} - {{cycle.endDate | date:'shortDate'}}\n                        </p>\n                        <p class=\"text-muted\" *ngIf=\"cycle?.payrolls?.length\">\n                            Payroll was processed {{getPayrollEditDate(cycle) | date:'short'}}\n                        </p>\n                    </mat-card-content>\n                </mat-card>\n            </div>\n        </div>\n    </ng-container>\n    <ng-template #noCycles>\n        <div class=\"row\">\n            <div class=\"col-md-12\">\n                <h5 class=\"text-center text-muted font-italic\">No Payroll Cycles to display.</h5>\n            </div>\n        </div>\n    </ng-template> -->\n    \n</div>"
 
 /***/ }),
 
@@ -8660,7 +8682,7 @@ module.exports = "\n<div class=\"container\">\n    <div class=\"row mb-4\">\n   
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzcmMvYXBwL3BheXJvbGwvcGF5LWN5Y2xlL3BheS1jeWNsZS5jb21wb25lbnQuc2NzcyJ9 */"
+module.exports = ".list-group {\n  min-height: 116px;\n  background-color: rgba(50, 50, 50, 0.05);\n  border-radius: 0.25rem; }\n\n.cdk-drag:hover {\n  cursor: -webkit-grab;\n  cursor: grab; }\n\n.cdk-drag:active {\n  cursor: -webkit-grabbing;\n  cursor: grabbing; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy9kcmV3cGF5bWVudC9kZXYvYWN0aXZlL3Zlcm9zdGFjay9yZXNvdXJjZXMvYXNzZXRzL25nL3NyYy9hcHAvcGF5cm9sbC9wYXktY3ljbGUvcGF5LWN5Y2xlLmNvbXBvbmVudC5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUNBO0VBQ0ksa0JBQWlCO0VBQ2pCLHlDQUFxQztFQUNyQyx1QkFBc0IsRUFDekI7O0FBRUQ7RUFHUSxxQkFBWTtFQUFaLGFBQVksRUFDZjs7QUFKTDtFQU9RLHlCQUFnQjtFQUFoQixpQkFBZ0IsRUFDbkIiLCJmaWxlIjoic3JjL2FwcC9wYXlyb2xsL3BheS1jeWNsZS9wYXktY3ljbGUuY29tcG9uZW50LnNjc3MiLCJzb3VyY2VzQ29udGVudCI6WyJcbi5saXN0LWdyb3VwIHsgXG4gICAgbWluLWhlaWdodDogMTE2cHg7XG4gICAgYmFja2dyb3VuZC1jb2xvcjogcmdiYSg1MCw1MCw1MCwwLjA1KTtcbiAgICBib3JkZXItcmFkaXVzOiAwLjI1cmVtO1xufVxuXG4uY2RrLWRyYWcge1xuXG4gICAgJjpob3ZlciB7XG4gICAgICAgIGN1cnNvcjogZ3JhYjtcbiAgICB9XG5cbiAgICAmOmFjdGl2ZSB7XG4gICAgICAgIGN1cnNvcjogZ3JhYmJpbmc7XG4gICAgfVxufSJdfQ== */"
 
 /***/ }),
 
@@ -8688,6 +8710,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
 /* harmony import */ var _app_payroll_payroll_service__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @app/payroll/payroll.service */ "./src/app/payroll/payroll.service.ts");
 /* harmony import */ var _pay_cycle_service__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./pay-cycle.service */ "./src/app/payroll/pay-cycle/pay-cycle.service.ts");
+/* harmony import */ var _angular_cdk_drag_drop__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @angular/cdk/drag-drop */ "./node_modules/@angular/cdk/esm5/drag-drop.es5.js");
+
 
 
 
@@ -8717,19 +8741,35 @@ var PayCycleComponent = /** @class */ (function () {
     PayCycleComponent.prototype.ngOnInit = function () {
         var _this = this;
         this.session.showLoader();
-        this.session.userItem.subscribe(function (user) {
-            if (user == null || _this.user != null)
+        this.session.getUserItem().subscribe(function (u) {
+            if (u == null)
                 return;
-            _this.user = user;
-            _this.campaignService.getCampaignsByClient(_this.user.sessionUser.sessionClient)
-                .subscribe(function (campaigns) { return _this.campaigns = campaigns; });
-            _this.payCycleService.getPayCycles(_this.user.sessionUser.sessionClient, true)
-                .subscribe(function (cycles) {
+            _this.user = u;
+            Object(rxjs__WEBPACK_IMPORTED_MODULE_7__["forkJoin"])(_this.campaignService.getCampaignsByClient(_this.user.sessionUser.sessionClient), _this.payCycleService.getPayCycles(_this.user.sessionUser.sessionClient)).subscribe(function (_a) {
+                var campaigns = _a[0], cycles = _a[1];
+                _this.campaigns = campaigns;
                 _this._cycles = cycles;
-                _this.getActive();
+                _this._filterCycles();
+                // this.getActive();
                 _this.session.hideLoader();
             });
         });
+    };
+    PayCycleComponent.prototype.drop = function (event) {
+        if (event.previousContainer === event.container) {
+            Object(_angular_cdk_drag_drop__WEBPACK_IMPORTED_MODULE_13__["moveItemInArray"])(event.container.data, event.previousIndex, event.currentIndex);
+        }
+        else {
+            Object(_angular_cdk_drag_drop__WEBPACK_IMPORTED_MODULE_13__["transferArrayItem"])(event.previousContainer.data, event.container.data, event.previousIndex, event.currentIndex);
+        }
+    };
+    PayCycleComponent.prototype._filterCycles = function () {
+        this.todoCycles = this._cycles.filter(function (c) { return !c.isClosed && !c.isLocked; });
+        this.lockedCycles = this._cycles.filter(function (c) { return !c.isClosed && c.isLocked; });
+        this.closedCycles = this._cycles.filter(function (c) { return c.isClosed; });
+    };
+    PayCycleComponent.prototype.getHumanReadableDuration = function (cycle) {
+        return this.today.to(cycle.createdAt);
     };
     PayCycleComponent.prototype.addPayCycle = function () {
         var _this = this;
@@ -11147,41 +11187,6 @@ var SessionService = /** @class */ (function () {
         this.localStorage.removeItemSubscribe(itemName);
     };
     /**
-     * Forces an item from localstorage. Returns the observable.
-     *
-     * @param itemName
-     */
-    SessionService.prototype.expediteItem = function (itemName) {
-        return this.localStorage.getItem(itemName);
-    };
-    /**
-     * Returns a promise with the user from local storage.
-     */
-    SessionService.prototype.getUserAuthenticationStatus = function () {
-        var _this = this;
-        return new Promise(function (resolve, reject) {
-            _this.localStorage.getItem('user').subscribe(function (item) {
-                if (item == null)
-                    reject('Not logged in.');
-                if (item.expires <= Date.now()) {
-                    _this.removeItem('user');
-                    reject('Login has expired. Please log back in.');
-                }
-                else {
-                    resolve(item.data);
-                }
-            });
-        });
-    };
-    SessionService.prototype.isExpiredItem = function (key, expires) {
-        var result = false;
-        if (Date.now() > expires) {
-            this.removeItem(key);
-            result = true;
-        }
-        return result;
-    };
-    /**
      * Iterates through all stored objects in localstorage
      * and checks their expiration dates. If the object has passed
      * its expiration date, it is invalidated and the object is
@@ -11731,8 +11736,8 @@ var SidenavComponent = /** @class */ (function () {
         this.session.getUserItem().subscribe(function (u) { return (_this.user = u); });
     }
     SidenavComponent.prototype.ngOnInit = function () {
+        // this.expandPayrollLinks = this.location.path(true).includes('admin/pay');
         var _this = this;
-        this.expandPayrollLinks = this.location.path(true).includes('admin/pay');
         this.router.events.pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_6__["filter"])(function (event) { return event instanceof _angular_router__WEBPACK_IMPORTED_MODULE_5__["NavigationEnd"]; })).subscribe(function () {
             // we are on the contacts page if this is true
             if (_this.location.path(true).includes('contacts')) {
@@ -12011,9 +12016,6 @@ var UserService = /** @class */ (function () {
             _this.userDetail$.next(detail);
         });
     }
-    UserService.prototype.ngOnInit = function () {
-        this.session.getItem('user');
-    };
     UserService.prototype.setUser = function (user) {
         this.user$.next(user);
     };
@@ -12195,6 +12197,21 @@ var UserService = /** @class */ (function () {
         };
         var url = this.api + "user-session";
         return this.http.post(url, dto);
+    };
+    UserService.prototype.changeClient = function (clientId) {
+        var _this = this;
+        var url = this.api + "users/select-client/" + clientId;
+        return this.http.get(url)
+            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_8__["tap"])(function (res) {
+            if (!res)
+                return;
+            var newClient = _this.dataStore.user.clients.find(function (c) { return c.clientId == clientId; });
+            _this.dataStore.user.sessionUser.sessionClient = clientId;
+            _this.dataStore.user.sessionUser.client = newClient;
+            _this.session.setUser(_this.dataStore.user);
+            _this.user$.next(_this.dataStore.user);
+            _this.setLocalStorageUser(_this.dataStore.user);
+        }));
     };
     UserService.prototype.updateUser = function (user, detail) {
         var _this = this;

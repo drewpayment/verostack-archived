@@ -34,6 +34,7 @@ import {
     MatBadgeModule
 } from '@angular/material';
 import {MatMomentDateModule} from '@angular/material-moment-adapter';
+import {DragDropModule} from '@angular/cdk/drag-drop';
 
 const modules = [
     MatAutocompleteModule,
@@ -68,7 +69,8 @@ const modules = [
     MatToolbarModule,
     MatTooltipModule,
     MatStepperModule,
-    MatMomentDateModule
+    MatMomentDateModule,
+    DragDropModule
 ];
 
 @NgModule({

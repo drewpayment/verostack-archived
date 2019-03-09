@@ -204,7 +204,7 @@ export class SessionService {
         this.tokenItem$.next(token);
     }
 
-    setItem<T>(itemName: string, data: ILocalStorage<T>): void {
+    setItem<T>(itemName: string, data:ILocalStorage<T>): void {
         if (this.dataStore[itemName]) this.dataStore[itemName] = data.data;
         data.expires =
             data.expires == null ? moment().valueOf() + moment.duration(3, 'days').milliseconds() : data.expires;
@@ -294,41 +294,6 @@ export class SessionService {
      */
     removeItem(itemName: string): void {
         this.localStorage.removeItemSubscribe(itemName);
-    }
-
-    /**
-     * Forces an item from localstorage. Returns the observable.
-     *
-     * @param itemName
-     */
-    expediteItem(itemName: string): Observable<any> {
-        return this.localStorage.getItem(itemName);
-    }
-
-    /**
-     * Returns a promise with the user from local storage.
-     */
-    getUserAuthenticationStatus(): Promise<User> {
-        return new Promise<User>((resolve, reject) => {
-            this.localStorage.getItem('user').subscribe((item: ILocalStorage<User>) => {
-                if (item == null) reject('Not logged in.');
-                if (item.expires <= Date.now()) {
-                    this.removeItem('user');
-                    reject('Login has expired. Please log back in.');
-                } else {
-                    resolve(item.data);
-                }
-            });
-        });
-    }
-
-    isExpiredItem(key: string, expires: number): boolean {
-        let result = false;
-        if (Date.now() > expires) {
-            this.removeItem(key);
-            result = true;
-        }
-        return result;
     }
 
     /**

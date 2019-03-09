@@ -11,6 +11,7 @@ import {environment} from '@env/environment';
 import {IUserDetailInfo} from '@app/models/user-detail-info.model';
 import {IRole} from '@app/models/role.model';
 import { catchError, tap, map } from 'rxjs/operators';
+import { Location } from '@angular/common';
 
 interface DataStore {
     user: User;
@@ -56,10 +57,6 @@ export class UserService {
             this.dataStore.detail = detail;
             this.userDetail$.next(detail);
         });
-    }
-
-    ngOnInit() {
-        this.session.getItem('user');
     }
 
     setUser(user: User): void {
@@ -245,6 +242,22 @@ export class UserService {
 
         const url = `${this.api}user-session`;
         return this.http.post<SessionUser>(url, dto);
+    }
+
+    changeClient(clientId:number):Observable<boolean> {
+        const url = `${this.api}users/select-client/${clientId}`;
+        return this.http.get<boolean>(url)
+            .pipe(
+                tap(res => {
+                    if (!res) return;
+                    const newClient = this.dataStore.user.clients.find(c => c.clientId == clientId);
+                    this.dataStore.user.sessionUser.sessionClient = clientId;
+                    this.dataStore.user.sessionUser.client = newClient;
+                    this.session.setUser(this.dataStore.user);
+                    this.user$.next(this.dataStore.user);
+                    this.setLocalStorageUser(this.dataStore.user);
+                })
+            );
     }
 
     updateUser(user: User, detail: IUserDetail):Observable<User> {

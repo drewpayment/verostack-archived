@@ -463,4 +463,24 @@ class UserController extends Controller
             ->getResponse();
     }
 
+    public function changeClient($clientId)
+    {
+        $result = new ApiResource();
+
+        $u = SessionUser::where('user_id', Auth::user()->id)->first();
+
+        dump($u);
+
+        $u->session_client = $clientId;
+
+        $res = $u->save();
+
+        if(!$res)
+            return $result->setToFail()->getResponse();
+
+        return $result->setData(true)
+            ->throwApiException()
+            ->getResponse();
+    }
+
 }

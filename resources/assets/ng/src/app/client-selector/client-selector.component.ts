@@ -8,6 +8,8 @@ import { AuthService } from '../auth.service';
 import { User, IClient } from '../models/index';
 import { Observable ,  BehaviorSubject } from 'rxjs';
 import { UserService } from '../user-features/user.service';
+import { Location } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-client-selector',
@@ -22,12 +24,16 @@ export class ClientSelectorComponent implements OnInit {
     public dialogRef: MatDialogRef<ClientSelectorComponent>,
     @Inject(MAT_DIALOG_DATA) public data: User,
     public auth: AuthService,
-    public userService: UserService
+    public userService: UserService,
+    private location:Location,
+    private router:Router
   ) {}
 
   ngOnInit() {
     this.userService.user.subscribe((next: User) => {
       this.user = next;
+
+      this.clientControl.setValue(this.user.sessionUser.sessionClient, { emitEvent: false });
     });
   }
 
@@ -36,8 +42,16 @@ export class ClientSelectorComponent implements OnInit {
   }
 
   onClientChange() {
-    this.userService.updateUser(this.user, null).subscribe();
-    this.cancel();
+    const clientId = this.clientControl.value;
+    if (clientId == null) return;
+
+    this.userService.changeClient(clientId)
+        .subscribe(result => {
+            if (!result) return;
+
+            location.reload();
+            this.cancel();
+        });
   }
 
   compareFn: ((f1: any, f2: any) => boolean)|null = this.compareByValue;

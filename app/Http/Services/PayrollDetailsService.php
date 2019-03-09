@@ -59,7 +59,7 @@ class PayrollDetailsService
     //     return $result->setData($details);
     // }
 
-    public function getPaychecksPaged(Request $request)
+    public function getPaychecksPaged(Request $request, $clientId)
     {
         $result = new ApiResource();
 
@@ -74,7 +74,14 @@ class PayrollDetailsService
         $filterByDates = !is_null($request->startDate) && !is_null($request->endDate);
 
         $details = PayrollDetail::with(['payroll.payCycle', 'agent', 'overrides.agent', 'expenses'])
-            ->select('payroll_details.*', DB::raw('(SELECT release_date FROM payrolls WHERE payroll_details.payroll_id = payrolls.payroll_id) as release_date'))
+            ->select('payroll_details.*', 
+                DB::raw('
+                    (SELECT p.release_date 
+                    FROM payrolls p
+                    WHERE p.client_id = ?
+                    AND p.payroll_id = payroll_details.payroll_id) AS release_date
+                '))
+            ->setBindings([$clientId])
             ->latest('release_date', 'desc')
             ->when($filterByDates, function($qry) use ($request) {
                 $qry->whereHas('payroll', function($pq) use ($request) {

@@ -39,7 +39,7 @@ export class SidenavComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.expandPayrollLinks = this.location.path(true).includes('admin/pay');
+        // this.expandPayrollLinks = this.location.path(true).includes('admin/pay');
 
         this.router.events.pipe(
             filter(event => event instanceof NavigationEnd)

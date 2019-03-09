@@ -90,7 +90,8 @@ export class PayCycleDialogComponent implements OnInit {
             startDate: this.form.value.startDate.format('YYYY-MM-DD'),
             endDate: this.form.value.endDate.format('YYYY-MM-DD'),
             isPending: false,
-            isClosed: false
+            isClosed: false,
+            isLocked: false
         }
     }
 

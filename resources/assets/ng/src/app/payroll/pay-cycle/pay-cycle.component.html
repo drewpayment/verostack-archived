@@ -8,13 +8,6 @@
                         <span>Pay Runs</span>
                     </h3>
                     <div>
-                        <mat-slide-toggle 
-                            [checked]="showClosed" 
-                            (change)="switchDisplay()"
-                            class="my-0 mr-2"
-                        >
-                            Show Closed
-                        </mat-slide-toggle>
                         <button type="button" mat-stroked-button color="primary" (click)="addPayCycle()">
                             <mat-icon inline="true">add</mat-icon>
                             <span>Payroll</span>
@@ -25,7 +18,118 @@
         </div>
     </div>
 
-    <ng-container *ngIf="displayCycles != null && (displayCycles|async).length; else noCycles">
+    <!-- DUE FOR RELEASE -->
+    <div class="row" cdkDropListGroup>
+        <div class="col-md-4" *ngIf="todoCycles">
+            <mat-card class="border-top-primary">
+                <mat-card-title class="d-flex justify-content-center mb-3 pb-2 border-bottom">
+                    <mat-icon class="mr-2">autorenew</mat-icon>
+                    <span>In Progress</span>
+                </mat-card-title>
+                <mat-card-content>
+                    <div class="list-group" cdkDropList #todoList="cdkDropList" [cdkDropListData]="todoCycles"
+                        (cdkDropListDropped)="drop($event)">
+                        <div *ngFor="let cycle of todoCycles as cycles" class="list-group-item list-group-item-action" cdkDrag>
+                            <!-- list group item heading -->
+                            <div class="d-flex w-100 justify-content-between">
+                                <h5 class="mb-1">{{ cycle.isPending ? 'Pending' : 'Not Started' }}</h5>
+                                <button type="button" mat-icon-button (click)="editPayCycle(cycle)">
+                                    <mat-icon>launch</mat-icon>
+                                </button>
+                            </div>
+                            <p class="mb-1">From: {{ cycle.startDate | date:'shortDate' }}</p>
+                            <p class="mb-1">To: {{ cycle.endDate | date:'shortDate' }}</p>
+                            <div class="d-flex w-100" [class.justify-content-between]="cycle.payrolls.length"
+                                [class.justify-content-end]="!cycle.payrolls.length">
+                                <small *ngIf="cycle.payrolls.length">
+                                    {{ cycle.payrolls.length }} Paychecks
+                                </small>
+                                <small>{{ getHumanReadableDuration(cycle) }}</small>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <ng-template #noTodoCycles>
+                        <h5 class="text-muted font-italic">Click "+ Payroll" to Start.</h5>
+                    </ng-template> -->
+                </mat-card-content>
+            </mat-card>
+        </div>
+
+        <div class="col-md-4" *ngIf="lockedCycles">
+            <mat-card class="border-top-secondary">
+                <mat-card-title class="d-flex justify-content-center pb-2 mb-3 border-bottom">
+                    <mat-icon class="mr-2">lock</mat-icon>
+                    <span>Locked</span>
+                </mat-card-title>
+                <mat-card-content>
+                    <div class="list-group" cdkDropList #lockedList="cdkDropList" [cdkDropListData]="lockedCycles"
+                        (cdkDropListDropped)="drop($event)">
+                        <a *ngFor="let cycle of lockedCycles as cycles" [routerLink]="" 
+                            class="list-group-item list-group-item-action" cdkDrag>
+                            <!-- list group item heading -->
+                            <div class="d-flex justify-content-between">
+                                <h5 class="mb-1">Locked</h5>
+                                <mat-icon>not_interested</mat-icon>
+                            </div>
+                            <p class="mb-1">From: {{ cycle.startDate | date:'shortDate' }}</p>
+                            <p class="mb-1">To: {{ cycle.endDate | date:'shortDate' }}</p>
+                            <div class="d-flex w-100" [class.justify-content-between]="cycle.payrolls.length"
+                                [class.justify-content-end]="!cycle.payrolls.length">
+                                <small *ngIf="cycle.payrolls.length">
+                                    {{ cycle.payrolls.length }} Paychecks
+                                </small>
+                                <small>{{ getHumanReadableDuration(cycle) }}</small>
+                            </div>
+                        </a>
+                    </div>
+                    <!-- <ng-template #noLockedCycles>
+                        <div class="d-flex w-100 justify-content-center">
+                            <h5 class="text-muted font-italic">No Locked Runs</h5>
+                        </div>
+                    </ng-template> -->
+                </mat-card-content>
+            </mat-card>
+        </div>
+
+        <div class="col-md-4" *ngIf="closedCycles">
+            <mat-card class="border-top-dark">
+                <mat-card-title class="d-flex justify-content-center mb-3 pb-2 border-bottom">
+                    <mat-icon class="mr-2">done_all</mat-icon>
+                    <span>Completed</span>
+                </mat-card-title>
+                <mat-card-content>
+                    <div class="list-group" *ngIf="closedCycles.length; else noClosedCycles">
+                        <ng-container *ngFor="let cycle of closedCycles as cycles">
+                            <div class="list-group-item list-group-item-action">
+                                <!-- list group item heading -->
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">Closed</h5>
+                                    <mat-icon>check_circle</mat-icon>
+                                </div>
+                                <p class="mb-1">From: {{ cycle.startDate | date:'shortDate' }}</p>
+                                <p class="mb-1">To: {{ cycle.endDate | date:'shortDate' }}</p>
+                                <div class="d-flex w-100" [class.justify-content-between]="cycle.payrolls.length"
+                                    [class.justify-content-end]="!cycle.payrolls.length">
+                                    <small *ngIf="cycle.payrolls.length">
+                                        {{ cycle.payrolls.length }} Paychecks
+                                    </small>
+                                    <small>{{ getHumanReadableDuration(cycle) }}</small>
+                                </div>
+                                
+                            </div>
+                        </ng-container>
+                    </div>
+                    <ng-template #noClosedCycles>
+                        <div class="d-flex w-100 justify-content-center">
+                            <h5 class="text-muted font-italic">No Closed Runs</h5>
+                        </div>
+                    </ng-template>
+                </mat-card-content>
+            </mat-card>
+        </div>
+    </div>
+
+    <!-- <ng-container *ngIf="displayCycles != null && (displayCycles|async).length; else noCycles">
         <div class="row" *ngFor="let cycle of displayCycles|async as cycles">
             <div class="col-md-12">
                 <mat-card [ngClass]="getBorderColor(cycle, 'left')">
@@ -114,9 +218,6 @@
                                 </button>
                             </ng-template>
                         </div>
-                        <!-- <button type="button" mat-icon-button color="primary" (click)="editPayCycle(cycle)">
-                            <mat-icon>edit</mat-icon>
-                        </button> -->
                     </mat-card-title>
                     <mat-card-content>
                         <p>
@@ -137,6 +238,6 @@
                 <h5 class="text-center text-muted font-italic">No Payroll Cycles to display.</h5>
             </div>
         </div>
-    </ng-template>
+    </ng-template> -->
     
 </div>

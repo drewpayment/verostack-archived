@@ -1,0 +1,17 @@
+
+.list-group { 
+    min-height: 116px;
+    background-color: rgba(50,50,50,0.05);
+    border-radius: 0.25rem;
+}
+
+.cdk-drag {
+
+    &:hover {
+        cursor: grab;
+    }
+
+    &:active {
+        cursor: grabbing;
+    }
+}

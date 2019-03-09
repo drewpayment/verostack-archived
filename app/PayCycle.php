@@ -33,6 +33,16 @@ class PayCycle extends Model
         $this->attributes['is_closed'] = $value == true ? 1 : 0;
     }
 
+    public function getIsLockedAttribute($value)
+    {
+        return $value == 1;
+    }
+
+    public function setIsLockedAttribute($value)
+    {
+        $this->attributes['is_locked'] = $value == true ? 1 : 0;
+    }
+
     /**
      * Get a list of related daily sales. 
      *
@@ -49,6 +59,11 @@ class PayCycle extends Model
     }
 
     /** QUERY HELPERS */
+
+    public function scopeByClient($query, $id)
+    {
+        return $query->where('client_id', $id);
+    }
 
     /**
      * Filters return from sql by pay_cycle_id column.

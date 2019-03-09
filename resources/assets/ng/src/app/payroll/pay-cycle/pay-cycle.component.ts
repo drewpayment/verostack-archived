@@ -7,13 +7,14 @@ import { FormBuilder } from '@angular/forms';
 import { MessageService } from '@app/message.service';
 import { PayCycle } from '@app/models/pay-cycle.model';
 import { Router } from '@angular/router';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, forkJoin } from 'rxjs';
 import { PayCycleDialogComponent } from './components/pay-cycle-dialog/pay-cycle-dialog.component';
 import { Moment } from 'moment';
 import * as moment from 'moment';
 import { map } from 'rxjs/operators';
 import { PayrollService } from '@app/payroll/payroll.service';
 import { PayCycleService } from './pay-cycle.service';
+import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 
 
 @Component({
@@ -28,7 +29,11 @@ export class PayCycleComponent implements OnInit {
     campaigns:ICampaign[];
     private _cycles:PayCycle[];
     displayCycles:BehaviorSubject<PayCycle[]> = new BehaviorSubject<PayCycle[]>([]);
-    showClosed:boolean = false;
+    showClosed = false;
+
+    todoCycles:PayCycle[];
+    lockedCycles:PayCycle[];
+    closedCycles:PayCycle[];
 
     constructor(
         private session:SessionService,
@@ -42,21 +47,43 @@ export class PayCycleComponent implements OnInit {
 
     ngOnInit() {
         this.session.showLoader();
-        this.session.userItem.subscribe(user => {
-            if(user == null || this.user != null) return;
-            this.user = user;
+        this.session.getUserItem().subscribe(u => {
+            if (u == null) return;
+            this.user = u;
 
-            this.campaignService.getCampaignsByClient(this.user.sessionUser.sessionClient)
-                .subscribe(campaigns => this.campaigns = campaigns);
+            forkJoin(
+                this.campaignService.getCampaignsByClient(this.user.sessionUser.sessionClient),
+                this.payCycleService.getPayCycles(this.user.sessionUser.sessionClient)
+            ).subscribe(([campaigns, cycles]) => {
+                this.campaigns = campaigns;
+                this._cycles = cycles;
 
-            this.payCycleService.getPayCycles(this.user.sessionUser.sessionClient, true)
-                .subscribe(cycles => {
-                    this._cycles = cycles;
-                    this.getActive();
-
-                    this.session.hideLoader();
-                });
+                this._filterCycles();
+                // this.getActive();
+                this.session.hideLoader();
+            });
         });
+    }
+
+    drop(event:CdkDragDrop<PayCycle[]>) {
+        if (event.previousContainer === event.container) {
+            moveItemInArray<PayCycle>(event.container.data, event.previousIndex, event.currentIndex);
+        } else {
+            transferArrayItem<PayCycle>(event.previousContainer.data,
+                event.container.data,
+                event.previousIndex,
+                event.currentIndex);
+        }
+    }
+
+    private _filterCycles() {
+        this.todoCycles = this._cycles.filter(c => !c.isClosed && !c.isLocked);
+        this.lockedCycles = this._cycles.filter(c => !c.isClosed && c.isLocked);
+        this.closedCycles = this._cycles.filter(c => c.isClosed);
+    }
+
+    getHumanReadableDuration(cycle:PayCycle):string {
+        return this.today.to(cycle.createdAt);
     }
 
     addPayCycle() {
@@ -110,13 +137,13 @@ export class PayCycleComponent implements OnInit {
     getCycleStatus(cycle:PayCycle):string {
         let message = '';
 
-        if(cycle.payrolls != null && cycle.payrolls.length > 0)
+        if (cycle.payrolls != null && cycle.payrolls.length > 0)
             return 'Complete. Ready to release.';
 
-        if(moment(cycle.endDate).isSameOrBefore(moment(), 'day'))
+        if (moment(cycle.endDate).isSameOrBefore(moment(), 'day'))
             return 'Due for release.';
 
-        if(!cycle.isPending && !cycle.isClosed) {
+        if (!cycle.isPending && !cycle.isClosed) {
             message = 'Get started.';
         } else if (cycle.isPending && !cycle.isClosed) {
             message = 'Pending.';

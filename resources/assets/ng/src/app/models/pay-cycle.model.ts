@@ -8,6 +8,7 @@ export interface PayCycle {
     endDate:string | Moment,
     isPending:boolean,
     isClosed:boolean,
+    isLocked:boolean,
     createdAt?:string | Moment,
     updatedAt?:string | Moment,
 
