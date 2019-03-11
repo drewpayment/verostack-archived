@@ -49,12 +49,13 @@ class PayCycleController extends Controller
 
         $dto = (object)$request;
         $cycle = new PayCycle;
+        $cycle->client_id = $clientId;
         $cycle->start_date = $dto->startDate;
         $cycle->end_date = $dto->endDate;
         $cycle->is_pending = $dto->isPending;
+        $cycle->is_locked = $dto->isLocked;
         $cycle->is_closed = $dto->isClosed;
-        $cycle->created_at = date_create()->format('Y-m-d H:i:s');
-        $cycle->updated_at = date_create()->format('Y-m-d H:i:s');
+        $cycle->timestamps();
 
         $res = $cycle->save();
 
@@ -91,6 +92,7 @@ class PayCycleController extends Controller
         $cycle->end_date = $dto['endDate'];
         $cycle->is_pending = $dto['isPending'];
         $cycle->is_closed = $dto['isClosed'];
+        $cycle->is_locked = $dto['isLocked'];
 
         $saved = $cycle->save();
 

@@ -147,7 +147,7 @@ export class PaycheckListComponent implements OnInit {
     }
 
     filterTable(filterValue:string):void {
-        if(filterValue == null) {
+        if (filterValue == null) {
             this.paychecks$.next(this._paychecks);
             return;
         }
@@ -182,13 +182,13 @@ export class PaycheckListComponent implements OnInit {
         const value = event.value;
 
         // add our search input
-        if((value || '').trim()) {
+        if ((value || '').trim()) {
             this.inputs.push(value.trim());
             this.filterTable(value.trim());
         }
 
         // clear our input value
-        if(input) {
+        if (input) {
             input.value = '';
         }
     }
@@ -260,7 +260,7 @@ export class PaycheckListComponent implements OnInit {
     ):void {
         page++; // we need to increment the value of "page" because matpaginator uses 0-based indexing and laravel pagination starts at 1
 
-        if(this.startDateCtrl.value && this.endDateCtrl.value) {
+        if (this.startDateCtrl.value && this.endDateCtrl.value) {
             startDate = moment(this.startDateCtrl.value).format('YYYY-MM-DD');
             endDate = moment(this.endDateCtrl.value).format('YYYY-MM-DD');
         }
@@ -270,42 +270,32 @@ export class PaycheckListComponent implements OnInit {
                 this.paginator = paginator;
                 this.paging.length = this.paginator.total;
 
-                if(this.paginator.data == null) {
+                if (this.paginator.data == null) {
                     this._paychecks = [];
                     this.paychecks$.next(this._paychecks);
-                    return;
+                    return; 
                 }
 
                 let paychecks = this.paginator.data.sort((a, b) => {
-                    if(a.agent.lastName < b.agent.lastName)
+                    if (a.agent.lastName < b.agent.lastName)
                         return -1;
-                    if(a.agent.lastName > b.agent.lastName)
+                    if (a.agent.lastName > b.agent.lastName)
                         return 1;
                     return 0;
                 }).sort((a, b) => {
-                    if(a.agent.firstName < b.agent.firstName)
+                    if (a.agent.firstName < b.agent.firstName)
                         return -1;
-                    if(a.agent.firstName > b.agent.firstName)
+                    if (a.agent.firstName > b.agent.firstName)
                         return 1;
                     return 0;
-                }).sort((a, b) => {
-                    if(<any>(Date.parse(<string>a.payroll.releaseDate) > Date.parse(<string>b.payroll.releaseDate))) 
-                        return -1;
-                    if(<any>(Date.parse(<string>a.payroll.releaseDate) < Date.parse(<string>b.payroll.releaseDate)))
-                        return 1;
-                    return 0;
-                });
+                })
+                .sort((a, b) => (<any>new Date(<any>b.payroll.releaseDate - <any>new Date(<any>a.payroll.releaseDate))));
                 
                 paychecks = paychecks.map(p => {
                     p.payroll.campaign = this.campaigns$.value.find(c => c.campaignId == p.payroll.campaignId);
                     p.grossTotal = this.calculateGrossTotal(p);
                     return p;
                 });
-
-                if(paychecks != null && this.startDate == null && this.endDate == null) {
-                    this.startDate = paychecks[paychecks.length - 1].payroll.payCycle.startDate;
-                    this.endDate = paychecks[0].payroll.payCycle.endDate;
-                }
                 
                 this._paychecks = paychecks;
                 this.paychecks$.next(paychecks);
@@ -313,9 +303,9 @@ export class PaycheckListComponent implements OnInit {
     }
 
     private calculateGrossTotal(detail:PayrollDetails):number {
-        let amount = coerceNumberProperty(detail.grossTotal);
-        let expensesTotal:number = 0;
-        let overridesTotal:number = 0;
+        const amount = coerceNumberProperty(detail.grossTotal);
+        let expensesTotal = 0;
+        let overridesTotal = 0;
 
         detail.expenses.forEach(e => expensesTotal += coerceNumberProperty(e.amount));
         detail.overrides.forEach(o => overridesTotal += (coerceNumberProperty(o.amount) * coerceNumberProperty(o.units)));

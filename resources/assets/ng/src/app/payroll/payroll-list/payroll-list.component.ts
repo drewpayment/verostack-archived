@@ -129,7 +129,7 @@ export class PayrollListComponent implements OnInit {
         })
         .afterClosed()
         .subscribe(result => {
-            if(result == null) return;
+            if (result == null) return;
 
             const payrollIds = this.selection.selected.map(p => p.payrollId);
 
@@ -138,7 +138,7 @@ export class PayrollListComponent implements OnInit {
                     // TODO: Do we really need to do this? Can't we just pass "payrolls" return from the API into setPayrolls()?
                     payrolls.forEach(p => {
                         this._payrolls.forEach((pp, i, a) => {
-                            if(pp.payrollId == p.payrollId) 
+                            if (pp.payrollId == p.payrollId) 
                                 a[i] = p;
                         });
                     });
@@ -177,7 +177,7 @@ export class PayrollListComponent implements OnInit {
             })
             .afterClosed()
             .subscribe(result => {
-                if(result == null) return;
+                if (result == null) return;
                 this.filters = result;
                 this.setActiveFiltersStatus();    
                 this.applyFilters();            
@@ -185,12 +185,12 @@ export class PayrollListComponent implements OnInit {
     }
 
     getFilteredAgent(agentId:number):IAgent {
-        if(this.agents == null || !this.agents.length) return {};
+        if (this.agents == null || !this.agents.length) return {};
         return this.agents.find(a => a.agentId == agentId);
     }
 
     getFilteredCampaign(campaignId:number):ICampaign {
-        if(this.campaigns == null || !this.campaigns.length) return {} as ICampaign;
+        if (this.campaigns == null || !this.campaigns.length) return {} as ICampaign;
         return this.campaigns.find(c => c.campaignId == campaignId);
     }
 
@@ -205,7 +205,7 @@ export class PayrollListComponent implements OnInit {
 
     removeFilter(filterType:PayrollFilterType) {
         this.removeActiveFilter(filterType);
-        switch(filterType) {
+        switch (filterType) {
             case PayrollFilterType.startDate:
                 this.filters.startDate = null;
                 break;
@@ -270,28 +270,33 @@ export class PayrollListComponent implements OnInit {
         })
         .afterClosed()
         .subscribe((result:PayrollDetails) => {
-            if(result == null) return;
+            if (result == null) return;
 
-            if(isNaN((<any>result.taxes).charAt(0)))
+            /** I believe this is removing the $ from the string? */
+            if (isNaN((<any>result.taxes).charAt(0)))
                 result.taxes = (<any>result.taxes).slice(0, 1);
-            if(isNaN((<any>result.grossTotal).charAt(0)))
+            if (isNaN((<any>result.grossTotal).charAt(0)))
                 result.grossTotal = (<any>result.grossTotal).slice(0, 1);
-            if(isNaN((<any>result.netTotal).charAt(0)))
+            if (isNaN((<any>result.netTotal).charAt(0)))
                 result.netTotal = (<any>result.netTotal).slice(0, 1);
 
             result.overrides.forEach((o, i, a) => {
-                if(isNaN((<any>o.amount).charAt(0)))
+                if (isNaN((<any>o.amount).charAt(0)))
                     a[i].amount = (<any>o.amount).slice(1);
             });
 
             result.expenses.forEach((e, i, a) => {
-                if(isNaN((<any>e.amount).charAt(0)))
+                if (isNaN((<any>e.amount).charAt(0)))
                     a[i].amount = (<any>e.amount).slice(1);
+
+                a[i].expenseId = e.expenseId > 0 ? e.expenseId : null;
             });
             
             this.service.savePayrollDetails(this.user.sessionUser.sessionClient, result)
                 .subscribe(res => {
                     this.setPayrolls(res);
+                    this.applyFilters();
+
                     this.msg.addMessage('Successfully updated overrides & expenses.', 'dismiss', 5000);
                 });
         });
@@ -425,13 +430,13 @@ export class PayrollListComponent implements OnInit {
                 this.setPayrolls(payrolls);
                 this.applyFilters();
 
-                if(this.agents == null) 
+                if (this.agents == null) 
                     this.agents = [];
 
                 this._payrolls.forEach(p => {
                     p.details.forEach(d => {
-                        if(d.agent == null) return;
-                        if(this.agents.find(a => a.agentId == d.agentId) != null)
+                        if (d.agent == null) return;
+                        if (this.agents.find(a => a.agentId == d.agentId) != null)
                             return;
                         this.agents = this.agents.concat(d.agent);
                     });

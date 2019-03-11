@@ -2,6 +2,7 @@
 
 namespace App\Http\Services;
 
+use App\User;
 use App\Agent;
 use App\Expense;
 use App\Payroll;
@@ -78,21 +79,31 @@ class PayrollService
     {
         $result = new ApiResource();
 
-        $payrolls = Payroll::with(['details.agent', 'details.expenses', 'details.overrides', 'payCycle'])->byClient($clientId)->get();
+        $payrolls = Payroll::with(['details.agent', 'details.expenses', 'details.overrides', 'payCycle'])
+            ->byClient($clientId)->get();
 
         if(count($payrolls) < 1) return $result;
 
-        $children = Agent::byManager($userId)->get();
+        $userType = User::with('role')->userId($userId)->first()->role->role;
 
-        if(count($children) > 0)
+        /**
+         * TODO: Critical! This isn't working right.. it is returning an object to the frontend for some reason... 
+         * needs to transform to an array... 
+         */
+        if($userType < 6) 
         {
-            $payrolls = $payrolls->filter(function ($p, $i) use ($children) {
-                return $p->details->contains(function ($d, $j) use ($children) {
-                    return $children->first(function ($c) use ($d) { 
-                            return $c->agent_id == $d->agent_id; 
-                        }) != null; 
-                });
-            });
+            $children = Agent::byManager($userId)->get();
+
+            if(count($children) > 0)
+            {
+                $payrolls = $payrolls->filter(function ($p, $i) use ($children) {
+                    return $p->details->contains(function ($d, $j) use ($children) {
+                        return $children->first(function ($c) use ($d) { 
+                                return $c->agent_id == $d->agent_id; 
+                            }) != null; 
+                    });
+                })->toCollect();
+            }
         }
         
         return $result->setData($payrolls);

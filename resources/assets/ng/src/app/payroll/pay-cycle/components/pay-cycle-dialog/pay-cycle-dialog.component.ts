@@ -19,7 +19,7 @@ interface DialogData {
 })
 export class PayCycleDialogComponent implements OnInit {
     user:User;
-    isNewDialog:boolean = false;
+    isNewDialog = false;
 
     form:FormGroup = this.createForm();
 
@@ -48,9 +48,9 @@ export class PayCycleDialogComponent implements OnInit {
             this.service.getLastPayCycle(user.sessionUser.sessionClient)
                 .subscribe(lastCycle => {
                     this.lastPayCycle = lastCycle;
-                    if(this.lastPayCycle == null) return;
+                    if (this.lastPayCycle == null) return;
                     const endDate = moment(this.lastPayCycle.endDate);
-                    if(endDate.isValid())
+                    if (endDate.isValid())
                         this.minimumDate = endDate.add(1, 'd');
                 });
         });
@@ -62,7 +62,7 @@ export class PayCycleDialogComponent implements OnInit {
 
     /** save the form */
     saveForm() {
-        if(this.form.invalid) return;
+        if (this.form.invalid) return;
 
         const model = this.prepareModel();
 

@@ -85,13 +85,7 @@ class PayrollDetailsService
             ->latest('release_date', 'desc')
             ->when($filterByDates, function($qry) use ($request) {
                 $qry->whereHas('payroll', function($pq) use ($request) {
-                    $pq->where('is_released', 1)
-                        ->whereBetween('release_date', [$request->startDate, $request->endDate]);
-                });
-            })
-            ->when(!$filterByDates, function($query) {
-                $query->whereHas('payroll', function($pq) {
-                    $pq->where('is_released', 1);
+                    $pq->whereBetween('release_date', [$request->startDate, $request->endDate]);
                 });
             })
             ->paginate($request->resultsPerPage, ['*'], 'page', $request->page);

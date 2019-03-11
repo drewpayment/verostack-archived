@@ -24,9 +24,9 @@ export class PaycheckService {
     ):Observable<Paginator<PayrollDetails>> {
         const url = `${this.api}/clients/${clientId}/payroll-details`;
         let params = new HttpParams().set('page', page.toString());
-        if(resultsPerPage) params = params.append('resultsPerPage', resultsPerPage.toString());
-        if(startDate && endDate) {
-            if(startDate == null || endDate == null) 
+        if (resultsPerPage) params = params.append('resultsPerPage', resultsPerPage.toString());
+        if (startDate && endDate) {
+            if (startDate == null || endDate == null) 
                 throw new Error('Both start date and end date are required if you select one.');
             params = params.append('startDate', moment(startDate).format('YYYY-MM-DD'));
             params = params.append('endDate', moment(endDate).format('YYYY-MM-DD'));

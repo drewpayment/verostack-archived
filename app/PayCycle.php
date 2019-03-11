@@ -13,6 +13,8 @@ class PayCycle extends Model
 
     protected $primaryKey = 'pay_cycle_id';
 
+    protected $fillable = ['pay_cycle_id', 'client_id', 'start_date', 'end_date', 'is_pending', 'is_locked', 'is_closed'];
+
     public function getIsPendingAttribute($value)
     {
         return $value == 1;

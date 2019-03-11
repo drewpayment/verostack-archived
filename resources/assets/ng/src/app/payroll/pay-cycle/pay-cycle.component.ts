@@ -16,6 +16,11 @@ import { PayrollService } from '@app/payroll/payroll.service';
 import { PayCycleService } from './pay-cycle.service';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 
+enum DropListType {
+    Todo,
+    Locked,
+    Closed
+}
 
 @Component({
     selector: 'vs-pay-cycle',
@@ -65,21 +70,56 @@ export class PayCycleComponent implements OnInit {
         });
     }
 
-    drop(event:CdkDragDrop<PayCycle[]>) {
+    drop(event:CdkDragDrop<PayCycle[]>, type:DropListType) {
+
+        /** Simply reorganizing the list... we don't support manual ordering right now */
         if (event.previousContainer === event.container) {
             moveItemInArray<PayCycle>(event.container.data, event.previousIndex, event.currentIndex);
         } else {
+            this.session.showLoader();
+
             transferArrayItem<PayCycle>(event.previousContainer.data,
                 event.container.data,
                 event.previousIndex,
                 event.currentIndex);
+
+            const cycle = event.container.data[event.currentIndex];
+
+            if (type == DropListType.Todo) {
+                cycle.isPending = true;
+                cycle.isLocked = false;
+                cycle.isClosed = false;
+            } else if (type == DropListType.Locked) {
+                cycle.isLocked = true;
+                cycle.isClosed = false;
+            } else if (type == DropListType.Closed) {
+                cycle.isPending = false;
+                cycle.isLocked = false;
+                cycle.isClosed = true;
+            }
+
+            this.payCycleService.updatePayCycle(this.user.sessionUser.sessionClient, cycle.payCycleId, cycle)
+                .subscribe(result => {
+                    this._cycles.forEach((c, i, a) => {
+                        if (c.payCycleId != result.payCycleId) return;
+                        a[i] = result;
+                    });
+
+                    this.session.hideLoader();
+
+                    /** This will run logic to make available in paycheck list */
+                    if (type == DropListType.Locked) this.processPayroll(result);
+                });
         }
     }
 
     private _filterCycles() {
-        this.todoCycles = this._cycles.filter(c => !c.isClosed && !c.isLocked);
-        this.lockedCycles = this._cycles.filter(c => !c.isClosed && c.isLocked);
-        this.closedCycles = this._cycles.filter(c => c.isClosed);
+        this.todoCycles = this._cycles.filter(c => !c.isClosed && !c.isLocked)
+            .sort((a, b) => <any>new Date(<any>b.startDate) - <any>new Date(<any>a.startDate));
+        this.lockedCycles = this._cycles.filter(c => !c.isClosed && c.isLocked)
+            .sort((a, b) => <any>new Date(<any>b.startDate) - <any>new Date(<any>a.startDate));
+        this.closedCycles = this._cycles.filter(c => c.isClosed)
+            .sort((a, b) => <any>new Date(<any>b.startDate) - <any>new Date(<any>a.startDate));
     }
 
     getHumanReadableDuration(cycle:PayCycle):string {
@@ -91,13 +131,16 @@ export class PayCycleComponent implements OnInit {
             width: '50vw'
         })
         .afterClosed()
-        .subscribe(result => {
-            if(result == null) return;
+        .subscribe((result:PayCycle) => {
+            if (result == null) return;
+
             this.payCycleService.savePayCycle(this.user.sessionUser.sessionClient, result)
                 .subscribe(cycle => {
                     this.msg.addMessage('Successfully created pay cycle!', 'dismiss', 5000);
                     this._cycles.push(cycle);
                     this.displayCycles.next(this._cycles);
+
+                    this._filterCycles();
                 });
         });
     }
@@ -205,12 +248,12 @@ export class PayCycleComponent implements OnInit {
             ).pipe(
                 map(sales => {
                     const campaigns = sales.map(s => s.campaignId).filter((s, i, a) => a.indexOf(s) === i);
-                    let payrollResults:Payroll[] = [];
+                    const payrollResults:Payroll[] = [];
                     
                     campaigns.forEach(c => {
-                        let campaign = this.campaigns.find(camp => camp.campaignId === c);
-                        let filteredSales = sales.filter(s => s.campaignId == c);
-                        let payroll:Payroll = {
+                        const campaign = this.campaigns.find(camp => camp.campaignId === c);
+                        const filteredSales = sales.filter(s => s.campaignId == c);
+                        const payroll:Payroll = {
                             payrollId: null,
                             payCycleId: cycle.payCycleId,
                             campaignId: c,
@@ -257,9 +300,9 @@ export class PayCycleComponent implements OnInit {
             .subscribe(sales => {
                 this.payrollService.savePayrollList(this.user.sessionUser.sessionClient, sales)
                     .subscribe(payrolls => {
-                        this.msg.addMessage('Successfully processed payroll.');
+                        this.msg.addMessage('Successfully processed payroll.', 'dismiss', 2500);
                         
-                        if(cycle.payrolls.length)
+                        if (cycle.payrolls != null && cycle.payrolls.length)
                             cycle.payrolls.concat(payrolls);
                         else 
                             cycle.payrolls = payrolls;
