@@ -179,7 +179,7 @@ class PayrollService
         foreach($dto->overrides as $ovr)
         {
             if(is_null($ovr['overrideId']))
-                $o = new Override;
+                $o = new Override();
             else
                 $o = Override::byOverride($ovr['overrideId'])->first();
 
@@ -194,12 +194,14 @@ class PayrollService
         }
 
         $expenses = [];
-        foreach($detail->expenses as $exp)
+        foreach($dto->expenses as $exp)
         {
-            if(is_null($exp['expenseId']))
-                $e = new Expense;
-            else
+            if(is_null($exp['expenseId'])) {
+                $e = new Expense();
+            }
+            else {
                 $e = Expense::byExpense($exp['expenseId'])->first();
+            }
 
             $e->payroll_details_id = $dto->payrollDetailsId;
             $e->agent_id = $dto->agentId;

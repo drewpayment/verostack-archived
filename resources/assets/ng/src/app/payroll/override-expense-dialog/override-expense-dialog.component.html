@@ -40,8 +40,8 @@
                         <div>
                             <mat-form-field class="w-100">
                                 <input type="text" matInput
-                                    placeholder="Amount per Unit"
-                                    (blur)="formatCurrencyOnBlur(f.get(['overrides', i, 'amount']), $event)"
+                                    placeholder="Amount per Unit"        
+                                    (ngModelChange)="updateOverrideAmount($event, i)"                          
                                     formControlName="amount"
                                     required />
                                 <mat-error *ngIf="f.get(['overrides', i, 'amount']).hasError('required')">
@@ -90,7 +90,7 @@
                             <mat-form-field class="w-100">
                                 <input type="text" matInput
                                     placeholder="Amount"
-                                    (blur)="formatCurrencyOnBlur(f.get(['expenses', i, 'amount']), $event)"
+                                    (ngModelChange)="updateExpenseAmount($event, i)"
                                     formControlName="amount"
                                     required
                                 />
@@ -124,7 +124,7 @@
                                 <textarea matInput 
                                     placeholder="Description" 
                                     formControlName="description"
-                                    rows="5"
+                                    rows="2"
                                 ></textarea>
                             </mat-form-field>
                         </div>

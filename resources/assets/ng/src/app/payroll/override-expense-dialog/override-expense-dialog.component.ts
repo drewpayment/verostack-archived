@@ -1,8 +1,11 @@
-import {Component, OnInit, Inject, ViewChild} from '@angular/core';
+import {Component, OnInit, Inject, ViewChild, AfterViewInit} from '@angular/core';
 import { PayrollDetails, IAgent, IOverride, IExpense } from '@app/models';
 import { MatDialogRef, MAT_DIALOG_DATA, MatTab } from '@angular/material';
 import { FormGroup, FormBuilder, FormArray, Validators, FormControl } from '@angular/forms';
 import { trigger, transition, style, animate } from '@angular/animations';
+import { DEFAULT_VALUE_ACCESSOR } from '@angular/forms/src/directives/default_value_accessor';
+import { coerceNumberProperty } from '@app/utils';
+import { CurrencyPipe } from '@angular/common';
 
 interface DialogData {
     detail:PayrollDetails,
@@ -26,9 +29,10 @@ interface DialogData {
                 ])
             ]
         )
-    ]
+    ],
+    providers: [CurrencyPipe]
 })
-export class OverrideExpenseDialogComponent implements OnInit {
+export class OverrideExpenseDialogComponent implements OnInit, AfterViewInit {
 
     detail:PayrollDetails;
     agents:IAgent[];
@@ -40,7 +44,8 @@ export class OverrideExpenseDialogComponent implements OnInit {
     constructor(
         private ref:MatDialogRef<OverrideExpenseDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data:DialogData,
-        private fb:FormBuilder
+        private fb:FormBuilder,
+        private currencyPipe:CurrencyPipe
     ) {
         this.detail = this.data.detail || {} as PayrollDetails;
         this.agents = this.data.agents || [];
@@ -48,6 +53,12 @@ export class OverrideExpenseDialogComponent implements OnInit {
 
     ngOnInit() {
         if(this.detail != null) this.buildFormArrays();
+    }
+
+    ngAfterViewInit() {
+        // this.f.valueChanges.subscribe(value => {
+        //     this.updateOverrideAmount(value);
+        // });
     }
 
     addAdjustment() {
@@ -111,6 +122,28 @@ export class OverrideExpenseDialogComponent implements OnInit {
         element.patchValue(result);
     }
 
+    updateOverrideAmount(value:string, index:number) {
+        const control = this.f.get(['overrides', index, 'amount']) as FormControl;
+
+        if (isNaN(<any>value.charAt(0))) {
+            const val = coerceNumberProperty(value.slice(1, value.length));
+            control.setValue(this.currencyPipe.transform(val), { emitEvent: false, emitViewToModelChange: false });
+        } else {
+            control.setValue(this.currencyPipe.transform(value), { emitEvent: false, emitViewToModelChange: false });
+        }
+    }
+
+    updateExpenseAmount(value:string, index:number) {
+        const control = this.f.get(['expenses', index, 'amount']) as FormControl;
+
+        if (isNaN(<any>value.charAt(0))) {
+            const val = coerceNumberProperty(value.slice(1, value.length));
+            control.setValue(this.currencyPipe.transform(val), { emitEvent: false, emitViewToModelChange: false });
+        } else {
+            control.setValue(this.currencyPipe.transform(value), { emitEvent: false, emitViewToModelChange: false });
+        }
+    }
+
     saveForm() {
         if(!this.f.valid) return;
         const model = this.prepareModel();
@@ -161,13 +194,16 @@ export class OverrideExpenseDialogComponent implements OnInit {
     }
 
     private addOverrideFormItem() {
-        (<FormArray>this.f.get('overrides')).push(this.fb.group({
+        const control = this.fb.group({
             overrideId: this.fb.control(''),
             payrollDetailsId: this.fb.control(this.detail.payrollDetailsId),
             agentId: this.fb.control('', [Validators.required]),
             units: this.fb.control('', [Validators.required]),
-            amount: this.fb.control('', [Validators.required])
-        }));
+            amount: this.fb.control('', { validators: Validators.required, updateOn: 'blur' })
+        });
+
+        (<FormArray>this.f.get('overrides')).push(control);
+
         this.detail.overrides.push({
             overrideId: null,
             payrollDetailsId: this.detail.payrollDetailsId,
@@ -184,7 +220,7 @@ export class OverrideExpenseDialogComponent implements OnInit {
             agentId: this.fb.control(this.detail.agentId),
             title: this.fb.control(''),
             description: this.fb.control(''),
-            amount: this.fb.control('', [Validators.required]),
+            amount: this.fb.control('', { validators: Validators.required, updateOn: 'blur' }),
             expenseDate: this.fb.control('', [Validators.required])
         }));
         this.detail.expenses.push({
@@ -218,23 +254,25 @@ export class OverrideExpenseDialogComponent implements OnInit {
                 payrollDetailsId: this.fb.control(o.payrollDetailsId),
                 agentId: this.fb.control(o.agentId, [Validators.required]),
                 units: this.fb.control(o.units, [Validators.required]),
-                amount: this.fb.control(o.amount, [Validators.required])
+                amount: this.fb.control(this.currencyPipe.transform(o.amount), { validators: Validators.required, updateOn: 'blur' })
             }));
         });
     }
 
     private createExpensesFormArray() {
-        if(this.detail.expenses == null || this.detail.expenses.length == 0) return;
+        if (this.detail.expenses == null || this.detail.expenses.length == 0) return;
         this.detail.expenses.forEach(e => {
-            (<FormArray>this.f.get('expenses')).push(this.fb.group({
+            const control = this.fb.group({
                 expenseId: this.fb.control(e.expenseId),
                 payrollDetailsId: this.fb.control(e.payrollDetailsId),
                 agentId: this.fb.control(e.agentId),
                 title: this.fb.control(e.title),
                 description: this.fb.control(e.description),
-                amount: this.fb.control(e.amount, [Validators.required]),
+                amount: this.fb.control(this.currencyPipe.transform(e.amount), { validators: Validators.required, updateOn: 'blur' }),
                 expenseDate: this.fb.control(e.expenseDate, [Validators.required])
-            }));
+            });
+
+            (<FormArray>this.f.get('expenses')).push(control);
         });
     }
 
