@@ -328,9 +328,9 @@ export class AgentComponent implements OnInit, AfterViewChecked, OnDestroy {
         (<FormControl>form.get('commission'))
                 .setValue(formattedValue, { emitEvent: false, emitViewToModelChange: false });
 
-        if (form.invalid) return;
+        // if (form.invalid) return;
 
-        this.savePairingUpdate(form, user);
+        // this.savePairingUpdate(form, user);
     }
 
     private refreshAgents():void {
