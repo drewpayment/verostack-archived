@@ -58,12 +58,6 @@
                                 <span>Edit</span> 
                             </button>
                         </mat-menu>
-                        <!-- <button class="p-0 hover-item" type="button" mat-icon-button>
-                            <i class="mdi mdi-security-lock mat-accent"></i>
-                        </button>
-                        <button class="p-0 hover-item" type="button" mat-icon-button (click)="editAgent(user)">
-                            <mat-icon color="accent">edit</mat-icon>
-                        </button> -->
                     </div>
                 </div>
                 <div class="card-body" [class.card-body-auto]="user.display === 2">
@@ -132,8 +126,8 @@
                             <mat-card *ngFor="let pairing of user.agent.pairings; let i=index">
                                 <mat-card-content [formGroupName]="i" class="mb-0">
                                     <div class="row">
-                                        <div class="col-md-6">
-                                            <mat-form-field>
+                                        <div class="col-md-4">
+                                            <mat-form-field class="wp-100">
                                                 <mat-select placeholder="Campaign" formControlName="campaignId" required>
                                                     <mat-option *ngFor="let campaign of campaigns" [value]="campaign.campaignId">
                                                         {{campaign.name}}
@@ -144,8 +138,8 @@
                                                 </mat-error>
                                             </mat-form-field>
                                         </div>
-                                        <div class="col-md-6 d-flex">
-                                            <mat-form-field class="flex-grow-1">
+                                        <div class="col-md-4 d-flex">
+                                            <mat-form-field class="wp-100 flex-grow-1">
                                                 <input matInput type="text" placeholder="Code" formControlName="salesId" required #pairingRows />
                                                 <mat-icon matSuffix
                                                     color="primary"
@@ -156,6 +150,12 @@
                                                 <mat-error *ngIf="user.pairingsForm.controls['array'].controls[i].hasError('required')">
                                                     Please enter a sales ID.
                                                 </mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <mat-form-field class="wp-100">
+                                                <input type="text" matInput placeholder="Commission" formControlName="commission" 
+                                                    (ngModelChange)="updateCommission(user, $event, i)" />
                                             </mat-form-field>
                                         </div>
                                     </div>

@@ -1,11 +1,11 @@
-import {Component, OnInit, ViewChildren, QueryList, ElementRef, AfterViewInit, OnDestroy, ContentChildren, AfterContentInit, AfterContentChecked, AfterViewChecked, ChangeDetectorRef} from '@angular/core';
+import {Component, OnInit, ViewChildren, QueryList, ElementRef, OnDestroy, AfterViewChecked, ChangeDetectorRef} from '@angular/core';
 import {AgentService} from '@app/agent/agent.service';
 import { IAgent, User, ICampaign } from '@app/models';
 import { Subject, Observable, Subscription } from 'rxjs';
 import { SessionService } from '@app/session.service';
 import * as _ from 'lodash';
 import * as moment from 'moment';
-import { MatDialog, MatInput, MatSelect, MatFormField, MatCard, MatSlideToggleChange } from '@angular/material';
+import { MatDialog, MatSlideToggleChange } from '@angular/material';
 import { AddAgentDialogComponent } from '@app/core/agents/dialogs/add-agent.component';
 import { FloatBtnService } from '@app/fab-float-btn/float-btn.service';
 import { map } from 'rxjs/operators';
@@ -16,6 +16,8 @@ import { ISalesPairing } from '@app/models/sales-pairings.model';
 import { CampaignService } from '@app/campaigns/campaign.service';
 import { MessageService } from '@app/message.service';
 import { AgentRulesDialogComponent } from '@app/agent/agent-rules-dialog/agent-rules-dialog.component';
+import { CurrencyPipe } from '@angular/common';
+import { coerceNumberProperty } from '@app/utils';
 
 interface DataStore {
     users:User[],
@@ -32,13 +34,13 @@ interface UserView extends User {
     pairingsForm:FormGroup
 }
 
-const PAIRING_KEYS:string[] = ['agentId', 'campaignId', 'clientId', 'salesId', 'salesPairingsId'];
+const PAIRING_KEYS:string[] = ['agentId', 'campaignId', 'commission', 'clientId', 'salesId', 'salesPairingsId'];
 
 @Component({
     selector: 'vs-agent',
     templateUrl: './agent.component.html',
     styleUrls: ['./agent.component.scss'],
-    providers: [FloatBtnService]
+    providers: [FloatBtnService, CurrencyPipe]
 })
 export class AgentComponent implements OnInit, AfterViewChecked, OnDestroy {
     user:User;
@@ -51,21 +53,21 @@ export class AgentComponent implements OnInit, AfterViewChecked, OnDestroy {
     form:FormGroup;
 
     searchContext:string;
-    showSearchContextChip:boolean = false;
+    showSearchContextChip = false;
     searchChipValue:string;
 
     /** internal use only to sort users */
     private _filteredUsers:UserView[];
-    sortAscending:boolean = true;
+    sortAscending = true;
 
     private _campaigns:ICampaign[];
     campaigns$:Subject<ICampaign[]> = new Subject<ICampaign[]>();
     campaigns:ICampaign[];
-    disableAddPairingBtn:boolean = false;
+    disableAddPairingBtn = false;
     @ViewChildren('pairingRows') pairingRows:QueryList<ElementRef>;
     private _pairingRowsSub:Subscription;
 
-    showInactive:boolean = true;
+    showInactive = true;
 
     constructor(
         private service:AgentService,
@@ -76,7 +78,8 @@ export class AgentComponent implements OnInit, AfterViewChecked, OnDestroy {
         private fb:FormBuilder,
         private msg:MessageService,
         private changeDetector:ChangeDetectorRef,
-        private userService:UserService
+        private userService:UserService,
+        private currencyPipe:CurrencyPipe
     ) {
         this.floatOpen$ = this.floatBtnService.opened$.asObservable();
         this.users = this.users$.asObservable();
@@ -86,8 +89,7 @@ export class AgentComponent implements OnInit, AfterViewChecked, OnDestroy {
 
     ngOnInit() {
         this.session.showLoader();
-        this.session.userItem.subscribe(user => {
-            if(user == null || this.user != null) return;
+        this.session.getUserItem().subscribe(user => {
             this.user = user;
             this.refreshAgents();
 
@@ -100,8 +102,9 @@ export class AgentComponent implements OnInit, AfterViewChecked, OnDestroy {
     }
 
     ngAfterViewChecked() {
-        this._pairingRowsSub = this.pairingRows.changes.subscribe(next => {
-            if(!this.pairingRows.length || !this.disableAddPairingBtn) return;
+        this._pairingRowsSub = this.pairingRows.changes.subscribe(() => {
+            if (!this.pairingRows.length || !this.disableAddPairingBtn)
+                return;
             this.pairingRows.last.nativeElement.focus();
             this.changeDetector.detectChanges();
         });
@@ -123,7 +126,7 @@ export class AgentComponent implements OnInit, AfterViewChecked, OnDestroy {
         .afterClosed()
         .subscribe(result => {
             this.floatBtnService.close();
-            if(result == null || !result) return;
+            if (result == null || !result) return;
             this.refreshAgents();
         });
     }
@@ -138,13 +141,13 @@ export class AgentComponent implements OnInit, AfterViewChecked, OnDestroy {
         })
         .afterClosed()
         .subscribe(result => {
-            if(result == null) return;
+            if (result == null) return;
             this.session.showLoader();
             this.userService.saveUserRoleEntity(result)
                 .subscribe(role => {
                     this.session.hideLoader();
                     this.store.users.forEach((u, i, a) => {
-                        if(u.id != role.userId) return;
+                        if (u.id != role.userId) return;
                         a[i].role = role;
                     });
 
@@ -153,16 +156,15 @@ export class AgentComponent implements OnInit, AfterViewChecked, OnDestroy {
     }
 
     saveNewPairing(form:FormGroup, user:UserView) {
-        if(form.invalid) return;
+        if (form.invalid) return;
         this.disableAddPairingBtn = false;
-        let model = this.preparePairingFromForm(form);
+        const model = this.preparePairingFromForm(form);
         model.agentId = model.agentId || user.agent.agentId;
 
         const isDuplicateEntry = this.isDuplicateCampaignPairing(user.agent.pairings, model.campaignId);
 
-        if(isDuplicateEntry) return;
+        if (isDuplicateEntry) return;
 
-        const isNewPairing:boolean = model.salesPairingsId == null || model.salesPairingsId < 1;
         this.session.showLoader();
 
         this.service.saveAgentSalesPairing(model, model.agentId)
@@ -182,14 +184,14 @@ export class AgentComponent implements OnInit, AfterViewChecked, OnDestroy {
      * @param user:@type UserView The agent that owns this entity.
      */
     savePairingUpdate(form:FormGroup, user:UserView) {
-        if(form.invalid) return;
-        let model = this.preparePairingFromForm(form);
+        if (form.invalid) return;
+        const model = this.preparePairingFromForm(form);
 
         this.session.showLoader();
         this.service.saveAgentSalesPairing(model, model.agentId)
             .subscribe(result => {
                 user.agent.pairings.forEach((p:ISalesPairing, i:number) => {
-                    if(p.salesPairingsId != result.salesPairingsId) return;
+                    if (p.salesPairingsId != result.salesPairingsId) return;
                     user.agent.pairings[i] = result;
                 });
 
@@ -201,11 +203,11 @@ export class AgentComponent implements OnInit, AfterViewChecked, OnDestroy {
     toggleAgents(event:MatSlideToggleChange):void {
         const showAll:boolean = event.checked;
 
-        if(showAll) {
+        if (showAll) {
             this.users$.next(this.store.users as UserView[]);
             this.showInactive = true;
         } else {
-            let filtered:UserView[] = this.store.users.filter(u => {
+            const filtered:UserView[] = this.store.users.filter(u => {
                 return u.agent.isActive == true;
             }) as UserView[];
             this.users$.next(filtered);
@@ -215,14 +217,16 @@ export class AgentComponent implements OnInit, AfterViewChecked, OnDestroy {
     }
 
     private resetPairingFormGroup(form:FormGroup, pairing:ISalesPairing):void {
-        form.reset();
         form.patchValue({
             salesPairingsId: pairing.salesPairingsId,
             salesId: pairing.salesId,
             campaignId: pairing.campaignId,
             clientId: pairing.clientId,
             agentId: pairing.agentId
-        });
+        }, { emitEvent: false });
+
+        const formatCommission = this.currencyPipe.transform(pairing.commission);
+        (<FormControl>form.get('commission')).setValue(formatCommission, { emitEvent: false, emitViewToModelChange: false });
     }
 
     private isDuplicateCampaignPairing(pairings:ISalesPairing[], proposedCampaignId:number):boolean {
@@ -230,7 +234,7 @@ export class AgentComponent implements OnInit, AfterViewChecked, OnDestroy {
             return p.campaignId == proposedCampaignId;
         });
 
-        if(existing) 
+        if (existing) 
             this.msg.addMessage('This agent already has a code for that campaign.', 'dismiss', 5000);
 
         return existing != null;
@@ -249,7 +253,7 @@ export class AgentComponent implements OnInit, AfterViewChecked, OnDestroy {
 
     addEmptyPairing(formArray:FormArray, existingPairings:ISalesPairing[]):void {
         this.disableAddPairingBtn = true;
-        if(existingPairings != null)
+        if (existingPairings != null)
             existingPairings.push({} as ISalesPairing);
         else 
             existingPairings = [{} as ISalesPairing];
@@ -260,11 +264,19 @@ export class AgentComponent implements OnInit, AfterViewChecked, OnDestroy {
     }
 
     private preparePairingFromForm(form:FormGroup):ISalesPairing {
+        let commission = form.value.commission != null 
+            ? form.value.commission.toString().slice(1, form.value.commission.toString().length)
+            : null;
+
+        if (commission != null) 
+            commission = coerceNumberProperty(commission);
+        
         return {
             salesPairingsId: form.value.salesPairingsId || 0,
             agentId: form.value.agentId,
             clientId: form.value.clientId || this.user.sessionUser.sessionClient,
             campaignId: form.value.campaignId,
+            commission: commission,
             salesId: form.value.salesId
         };
     }
@@ -280,15 +292,45 @@ export class AgentComponent implements OnInit, AfterViewChecked, OnDestroy {
         keys.forEach(k => {
             let validatorFn:(control:AbstractControl) => {};
             let formControl:FormControl;
-            if(k == 'salesId' || k == 'campaignId') {
+
+            // normalize
+            const key = k.trim().toLowerCase();
+
+            if (key == 'salesid' || key == 'campaignid') {
                 validatorFn = Validators.required;
                 formControl = this.fb.control(p[k] || '', [validatorFn]);
+            } else if (key == 'commission') {
+                const formattedValue = p[k] != null ? this.currencyPipe.transform(p[k]) : null;
+                formControl = this.fb.control(formattedValue || '', { updateOn: 'blur' });
             } else {
                 formControl = this.fb.control(p[k] || '');
             }
             group.addControl(k, formControl);
         });
         return group;
+    }
+
+    updateCommission(user:UserView, newValue:any, i:number):void {
+        const form = user.pairingsForm.get(['array', i]) as FormGroup;
+
+        if (isNaN(newValue.toString().charAt(0)))
+            newValue = newValue.slice(1, newValue.length);
+
+        if (isNaN(newValue)) {
+            (<FormControl>form.get('commission'))
+                .setValue(null, { emitEvent: false, emitViewToModelChange: false });
+            this.msg.addMessage('Numbers only please.', 'dismiss', 2500);
+            return;
+        }
+
+        const numVal = coerceNumberProperty(newValue);
+        const formattedValue = this.currencyPipe.transform(numVal);
+        (<FormControl>form.get('commission'))
+                .setValue(formattedValue, { emitEvent: false, emitViewToModelChange: false });
+
+        if (form.invalid) return;
+
+        this.savePairingUpdate(form, user);
     }
 
     private refreshAgents():void {
@@ -298,7 +340,7 @@ export class AgentComponent implements OnInit, AfterViewChecked, OnDestroy {
                 _.remove(users, u => u.agent == null);
 
                 users.forEach((u:User, i:number) => {
-                    if(u.detail == null) 
+                    if (u.detail == null) 
                         users[i].detail = {
                             userId: u.id,
                             street: null, 
@@ -311,9 +353,9 @@ export class AgentComponent implements OnInit, AfterViewChecked, OnDestroy {
                             ssn: null,
                             bankRouting: null,
                             bankAccount: null
-                        }
+                        };
                     
-                    if(u.agent.pairings != null && u.agent.pairings.length)
+                    if (u.agent.pairings != null && u.agent.pairings.length)
                         users[i].pairingsForm = this.createPairingsForm(u.agent.pairings);
                     else
                         users[i].pairingsForm = this.createPairingsForm([]);
@@ -327,10 +369,10 @@ export class AgentComponent implements OnInit, AfterViewChecked, OnDestroy {
     }
 
     private setMoments(users:UserView[]):UserView[] {
-        if(!users)
+        if (!users)
             return users;
         users.forEach(user => {
-            if(user.agent == null) return;
+            if (user.agent == null) return;
             user.agent.createdAt = moment(user.agent.createdAt);
             user.display = AgentDisplay.Summary;
         });
@@ -345,9 +387,9 @@ export class AgentComponent implements OnInit, AfterViewChecked, OnDestroy {
     }
 
     replaceCharAt(input:string, start:number, end:number, replaceChar:string) {
-        let counter = end - start;
+        const counter = end - start;
         let calculatedReplacement:string;
-        for(let i = 0; i < counter; i++) {
+        for (let i = 0; i < counter; i++) {
             calculatedReplacement += replaceChar;
         }
 
@@ -355,7 +397,7 @@ export class AgentComponent implements OnInit, AfterViewChecked, OnDestroy {
     }
 
     editAgent(user:UserView):void {
-        let displayType = user.display;
+        const displayType = user.display;
 
         this.dialog.open(EditAgentDialogComponent, {
             width: '600px',
@@ -367,18 +409,18 @@ export class AgentComponent implements OnInit, AfterViewChecked, OnDestroy {
         })
         .afterClosed()
         .subscribe(result => {
-            if(result == null) return; /** If the result is undefined, the user canceled the changes. */
+            if (result == null) return; /** If the result is undefined, the user canceled the changes. */
 
             this.session.showLoader();            
             this.service.updateUserWithRelationships(this.user.sessionUser.sessionClient, result)
                 .subscribe((user:UserView) => {
                     const idx = _.findIndex(this.store.users, {id:user.id});
-                    if(idx < 0) {
+                    if (idx < 0) {
                         // this will be for a new user
                     } else {
                         user.display = displayType || AgentDisplay.Summary;
 
-                        if(user.agent.pairings != null && user.agent.pairings.length)
+                        if (user.agent.pairings != null && user.agent.pairings.length)
                             user.pairingsForm = this.createPairingsForm(user.agent.pairings);
                         else
                             user.pairingsForm = this.createPairingsForm([]);
@@ -388,14 +430,14 @@ export class AgentComponent implements OnInit, AfterViewChecked, OnDestroy {
                         this.setManagers(this.store.users);
                         this.session.hideLoader();
                     }
-                })
+                });
         });    
     }
 
     searchAgents(event) {
         this.searchContext = event.target.value;
 
-        let agentsResult = _.filter(this.store.users, (u:User) => {
+        const agentsResult = _.filter(this.store.users, (u:User) => {
             return u.firstName.concat(u.lastName).toLowerCase().trim().includes(this.searchContext);
         });
 
@@ -403,7 +445,7 @@ export class AgentComponent implements OnInit, AfterViewChecked, OnDestroy {
     }
 
     handleSearchContext() {
-        if(this.searchContext != null) {
+        if (this.searchContext != null) {
             this.searchChipValue = this.searchContext;
             this.searchContext = null;
             this.showSearchContextChip = true;
@@ -416,7 +458,7 @@ export class AgentComponent implements OnInit, AfterViewChecked, OnDestroy {
     }
 
     toggleSortUsers() {
-        let direction = this.sortAscending ? 'desc' : 'asc';
+        const direction = this.sortAscending ? 'desc' : 'asc';
         this._filteredUsers = _.orderBy(this._filteredUsers, ['lastName', 'firstName'], [direction, 'asc']);
         this.users$.next(this._filteredUsers);
         this.sortAscending = !this.sortAscending;

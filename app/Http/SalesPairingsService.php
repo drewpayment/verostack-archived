@@ -1,13 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: drewpayment
- * Date: 7/12/18
- * Time: 10:16 PM
- */
 
 namespace App\Http;
-
 
 use App\Http\Resources\ApiResource;
 use App\SalesPairing;
@@ -109,6 +102,7 @@ class SalesPairingsService {
 
         $model->agent_id = $pairing['agentId'];
         $model->campaign_id = $pairing['campaignId'];
+        $model->commission = $pairing['commission'];
         $model->sales_id = $pairing['salesId'];
         $model->client_id = $pairing['clientId'];
 

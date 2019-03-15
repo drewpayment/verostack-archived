@@ -14,7 +14,7 @@ class SalesPairing extends Model
 	 * @var array
 	 */
 	protected $fillable = [
-		'campaign_id', 'sales_id', 'client_id', 'agent_id'
+		'sales_pairings_id', 'campaign_id', 'commission', 'sales_id', 'client_id', 'agent_id'
 	];
 
 	protected $table = 'sales_pairings';
