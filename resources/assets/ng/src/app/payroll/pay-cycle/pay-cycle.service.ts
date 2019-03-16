@@ -48,6 +48,23 @@ export class PayCycleService {
         });
     }
 
+    /**
+     * System admin action only, this removes payrolls if someone processed payroll when they shouldn't have.
+     * 
+     * @param client 
+     * @param payCycleId 
+     */
+    deletePayCyclePayrolls(clientId:number, payCycleId:number, payrollIds:string[]):Observable<boolean> {
+        const url = `${this.api}api/clients/${clientId}/pay-cycles/${payCycleId}/payrolls`;
+        let params = new HttpParams();
+
+        payrollIds.forEach(p => {
+            params = params.append('ids[]', p);
+        });
+        
+        return this.http.delete<boolean>(url, { params: params });
+    }
+
     updatePayCycle(clientId:number, payCycleId:number, dto:PayCycle):Observable<PayCycle> {
         const url = `${this.api}api/clients/${clientId}/pay-cycles/${payCycleId}`;
         return this.http.post<PayCycle>(url, {

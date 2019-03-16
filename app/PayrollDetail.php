@@ -7,11 +7,15 @@ use App\Expense;
 use App\Payroll;
 use App\Override;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class PayrollDetail extends Model
 {
-    
+    use SoftDeletes;
+
     protected $primaryKey = 'payroll_details_id';
+
+    protected $dates = ['created_at', 'updated_at', 'deleted_at'];
 
     public function agent()
     {

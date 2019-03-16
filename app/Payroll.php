@@ -7,12 +7,17 @@ use App\Campaign;
 use App\PayCycle;
 use App\PayrollDetail;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Payroll extends Model
 {
+    use SoftDeletes;
+
     protected $primaryKey = 'payroll_id';
 
     protected $fillable = ['is_released'];
+
+    protected $dates = ['created_at', 'updated_at', 'deleted_at'];
 
     public function getIsReleasedAttribute($value)
     {

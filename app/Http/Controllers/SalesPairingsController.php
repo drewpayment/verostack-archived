@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\ApiResource;
-use App\Http\SalesPairingsService;
+use App\User;
 use Illuminate\Http\Request;
+use App\Http\SalesPairingsService;
+use App\Http\Resources\ApiResource;
+use Illuminate\Support\Facades\Auth;
 
 class SalesPairingsController extends Controller
 {
@@ -65,7 +67,21 @@ class SalesPairingsController extends Controller
 	 */
 	public function getSalesPairingsByClient($clientId)
 	{
-		$result = new ApiResource();
+        $result = new ApiResource();
+        
+        $result
+            ->checkAccessByClient($clientId, Auth::user()->id)
+            ->mergeInto($result);
+
+        if($result->hasError)
+            return $result->throwApiException()->getResponse();
+
+        $user = User::with('role')->userId(Auth::user()->id)->first();
+
+        // if the user isn't a company admin, they're not allowed to make this api call
+        if($user->role->role < 6)
+            return $result->setToFail()->throwApiException()->getResponse();
+
 		return $this->service
 			->getSalesPairingsByClientId($clientId)
 			->mergeInto($result)

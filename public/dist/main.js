@@ -743,6 +743,11 @@ var AgentComponent = /** @class */ (function () {
     };
     AgentComponent.prototype.updateCommission = function (user, newValue, i) {
         var form = user.pairingsForm.get(['array', i]);
+        if (newValue == null) {
+            form.get('commission')
+                .setValue(null, { emitEvent: false, emitViewToModelChange: false });
+            return;
+        }
         if (isNaN(newValue.toString().charAt(0)))
             newValue = newValue.slice(1, newValue.length);
         if (isNaN(newValue)) {
@@ -8738,7 +8743,7 @@ var PayCycleDialogComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n<div class=\"container\">\n    <div class=\"row mb-4\">\n        <div class=\"col-md-12\">\n            <mat-card class=\"page-header-accent\">\n                <mat-card-content class=\"d-flex justify-content-between\">\n                    <h3>\n                        <span>Pay Runs</span>\n                    </h3>\n                    <div>\n                        <button type=\"button\" mat-stroked-button color=\"primary\" (click)=\"addPayCycle()\">\n                            <mat-icon inline=\"true\">add</mat-icon>\n                            <span>Payroll</span>\n                        </button>\n                    </div>\n                </mat-card-content>\n            </mat-card>\n        </div>\n    </div>\n\n    <!-- DUE FOR RELEASE -->\n    <div class=\"row\" cdkDropListGroup>\n        <div class=\"col-md-4\" *ngIf=\"todoCycles\">\n            <mat-card class=\"border-top-primary\">\n                <mat-card-title class=\"d-flex justify-content-center mb-3 pb-2 border-bottom\">\n                    <mat-icon class=\"mr-2\">autorenew</mat-icon>\n                    <span>In Progress</span>\n                </mat-card-title>\n                <mat-card-content>\n                    <div class=\"list-group\" cdkDropList #todoList=\"cdkDropList\" [cdkDropListData]=\"todoCycles\"\n                        (cdkDropListDropped)=\"drop($event, 0)\">\n                        <div *ngFor=\"let cycle of todoCycles as cycles\" class=\"list-group-item list-group-item-action\" cdkDrag>\n                            <!-- list group item heading -->\n                            <div class=\"d-flex w-100 justify-content-between align-items-center\">\n                                <h5 class=\"mb-1\">{{ cycle.isPending ? 'Pending' : 'Not Started' }}</h5>\n                                <button type=\"button\" mat-icon-button (click)=\"editPayCycle(cycle)\">\n                                    <mat-icon>launch</mat-icon>\n                                </button>\n                            </div>\n                            <p class=\"mb-1\">From: {{ cycle.startDate | date:'shortDate' }}</p>\n                            <p class=\"mb-1\">To: {{ cycle.endDate | date:'shortDate' }}</p>\n                            <div class=\"d-flex w-100\" [class.justify-content-between]=\"cycle.payrolls.length\"\n                                [class.justify-content-end]=\"!cycle.payrolls.length\">\n                                <small *ngIf=\"cycle.payrolls.length\">\n                                    {{ cycle.payrolls.length }} Paychecks\n                                </small>\n                                <small>{{ getHumanReadableDuration(cycle) }}</small>\n                            </div>\n                        </div>\n                    </div>\n                    <!-- <ng-template #noTodoCycles>\n                        <h5 class=\"text-muted font-italic\">Click \"+ Payroll\" to Start.</h5>\n                    </ng-template> -->\n                </mat-card-content>\n            </mat-card>\n        </div>\n\n        <div class=\"col-md-4\" *ngIf=\"lockedCycles\">\n            <mat-card class=\"border-top-secondary\">\n                <mat-card-title class=\"d-flex justify-content-center pb-2 mb-3 border-bottom\">\n                    <mat-icon class=\"mr-2\">lock</mat-icon>\n                    <span>Locked</span>\n                </mat-card-title>\n                <mat-card-content>\n                    <div class=\"list-group\" cdkDropList #lockedList=\"cdkDropList\" [cdkDropListData]=\"lockedCycles\"\n                        (cdkDropListDropped)=\"drop($event, 1)\">\n                        <a *ngFor=\"let cycle of lockedCycles as cycles\" [routerLink]=\"\" \n                            class=\"list-group-item list-group-item-action\" cdkDrag>\n                            <!-- list group item heading -->\n                            <div class=\"d-flex justify-content-between align-items-center\">\n                                <h5 class=\"mb-1\">Locked</h5>\n                                <button type=\"button\" mat-icon-button>\n                                    <mat-icon>locked</mat-icon>\n                                </button>\n                            </div>\n                            <p class=\"mb-1\">From: {{ cycle.startDate | date:'shortDate' }}</p>\n                            <p class=\"mb-1\">To: {{ cycle.endDate | date:'shortDate' }}</p>\n                            <div class=\"d-flex w-100\" [class.justify-content-between]=\"cycle.payrolls.length\"\n                                [class.justify-content-end]=\"!cycle.payrolls.length\">\n                                <small *ngIf=\"cycle.payrolls.length\">\n                                    {{ cycle.payrolls.length }} Paychecks\n                                </small>\n                                <small>{{ getHumanReadableDuration(cycle) }}</small>\n                            </div>\n                        </a>\n                    </div>\n                    <!-- <ng-template #noLockedCycles>\n                        <div class=\"d-flex w-100 justify-content-center\">\n                            <h5 class=\"text-muted font-italic\">No Locked Runs</h5>\n                        </div>\n                    </ng-template> -->\n                </mat-card-content>\n            </mat-card>\n        </div>\n\n        <div class=\"col-md-4\" *ngIf=\"closedCycles\">\n            <mat-card class=\"border-top-dark\">\n                <mat-card-title class=\"d-flex justify-content-center mb-3 pb-2 border-bottom\">\n                    <mat-icon class=\"mr-2\">done_all</mat-icon>\n                    <span>Completed</span>\n                </mat-card-title>\n                <mat-card-content>\n                    <div class=\"list-group\" *ngIf=\"closedCycles.length; else noClosedCycles\">\n                        <ng-container *ngFor=\"let cycle of closedCycles as cycles\">\n                            <div class=\"list-group-item list-group-item-action\">\n                                <!-- list group item heading -->\n                                <div class=\"d-flex w-100 justify-content-between\">\n                                    <h5 class=\"mb-1\">Closed</h5>\n                                    <mat-icon>check_circle</mat-icon>\n                                </div>\n                                <p class=\"mb-1\">From: {{ cycle.startDate | date:'shortDate' }}</p>\n                                <p class=\"mb-1\">To: {{ cycle.endDate | date:'shortDate' }}</p>\n                                <div class=\"d-flex w-100\" [class.justify-content-between]=\"cycle.payrolls.length\"\n                                    [class.justify-content-end]=\"!cycle.payrolls.length\">\n                                    <small *ngIf=\"cycle.payrolls.length\">\n                                        {{ cycle.payrolls.length }} Paychecks\n                                    </small>\n                                    <small>{{ getHumanReadableDuration(cycle) }}</small>\n                                </div>\n                                \n                            </div>\n                        </ng-container>\n                    </div>\n                    <ng-template #noClosedCycles>\n                        <div class=\"d-flex w-100 justify-content-center\">\n                            <h5 class=\"text-muted font-italic\">No Closed Runs</h5>\n                        </div>\n                    </ng-template>\n                </mat-card-content>\n            </mat-card>\n        </div>\n    </div>\n\n    <!-- <ng-container *ngIf=\"displayCycles != null && (displayCycles|async).length; else noCycles\">\n        <div class=\"row\" *ngFor=\"let cycle of displayCycles|async as cycles\">\n            <div class=\"col-md-12\">\n                <mat-card [ngClass]=\"getBorderColor(cycle, 'left')\">\n                    <mat-card-title class=\"d-flex justify-content-between\">\n                        <div [class.text-danger]=\"isPayCycleDue(cycle)\">\n                            <span class=\"font-weight-bold\">Status: </span>\n                            <small>{{getCycleStatus(cycle)}}</small>\n                        </div>\n                        <div class=\"d-flex justify-content-end\">\n                            <button type=\"button\" mat-button \n                                color=\"primary\" \n                                *ngIf=\"!cycle.isPending && !cycle.isClosed\"\n                                (click)=\"editPayCycle(cycle)\"\n                            >\n                                <mat-icon>play_arrow</mat-icon>\n                                <span>Start</span>\n                            </button>\n                            <ng-container *ngIf=\"!isBeforeEndDate(cycle); else payrollReadyToRun\">\n                                <button\n                                    type=\"button\" mat-button\n                                    color=\"primary\"\n                                    *ngIf=\"cycle.isPending && !cycle.isClosed\"\n                                    (click)=\"editPayCycle(cycle)\"\n                                >\n                                    <mat-icon>redo</mat-icon>\n                                    <span>Continue</span>\n                                </button>\n                                <button\n                                    type=\"button\" mat-button\n                                    color=\"accent\"\n                                    *ngIf=\"cycle.isPending && !cycle.isClosed\"\n                                    (click)=\"closePayCycle(cycle)\"\n                                >\n                                    <mat-icon>archive</mat-icon>\n                                    <span>Archive</span>\n                                </button>\n                                <button\n                                    type=\"button\" mat-button\n                                    color=\"primary\"\n                                    *ngIf=\"cycle.isClosed\"\n                                    (click)=\"openPayCycle(cycle)\"\n                                >\n                                    <mat-icon>unarchive</mat-icon>\n                                    <span>Re-Open</span>\n                                </button>\n                            </ng-container>\n                            <ng-template #payrollReadyToRun>\n                                <button type=\"button\"\n                                    mat-button\n                                    [color]=\"getEditButtonColor(cycle)\"\n                                    [class.text-muted]=\"cycle?.payrolls?.length > 0\"\n                                    *ngIf=\"cycle.isPending && !cycle.isClosed\"\n                                    (click)=\"editPayCycle(cycle)\"\n                                >\n                                    <mat-icon>create</mat-icon>\n                                    <span>Edit</span>\n                                </button>\n                                <button type=\"button\"\n                                    mat-button\n                                    color=\"primary\"\n                                    *ngIf=\"cycle.isPending && !cycle.isClosed && cycle?.payrolls?.length < 1\"\n                                    (click)=\"processPayroll(cycle)\"\n                                >\n                                    <mat-icon>sync</mat-icon>\n                                    <span>\n                                        {{ cycle?.payrolls?.length > 0 ? 'Reprocess' : 'Process' }}\n                                    </span>\n                                </button>\n                                <button\n                                    type=\"button\" mat-button\n                                    color=\"accent\"\n                                    *ngIf=\"cycle.isPending && !cycle.isClosed\"\n                                    (click)=\"closePayCycle(cycle)\"\n                                >\n                                    <mat-icon>archive</mat-icon>\n                                    <span>Archive</span>\n                                </button>\n                                <button\n                                    type=\"button\" mat-button\n                                    color=\"primary\"\n                                    *ngIf=\"cycle.isClosed\"\n                                    (click)=\"openPayCycle(cycle)\"\n                                >\n                                    <mat-icon>unarchive</mat-icon>\n                                    <span>Re-Open</span>\n                                </button>\n                            </ng-template>\n                        </div>\n                    </mat-card-title>\n                    <mat-card-content>\n                        <p>\n                            <span class=\"font-weight-bold\">Dates:</span> \n                            {{cycle.startDate | date:'shortDate'}} - {{cycle.endDate | date:'shortDate'}}\n                        </p>\n                        <p class=\"text-muted\" *ngIf=\"cycle?.payrolls?.length\">\n                            Payroll was processed {{getPayrollEditDate(cycle) | date:'short'}}\n                        </p>\n                    </mat-card-content>\n                </mat-card>\n            </div>\n        </div>\n    </ng-container>\n    <ng-template #noCycles>\n        <div class=\"row\">\n            <div class=\"col-md-12\">\n                <h5 class=\"text-center text-muted font-italic\">No Payroll Cycles to display.</h5>\n            </div>\n        </div>\n    </ng-template> -->\n    \n</div>"
+module.exports = "\n<div class=\"container\">\n    <div class=\"row mb-4\">\n        <div class=\"col-md-12\">\n            <mat-card class=\"page-header-accent\">\n                <mat-card-content class=\"d-flex justify-content-between\">\n                    <h3>\n                        <span>Pay Runs</span>\n                    </h3>\n                    <div>\n                        <button type=\"button\" mat-stroked-button color=\"primary\" (click)=\"addPayCycle()\">\n                            <mat-icon inline=\"true\">add</mat-icon>\n                            <span>Payroll</span>\n                        </button>\n                    </div>\n                </mat-card-content>\n            </mat-card>\n        </div>\n    </div>\n\n    <!-- DUE FOR RELEASE -->\n    <div class=\"row\" cdkDropListGroup>\n        <div class=\"col-md-4\" *ngIf=\"todoCycles\">\n            <mat-card class=\"border-top-primary\">\n                <mat-card-title class=\"d-flex justify-content-center mb-3 pb-2 border-bottom\">\n                    <mat-icon class=\"mr-2\">autorenew</mat-icon>\n                    <span>In Progress</span>\n                </mat-card-title>\n                <mat-card-content>\n                    <div class=\"list-group\" cdkDropList #todoList=\"cdkDropList\" [cdkDropListData]=\"todoCycles\"\n                        (cdkDropListDropped)=\"drop($event, 0)\">\n                        <div *ngFor=\"let cycle of todoCycles as cycles\" class=\"list-group-item list-group-item-action\" cdkDrag>\n                            <!-- list group item heading -->\n                            <div class=\"d-flex w-100 justify-content-between align-items-center\">\n                                <h5 class=\"mb-1\">\n                                    {{ cycle.isPending ? 'Pending' : 'Not Started' }}\n                                    <small class=\"text-muted font-weight-normal\"> Run #: {{ cycle.payCycleId }}</small>\n                                </h5>\n                                <button type=\"button\" mat-icon-button (click)=\"editPayCycle(cycle)\">\n                                    <mat-icon>launch</mat-icon>\n                                </button>\n                            </div>\n                            <p class=\"mb-1\">From: {{ cycle.startDate | date:'shortDate' }}</p>\n                            <p class=\"mb-1\">To: {{ cycle.endDate | date:'shortDate' }}</p>\n                            <div class=\"d-flex w-100\" [class.justify-content-between]=\"cycle.payrolls?.length\"\n                                [class.justify-content-end]=\"!cycle.payrolls?.length\">\n                                <small *ngIf=\"cycle?.payrolls?.length\">\n                                    {{ cycle.payrolls.length }} Paychecks\n                                </small>\n                                <small>{{ getHumanReadableDuration(cycle) }}</small>\n                            </div>\n                        </div>\n                    </div>\n                    <!-- <ng-template #noTodoCycles>\n                        <h5 class=\"text-muted font-italic\">Click \"+ Payroll\" to Start.</h5>\n                    </ng-template> -->\n                </mat-card-content>\n            </mat-card>\n        </div>\n\n        <div class=\"col-md-4\" *ngIf=\"lockedCycles\">\n            <mat-card class=\"border-top-secondary\">\n                <mat-card-title class=\"d-flex justify-content-center pb-2 mb-3 border-bottom\">\n                    <mat-icon class=\"mr-2\">lock</mat-icon>\n                    <span>Locked</span>\n                </mat-card-title>\n                <mat-card-content>\n                    <div class=\"list-group\" cdkDropList #lockedList=\"cdkDropList\" [cdkDropListData]=\"lockedCycles\"\n                        (cdkDropListDropped)=\"drop($event, 1)\">\n                        <a *ngFor=\"let cycle of lockedCycles as cycles\" [routerLink]=\"\" \n                            class=\"list-group-item list-group-item-action\" cdkDrag>\n                            <!-- list group item heading -->\n                            <div class=\"d-flex justify-content-between align-items-center\">\n                                <h5 class=\"mb-1\">\n                                    Locked\n                                    <small class=\"text-muted font-weight-normal\"> Run #: {{ cycle.payCycleId }}</small>\n                                </h5>\n                                <button type=\"button\" mat-icon-button>\n                                    <mat-icon>locked</mat-icon>\n                                </button>\n                            </div>\n                            <div class=\"d-flex justify-content-between\">\n                                <div>\n                                    <p class=\"mb-1\">From: {{ cycle.startDate | date:'shortDate' }}</p>\n                                    <p class=\"mb-1\">To: {{ cycle.endDate | date:'shortDate' }}</p>\n                                    <small *ngIf=\"cycle.payrolls?.length\">\n                                        {{ cycle.payrolls.length }} Paychecks\n                                    </small>\n                                </div>\n                                <div class=\"d-flex flex-column justify-content-end\">\n                                    <button type=\"button\" mat-stroked-button color=\"primary\" class=\"p-0\" \n                                        (click)=\"processPayroll(cycle)\" *ngIf=\"user?.role.role > 5\">\n                                        Process\n                                    </button>\n                                    <small>{{ getHumanReadableDuration(cycle) }}</small>\n                                </div>\n                            </div>\n                        </a>\n                    </div>\n                </mat-card-content>\n            </mat-card>\n        </div>\n\n        <div class=\"col-md-4\" *ngIf=\"closedCycles\">\n            <mat-card class=\"border-top-dark\">\n                <mat-card-title class=\"d-flex justify-content-center mb-3 pb-2 border-bottom\">\n                    <mat-icon class=\"mr-2\">done_all</mat-icon>\n                    <span>Completed</span>\n                </mat-card-title>\n                <mat-card-content>\n                    <div class=\"list-group\" *ngIf=\"closedCycles.length; else noClosedCycles\">\n                        <ng-container *ngFor=\"let cycle of closedCycles as cycles\">\n                            <div class=\"list-group-item list-group-item-action\">\n                                <!-- list group item heading -->\n                                <div class=\"d-flex w-100 justify-content-between\">\n                                    <h5 class=\"mb-1\">\n                                        Closed\n                                        <small class=\"text-muted font-weight-normal\"> Run #: {{ cycle.payCycleId }}</small>\n                                    </h5>\n                                    <mat-icon>check_circle</mat-icon>\n                                </div>\n                                <div class=\"d-flex justify-content-between\">\n                                    <div>\n                                        <p class=\"mb-1\">From: {{ cycle.startDate | date:'shortDate' }}</p>\n                                        <p class=\"mb-1\">To: {{ cycle.endDate | date:'shortDate' }}</p>\n                                        <small *ngIf=\"cycle.payrolls?.length\">\n                                            {{ cycle.payrolls.length }} Paychecks\n                                        </small>\n                                    </div>\n                                    <div class=\"d-flex flex-column justify-content-end\">\n                                        <button type=\"button\" mat-button color=\"warn\" class=\"p-0\" \n                                            (click)=\"reopenPayroll(cycle)\" *ngIf=\"user?.role.role > 6\">\n                                            Open\n                                        </button>\n                                        <small>{{ getHumanReadableDuration(cycle) }}</small>\n                                    </div>\n                                </div>\n                            </div>\n                        </ng-container>\n                    </div>\n                    <ng-template #noClosedCycles>\n                        <div class=\"d-flex w-100 justify-content-center\">\n                            <h5 class=\"text-muted font-italic\">No Closed Runs</h5>\n                        </div>\n                    </ng-template>\n                </mat-card-content>\n            </mat-card>\n        </div>\n    </div>\n    \n</div>"
 
 /***/ }),
 
@@ -8778,6 +8783,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _app_payroll_payroll_service__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @app/payroll/payroll.service */ "./src/app/payroll/payroll.service.ts");
 /* harmony import */ var _pay_cycle_service__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./pay-cycle.service */ "./src/app/payroll/pay-cycle/pay-cycle.service.ts");
 /* harmony import */ var _angular_cdk_drag_drop__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @angular/cdk/drag-drop */ "./node_modules/@angular/cdk/esm5/drag-drop.es5.js");
+/* harmony import */ var _app_agent_agent_service__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! @app/agent/agent.service */ "./src/app/agent/agent.service.ts");
+
 
 
 
@@ -8799,8 +8806,9 @@ var DropListType;
     DropListType[DropListType["Closed"] = 2] = "Closed";
 })(DropListType || (DropListType = {}));
 var PayCycleComponent = /** @class */ (function () {
-    function PayCycleComponent(session, payCycleService, payrollService, dialog, campaignService, msg, router) {
+    function PayCycleComponent(session, agentService, payCycleService, payrollService, dialog, campaignService, msg, router) {
         this.session = session;
+        this.agentService = agentService;
         this.payCycleService = payCycleService;
         this.payrollService = payrollService;
         this.dialog = dialog;
@@ -8818,12 +8826,12 @@ var PayCycleComponent = /** @class */ (function () {
             if (u == null)
                 return;
             _this.user = u;
-            Object(rxjs__WEBPACK_IMPORTED_MODULE_7__["forkJoin"])(_this.campaignService.getCampaignsByClient(_this.user.sessionUser.sessionClient), _this.payCycleService.getPayCycles(_this.user.sessionUser.sessionClient)).subscribe(function (_a) {
-                var campaigns = _a[0], cycles = _a[1];
+            Object(rxjs__WEBPACK_IMPORTED_MODULE_7__["forkJoin"])(_this.campaignService.getCampaignsByClient(_this.user.sessionUser.sessionClient), _this.payCycleService.getPayCycles(_this.user.sessionUser.sessionClient), _this.agentService.getSalesPairingsByClient(_this.user.sessionUser.sessionClient)).subscribe(function (_a) {
+                var campaigns = _a[0], cycles = _a[1], pairings = _a[2];
                 _this.campaigns = campaigns;
                 _this._cycles = cycles;
+                _this.salesPairings = pairings;
                 _this._filterCycles();
-                // this.getActive();
                 _this.session.hideLoader();
             });
         });
@@ -8861,8 +8869,7 @@ var PayCycleComponent = /** @class */ (function () {
                 });
                 _this.session.hideLoader();
                 /** This will run logic to make available in paycheck list */
-                if (type == DropListType.Locked)
-                    _this.processPayroll(result);
+                // if (type == DropListType.Locked) this.processPayroll(result); // commented for now, changed to manual process button
             });
         }
     };
@@ -8917,7 +8924,7 @@ var PayCycleComponent = /** @class */ (function () {
             : 'primary';
     };
     PayCycleComponent.prototype.getActive = function () {
-        this.displayCycles.next(this._cycles.filter(function (c) { return !c.isClosed; }));
+        // this.displayCycles.next(this._cycles.filter(c => !c.isClosed));
     };
     PayCycleComponent.prototype.getArchived = function () {
         this.displayCycles.next(this._cycles.filter(function (c) { return c.isClosed; }));
@@ -8962,6 +8969,18 @@ var PayCycleComponent = /** @class */ (function () {
     PayCycleComponent.prototype.isBeforeEndDate = function (cycle) {
         return moment__WEBPACK_IMPORTED_MODULE_9__(cycle.endDate).isBefore(this.today);
     };
+    PayCycleComponent.prototype.reopenPayroll = function (cycle) {
+        var _this = this;
+        cycle.isClosed = false;
+        var payrollIds = cycle.payrolls == null ? [] : cycle.payrolls.map(function (p) { return p.payrollId.toString(); });
+        this.payCycleService.deletePayCyclePayrolls(this.user.sessionUser.sessionClient, cycle.payCycleId, payrollIds)
+            .subscribe(function (result) {
+            if (!result) {
+                _this.msg.addMessage("\n                        Sorry, we were unable to remove the payrolls. You need to delete payrolls associated with \n                        PayCycleId --> " + cycle.payCycleId + "\n                    ", 'dismiss');
+            }
+            _this.updatePayCycle(cycle);
+        });
+    };
     /**
      * Begins the workflow of processing payroll. Opens the dialog to allow user to select a "pay date"
      * and then creates the relationship to the this cycle, calculates total information for users,
@@ -8992,9 +9011,12 @@ var PayCycleComponent = /** @class */ (function () {
                 };
                 var uniqueAgents = filteredSales.map(function (fs) { return fs.agentId; }).filter(function (fs, i, a) { return a.indexOf(fs) === i; });
                 uniqueAgents.forEach(function (ua) {
+                    var pairing = _this.salesPairings.find(function (sp) { return sp.campaignId == c && sp.agentId == ua; });
+                    var commission = pairing != null ? pairing.commission : null;
                     var agentSales = filteredSales.filter(function (fs) { return fs.agentId == ua && fs.payCycleId == cycle.payCycleId; });
-                    var grossTotal = agentSales.length * (campaign.compensation || 0);
+                    var grossTotal = agentSales.length * (commission || campaign.compensation || 0);
                     /**
+                     * TODO:
                      * how do we figure this out? this might need to be a server side calc if
                      * the company has "taxes" turned on?
                      */
@@ -9026,6 +9048,10 @@ var PayCycleComponent = /** @class */ (function () {
                     cycle.payrolls.concat(payrolls);
                 else
                     cycle.payrolls = payrolls;
+                // if we get here, we've successfully process payroll,
+                // now we are going to close the pay cycle
+                cycle.isClosed = true;
+                _this.updatePayCycle(cycle);
             });
         });
     };
@@ -9039,10 +9065,7 @@ var PayCycleComponent = /** @class */ (function () {
                     return;
                 a[i] = payCycle;
             });
-            if (_this.showClosed)
-                _this.getArchived();
-            else
-                _this.getActive();
+            _this._filterCycles();
         });
     };
     PayCycleComponent.prototype.switchDisplay = function () {
@@ -9059,6 +9082,7 @@ var PayCycleComponent = /** @class */ (function () {
             styles: [__webpack_require__(/*! ./pay-cycle.component.scss */ "./src/app/payroll/pay-cycle/pay-cycle.component.scss")]
         }),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_app_session_service__WEBPACK_IMPORTED_MODULE_2__["SessionService"],
+            _app_agent_agent_service__WEBPACK_IMPORTED_MODULE_14__["AgentService"],
             _pay_cycle_service__WEBPACK_IMPORTED_MODULE_12__["PayCycleService"],
             _app_payroll_payroll_service__WEBPACK_IMPORTED_MODULE_11__["PayrollService"],
             _angular_material__WEBPACK_IMPORTED_MODULE_3__["MatDialog"],
@@ -9128,6 +9152,20 @@ var PayCycleService = /** @class */ (function () {
                 }
             })
         });
+    };
+    /**
+     * System admin action only, this removes payrolls if someone processed payroll when they shouldn't have.
+     *
+     * @param client
+     * @param payCycleId
+     */
+    PayCycleService.prototype.deletePayCyclePayrolls = function (clientId, payCycleId, payrollIds) {
+        var url = this.api + "api/clients/" + clientId + "/pay-cycles/" + payCycleId + "/payrolls";
+        var params = new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpParams"]();
+        payrollIds.forEach(function (p) {
+            params = params.append('ids[]', p);
+        });
+        return this.http.delete(url, { params: params });
     };
     PayCycleService.prototype.updatePayCycle = function (clientId, payCycleId, dto) {
         var url = this.api + "api/clients/" + clientId + "/pay-cycles/" + payCycleId;

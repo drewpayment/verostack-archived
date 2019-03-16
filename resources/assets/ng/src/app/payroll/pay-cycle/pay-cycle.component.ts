@@ -15,6 +15,8 @@ import { map } from 'rxjs/operators';
 import { PayrollService } from '@app/payroll/payroll.service';
 import { PayCycleService } from './pay-cycle.service';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { AgentService } from '@app/agent/agent.service';
+import { ISalesPairing } from '@app/models/sales-pairings.model';
 
 enum DropListType {
     Todo,
@@ -40,8 +42,11 @@ export class PayCycleComponent implements OnInit {
     lockedCycles:PayCycle[];
     closedCycles:PayCycle[];
 
+    salesPairings:ISalesPairing[];
+
     constructor(
         private session:SessionService,
+        private agentService:AgentService,
         private payCycleService:PayCycleService,
         private payrollService:PayrollService,
         private dialog:MatDialog,
@@ -58,13 +63,14 @@ export class PayCycleComponent implements OnInit {
 
             forkJoin(
                 this.campaignService.getCampaignsByClient(this.user.sessionUser.sessionClient),
-                this.payCycleService.getPayCycles(this.user.sessionUser.sessionClient)
-            ).subscribe(([campaigns, cycles]) => {
+                this.payCycleService.getPayCycles(this.user.sessionUser.sessionClient),
+                this.agentService.getSalesPairingsByClient(this.user.sessionUser.sessionClient)
+            ).subscribe(([campaigns, cycles, pairings]) => {
                 this.campaigns = campaigns;
                 this._cycles = cycles;
+                this.salesPairings = pairings;
 
                 this._filterCycles();
-                // this.getActive();
                 this.session.hideLoader();
             });
         });
@@ -108,7 +114,7 @@ export class PayCycleComponent implements OnInit {
                     this.session.hideLoader();
 
                     /** This will run logic to make available in paycheck list */
-                    if (type == DropListType.Locked) this.processPayroll(result);
+                    // if (type == DropListType.Locked) this.processPayroll(result); // commented for now, changed to manual process button
                 });
         }
     }
@@ -170,7 +176,7 @@ export class PayCycleComponent implements OnInit {
     }
 
     private getActive():void {
-        this.displayCycles.next(this._cycles.filter(c => !c.isClosed));
+        // this.displayCycles.next(this._cycles.filter(c => !c.isClosed));
     }
 
     private getArchived():void {
@@ -228,6 +234,23 @@ export class PayCycleComponent implements OnInit {
         return moment(cycle.endDate).isBefore(this.today);
     }
 
+    reopenPayroll(cycle:PayCycle):void {
+        cycle.isClosed = false;
+
+        const payrollIds = cycle.payrolls == null ? [] : cycle.payrolls.map(p => p.payrollId.toString());
+        this.payCycleService.deletePayCyclePayrolls(this.user.sessionUser.sessionClient, cycle.payCycleId, payrollIds)
+            .subscribe(result => {
+                if (!result) {
+                    this.msg.addMessage(`
+                        Sorry, we were unable to remove the payrolls. You need to delete payrolls associated with 
+                        PayCycleId --> ${cycle.payCycleId}
+                    `, 'dismiss');
+                }
+
+                this.updatePayCycle(cycle);
+            });
+    }
+
     /**
      * Begins the workflow of processing payroll. Opens the dialog to allow user to select a "pay date" 
      * and then creates the relationship to the this cycle, calculates total information for users, 
@@ -249,7 +272,7 @@ export class PayCycleComponent implements OnInit {
                 map(sales => {
                     const campaigns = sales.map(s => s.campaignId).filter((s, i, a) => a.indexOf(s) === i);
                     const payrollResults:Payroll[] = [];
-                    
+
                     campaigns.forEach(c => {
                         const campaign = this.campaigns.find(camp => camp.campaignId === c);
                         const filteredSales = sales.filter(s => s.campaignId == c);
@@ -267,9 +290,13 @@ export class PayCycleComponent implements OnInit {
                         const uniqueAgents = filteredSales.map(fs => fs.agentId).filter((fs, i, a) => a.indexOf(fs) === i);
                         
                         uniqueAgents.forEach(ua => {
+                            const pairing = this.salesPairings.find(sp => sp.campaignId == c && sp.agentId == ua);
+                            const commission = pairing != null ? pairing.commission : null;
                             const agentSales = filteredSales.filter(fs => fs.agentId == ua && fs.payCycleId == cycle.payCycleId);
-                            const grossTotal = agentSales.length * (campaign.compensation || 0);
+                            const grossTotal = agentSales.length * (commission || campaign.compensation || 0);
+
                             /** 
+                             * TODO:
                              * how do we figure this out? this might need to be a server side calc if 
                              * the company has "taxes" turned on? 
                              */
@@ -306,6 +333,11 @@ export class PayCycleComponent implements OnInit {
                             cycle.payrolls.concat(payrolls);
                         else 
                             cycle.payrolls = payrolls;
+
+                        // if we get here, we've successfully process payroll,
+                        // now we are going to close the pay cycle
+                        cycle.isClosed = true;
+                        this.updatePayCycle(cycle);
                     });
             });
     }
@@ -315,20 +347,17 @@ export class PayCycleComponent implements OnInit {
             .subscribe(payCycle => {
                 this.session.hideLoader();
                 this._cycles.forEach((c, i, a) => {
-                    if(payCycle.payCycleId != c.payCycleId) return;
+                    if (payCycle.payCycleId != c.payCycleId) return;
                     a[i] = payCycle;
                 });
 
-                if(this.showClosed)
-                    this.getArchived();
-                else
-                    this.getActive();
+                this._filterCycles();
             });
     }
 
     switchDisplay():void {
         this.showClosed = !this.showClosed;
-        if(this.showClosed)
+        if (this.showClosed)
             this.getArchived();
         else
             this.getActive();

@@ -5,15 +5,19 @@ namespace App;
 use App\Payroll;
 use App\DailySale;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class PayCycle extends Model
 {
+    use SoftDeletes;
     
     protected $table = 'pay_cycle';
 
     protected $primaryKey = 'pay_cycle_id';
 
     protected $fillable = ['pay_cycle_id', 'client_id', 'start_date', 'end_date', 'is_pending', 'is_locked', 'is_closed'];
+
+    protected $dates = ['created_at', 'updated_at', 'deleted_at'];
 
     public function getIsPendingAttribute($value)
     {

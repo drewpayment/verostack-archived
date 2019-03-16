@@ -313,6 +313,12 @@ export class AgentComponent implements OnInit, AfterViewChecked, OnDestroy {
     updateCommission(user:UserView, newValue:any, i:number):void {
         const form = user.pairingsForm.get(['array', i]) as FormGroup;
 
+        if (newValue == null) {
+            (<FormControl>form.get('commission'))
+                .setValue(null, { emitEvent: false, emitViewToModelChange: false });
+            return;
+        }
+
         if (isNaN(newValue.toString().charAt(0)))
             newValue = newValue.slice(1, newValue.length);
 

@@ -32,16 +32,19 @@
                         <div *ngFor="let cycle of todoCycles as cycles" class="list-group-item list-group-item-action" cdkDrag>
                             <!-- list group item heading -->
                             <div class="d-flex w-100 justify-content-between align-items-center">
-                                <h5 class="mb-1">{{ cycle.isPending ? 'Pending' : 'Not Started' }}</h5>
+                                <h5 class="mb-1">
+                                    {{ cycle.isPending ? 'Pending' : 'Not Started' }}
+                                    <small class="text-muted font-weight-normal"> Run #: {{ cycle.payCycleId }}</small>
+                                </h5>
                                 <button type="button" mat-icon-button (click)="editPayCycle(cycle)">
                                     <mat-icon>launch</mat-icon>
                                 </button>
                             </div>
                             <p class="mb-1">From: {{ cycle.startDate | date:'shortDate' }}</p>
                             <p class="mb-1">To: {{ cycle.endDate | date:'shortDate' }}</p>
-                            <div class="d-flex w-100" [class.justify-content-between]="cycle.payrolls.length"
-                                [class.justify-content-end]="!cycle.payrolls.length">
-                                <small *ngIf="cycle.payrolls.length">
+                            <div class="d-flex w-100" [class.justify-content-between]="cycle.payrolls?.length"
+                                [class.justify-content-end]="!cycle.payrolls?.length">
+                                <small *ngIf="cycle?.payrolls?.length">
                                     {{ cycle.payrolls.length }} Paychecks
                                 </small>
                                 <small>{{ getHumanReadableDuration(cycle) }}</small>
@@ -68,27 +71,32 @@
                             class="list-group-item list-group-item-action" cdkDrag>
                             <!-- list group item heading -->
                             <div class="d-flex justify-content-between align-items-center">
-                                <h5 class="mb-1">Locked</h5>
+                                <h5 class="mb-1">
+                                    Locked
+                                    <small class="text-muted font-weight-normal"> Run #: {{ cycle.payCycleId }}</small>
+                                </h5>
                                 <button type="button" mat-icon-button>
                                     <mat-icon>locked</mat-icon>
                                 </button>
                             </div>
-                            <p class="mb-1">From: {{ cycle.startDate | date:'shortDate' }}</p>
-                            <p class="mb-1">To: {{ cycle.endDate | date:'shortDate' }}</p>
-                            <div class="d-flex w-100" [class.justify-content-between]="cycle.payrolls.length"
-                                [class.justify-content-end]="!cycle.payrolls.length">
-                                <small *ngIf="cycle.payrolls.length">
-                                    {{ cycle.payrolls.length }} Paychecks
-                                </small>
-                                <small>{{ getHumanReadableDuration(cycle) }}</small>
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <p class="mb-1">From: {{ cycle.startDate | date:'shortDate' }}</p>
+                                    <p class="mb-1">To: {{ cycle.endDate | date:'shortDate' }}</p>
+                                    <small *ngIf="cycle.payrolls?.length">
+                                        {{ cycle.payrolls.length }} Paychecks
+                                    </small>
+                                </div>
+                                <div class="d-flex flex-column justify-content-end">
+                                    <button type="button" mat-stroked-button color="primary" class="p-0" 
+                                        (click)="processPayroll(cycle)" *ngIf="user?.role.role > 5">
+                                        Process
+                                    </button>
+                                    <small>{{ getHumanReadableDuration(cycle) }}</small>
+                                </div>
                             </div>
                         </a>
                     </div>
-                    <!-- <ng-template #noLockedCycles>
-                        <div class="d-flex w-100 justify-content-center">
-                            <h5 class="text-muted font-italic">No Locked Runs</h5>
-                        </div>
-                    </ng-template> -->
                 </mat-card-content>
             </mat-card>
         </div>
@@ -105,19 +113,28 @@
                             <div class="list-group-item list-group-item-action">
                                 <!-- list group item heading -->
                                 <div class="d-flex w-100 justify-content-between">
-                                    <h5 class="mb-1">Closed</h5>
+                                    <h5 class="mb-1">
+                                        Closed
+                                        <small class="text-muted font-weight-normal"> Run #: {{ cycle.payCycleId }}</small>
+                                    </h5>
                                     <mat-icon>check_circle</mat-icon>
                                 </div>
-                                <p class="mb-1">From: {{ cycle.startDate | date:'shortDate' }}</p>
-                                <p class="mb-1">To: {{ cycle.endDate | date:'shortDate' }}</p>
-                                <div class="d-flex w-100" [class.justify-content-between]="cycle.payrolls.length"
-                                    [class.justify-content-end]="!cycle.payrolls.length">
-                                    <small *ngIf="cycle.payrolls.length">
-                                        {{ cycle.payrolls.length }} Paychecks
-                                    </small>
-                                    <small>{{ getHumanReadableDuration(cycle) }}</small>
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <p class="mb-1">From: {{ cycle.startDate | date:'shortDate' }}</p>
+                                        <p class="mb-1">To: {{ cycle.endDate | date:'shortDate' }}</p>
+                                        <small *ngIf="cycle.payrolls?.length">
+                                            {{ cycle.payrolls.length }} Paychecks
+                                        </small>
+                                    </div>
+                                    <div class="d-flex flex-column justify-content-end">
+                                        <button type="button" mat-button color="warn" class="p-0" 
+                                            (click)="reopenPayroll(cycle)" *ngIf="user?.role.role > 6">
+                                            Open
+                                        </button>
+                                        <small>{{ getHumanReadableDuration(cycle) }}</small>
+                                    </div>
                                 </div>
-                                
                             </div>
                         </ng-container>
                     </div>
@@ -130,116 +147,5 @@
             </mat-card>
         </div>
     </div>
-
-    <!-- <ng-container *ngIf="displayCycles != null && (displayCycles|async).length; else noCycles">
-        <div class="row" *ngFor="let cycle of displayCycles|async as cycles">
-            <div class="col-md-12">
-                <mat-card [ngClass]="getBorderColor(cycle, 'left')">
-                    <mat-card-title class="d-flex justify-content-between">
-                        <div [class.text-danger]="isPayCycleDue(cycle)">
-                            <span class="font-weight-bold">Status: </span>
-                            <small>{{getCycleStatus(cycle)}}</small>
-                        </div>
-                        <div class="d-flex justify-content-end">
-                            <button type="button" mat-button 
-                                color="primary" 
-                                *ngIf="!cycle.isPending && !cycle.isClosed"
-                                (click)="editPayCycle(cycle)"
-                            >
-                                <mat-icon>play_arrow</mat-icon>
-                                <span>Start</span>
-                            </button>
-                            <ng-container *ngIf="!isBeforeEndDate(cycle); else payrollReadyToRun">
-                                <button
-                                    type="button" mat-button
-                                    color="primary"
-                                    *ngIf="cycle.isPending && !cycle.isClosed"
-                                    (click)="editPayCycle(cycle)"
-                                >
-                                    <mat-icon>redo</mat-icon>
-                                    <span>Continue</span>
-                                </button>
-                                <button
-                                    type="button" mat-button
-                                    color="accent"
-                                    *ngIf="cycle.isPending && !cycle.isClosed"
-                                    (click)="closePayCycle(cycle)"
-                                >
-                                    <mat-icon>archive</mat-icon>
-                                    <span>Archive</span>
-                                </button>
-                                <button
-                                    type="button" mat-button
-                                    color="primary"
-                                    *ngIf="cycle.isClosed"
-                                    (click)="openPayCycle(cycle)"
-                                >
-                                    <mat-icon>unarchive</mat-icon>
-                                    <span>Re-Open</span>
-                                </button>
-                            </ng-container>
-                            <ng-template #payrollReadyToRun>
-                                <button type="button"
-                                    mat-button
-                                    [color]="getEditButtonColor(cycle)"
-                                    [class.text-muted]="cycle?.payrolls?.length > 0"
-                                    *ngIf="cycle.isPending && !cycle.isClosed"
-                                    (click)="editPayCycle(cycle)"
-                                >
-                                    <mat-icon>create</mat-icon>
-                                    <span>Edit</span>
-                                </button>
-                                <button type="button"
-                                    mat-button
-                                    color="primary"
-                                    *ngIf="cycle.isPending && !cycle.isClosed && cycle?.payrolls?.length < 1"
-                                    (click)="processPayroll(cycle)"
-                                >
-                                    <mat-icon>sync</mat-icon>
-                                    <span>
-                                        {{ cycle?.payrolls?.length > 0 ? 'Reprocess' : 'Process' }}
-                                    </span>
-                                </button>
-                                <button
-                                    type="button" mat-button
-                                    color="accent"
-                                    *ngIf="cycle.isPending && !cycle.isClosed"
-                                    (click)="closePayCycle(cycle)"
-                                >
-                                    <mat-icon>archive</mat-icon>
-                                    <span>Archive</span>
-                                </button>
-                                <button
-                                    type="button" mat-button
-                                    color="primary"
-                                    *ngIf="cycle.isClosed"
-                                    (click)="openPayCycle(cycle)"
-                                >
-                                    <mat-icon>unarchive</mat-icon>
-                                    <span>Re-Open</span>
-                                </button>
-                            </ng-template>
-                        </div>
-                    </mat-card-title>
-                    <mat-card-content>
-                        <p>
-                            <span class="font-weight-bold">Dates:</span> 
-                            {{cycle.startDate | date:'shortDate'}} - {{cycle.endDate | date:'shortDate'}}
-                        </p>
-                        <p class="text-muted" *ngIf="cycle?.payrolls?.length">
-                            Payroll was processed {{getPayrollEditDate(cycle) | date:'short'}}
-                        </p>
-                    </mat-card-content>
-                </mat-card>
-            </div>
-        </div>
-    </ng-container>
-    <ng-template #noCycles>
-        <div class="row">
-            <div class="col-md-12">
-                <h5 class="text-center text-muted font-italic">No Payroll Cycles to display.</h5>
-            </div>
-        </div>
-    </ng-template> -->
     
 </div>

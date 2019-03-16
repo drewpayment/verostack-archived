@@ -8,9 +8,12 @@ use App\PayCycle;
 use Carbon\Carbon;
 use App\SaleStatus;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class DailySale extends Model
 {
+    use SoftDeletes;
+
     protected $table = 'daily_sale';
 
     protected $primaryKey = 'daily_sale_id';
@@ -34,6 +37,8 @@ class DailySale extends Model
 	    'sale_date',
 	    'last_touch_date'
     ];
+
+    protected $dates = ['created_at', 'updated_at', 'deleted_at'];
 
 	/**
 	 * Creates one-to-one relationship with agent.

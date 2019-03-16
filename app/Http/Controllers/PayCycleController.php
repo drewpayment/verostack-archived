@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
 use App\PayCycle;
+use App\DailySale;
 use Illuminate\Http\Request;
 use App\Http\Resources\ApiResource;
 use Illuminate\Support\Facades\Auth;
-use App\DailySale;
+use App\Payroll;
 
 class PayCycleController extends Controller
 {
@@ -144,6 +146,42 @@ class PayCycleController extends Controller
             ->get();
 
         return $result->setData($sales)
+            ->throwApiException()
+            ->getResponse();
+    }
+
+    public function deletePayrollsByPayCycle(Request $request, $clientId, $payCycleId)
+    {
+        $result = new ApiResource();
+
+        $payrollIds = $request->ids;
+
+        $result
+            ->checkAccessByClient($clientId, Auth::user()->id)
+            ->mergeInto($result);
+
+        if($result->hasError)
+            return $result->throwApiException()->getResponse();
+
+        $user = User::with('role')->userId(Auth::user()->id)->first();
+
+        // if the user isn't a system admin, they're not allowed to make this api call
+        if($user->role->role < 7)
+            return $result->setToFail()->throwApiException()->getResponse();
+
+        $sales = DailySale::with('agent', 'contact')
+            ->byPayCycleWithNulls($payCycleId)
+            ->update(['pay_cycle_id' => null]);
+
+        if (!$sales)
+            return $result->setToFail()->throwApiException()->getResponse();
+
+        if (is_array($payrollIds) && count($payrollIds) > 0) {
+            $deletes = Payroll::whereIn('payroll_id', $payrollIds)->delete();
+            $result->setData($deletes);
+        }
+            
+        return $result
             ->throwApiException()
             ->getResponse();
     }
