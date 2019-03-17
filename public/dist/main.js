@@ -9619,7 +9619,7 @@ var PaycheckListComponent = /** @class */ (function () {
                     return 1;
                 return 0;
             })
-                .sort(function (a, b) { return new Date(b.payroll.releaseDate - new Date(a.payroll.releaseDate)); });
+                .sort(function (a, b) { return new Date(b.releaseDate - new Date(a.releaseDate)); });
             paychecks = paychecks.map(function (p) {
                 p.payroll.campaign = _this.campaigns$.value.find(function (c) { return c.campaignId == p.payroll.campaignId; });
                 p.grossTotal = _this.calculateGrossTotal(p);

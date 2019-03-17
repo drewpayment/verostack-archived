@@ -66,7 +66,7 @@ class PayrollController extends Controller
             $payrolls[] = $res->getData();
         }
 
-        if(!is_array($payrolls) || !(count($payrolls) > 0))
+        if(!is_array($payrolls) || count($payrolls) < 1)
             return $result->setToFail('Fatal error. Please try again later.');
 
         return $result->setData($payrolls)

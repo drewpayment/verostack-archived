@@ -58,9 +58,9 @@ export class EditPayCycleComponent implements OnInit {
     }
 
     private initPage():void {
-        if(this.salesLoaded) return;
+        if (this.salesLoaded) return;
 
-        if(this._cycle == null) {
+        if (this._cycle == null) {
             this.router.navigate(['admin/pay']);
             return;
         }

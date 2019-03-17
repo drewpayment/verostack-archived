@@ -88,6 +88,7 @@ class PayrollDetailsService
                     $pq->whereBetween('release_date', [$request->startDate, $request->endDate]);
                 });
             })
+            // TODO: ->whereNotNull('release_date') needs to make sure we're getting only released payrolls back
             ->paginate($request->resultsPerPage, ['*'], 'page', $request->page);
 
         return $result->setData($details);

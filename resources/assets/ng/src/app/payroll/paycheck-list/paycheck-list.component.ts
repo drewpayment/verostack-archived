@@ -289,7 +289,7 @@ export class PaycheckListComponent implements OnInit {
                         return 1;
                     return 0;
                 })
-                .sort((a, b) => (<any>new Date(<any>b.payroll.releaseDate - <any>new Date(<any>a.payroll.releaseDate))));
+                .sort((a, b) => (<any>new Date(<any>b.releaseDate - <any>new Date(<any>a.releaseDate))));
                 
                 paychecks = paychecks.map(p => {
                     p.payroll.campaign = this.campaigns$.value.find(c => c.campaignId == p.payroll.campaignId);

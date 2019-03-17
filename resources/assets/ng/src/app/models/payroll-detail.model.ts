@@ -22,5 +22,8 @@ export interface PayrollDetails {
     agent?:IAgent,
     modifiedByUser?:User,
     expenses?:IExpense[],
-    overrides?:IOverride[]
+    overrides?:IOverride[],
+
+    /** UI ONLY */
+    releaseDate?:Moment|Date|string
 }

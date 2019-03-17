@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Http\Resources\ApiResource;
 use Illuminate\Support\Facades\Auth;
 use App\Payroll;
+use App\PayrollDetail;
 
 class PayCycleController extends Controller
 {
@@ -140,7 +141,7 @@ class PayCycleController extends Controller
             return $result->throwApiException()->getResponse();
 
         $sales = DailySale::with('agent', 'contact')
-            ->byPayCycleWithNulls($payCycleId)
+            // ->byPayCycle($payCycleId)
             ->byDateRange($request->start, $request->end)
             ->get();
 
@@ -169,7 +170,7 @@ class PayCycleController extends Controller
             return $result->setToFail()->throwApiException()->getResponse();
 
         $sales = DailySale::with('agent', 'contact')
-            ->byPayCycle()($payCycleId)
+            ->byPayCycle($payCycleId)
             ->update(['pay_cycle_id' => null]);
 
         if (!$sales)
@@ -177,6 +178,7 @@ class PayCycleController extends Controller
 
         if (is_array($payrollIds) && count($payrollIds) > 0) {
             $deletes = Payroll::whereIn('payroll_id', $payrollIds)->delete();
+            $deletes = PayrollDetail::whereIn('payroll_id', $payrollIds)->delete();
             $result->setData($deletes);
         }
             
