@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRouteSnapshot, ActivatedRoute } from '@angular/router';
 import { PayrollDetails, User, IClient, DailySale, IOverride, IExpense } from '@app/models';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, forkJoin } from 'rxjs';
 import { SessionService } from '@app/session.service';
 import { DailySaleTrackerService } from '@app/daily-sale-tracker/daily-sale-tracker.service';
+import { AgentService } from '@app/agent/agent.service';
 
 @Component({
     selector: 'vs-paycheck-detail',
@@ -31,8 +32,9 @@ export class PaycheckDetailComponent implements OnInit {
     constructor(
         private route:ActivatedRoute, 
         private session:SessionService, 
-        private dailySaleService:DailySaleTrackerService
-    ){}
+        private dailySaleService:DailySaleTrackerService,
+        private agentService:AgentService
+    ) {}
 
     ngOnInit() {
         this.route.data.subscribe(data => {
@@ -46,10 +48,17 @@ export class PaycheckDetailComponent implements OnInit {
                 this.user = u;
                 this.client = this.user.clients.find(c => c.clientId == this.user.sessionUser.sessionClient);
 
-                this.dailySaleService.getPaycheckDetailSales(
-                    this.user.sessionUser.sessionClient,
-                    detailData.payroll.payCycleId
-                ).subscribe(sales => {
+                forkJoin(
+                    this.dailySaleService.getPaycheckDetailSales(this.client.clientId, detailData.payroll.payCycleId),
+                    this.agentService.getSalesPairingsByClient(this.client.clientId)
+                ).subscribe(([sales, pairings]) => {
+                    
+                    sales.forEach(s => {
+                        const pairing = pairings.find(p => p.agentId == s.agentId && s.campaignId == p.campaignId);
+                        if (pairing == null || pairing.commission == null) return;
+                        s.campaign.compensation = pairing.commission;
+                    });
+
                     this.sales = sales;
                 });
             });

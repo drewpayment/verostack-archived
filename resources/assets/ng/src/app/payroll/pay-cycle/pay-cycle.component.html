@@ -108,7 +108,7 @@
                     <span>Completed</span>
                 </mat-card-title>
                 <mat-card-content>
-                    <div class="list-group" *ngIf="closedCycles.length; else noClosedCycles">
+                    <div class="list-group">
                         <ng-container *ngFor="let cycle of closedCycles as cycles">
                             <div class="list-group-item list-group-item-action">
                                 <!-- list group item heading -->
@@ -138,11 +138,6 @@
                             </div>
                         </ng-container>
                     </div>
-                    <ng-template #noClosedCycles>
-                        <div class="d-flex w-100 justify-content-center">
-                            <h5 class="text-muted font-italic">No Closed Runs</h5>
-                        </div>
-                    </ng-template>
                 </mat-card-content>
             </mat-card>
         </div>

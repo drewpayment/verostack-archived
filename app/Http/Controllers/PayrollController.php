@@ -153,6 +153,7 @@ class PayrollController extends Controller
         foreach($payrolls as $p) 
         {
             $p->is_released = true;
+            $p->release_date = date('Y-m-d');
             $p->payCycle->is_pending = false;
             $rs = $p->push();
 

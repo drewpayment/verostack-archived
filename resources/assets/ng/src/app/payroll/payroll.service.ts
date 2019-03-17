@@ -39,7 +39,7 @@ export class PayrollService {
 
     setReleased(clientId:number, payrollIds:number[]):Observable<boolean> {
         const url = `${this.api}/clients/${clientId}/payrolls/set-released`;
-        let params = new HttpParams().set('payrollIds', JSON.stringify(payrollIds));
+        const params = new HttpParams().set('payrollIds', JSON.stringify(payrollIds));
         return this.http.get<boolean>(url, { params: params });
     }
 

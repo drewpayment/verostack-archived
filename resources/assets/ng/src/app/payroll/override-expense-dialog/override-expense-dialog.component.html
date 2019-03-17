@@ -101,6 +101,7 @@
                                 <mat-form-field class="w-100">
                                     <input matInput
                                         [matDatepicker]="expenseDatepicker"
+                                        [max]="payCycle.endDate"
                                         placeholder="Date"
                                         formControlName="expenseDate"
                                         required

@@ -6,8 +6,10 @@ import { trigger, transition, style, animate } from '@angular/animations';
 import { DEFAULT_VALUE_ACCESSOR } from '@angular/forms/src/directives/default_value_accessor';
 import { coerceNumberProperty } from '@app/utils';
 import { CurrencyPipe } from '@angular/common';
+import { PayCycle } from '@app/models/pay-cycle.model';
 
 interface DialogData {
+    payCycle:PayCycle,
     detail:PayrollDetails,
     agents:IAgent[]
 }
@@ -34,6 +36,7 @@ interface DialogData {
 })
 export class OverrideExpenseDialogComponent implements OnInit, AfterViewInit {
 
+    payCycle:PayCycle;
     detail:PayrollDetails;
     agents:IAgent[];
     f:FormGroup = this.createForm();
@@ -47,12 +50,13 @@ export class OverrideExpenseDialogComponent implements OnInit, AfterViewInit {
         private fb:FormBuilder,
         private currencyPipe:CurrencyPipe
     ) {
+        this.payCycle = this.data.payCycle;
         this.detail = this.data.detail || {} as PayrollDetails;
         this.agents = this.data.agents || [];
     }
 
     ngOnInit() {
-        if(this.detail != null) this.buildFormArrays();
+        if (this.detail != null) this.buildFormArrays();
     }
 
     ngAfterViewInit() {
@@ -62,7 +66,7 @@ export class OverrideExpenseDialogComponent implements OnInit, AfterViewInit {
     }
 
     addAdjustment() {
-        if(this.overrideTab.isActive) 
+        if (this.overrideTab.isActive) 
             this.addOverrideFormItem();
         else
             this.addExpenseFormItem();

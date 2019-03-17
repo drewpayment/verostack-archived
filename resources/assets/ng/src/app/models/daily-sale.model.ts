@@ -1,5 +1,5 @@
 import { Moment } from "moment";
-import { Remark, IAgent } from "@app/models";
+import { Remark, IAgent, ICampaign } from "@app/models";
 import { Contact } from './contact.model';
 import { SaleStatus } from './sale-status.model';
 
@@ -37,7 +37,8 @@ export interface DailySale {
   remarks:Remark[],
   agent?:IAgent,
   contact?:Contact,
-  saleStatus?:SaleStatus
+  saleStatus?:SaleStatus,
+  campaign?:ICampaign,
 
   // UI ONLY PROPERTIES 
   readonly?:boolean

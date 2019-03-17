@@ -96,7 +96,7 @@
                                     (click)="$event.stopPropagation()"
                                     (change)="$event ? selection.toggle(item) : null"
                                     [checked]="selection.isSelected(item)"
-                                    [disabled]="item.payCycle.isClosed || item.isReleased"
+                                    [disabled]="item.isReleased"
                                 ></mat-checkbox>
                             </mat-cell>
                         </ng-container>
@@ -160,7 +160,12 @@
                                         </a>
                                     </ng-container>
                                     <ng-template #notReleased>
-                                        {{desc}}
+                                        <span *ngIf="item.payCycle.isClosed; else notReady" matTooltip="Ready to release to agents.">
+                                            Ready
+                                        </span>
+                                        <ng-template #notReady>
+                                            {{desc}}
+                                        </ng-template>
                                     </ng-template>
                                 </ng-container>
                             </mat-cell>
@@ -206,7 +211,7 @@
                                                         </div>
                                                     </div>
                                                 </li>
-                                                <li *ngFor="let detail of item.details" class="list-group-item">
+                                                <li *ngFor="let detail of item.details; let didx = index;" class="list-group-item">
                                                     <div class="row align-middle">
                                                         <div class="col-md-3">
                                                             {{detail.agent.firstName}} {{detail.agent.lastName}}
@@ -226,8 +231,8 @@
                                                         <div class="col-md-auto">
                                                             <button type="button" mat-icon-button 
                                                                 color="primary"
-                                                                (click)="showExpensesAndOverrides(detail)"
-                                                                [disabled]="item.isReleased || item.payCycle.isClosed"
+                                                                (click)="showExpensesAndOverrides(item, detail)"
+                                                                [disabled]="item.isReleased"
                                                             >
                                                                 <mat-icon>settings</mat-icon>
                                                             </button>

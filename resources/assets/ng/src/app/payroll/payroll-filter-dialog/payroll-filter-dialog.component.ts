@@ -24,9 +24,6 @@ export class PayrollFilterDialogComponent implements OnInit {
     campaigns:ICampaign[];
     showReleaseDateFormControl:boolean = false;
 
-    defaultEndDate:Moment = moment();
-    defaultStartDate:Moment = this.defaultEndDate.clone().subtract(7, 'days');
-
     constructor(
         private ref:MatDialogRef<PayrollFilterDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data:DialogData,
@@ -35,11 +32,11 @@ export class PayrollFilterDialogComponent implements OnInit {
         this.filters = this.data.filters || { activeFilters: [] } as PayrollFilter;
         this.agents = this.data.agents || [];
         this.campaigns = this.data.campaigns.sort((a, b) => {
-            if(a.active && !b.active) 
+            if (a.active && !b.active) 
                 return -1;
-            if(!a.active && b.active)
+            if (!a.active && b.active)
                 return 1;
-            if(a.active == b.active)
+            if (a.active == b.active)
                 return 0;
         }) || [];
     }
@@ -50,7 +47,7 @@ export class PayrollFilterDialogComponent implements OnInit {
         this.f.controls.isAutomated.valueChanges.subscribe(value => {
             this.showReleaseDateFormControl = value;
 
-            if(value)
+            if (value)
                 this.f.controls.automatedRelease.setValidators([Validators.required]);
             else
                 this.f.controls.automatedRelease.clearValidators();
@@ -118,8 +115,8 @@ export class PayrollFilterDialogComponent implements OnInit {
 
     private patchForm():void {
         this.f.patchValue({
-            startDate: this.filters.startDate || this.defaultStartDate,
-            endDate: this.filters.endDate || this.defaultEndDate,
+            startDate: this.filters.startDate,
+            endDate: this.filters.endDate,
             agent: this.filters.agentId,
             campaign: this.filters.campaignId,
             client: this.filters.clientId,

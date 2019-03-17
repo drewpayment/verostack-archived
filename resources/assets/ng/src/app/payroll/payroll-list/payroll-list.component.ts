@@ -16,6 +16,7 @@ import { ScheduleAutoReleaseDialogComponent } from '../schedule-auto-release-dia
 import { ConfirmAutoreleaseDateDialogComponent } from '../confirm-autorelease-date-dialog/confirm-autorelease-date-dialog.component';
 import { ConfirmReleaseDialogComponent } from '../confirm-release-dialog/confirm-release-dialog.component';
 import * as _ from 'lodash';
+import { isArray } from 'util';
 
 @Component({
     selector: 'vs-payroll-list',
@@ -60,8 +61,8 @@ export class PayrollListComponent implements OnInit {
     defaultStartDate:Moment;
     filters:PayrollFilter = { 
         activeFilters: [],
-        startDate: this.defaultStartDate,
-        endDate: this.defaultEndDate
+        startDate: null,
+        endDate: null
     } as PayrollFilter;
     private _isFilterBtnActive = false;
     isFilterBtnActive$ = new BehaviorSubject<boolean>(this._isFilterBtnActive);
@@ -78,7 +79,7 @@ export class PayrollListComponent implements OnInit {
     allowMultiSelect = true;
     selection = new SelectionModel<Payroll>(true, []);
     @ViewChild('tableRef') table:MatTable<MatTableDataSource<Payroll>>; 
-    disableRelease:boolean = true;
+    disableRelease = true;
 
     selectedAutoReleaseDate:Moment;
 
@@ -259,11 +260,12 @@ export class PayrollListComponent implements OnInit {
         return numSelected === numRows;
     }
 
-    showExpensesAndOverrides(detail:PayrollDetails) {
+    showExpensesAndOverrides(payroll:Payroll, detail:PayrollDetails) {
         this.dialog.open(OverrideExpenseDialogComponent, {
             width: '60vw',
             maxHeight: '80vh',
             data: {
+                payCycle: payroll.payCycle,
                 detail: detail,
                 agents: this.agents
             }
@@ -317,7 +319,7 @@ export class PayrollListComponent implements OnInit {
         })
         .afterClosed()
         .subscribe(result => {
-            if(!result) return;
+            if (!result) return;
 
             const payrollIds = this.selection.selected.map(p => p.payrollId);
 
@@ -325,13 +327,14 @@ export class PayrollListComponent implements OnInit {
                 .subscribe(() => {
                     payrollIds.forEach(id => {
                         this._payrolls.forEach((p, i, a) => {
-                            if(p.payrollId != id) return;
+                            if (p.payrollId != id) return;
                             a[i].isReleased = true;
                             a[i].payCycle.isPending = false;
                         });
                     });
 
                     this.setPayrolls(this._payrolls);
+                    this.applyFilters();
                     this.msg.addMessage('Successfully released!', 'dismiss', 5000);
                 });
         });
@@ -339,29 +342,30 @@ export class PayrollListComponent implements OnInit {
     }
 
     private applyFilters() {
-        if(this._payrolls == null || !this._payrolls.length) return;
+        if (this._payrolls == null || !this._payrolls.length) return;
 
         /** let's set our initial filter dates based on what came back from the api */
-        if((this.filters.startDate == null || this.filters.endDate == null) && this._payrolls.length) {
-            const sortedPayrolls = this._payrolls.sort((a, b) => moment(a.weekEnding).isAfter(b.weekEnding, 'day') ? 1 : 0);
-            const mostRecentWeekending = sortedPayrolls[sortedPayrolls.length - 1].weekEnding;
-            this.filters.endDate = moment(mostRecentWeekending).add(7, 'days');
-            this.filters.startDate = moment(mostRecentWeekending).subtract(7, 'days');
-        }
+        // if ((this.filters.startDate == null || this.filters.endDate == null) && this._payrolls.length) {
+        //     const sortedPayrolls = this._payrolls.sort((a, b) => moment(a.weekEnding).isAfter(b.weekEnding, 'day') ? 1 : 0);
+        //     const mostRecentWeekending = sortedPayrolls[sortedPayrolls.length - 1].weekEnding;
+        //     this.filters.endDate = moment(mostRecentWeekending).add(7, 'days');
+        //     this.filters.startDate = moment(mostRecentWeekending).subtract(7, 'days');
+        // }
 
-        let filteredPayrolls:Payroll[] = [];
-        filteredPayrolls = this._payrolls.filter(p => {
-            const startDate = this.filters.startDate;
-            const endDate = this.filters.endDate;
-            return moment(p.weekEnding).isBetween(startDate, endDate, 'd', MomentInclusivity.includeBoth);
-        });
+        let filteredPayrolls:Payroll[] = this._payrolls;
+        // TODO: Bad logic, this hides data that should be apparent to the user that it exists
+        // filteredPayrolls = this._payrolls.filter(p => {
+        //     const startDate = this.filters.startDate;
+        //     const endDate = this.filters.endDate;
+        //     return moment(p.weekEnding).isBetween(startDate, endDate, 'd', MomentInclusivity.includeBoth);
+        // });
         
         this.filters.activeFilters.forEach(af => {
             filteredPayrolls = this.applyFilterByType(filteredPayrolls, af);
         });
 
         /** TODO: for now we're going to stripped closed cycles out until we add to filter */
-        filteredPayrolls = filteredPayrolls.filter(f => !f.payCycle.isClosed);
+        // filteredPayrolls = filteredPayrolls.filter(f => !f.payCycle.isClosed);
 
         // this is the only time we set the payroll subject direclty without the setPayrolls() method
         this.payrolls$.next(filteredPayrolls);
@@ -371,11 +375,11 @@ export class PayrollListComponent implements OnInit {
 
     private applyFilterByType(payrolls:Payroll[], type:PayrollFilterType):Payroll[] {
         let result:Payroll[];
-        switch(type) {
+        switch (type) {
             case PayrollFilterType.agent:
                 result = payrolls.map((p, i, a) => {
                     const hasDetails = p.details.find(d => d.agentId == this.filters.agentId) != null;
-                    if(hasDetails) {
+                    if (hasDetails) {
                         p.details = p.details.filter(d => d.agentId == this.filters.agentId);
                         return p;
                     }
@@ -407,10 +411,10 @@ export class PayrollListComponent implements OnInit {
     private setActiveFiltersStatus() {
         let setFiltersActive = false;
         
-        if(this.filters.activeFilters.length)
+        if (this.filters.activeFilters.length)
             setFiltersActive = true;
 
-        if(this._isFilterBtnActive != setFiltersActive) {
+        if (this._isFilterBtnActive != setFiltersActive) {
             this._isFilterBtnActive = setFiltersActive;
             this.isFilterBtnActive$.next(this._isFilterBtnActive);
         }
@@ -427,6 +431,10 @@ export class PayrollListComponent implements OnInit {
     private initializeComponent() {
         this.service.getPayrollList(this.user.sessionUser.sessionClient, this.user.id)
             .subscribe(payrolls => {
+                if (!isArray(payrolls)) {
+                    this.session.hideLoader();
+                    return;
+                }
                 this.setPayrolls(payrolls);
                 this.applyFilters();
 

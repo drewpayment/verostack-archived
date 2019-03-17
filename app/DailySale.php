@@ -83,7 +83,7 @@ class DailySale extends Model
 	public function campaign()
 	{
 		return $this->hasOne(Campaign::class, 'campaign_id', 'campaign_id');
-	}
+    }
 
     /**
 	 * Filter entities by pay cycle id. This query also returns sales that have a null
@@ -95,7 +95,7 @@ class DailySale extends Model
 	 *
 	 * @return mixed \Illuminate\Database\Eloquent\Builder
 	 */
-    public function scopeByPayCycleWithNulls($query, $payCycleId)
+    protected function scopeByPayCycleWithNulls($query, $payCycleId)
     {
         return $query->where('pay_cycle_id', $payCycleId)
             ->orWhere('pay_cycle_id', null);

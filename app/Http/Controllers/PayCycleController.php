@@ -57,7 +57,6 @@ class PayCycleController extends Controller
         $cycle->is_pending = $dto->isPending;
         $cycle->is_locked = $dto->isLocked;
         $cycle->is_closed = $dto->isClosed;
-        $cycle->timestamps();
 
         $res = $cycle->save();
 
@@ -170,7 +169,7 @@ class PayCycleController extends Controller
             return $result->setToFail()->throwApiException()->getResponse();
 
         $sales = DailySale::with('agent', 'contact')
-            ->byPayCycleWithNulls($payCycleId)
+            ->byPayCycle()($payCycleId)
             ->update(['pay_cycle_id' => null]);
 
         if (!$sales)
