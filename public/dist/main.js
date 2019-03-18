@@ -8990,7 +8990,17 @@ var PayCycleComponent = /** @class */ (function () {
      * @param cycle
      */
     PayCycleComponent.prototype.processPayroll = function (cycle) {
-        this.createPayrollsByCampaign(cycle);
+        var _this = this;
+        /** CHECK FOR SOFT DELETED PAYROLL AND PAYROLL DETAILS */
+        this.payCycleService.checkAndOpenSoftDeletedPayCycleAffiliates(this.user.sessionUser.sessionClient, cycle.payCycleId).subscribe(function (result) {
+            if (result) {
+                cycle.isClosed = true;
+                _this.updatePayCycle(cycle);
+            }
+            else {
+                _this.createPayrollsByCampaign(cycle);
+            }
+        });
     };
     PayCycleComponent.prototype.createPayrollsByCampaign = function (cycle) {
         var _this = this;
@@ -9128,6 +9138,11 @@ var PayCycleService = /** @class */ (function () {
     PayCycleService.prototype.getPayCycles = function (clientId, includeClosed) {
         if (includeClosed === void 0) { includeClosed = false; }
         return this.http.get(this.api + "api/clients/" + clientId + "/pay-cycles/include-closed/" + includeClosed);
+    };
+    // clients/{clientId}/pay-cycles/{payCycleId}/existing-pay-cycle-affiliates
+    PayCycleService.prototype.checkAndOpenSoftDeletedPayCycleAffiliates = function (clientId, payCycleId) {
+        var url = this.api + "api/clients/" + clientId + "/pay-cycles/" + payCycleId + "/existing-pay-cycle-affiliates";
+        return this.http.get(url);
     };
     PayCycleService.prototype.getSalesByDateRange = function (clientId, start, end, includeClosed) {
         if (includeClosed === void 0) { includeClosed = false; }

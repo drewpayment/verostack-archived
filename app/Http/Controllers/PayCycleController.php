@@ -169,13 +169,6 @@ class PayCycleController extends Controller
         if($user->role->role < 7)
             return $result->setToFail()->throwApiException()->getResponse();
 
-        $sales = DailySale::with('agent', 'contact')
-            ->byPayCycle($payCycleId)
-            ->update(['pay_cycle_id' => null]);
-
-        if (!$sales)
-            return $result->setToFail()->throwApiException()->getResponse();
-
         if (is_array($payrollIds) && count($payrollIds) > 0) {
             $deletes = Payroll::whereIn('payroll_id', $payrollIds)->delete();
             $deletes = PayrollDetail::whereIn('payroll_id', $payrollIds)->delete();
@@ -256,9 +249,42 @@ class PayCycleController extends Controller
 
         $cycle = PayCycle::orderBy('end_date', 'desc')->take(1)->first();
 
+        if (is_null($cycle)) {
+            return $result->throwApiException()->getResponse();
+        }
+
         return $result->setData($cycle)
             ->throwApiException()
             ->getResponse();
+    }
+
+    public function checkForExistingPayCycleAffiliates($clientId, $payCycleId)
+    {
+        $result = new ApiResource();
+
+        $result
+            ->checkAccessByClient($clientId, Auth::user()->id)
+            ->mergeInto($result);
+
+        if($result->hasError)
+            return $result->throwApiException()->getResponse();
+
+        $payrollsQuery = Payroll::withTrashed()->byPayCycleId($payCycleId);
+        $payrolls = $payrollsQuery->get();
+
+        if ($payrolls->count() < 1) {
+            return $result->setData(false)->throwApiException()->getResponse();
+        }
+
+        $payrollIds = $payrolls->map(function($p) { return $p->payroll_id; })->all();
+
+        foreach($payrollIds as $p) {
+            PayrollDetail::withTrashed()->byPayrollId($p)->restore();
+        }
+
+        $payrollsQuery->restore();
+
+        return $result->setData(true)->throwApiException()->getResponse();
     }
 
 }

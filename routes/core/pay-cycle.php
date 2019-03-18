@@ -22,4 +22,6 @@ Route::middleware(['auth:api'])->group(function() {
 
     Route::get('clients/{clientId}/pay-cycles/last', 'PayCycleController@getLastPaycycle');
 
+    Route::get('clients/{clientId}/pay-cycles/{payCycleId}/existing-pay-cycle-affiliates', 'PayCycleController@checkForExistingPayCycleAffiliates');
+
 });

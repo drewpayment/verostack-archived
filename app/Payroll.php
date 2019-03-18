@@ -76,6 +76,11 @@ class Payroll extends Model
         return $query->where('client_id', $clientId);
     }
 
+    public function scopeByPayCycleId($query, $payCycleId)
+    {
+        return $query->where('pay_cycle_id', $payCycleId);
+    }
+
     /**
      * Save the model and return it with the Pay Cycle relationship.
      * I DON'T KNOW IF THIS IS GOING TO WORK.

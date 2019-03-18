@@ -259,7 +259,20 @@ export class PayCycleComponent implements OnInit {
      * @param cycle 
      */
     processPayroll(cycle:PayCycle) {
-        this.createPayrollsByCampaign(cycle);
+
+        /** CHECK FOR SOFT DELETED PAYROLL AND PAYROLL DETAILS */
+        this.payCycleService.checkAndOpenSoftDeletedPayCycleAffiliates(
+            this.user.sessionUser.sessionClient,
+            cycle.payCycleId
+        ).subscribe(result => {
+
+            if (result) {
+                cycle.isClosed = true;
+                this.updatePayCycle(cycle);
+            } else {
+                this.createPayrollsByCampaign(cycle);
+            }
+        });
     }
 
     private createPayrollsByCampaign(cycle:PayCycle) {

@@ -85,7 +85,8 @@ class PayrollDetailsService
             ->latest('release_date', 'desc')
             ->when($filterByDates, function($qry) use ($request) {
                 $qry->whereHas('payroll', function($pq) use ($request) {
-                    $pq->whereBetween('release_date', [$request->startDate, $request->endDate]);
+                    $pq->where('is_released', 1)
+                        ->whereBetween('release_date', [$request->startDate, $request->endDate]);
                 });
             })
             // TODO: ->whereNotNull('release_date') needs to make sure we're getting only released payrolls back

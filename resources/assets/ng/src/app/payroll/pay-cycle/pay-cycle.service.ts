@@ -23,6 +23,12 @@ export class PayCycleService {
         return this.http.get<PayCycle[]>(`${this.api}api/clients/${clientId}/pay-cycles/include-closed/${includeClosed}`);
     }
 
+    // clients/{clientId}/pay-cycles/{payCycleId}/existing-pay-cycle-affiliates
+    checkAndOpenSoftDeletedPayCycleAffiliates(clientId:number, payCycleId:number):Observable<boolean> {
+        const url = `${this.api}api/clients/${clientId}/pay-cycles/${payCycleId}/existing-pay-cycle-affiliates`;
+        return this.http.get<boolean>(url);
+    }
+
     getSalesByDateRange(clientId:number, start:string, end:string, includeClosed = false):Observable<DailySale[]> {
         const url = `${this.api}api/clients/${clientId}/pay-cycles/daily-sales`;
         return this.http.get<DailySale[]>(url, { 

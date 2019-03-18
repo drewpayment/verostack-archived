@@ -42,4 +42,9 @@ class PayrollDetail extends Model
         return $query->where('payroll_details_id', $id);
     }
 
+    public function scopeByPayrollId($query, $id)
+    {
+        return $query->where('payroll_id', $id);
+    }
+
 }
