@@ -6,6 +6,45 @@ use App\Payroll;
 use App\PayrollDetail;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * App\Agent
+ *
+ * @property int $agent_id
+ * @property int|null $user_id
+ * @property string $first_name
+ * @property string $last_name
+ * @property int|null $manager_id
+ * @property bool $is_manager
+ * @property bool $is_active
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Agent[] $children
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\SalesPairing[] $pairings
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\PayrollDetail[] $payrollDetails
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Payroll[] $payrolls
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\DailySale[] $sales
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\SalesPairing[] $salesPairings
+ * @property-read \App\User $user
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Agent activeOnly($activeOnly)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Agent byActiveType($activeType)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Agent byAgentId($agentId)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Agent byManager($managerId)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Agent byUser($userId)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Agent managerId($managerId)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Agent newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Agent newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Agent query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Agent whereAgentId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Agent whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Agent whereFirstName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Agent whereIsActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Agent whereIsManager($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Agent whereLastName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Agent whereManagerId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Agent whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Agent whereUserId($value)
+ * @mixin \Eloquent
+ */
 class Agent extends Model
 {
 

@@ -5,6 +5,24 @@ namespace App;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * App\DailySaleRemark
+ *
+ * @property int $daily_sale_id
+ * @property int $remark_id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\DailySale $dailySale
+ * @property-read \App\Remark $remark
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\DailySaleRemark newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\DailySaleRemark newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\DailySaleRemark query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\DailySaleRemark whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\DailySaleRemark whereDailySaleId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\DailySaleRemark whereRemarkId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\DailySaleRemark whereUpdatedAt($value)
+ * @mixin \Eloquent
+ */
 class DailySaleRemark extends Model
 {
     protected $table = 'daily_sale_remark';

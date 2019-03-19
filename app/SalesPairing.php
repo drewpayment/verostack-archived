@@ -5,6 +5,35 @@ namespace App;
 use App\Agent;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * App\SalesPairing
+ *
+ * @property int $sales_pairings_id
+ * @property int $agent_id
+ * @property int $campaign_id
+ * @property float|null $commission
+ * @property int $sales_id
+ * @property int $client_id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Agent $agent
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\SalesPairing agentId($id)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\SalesPairing campaignId($campaignId)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\SalesPairing clientId($clientId)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\SalesPairing newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\SalesPairing newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\SalesPairing query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\SalesPairing salesPairings($id)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\SalesPairing whereAgentId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\SalesPairing whereCampaignId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\SalesPairing whereClientId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\SalesPairing whereCommission($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\SalesPairing whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\SalesPairing whereSalesId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\SalesPairing whereSalesPairingsId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\SalesPairing whereUpdatedAt($value)
+ * @mixin \Eloquent
+ */
 class SalesPairing extends Model
 {
 

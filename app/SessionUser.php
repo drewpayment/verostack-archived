@@ -4,6 +4,28 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * App\SessionUser
+ *
+ * @property int $id
+ * @property int $user_id
+ * @property int $session_client
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Client $client
+ * @property-read \App\User $user
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\SessionUser bySessionUserId($id)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\SessionUser newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\SessionUser newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\SessionUser query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\SessionUser userId($id)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\SessionUser whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\SessionUser whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\SessionUser whereSessionClient($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\SessionUser whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\SessionUser whereUserId($value)
+ * @mixin \Eloquent
+ */
 class SessionUser extends Model
 {
 

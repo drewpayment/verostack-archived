@@ -10,6 +10,70 @@ use App\SaleStatus;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * App\DailySale
+ *
+ * @property int $daily_sale_id
+ * @property int $agent_id
+ * @property int $client_id
+ * @property int $utility_id
+ * @property int $campaign_id
+ * @property int $contact_id
+ * @property string $pod_account
+ * @property int $status
+ * @property int $paid_status
+ * @property int|null $pay_cycle_id
+ * @property string $sale_date
+ * @property string $last_touch_date
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property string|null $paid_date
+ * @property string|null $charge_date
+ * @property string|null $repaid_date
+ * @property-read \App\Agent $agent
+ * @property-read \App\Campaign $campaign
+ * @property-read \App\Contact $contact
+ * @property-read \App\PayCycle|null $payCycle
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Remark[] $remarks
+ * @property-read \App\SaleStatus $saleStatus
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\DailySale byAccount($pod)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\DailySale byAgentId($agentId)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\DailySale byCampaign($campaignId)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\DailySale byClient($clientId)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\DailySale byDailySale($dailySaleId)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\DailySale byDateRange($startDate, $endDate)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\DailySale byPaidStatus($status)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\DailySale byPayCycle($id)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\DailySale filterPaid()
+ * @method static bool|null forceDelete()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\DailySale newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\DailySale newQuery()
+ * @method static \Illuminate\Database\Query\Builder|\App\DailySale onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\DailySale query()
+ * @method static bool|null restore()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\DailySale whereAgentId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\DailySale whereCampaignId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\DailySale whereChargeDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\DailySale whereClientId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\DailySale whereContactId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\DailySale whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\DailySale whereDailySaleId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\DailySale whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\DailySale whereLastTouchDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\DailySale wherePaidDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\DailySale wherePaidStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\DailySale wherePayCycleId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\DailySale wherePodAccount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\DailySale whereRepaidDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\DailySale whereSaleDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\DailySale whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\DailySale whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\DailySale whereUtilityId($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\DailySale withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\App\DailySale withoutTrashed()
+ * @mixin \Eloquent
+ */
 class DailySale extends Model
 {
     use SoftDeletes;

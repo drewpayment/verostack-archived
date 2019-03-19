@@ -16,6 +16,7 @@ use Illuminate\Http\Response;
 use App\Http\Resources\ApiResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use App\ClientUser;
 
 class UserController extends Controller
 {
@@ -467,16 +468,23 @@ class UserController extends Controller
     {
         $result = new ApiResource();
 
-        $u = SessionUser::where('user_id', Auth::user()->id)->first();
+        // check if user is allowed to change to client
+        $hasClientAccess = ClientUser::byClient($clientId)->exists();
 
-        dump($u);
+        if (!$hasClientAccess) {
+            return $result->setToFail('Does not have access to the selected client.')
+                ->throwApiException()
+                ->getResponse();
+        }
+
+        $u = SessionUser::where('user_id', Auth::user()->id)->first();
 
         $u->session_client = $clientId;
 
         $res = $u->save();
 
         if(!$res)
-            return $result->setToFail()->getResponse();
+            return $result->setToFail()->throwApiException()->getResponse();
 
         return $result->setData(true)
             ->throwApiException()

@@ -49,7 +49,7 @@ export class ClientSelectorComponent implements OnInit {
         .subscribe(result => {
             if (!result) return;
 
-            location.reload();
+            this.router.navigate(['client-information']);
             this.cancel();
         });
   }

@@ -4,6 +4,33 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * App\Invoice
+ *
+ * @property int $invoice_id
+ * @property int $agent_id
+ * @property int $campaign_id
+ * @property string $issue_date
+ * @property string $week_ending
+ * @property int|null $modified_by
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Invoice byAgentId($id)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Invoice byCampaignId($id)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Invoice byIssueDate($date)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Invoice newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Invoice newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Invoice query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Invoice whereAgentId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Invoice whereCampaignId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Invoice whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Invoice whereInvoiceId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Invoice whereIssueDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Invoice whereModifiedBy($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Invoice whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Invoice whereWeekEnding($value)
+ * @mixin \Eloquent
+ */
 class Invoice extends Model
 {
 

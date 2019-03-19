@@ -7,6 +7,45 @@ use App\DailySale;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * App\PayCycle
+ *
+ * @property int $pay_cycle_id
+ * @property int $client_id
+ * @property string $start_date
+ * @property string $end_date
+ * @property bool $is_pending
+ * @property bool $is_closed
+ * @property bool $is_locked
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\DailySale[] $dailySales
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Payroll[] $payrolls
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\PayCycle byClient($id)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\PayCycle byDates($start, $end)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\PayCycle byPayCycle($id)
+ * @method static bool|null forceDelete()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\PayCycle includeClosed($include = false)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\PayCycle newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\PayCycle newQuery()
+ * @method static \Illuminate\Database\Query\Builder|\App\PayCycle onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\PayCycle query()
+ * @method static bool|null restore()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\PayCycle whereClientId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\PayCycle whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\PayCycle whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\PayCycle whereEndDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\PayCycle whereIsClosed($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\PayCycle whereIsLocked($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\PayCycle whereIsPending($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\PayCycle wherePayCycleId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\PayCycle whereStartDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\PayCycle whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\PayCycle withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\App\PayCycle withoutTrashed()
+ * @mixin \Eloquent
+ */
 class PayCycle extends Model
 {
     use SoftDeletes;

@@ -4,6 +4,29 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * App\Role
+ *
+ * @property int $user_id
+ * @property int $role
+ * @property bool $is_sales_admin
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\User $user
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Role activeOnly()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Role byRoleId($id)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Role inactiveOnly()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Role newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Role newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Role query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Role userId($userId)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Role whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Role whereIsSalesAdmin($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Role whereRole($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Role whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Role whereUserId($value)
+ * @mixin \Eloquent
+ */
 class Role extends Model
 {
 

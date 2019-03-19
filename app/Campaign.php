@@ -6,6 +6,40 @@ use App\Payroll;
 use App\Utility;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * App\Campaign
+ *
+ * @property int $campaign_id
+ * @property int $client_id
+ * @property string $name
+ * @property bool $active
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property float|null $compensation
+ * @property string|null $md_details
+ * @property string|null $md_onboarding
+ * @property string|null $md_other
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Payroll[] $payrolls
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Utility[] $utilities
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Campaign active($activeOnly = false)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Campaign byCampaign($id)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Campaign byCampaignName($name)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Campaign byClientId($clientId)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Campaign newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Campaign newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Campaign query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Campaign whereActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Campaign whereCampaignId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Campaign whereClientId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Campaign whereCompensation($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Campaign whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Campaign whereMdDetails($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Campaign whereMdOnboarding($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Campaign whereMdOther($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Campaign whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Campaign whereUpdatedAt($value)
+ * @mixin \Eloquent
+ */
 class Campaign extends Model
 {
     protected $table = 'campaigns';
