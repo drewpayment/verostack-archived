@@ -14,3 +14,6 @@ Route::middleware(['auth:api'])->group(function() {
     Route::get('clients/{clientId}/payroll-details', 'PayrollDetailController@getPaychecks');
 
 });
+
+Route::get('clients/{clientId}/users/{userId}/payroll-details/{payrollDetailId}/{headless}', 
+    'PayrollDetailController@getHeadlessPaycheckDetail');

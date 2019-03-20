@@ -26,6 +26,7 @@ import { RouterModule, Route } from '@angular/router';
 import { AuthGuard } from '@app/auth.guard';
 import { PaycheckDetailComponent } from './paycheck-detail/paycheck-detail.component';
 import { PaycheckDetailService } from './paycheck-detail/paycheck-detail.service';
+import { PaycheckDetailGuard } from './paycheck-detail.guard';
 
 const routes:Route[] = [{ 
     path: 'admin/pay', 
@@ -37,7 +38,7 @@ const routes:Route[] = [{
         { 
             path: 'paycheck-detail', 
             component: PaycheckDetailComponent, 
-            canActivate: [AuthGuard],
+            canActivate: [PaycheckDetailGuard],
             resolve: {
                 data: PaycheckDetailService
             }

@@ -48,16 +48,15 @@ class PayrollDetailsService
         return $result->setData($d);
     }
 
-    // public function getPaychecksByDetailPaged($payrollDetailsId, $page = 1)
-    // {
-    //     $result = new ApiResource();
+    public function getPaycheck($payrollDetailId)
+    {
+        $result = new ApiResource();
+        $detail = PayrollDetail::with(['payroll.payCycle', 'agent', 'overrides.agent', 'expenses'])
+            ->byPayrollDetailsId($payrollDetailId)
+            ->first();
 
-    //     $details = PayrollDetail::with(['payroll.payCycle', 'agent', 'overrides', 'expenses'])
-    //         ->byPayrollDetailsId($payrollDetailsId)
-    //         ->paginate(10);
-
-    //     return $result->setData($details);
-    // }
+        return $result->setData($detail);
+    }
 
     public function getPaychecksPaged(Request $request, $clientId)
     {
