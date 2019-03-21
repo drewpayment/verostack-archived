@@ -6,7 +6,6 @@ import { SessionService } from '@app/session.service';
 import { DailySaleTrackerService } from '@app/daily-sale-tracker/daily-sale-tracker.service';
 import { AgentService } from '@app/agent/agent.service';
 import { PaycheckDetailService } from './paycheck-detail.service';
-import { environment } from '@env/environment';
 
 @Component({
     selector: 'vs-paycheck-detail',
@@ -55,25 +54,36 @@ export class PaycheckDetailComponent implements OnInit {
         this.session.getUserItem().subscribe(u => {
             this.user = u;
             if (this.user == null) {
-                this.user = this.paycheckDetailService.headlessUser;
+                const payload = this.paycheckDetailService.headlessPayload;
+                this.user = payload.user;
                 this.client = <any>this.user.selectedClient;
-            } else {
-                this.client = this.user.clients.find(c => c.clientId == this.user.sessionUser.sessionClient);
-            }
 
-            forkJoin(
-                this.dailySaleService.getPaycheckDetailSales(this.client.clientId, detailData.payroll.payCycleId),
-                this.agentService.getSalesPairingsByClient(this.client.clientId)
-            ).subscribe(([sales, pairings]) => {
-                
-                sales.forEach(s => {
-                    const pairing = pairings.find(p => p.agentId == s.agentId && s.campaignId == p.campaignId);
+                payload.sales.forEach(s => {
+                    const pairing = payload.pairings.find(p => p.agentId == s.agentId && s.campaignId == p.campaignId);
                     if (pairing == null || pairing.commission == null) return;
                     s.campaign.compensation = pairing.commission;
                 });
 
-                this.sales = sales;
-            });
+                this.sales = payload.sales;
+
+                (<any>document.getElementsByTagName('mat-toolbar')[0]).style.opacity = 0;
+            } else {
+                this.client = this.user.clients.find(c => c.clientId == this.user.sessionUser.sessionClient);
+
+                forkJoin(
+                    this.dailySaleService.getPaycheckDetailSales(this.client.clientId, detailData.payroll.payCycleId),
+                    this.agentService.getSalesPairingsByClient(this.client.clientId)
+                ).subscribe(([sales, pairings]) => {
+                    
+                    sales.forEach(s => {
+                        const pairing = pairings.find(p => p.agentId == s.agentId && s.campaignId == p.campaignId);
+                        if (pairing == null || pairing.commission == null) return;
+                        s.campaign.compensation = pairing.commission;
+                    });
+    
+                    this.sales = sales;
+                });
+            }
         });
     }
 }

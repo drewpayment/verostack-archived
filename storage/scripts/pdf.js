@@ -13,8 +13,6 @@ const random = Math.random().toFixed(7).toString().slice(2);
 const baseSavePath = path.resolve(`../app/public/pdfs/`);
 const fileSavePath = path.resolve(baseSavePath, `${client}/${userId}/${date}-${random}`);
 
-console.log(fileSavePath);
-
 if(!fs.existsSync(path.resolve(baseSavePath, `${client}`))) {
     fs.mkdirSync(path.resolve(baseSavePath, `${client}`));
 }

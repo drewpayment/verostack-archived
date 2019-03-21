@@ -97,7 +97,7 @@ class Payroll extends Model
 
     public function campaign()
     {
-        return $this->hasOne(Campaign::class, 'campaign_id');
+        return $this->belongsTo(Campaign::class, 'campaign_id');
     }
 
     /**

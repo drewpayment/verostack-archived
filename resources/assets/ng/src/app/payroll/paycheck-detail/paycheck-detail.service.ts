@@ -4,6 +4,7 @@ import { PayrollDetails, User } from '@app/models';
 import { Observable, Observer } from 'rxjs';
 import { environment } from '@env/environment';
 import { HttpClient } from '@angular/common/http';
+import { HeadlessPayload } from '@app/models/headless-payload.model';
 
 @Injectable()
 export class PaycheckDetailService implements Resolve<PayrollDetails> {
@@ -19,9 +20,9 @@ export class PaycheckDetailService implements Resolve<PayrollDetails> {
         this._payrollDetails = value;
     }
 
-    private _headlessUserCache:User;
-    get headlessUser():User {
-        return this._headlessUserCache;
+    private _headlessPayload:HeadlessPayload;
+    get headlessPayload():HeadlessPayload {
+        return this._headlessPayload;
     }
 
     constructor(private router:Router, private http:HttpClient) {}
@@ -36,9 +37,9 @@ export class PaycheckDetailService implements Resolve<PayrollDetails> {
                 const headless = params['headless'];
 
                 this.getPaycheck(clientId, userId, detailId, headless)
-                    .subscribe(headlessDetail => {
-                        this._headlessUserCache = headlessDetail.user;
-                        this.payrollDetails = headlessDetail.detail;
+                    .subscribe(payload => {
+                        this._headlessPayload = payload;
+                        this.payrollDetails = payload.detail;
 
                         observer.next(this.payrollDetails);
                         observer.complete();
@@ -64,9 +65,22 @@ export class PaycheckDetailService implements Resolve<PayrollDetails> {
         this.router.navigate(['/admin/pay/paycheck-detail']);
     }
 
-    getPaycheck(clientId:number, userId:number, payrollDetailId:number, headless:string):Observable<{ detail:PayrollDetails, user:User }> {
+    getPaycheck(clientId:number, userId:number, payrollDetailId:number, headless:string):Observable<HeadlessPayload> {
         const url = `${this.api}/clients/${clientId}/users/${userId}/payroll-details/${payrollDetailId}/${headless}`;
-        return this.http.get<{ detail:PayrollDetails, user:User }>(url);
+        return this.http.get<HeadlessPayload>(url);
+    }
+
+    /**
+     * This method calls a secure endpoint that ensures the user has rights to the access the API, 
+     * then executes a script with puppeteer to generate the PDF version of the paystub. Once generated, this call 
+     * will download that PDF and return it, so we can open in the browser and display it to the user. 
+     * 
+     * @param clientId 
+     * @param payrollDetailsId 
+     */
+    generatePdf(clientId:number, payrollDetailsId:number):Observable<any> {
+        const url = `${this.api}/clients/${clientId}/payroll-details/${payrollDetailsId}/generate-pdf`;
+        return this.http.get<any>(url);
     }
 
 }

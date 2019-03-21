@@ -9374,22 +9374,31 @@ var PaycheckDetailComponent = /** @class */ (function () {
         this.session.getUserItem().subscribe(function (u) {
             _this.user = u;
             if (_this.user == null) {
-                _this.user = _this.paycheckDetailService.headlessUser;
+                var payload_1 = _this.paycheckDetailService.headlessPayload;
+                _this.user = payload_1.user;
                 _this.client = _this.user.selectedClient;
-            }
-            else {
-                _this.client = _this.user.clients.find(function (c) { return c.clientId == _this.user.sessionUser.sessionClient; });
-            }
-            Object(rxjs__WEBPACK_IMPORTED_MODULE_3__["forkJoin"])(_this.dailySaleService.getPaycheckDetailSales(_this.client.clientId, detailData.payroll.payCycleId), _this.agentService.getSalesPairingsByClient(_this.client.clientId)).subscribe(function (_a) {
-                var sales = _a[0], pairings = _a[1];
-                sales.forEach(function (s) {
-                    var pairing = pairings.find(function (p) { return p.agentId == s.agentId && s.campaignId == p.campaignId; });
+                payload_1.sales.forEach(function (s) {
+                    var pairing = payload_1.pairings.find(function (p) { return p.agentId == s.agentId && s.campaignId == p.campaignId; });
                     if (pairing == null || pairing.commission == null)
                         return;
                     s.campaign.compensation = pairing.commission;
                 });
-                _this.sales = sales;
-            });
+                _this.sales = payload_1.sales;
+                document.getElementsByTagName('mat-toolbar')[0].style.opacity = 0;
+            }
+            else {
+                _this.client = _this.user.clients.find(function (c) { return c.clientId == _this.user.sessionUser.sessionClient; });
+                Object(rxjs__WEBPACK_IMPORTED_MODULE_3__["forkJoin"])(_this.dailySaleService.getPaycheckDetailSales(_this.client.clientId, detailData.payroll.payCycleId), _this.agentService.getSalesPairingsByClient(_this.client.clientId)).subscribe(function (_a) {
+                    var sales = _a[0], pairings = _a[1];
+                    sales.forEach(function (s) {
+                        var pairing = pairings.find(function (p) { return p.agentId == s.agentId && s.campaignId == p.campaignId; });
+                        if (pairing == null || pairing.commission == null)
+                            return;
+                        s.campaign.compensation = pairing.commission;
+                    });
+                    _this.sales = sales;
+                });
+            }
         });
     };
     PaycheckDetailComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
@@ -9451,9 +9460,9 @@ var PaycheckDetailService = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
-    Object.defineProperty(PaycheckDetailService.prototype, "headlessUser", {
+    Object.defineProperty(PaycheckDetailService.prototype, "headlessPayload", {
         get: function () {
-            return this._headlessUserCache;
+            return this._headlessPayload;
         },
         enumerable: true,
         configurable: true
@@ -9468,9 +9477,9 @@ var PaycheckDetailService = /** @class */ (function () {
                 var clientId = +params['client'] || 0;
                 var headless = params['headless'];
                 _this.getPaycheck(clientId, userId, detailId, headless)
-                    .subscribe(function (headlessDetail) {
-                    _this._headlessUserCache = headlessDetail.user;
-                    _this.payrollDetails = headlessDetail.detail;
+                    .subscribe(function (payload) {
+                    _this._headlessPayload = payload;
+                    _this.payrollDetails = payload.detail;
                     observer.next(_this.payrollDetails);
                     observer.complete();
                 }, function (err) {
@@ -9492,6 +9501,18 @@ var PaycheckDetailService = /** @class */ (function () {
     };
     PaycheckDetailService.prototype.getPaycheck = function (clientId, userId, payrollDetailId, headless) {
         var url = this.api + "/clients/" + clientId + "/users/" + userId + "/payroll-details/" + payrollDetailId + "/" + headless;
+        return this.http.get(url);
+    };
+    /**
+     * This method calls a secure endpoint that ensures the user has rights to the access the API,
+     * then executes a script with puppeteer to generate the PDF version of the paystub. Once generated, this call
+     * will download that PDF and return it, so we can open in the browser and display it to the user.
+     *
+     * @param clientId
+     * @param payrollDetailsId
+     */
+    PaycheckDetailService.prototype.generatePdf = function (clientId, payrollDetailsId) {
+        var url = this.api + "/clients/" + clientId + "/payroll-details/" + payrollDetailsId + "/generate-pdf";
         return this.http.get(url);
     };
     PaycheckDetailService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([

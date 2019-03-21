@@ -51,7 +51,7 @@ class PayrollDetailsService
     public function getPaycheck($payrollDetailId)
     {
         $result = new ApiResource();
-        $detail = PayrollDetail::with(['payroll.payCycle', 'agent', 'overrides.agent', 'expenses'])
+        $detail = PayrollDetail::with(['payroll.campaign', 'payroll.payCycle', 'agent', 'overrides.agent', 'expenses'])
             ->byPayrollDetailsId($payrollDetailId)
             ->first();
 

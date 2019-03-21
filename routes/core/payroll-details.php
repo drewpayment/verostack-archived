@@ -13,6 +13,8 @@ Route::middleware(['auth:api'])->group(function() {
 
     Route::get('clients/{clientId}/payroll-details', 'PayrollDetailController@getPaychecks');
 
+    Route::get('clients/{clientId}/payroll-details/{payrollDetailsId}/generate-pdf', 'PayrollDetailControll@runHeadlessDetailScript');
+
 });
 
 Route::get('clients/{clientId}/users/{userId}/payroll-details/{payrollDetailId}/{headless}', 

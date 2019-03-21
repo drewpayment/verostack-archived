@@ -67,8 +67,10 @@ class ApiResource {
 	{
 		$this->data = $obj == null
 			? $obj
-			: is_object($obj)
-				? $this->helper->normalizeLaravelObject(array_filter($obj->toArray()))
+            : is_object($obj)
+                // removed 'array_filter' because it removes empty arrays from return object
+                // ? $this->helper->normalizeLaravelObject(array_filter($obj->toArray()))
+                ? $this->helper->normalizeLaravelObject($obj->toArray())
 				: $obj;
 
 		return $this->hasData() ? $this->setToSuccess() : $this->setToFail();
