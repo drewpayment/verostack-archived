@@ -50,6 +50,15 @@ export class PaycheckDetailComponent implements OnInit {
         });
     }
 
+    getPrintablePDF() {
+        this.paycheckDetailService.generatePdf(this.user.sessionUser.sessionClient, this.detail$.getValue().payrollDetailsId)
+            .subscribe(result => {
+                const pdf = JSON.parse(result.data);
+                const dataURI = `data:application/pdf;base64,${encodeURI(pdf)}`;
+                window.open(dataURI);
+            });
+    }
+
     private initializeComponent(detailData:PayrollDetails) {
         this.session.getUserItem().subscribe(u => {
             this.user = u;
@@ -67,6 +76,10 @@ export class PaycheckDetailComponent implements OnInit {
                 this.sales = payload.sales;
 
                 (<any>document.getElementsByTagName('mat-toolbar')[0]).style.opacity = 0;
+                (<any>document.getElementsByClassName('print-button')[0]).style.opacity = 0;
+                (<any>document.getElementsByClassName('page-header-accent')[0]).style.borderStyle = 'unset';
+                (<any>document.getElementsByClassName('page-header-accent')[0]).style.marginBottom = 0;
+                (<any>document.getElementsByClassName('border-top-primary')[0]).style.borderStyle = 'unset';
             } else {
                 this.client = this.user.clients.find(c => c.clientId == this.user.sessionUser.sessionClient);
 

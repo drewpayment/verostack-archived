@@ -3,7 +3,13 @@
     <div class="row">
         <div class="col-md-12">
             <mat-card class="page-header-accent">
-                <h3 mat-card-title>Income Statement</h3>
+                <div mat-card-title class="w-100 d-flex justify-content-between">
+                    <h3>Income Statement</h3>
+                    <button type="button" mat-button class="print-button" (click)="getPrintablePDF()">
+                        <mat-icon>print</mat-icon>
+                        <span>Print</span>
+                    </button>
+                </div>
                 <mat-card-content></mat-card-content>
                 <!-- <mat-card-content class="d-flex justify-content-between">
                     <h3>

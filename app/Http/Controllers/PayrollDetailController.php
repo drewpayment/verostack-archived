@@ -64,19 +64,28 @@ class PayrollDetailController extends Controller
         if($result->hasError)
             return $result->throwApiException()->getResponse();
 
-        $url = URL::to('/#/admin/pay/paycheck-detail/&client=') . $clientId 
+        $url = URL::to('/#/admin/pay/paycheck-detail?client=') . $clientId 
             . '&user=' . $userId 
             . '&detail=' . $payrollDetailsId
             . '&headless=' . env('HEADLESS');
+
+        dump($url);
         
-        $process = new Process(['node', './storage/scripts/pdf.js', 
-            $url, $clientId, $userId, Carbon::now()->format('Y-m-d')
+        $baseStoragePath = storage_path('app/public/pdfs');
+        $randomIdentifier = bin2hex(random_bytes(7));
+        $date = Carbon::now()->format('Y-m-d');
+        $env = ["PATH" => env('NODE_PATH')];
+        $process = new Process(['node', storage_path('scripts/pdf.js'), 
+            $url, $clientId, $userId, $date, $baseStoragePath, $randomIdentifier
         ]);
 
-        $process->run();
+        $process->run(null, $env);
 
         if(!$process->isSuccessful()) {
             throw new ProcessFailedException($process);
+            return $result->setToFail()
+                ->throwApiException()
+                ->getResponse();
         }
 
         /**
@@ -85,9 +94,10 @@ class PayrollDetailController extends Controller
          * 
          */
 
-        return $result->setToSuccess()
-            ->throwApiException()
-            ->getResponse();
+        $pdf = json_encode(base64_encode(file_get_contents($baseStoragePath . '/' . $clientId . '/' . $userId . '/' . $date . '-' . $randomIdentifier . '.pdf')));
+
+        return response()->json(['data' => $pdf], 200, 
+            ['Content-Type' => 'application/json; charset=utf-8', 'Content-Length' => mb_strlen($pdf)]);
     }
 
     public function getHeadlessPaycheckDetail($clientId, $userId, $payrollDetailId, $headless)

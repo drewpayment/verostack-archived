@@ -36,28 +36,31 @@ export class PaycheckDetailService implements Resolve<PayrollDetails> {
                 const clientId = +params['client'] || 0;
                 const headless = params['headless'];
 
-                this.getPaycheck(clientId, userId, detailId, headless)
-                    .subscribe(payload => {
-                        this._headlessPayload = payload;
-                        this.payrollDetails = payload.detail;
+                if (userId == 0 || clientId == 0 || detailId == 0 || headless == null) {
+                    this._noDetailsRedirect(observer);
+                } else {
 
-                        observer.next(this.payrollDetails);
-                        observer.complete();
-                    }, err => {
+                    this.getPaycheck(clientId, userId, detailId, headless)
+                        .subscribe(payload => {
+                            this._headlessPayload = payload;
+                            this.payrollDetails = payload.detail;
 
-                        console.error('No payroll details, please reload the page and try again.');
-                        this.router.navigate(['/admin/pay/paycheck-list']);
-                        observer.next(null);
-                        observer.complete(); 
-
-                    });
+                            observer.next(this.payrollDetails);
+                            observer.complete();
+                        }, err => this._noDetailsRedirect(observer));
+                }
             } else {
-
                 observer.next(this.payrollDetails);
                 observer.complete();
-
             }
         });
+    }
+
+    private _noDetailsRedirect(observer:Observer<PayrollDetails>):void {
+        console.error('No payroll details, please reload the page and try again.');
+        this.router.navigate(['/admin/pay/paycheck-list']);
+        observer.next(null);
+        observer.complete(); 
     }
 
     navigateToDetail(detail:PayrollDetails):void {
@@ -78,9 +81,9 @@ export class PaycheckDetailService implements Resolve<PayrollDetails> {
      * @param clientId 
      * @param payrollDetailsId 
      */
-    generatePdf(clientId:number, payrollDetailsId:number):Observable<any> {
+    generatePdf(clientId:number, payrollDetailsId:number):Observable<{ data:string }> {
         const url = `${this.api}/clients/${clientId}/payroll-details/${payrollDetailsId}/generate-pdf`;
-        return this.http.get<any>(url);
+        return this.http.get<{ data:string }>(url);
     }
 
 }
