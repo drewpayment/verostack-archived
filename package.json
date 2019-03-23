@@ -1,0 +1,38 @@
+{
+  "name": "verostack",
+  "version": "1.0.0",
+  "description": "Verostack npm setup.",
+  "main": "webpack.mix.js",
+  "directories": {
+    "test": "tests"
+  },
+  "author": "Verostack Development, LLC",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "ide-helper": "php artisan ide-helper:generate && php artisan ide-helper:models"
+  },
+  "devDependencies": {
+    "axios": "^0.17",
+    "bootstrap": "^4.0.0",
+    "cross-env": "^5.1",
+    "laravel-mix": "^1.6.1",
+    "lodash": "^4.17.4",
+    "page": "^1.7.1",
+    "popper.js": "^1.12.9",
+    "ts-loader": "^3.2.0",
+    "webpack-livereload-plugin": "^1.0.0"
+  },
+  "dependencies": {
+    "@mdi/font": "^3.0.39",
+    "concurrently": "^4.0.1",
+    "core-js": "^2.5.3",
+    "font-awesome": "^4.7.0",
+    "jquery": "^3.2.1",
+    "js-cookie": "^2.2.0",
+    "material-icon-font": "^3.0.1",
+    "moment": "^2.19.4",
+    "puppeteer": "^1.13.0",
+    "reflect-metadata": "^0.1.12"
+  }
+}
