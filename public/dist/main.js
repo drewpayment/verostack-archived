@@ -9370,11 +9370,20 @@ var PaycheckDetailComponent = /** @class */ (function () {
         });
     };
     PaycheckDetailComponent.prototype.getPrintablePDF = function () {
+        var _this = this;
+        this.session.showLoader();
         this.paycheckDetailService.generatePdf(this.user.sessionUser.sessionClient, this.detail$.getValue().payrollDetailsId)
             .subscribe(function (result) {
-            var pdf = JSON.parse(result.data);
-            var dataURI = "data:application/pdf;base64," + encodeURI(pdf);
-            window.open(dataURI);
+            _this.session.hideLoader();
+            var byteChars = atob(result);
+            var byteNumbers = [byteChars.length];
+            for (var i = 0; i < byteChars.length; i++) {
+                byteNumbers[i] = byteChars.charCodeAt(i);
+            }
+            var byteArray = new Uint8Array(byteNumbers);
+            var file = new Blob([byteArray], { type: 'application/pdf;base64' });
+            var fileUrl = URL.createObjectURL(file);
+            window.open(fileUrl);
         });
     };
     PaycheckDetailComponent.prototype.initializeComponent = function (detailData) {

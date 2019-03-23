@@ -68,8 +68,6 @@ class PayrollDetailController extends Controller
             . '&user=' . $userId 
             . '&detail=' . $payrollDetailsId
             . '&headless=' . env('HEADLESS');
-
-        dump($url);
         
         $baseStoragePath = storage_path('app/public/pdfs');
         $randomIdentifier = bin2hex(random_bytes(7));
@@ -93,11 +91,10 @@ class PayrollDetailController extends Controller
          * NEED TO THEN GET FILE FROM FILESYSTEM AND RETURN IT TO THE FRONTEND... 
          * 
          */
+        $pdf = base64_encode(file_get_contents($baseStoragePath . '/' . $clientId . '/' . $userId . '/' . $date . '-' . $randomIdentifier . '.pdf'));
 
-        $pdf = json_encode(base64_encode(file_get_contents($baseStoragePath . '/' . $clientId . '/' . $userId . '/' . $date . '-' . $randomIdentifier . '.pdf')));
-
-        return response()->json(['data' => $pdf], 200, 
-            ['Content-Type' => 'application/json; charset=utf-8', 'Content-Length' => mb_strlen($pdf)]);
+        return response()->json($pdf, 200, 
+            ['Content-Type' => 'application/json; charset=utf-8', 'Content-Length' => strlen($pdf)]);
     }
 
     public function getHeadlessPaycheckDetail($clientId, $userId, $payrollDetailId, $headless)

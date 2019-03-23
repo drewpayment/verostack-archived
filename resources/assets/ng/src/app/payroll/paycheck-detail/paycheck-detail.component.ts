@@ -51,11 +51,21 @@ export class PaycheckDetailComponent implements OnInit {
     }
 
     getPrintablePDF() {
+        this.session.showLoader();
         this.paycheckDetailService.generatePdf(this.user.sessionUser.sessionClient, this.detail$.getValue().payrollDetailsId)
             .subscribe(result => {
-                const pdf = JSON.parse(result.data);
-                const dataURI = `data:application/pdf;base64,${encodeURI(pdf)}`;
-                window.open(dataURI);
+                this.session.hideLoader();
+                
+                const byteChars = atob(result);
+                const byteNumbers = [byteChars.length];
+                for (let i = 0; i < byteChars.length; i++) {
+                    byteNumbers[i] = byteChars.charCodeAt(i);
+                }
+
+                const byteArray = new Uint8Array(byteNumbers);
+                const file = new Blob([byteArray], { type: 'application/pdf;base64' });
+                const fileUrl = URL.createObjectURL(file);
+                window.open(fileUrl);
             });
     }
 
