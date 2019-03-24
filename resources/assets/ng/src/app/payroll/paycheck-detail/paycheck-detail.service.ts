@@ -5,6 +5,7 @@ import { Observable, Observer } from 'rxjs';
 import { environment } from '@env/environment';
 import { HttpClient } from '@angular/common/http';
 import { HeadlessPayload } from '@app/models/headless-payload.model';
+import { map, tap } from 'rxjs/operators';
 
 @Injectable()
 export class PaycheckDetailService implements Resolve<PayrollDetails> {
@@ -83,7 +84,10 @@ export class PaycheckDetailService implements Resolve<PayrollDetails> {
      */
     generatePdf(clientId:number, payrollDetailsId:number):Observable<{ data:string }> {
         const url = `${this.api}/clients/${clientId}/payroll-details/${payrollDetailsId}/generate-pdf`;
-        return this.http.get<{ data:string }>(url);
+        return this.http.get<{ data:string }>(url)
+            .pipe(
+                tap(res => console.dir(res))
+            );
     }
 
 }

@@ -14,6 +14,7 @@ use Symfony\Component\Process\Process;
 use Illuminate\Support\Facades\URL;
 use Carbon\Carbon;
 use Symfony\Component\Process\Exception\ProcessFailedException;
+use Illuminate\Http\JsonResponse;
 
 class PayrollDetailController extends Controller
 {
@@ -93,8 +94,11 @@ class PayrollDetailController extends Controller
          */
         $pdf = base64_encode(file_get_contents($baseStoragePath . '/' . $clientId . '/' . $userId . '/' . $date . '-' . $randomIdentifier . '.pdf'));
 
-        return response()->json(['data' => $pdf], 200, 
-            ['Content-Type' => 'application/json; charset=utf-8', 'Content-Length' => strlen($pdf)]);
+        $json = new JsonResponse();
+        $json->setData(['data' => $pdf]);
+        $json->withHeaders(['Content-Type' => 'application/json; charset=utf-8', 'Content-Length' => strlen($pdf)]);
+
+        return $json;
     }
 
     public function getHeadlessPaycheckDetail($clientId, $userId, $payrollDetailId, $headless)
