@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {User} from './models/user.model';
-import {Observable, BehaviorSubject, Subject, ReplaySubject, Observer} from 'rxjs';
+import {Observable, BehaviorSubject, Subject, ReplaySubject, Observer, forkJoin} from 'rxjs';
 import {MatSidenav} from '@angular/material';
 import {LocalStorage, JSONSchema} from '@ngx-pwa/local-storage';
 import {ILocalStorage, IToken} from './models';
@@ -37,14 +37,13 @@ export class SessionService {
     private tokenItem$: Subject<IToken> = new ReplaySubject<IToken>(1);
     tokenItem: Observable<IToken>;
 
-    loading$: Subject<boolean> = new Subject<boolean>();
-    loadingState: Observable<boolean>;
+    loading$ = new BehaviorSubject<boolean>(false);
 
-    private hasTokenSubject = new ReplaySubject<boolean>(1);
-    isLoginSubject = new BehaviorSubject<boolean>(this.hasToken());
+    private _hasToken = new BehaviorSubject<boolean>(false);
+    isLoginSubject = new BehaviorSubject<boolean>(false);
 
-    previousUrl:string = '';
-    currentUrl:string = '';
+    previousUrl = '';
+    currentUrl = '';
 
     private _navigationTitle:string = environment.defaultTitle;
     navigationTitle$ = new BehaviorSubject<string>(this._navigationTitle);
@@ -55,12 +54,11 @@ export class SessionService {
     ) {
         // make sure we're removing expired cookies on app boot
         this.pruneExpiredStorage();
-        for (let p in this.dataStore) {
+        for (const p in this.dataStore) {
             this.getItem(p);
         }
 
         this.tokenItem = this.tokenItem$.asObservable();
-        this.loadingState = this.loading$.asObservable();
 
         this.router.events.pipe(
             filter(event => event instanceof NavigationEnd)
@@ -82,56 +80,46 @@ export class SessionService {
         this.navigationTitle$.next(this._navigationTitle);
     }
 
-    private hasToken(): boolean {
-        this.hasTokenSubject.subscribe((hasToken: boolean) => {
-            this.userLoggedIn = hasToken;
+    private getToken():Observable<ILocalStorage<IToken>> {
+        return Observable.create((observer:Observer<ILocalStorage<IToken>>) => {
+
+            this.localStorage
+                .getItem('token')
+                .subscribe((token:ILocalStorage<IToken>) => {
+                    if (token == null) return;
+
+                    if (Date.now() >= token.expires) {
+                        this.removeItem('token');
+                        this.isLoginSubject.next(false);
+                    } else {
+                        this.dataStore.token = token.data;
+                        this.tokenItem$.next(token.data);
+                        this.isLoginSubject.next(true);
+                    }
+
+                    observer.next(token);
+                    observer.complete();
+                });
+
         });
-        this.localStorage
-            .getItem('token')
-            .toPromise()
-            .then((item: ILocalStorage<IToken>) => {
-                if (item == null) return;
-                if (Date.now() >= item.expires) {
-                    this.removeItem('token');
-                    this.isLoginSubject.next(false);
-                } else {
-                    this.dataStore.token = item.data;
-                    this.tokenItem$.next(item.data);
-                    this.isLoginSubject.next(true);
-                }
-            });
-        return this.userLoggedIn;
     }
 
     login(token: ILocalStorage<IToken>): void {
         this.setToken(token.data);
         this.setItem('token', token);
         this.hideLoader();
-        this.navigateTo('/');
     }
 
     logout(): void {
         this.clearStorage();
         this.isLoginSubject.next(false);
-        this.hasTokenSubject.next(false);
-        window.location.href = rootUrl + '/#/login';
+        this._hasToken.next(false);
+
+        this.router.navigate(['login']);
     }
 
     getUserItem():BehaviorSubject<User> {
         return this.userItem;
-    }
-
-    get userHomePage() {
-        return SessionService.defaultUserUrl;
-    }
-
-    /**
-     * Updates the app's loading spinner status. It is recommended to use the hide/show methods though.
-     *
-     * @param loading
-     */
-    updateLoadingState(loading: boolean): void {
-        this.loading$.next(loading);
     }
 
     // hide the loading graphics
@@ -176,57 +164,36 @@ export class SessionService {
         this.userItem.next(user);
     }
 
-    /**
-     * What is this doing????
-     *
-     * @param sidenav
-     */
-    setSidenav(sidenav: MatSidenav) {
-        this.sidenav = sidenav;
-    }
-
-    open(): Promise<any> {
-        return this.sidenav.open();
-    }
-
-    close(): Promise<any> {
-        return this.sidenav.close();
-    }
-
-    toggle(isOpen?: boolean): Promise<any> {
-        return this.sidenav.toggle(isOpen);
-    }
-
-    setToken(token: IToken): void {
+    setToken(token: IToken) {
         this.isLoginSubject.next(true);
-        this.hasTokenSubject.next(true);
+        this._hasToken.next(true);
         this.dataStore.token = token;
         this.tokenItem$.next(token);
     }
 
-    setItem<T>(itemName: string, data:ILocalStorage<T>): void {
+    setItem<T>(itemName: string, data:ILocalStorage<T>) {
         if (this.dataStore[itemName]) this.dataStore[itemName] = data.data;
         data.expires =
             data.expires == null ? moment().valueOf() + moment.duration(3, 'days').milliseconds() : data.expires;
         this.localStorage.setItemSubscribe(itemName, data);
     }
 
-    getItem(itemName: string): void {
+    getItem(itemName: string) {
         itemName = itemName.trim().toLowerCase();
         this.localStorage.getItem(itemName).subscribe((next: ILocalStorage<any>) => {
             if (next == null) {
                 return;
             } else if (Date.now() >= next.expires) {
-                this.hasTokenSubject.next(false);
+                this._hasToken.next(false);
                 this.isLoginSubject.next(false);
                 this.removeItem(itemName);
             } else if (itemName === 'user') {
-                this.hasTokenSubject.next(true);
+                this._hasToken.next(true);
                 this.isLoginSubject.next(true);
                 this.dataStore.user = next.data;
                 this.userItem.next(<User>next.data);
             } else if (itemName === 'token') {
-                this.hasTokenSubject.next(true);
+                this._hasToken.next(true);
                 this.isLoginSubject.next(true);
                 this.dataStore.token = next.data;
                 this.tokenItem$.next(<IToken>next.data);
@@ -270,21 +237,49 @@ export class SessionService {
      * Explicit method to load token item from storage.
      *
      */
-    loadTokenStorageItem(): void {
+    getAuthenticationStorageItems():Observable<AuthenticationStorageItems> {
         this.pruneExpiredStorage();
-        this.localStorage.getItem('token').subscribe((item: ILocalStorage<IToken>) => {
-            if (item == null) return;
 
-            if (item.expires <= Date.now()) {
-                this.userLoggedIn = false;
-                this.removeItem('token');
-            } else {
-                this.userLoggedIn = this.userLoggedIn || true;
-                this.dataStore.token = item.data;
-                this.tokenItem$.next(item.data);
-            }
-            this.loggedInService.next(this.userLoggedIn);
+        return Observable.create((observer:Observer<AuthenticationStorageItems>) => {
+            forkJoin(
+                this.localStorage.getItem<ILocalStorage<IToken>>('token'),
+                this.localStorage.getItem<ILocalStorage<User>>('user')
+            ).subscribe(([storageToken, storageUser]) => {
+                if (storageToken == null || storageUser == null) {
+                    this._logoutUser();
+                    observer.next(null);
+                    observer.complete();
+                    return;
+                }
+                    
+                const token:ILocalStorage<IToken> = storageToken as ILocalStorage<IToken>;
+                const user:ILocalStorage<User> = storageUser as ILocalStorage<User>;
+                const payload:AuthenticationStorageItems = {
+                    token: token,
+                    user: user
+                };
+    
+                if (token.expires <= Date.now()) {
+                    this._logoutUser();
+                    observer.next(null);
+                    observer.complete();
+                } else {
+                    this.userLoggedIn = true;
+                    this.dataStore.token = token.data;
+                    this.tokenItem$.next(token.data);
+                    this.loggedInService.next(true);
+                    observer.next(payload);
+                    observer.complete();
+                }
+            });
         });
+    }
+
+    private _logoutUser() {
+        this.userLoggedIn = false;
+        this.localStorage.clearSubscribe();
+        this.loggedInService.next(false);
+        this.router.navigate(['login']);
     }
 
     /**
@@ -304,9 +299,9 @@ export class SessionService {
      *
      */
     pruneExpiredStorage(): void {
-        let values = [],
-            keys = Object.keys(localStorage),
-            i = keys.length;
+        const values = [];
+        const keys = Object.keys(localStorage);
+        let i = keys.length;
 
         while (i--) {
             values.push({
@@ -341,4 +336,9 @@ export class SessionService {
             }
         });
     }
+}
+
+export interface AuthenticationStorageItems {
+    token:ILocalStorage<IToken>,
+    user:ILocalStorage<User>
 }

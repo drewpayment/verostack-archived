@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, OnChanges, ChangeDetectorRef, AfterViewInit, AfterViewChecked} from '@angular/core';
 import {NgForm} from '@angular/forms';
 
 import {User, IUserDetail, IWeather, IOnboarding, IClient, ICampaign} from '../models';
@@ -20,7 +20,7 @@ import {UserRole} from '@app/models/role.model';
     templateUrl: './my-information.component.html',
     styleUrls: ['./my-information.component.scss']
 })
-export class MyInformationComponent implements OnInit {
+export class MyInformationComponent implements OnInit, AfterViewChecked {
     user: User;
     user$: Observable<User>;
     detail$: Observable<IUserDetail>;
@@ -28,16 +28,16 @@ export class MyInformationComponent implements OnInit {
     weather: IWeather;
     minTemp: string;
     maxTemp: string;
-    editProfile: boolean = false;
-    editDetails: boolean;
+    editProfile = false;
+    editDetails:boolean;
     joinDate: string;
     welcome: string;
-    hasOnboarding: boolean = false;
+    hasOnboarding = false;
     onboarding: IOnboarding;
 
     client: IClient = <IClient>{};
 
-    ssn: string = '123456789';
+    ssn = '123456789';
 
     campaigns: ICampaign[] = [];
     allCampaigns: ICampaign[] = [];
@@ -48,7 +48,8 @@ export class MyInformationComponent implements OnInit {
         private msg: MessageService,
         private spinner: LoadingSpinnerService,
         private campaignService: CampaignService,
-        private session: SessionService
+        private session: SessionService,
+        private cd:ChangeDetectorRef
     ) {
         this.detail$ = this.userService.userDetail$.asObservable();
     }
@@ -56,7 +57,7 @@ export class MyInformationComponent implements OnInit {
     ngOnInit() {
         this.session.showLoader();
         this.session.getUserItem().subscribe(user => {
-            if(user == null) return;
+            if (user == null) return;
             this.user$ = of(user);
             this.user = user;
 
@@ -78,26 +79,12 @@ export class MyInformationComponent implements OnInit {
                 })
                 .catch(this.msg.showWebApiError);
         });
-        // this.user$.subscribe(user => );
-
-        // gets user's location from the browser
-        navigator.geolocation.getCurrentPosition(pos => {
-            this.initWeather(pos.coords.longitude, pos.coords.latitude);
-        });
     }
 
-    initWeather(longitude: number, latitude: number): void {
-        this.weatherApi.getWeatherByGeoLocale(longitude, latitude).then((result: IWeather) => {
-            this.weather = result;
-            this.minTemp = this.convertToFahrenheit(this.weather.main.temp_min);
-            this.maxTemp = this.convertToFahrenheit(this.weather.main.temp_max);
-        });
-    }
-
-    convertToFahrenheit(temp: number): string {
-        let result = 1.8 * (temp - 273) + 32;
-        result = Math.round(result);
-        return result + 'F';
+    ngAfterViewChecked() {
+        
+        // ExpressionChangedAfterItHasBeenCheckedError
+        this.cd.detectChanges();
     }
 
     changeEditMode(f: NgForm): void {

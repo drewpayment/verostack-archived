@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewChild, ChangeDetectorRef, AfterViewChecked, AfterViewInit, AfterContentInit} from '@angular/core';
-import {Observable, Subscription, of} from 'rxjs';
+import {Observable, Subscription, of, BehaviorSubject} from 'rxjs';
 import {SessionService} from './session.service';
 import {MatSidenav} from '@angular/material';
 import {environment} from '@env/environment.prod';
@@ -13,13 +13,12 @@ import { Router } from '@angular/router';
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit, AfterViewChecked, AfterContentInit {
+export class AppComponent implements OnInit, AfterViewChecked {
     title = 'app';
-    loading:boolean = true;
+    loading = true;
     loggedInStatus: Observable<boolean>;
-    loading$: Observable<boolean>;
     opened$: Observable<boolean>;
-    _loading:boolean;
+    _loading = new BehaviorSubject<boolean>(false);
     _loggedIn:boolean;
 
     @ViewChild('navigation') public sidenav: MatSidenav;
@@ -33,33 +32,22 @@ export class AppComponent implements OnInit, AfterViewChecked, AfterContentInit 
         private breakpointObserver:BreakpointObserver,
         private router:Router
     ) {
-        let counter = 0;
         // wire up our extension methods
         MomentExtensions.init();
-        this.session.loading$.subscribe(next => {
-            if(next == null) return;
-            this.loading$ = of(next);
-            this._loading = next;
-
-            this.cd.detectChanges();
-        });
-        this.session.isLoginSubject.subscribe(next => {
-            if(next == null) return;
-            this.loggedInStatus = of(next);
-            this._loggedIn = next;
-        });
 
         this.observeBreakpoints();
     }
 
     ngOnInit() {
-        this.session.loadUserStorageItem();
-    }
+        this._loading = this.session.loading$;
 
-    ngAfterContentInit() {
-        //Called after ngOnInit when the component's or directive's content has been initialized.
-        //Add 'implements AfterContentInit' to the class.
-        // this.loading = this.session.loadingState;
+        this.session.isLoginSubject.subscribe(next => {
+            if (next == null) return;
+            this.loggedInStatus = of(next);
+            this._loggedIn = next;
+        });
+
+        this.session.getAuthenticationStorageItems().subscribe();
     }
 
     ngAfterViewChecked() {
@@ -68,7 +56,7 @@ export class AppComponent implements OnInit, AfterViewChecked, AfterContentInit 
 
         // dev only bug -
         // https://stackoverflow.com/questions/39787038/how-to-manage-angular2-expression-has-changed-after-it-was-checked-exception-w
-        if (!environment.production) this.cd.detectChanges();
+        this.cd.detectChanges();
     }
 
     /**
@@ -79,7 +67,7 @@ export class AppComponent implements OnInit, AfterViewChecked, AfterContentInit 
         this.breakpointObserver.observe([
             Breakpoints.Handset
         ]).subscribe(result => {
-            if(result.matches)
+            if (result.matches)
                 this.handleMobileViewport();
             else
                 this.handleFullViewport();
@@ -93,7 +81,7 @@ export class AppComponent implements OnInit, AfterViewChecked, AfterContentInit 
     }
 
     private handleFullViewport() {
-        if(this.routerSubscription != null) 
+        if (this.routerSubscription != null) 
             this.routerSubscription.unsubscribe();
     }
 }

@@ -4,7 +4,8 @@
     </mat-sidenav>
     <!-- <mat-sidenav-content scrollLock [trapScroll]="_loading" class="pb-4"> -->
     <mat-sidenav-content class="pb-4">
-        <ngx-loading [show]="_loading"></ngx-loading>
+        <vero-loading-spinner></vero-loading-spinner>
+        <!-- <ngx-loading [show]="_loading|async"></ngx-loading> -->
         <app-header></app-header>
         <router-outlet></router-outlet>
     </mat-sidenav-content>
@@ -12,7 +13,8 @@
 <ng-template #loggedOut>
     <!-- <div scrollLock [trapScroll]="_loading"> -->
     <div>
-        <ngx-loading [show]="_loading"></ngx-loading>
+        <vero-loading-spinner></vero-loading-spinner>
+        <!-- <ngx-loading [show]="_loading|async"></ngx-loading> -->
         <app-header></app-header>
         <router-outlet></router-outlet>
     </div>

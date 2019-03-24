@@ -8,7 +8,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
 export class LoadingSpinnerService {
 
   showSpinner: Observable<boolean>;
-  private showSpinner$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  private showSpinner$ = new BehaviorSubject<boolean>(false);
 
   constructor() {
     this.showSpinner = this.showSpinner$.asObservable();

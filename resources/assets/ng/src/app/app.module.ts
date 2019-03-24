@@ -20,6 +20,8 @@ import {NewSaleComponent} from './daily-sale-tracker/components/new-sale/new-sal
 import {DirectivesModule} from './directives/directives.module';
 import { PayrollModule } from './payroll/payroll.module';
 import { environment } from '@env/environment';
+import { SharedModule } from './shared';
+import { BaseModule } from './base/base.module';
 
 @NgModule({
     imports: [
@@ -35,6 +37,7 @@ import { environment } from '@env/environment';
         FormsModule,
         DirectivesModule,
         PayrollModule,
+        BaseModule,
 
         /** ROUTING FOR ENTIRE APPLICATION */
         AppRoutingModule
@@ -47,7 +50,8 @@ import { environment } from '@env/environment';
         EditAgentDialogComponent,
         PublicHomeComponent,
         AgentRulesDialogComponent,
-        NewSaleComponent
+        NewSaleComponent,
+
     ],
     entryComponents: [
         EditAgentDialogComponent,
@@ -59,14 +63,14 @@ import { environment } from '@env/environment';
 export class AppModule {
     constructor() {
         // <!-- Global site tag (gtag.js) - Google Analytics -->
-        if(environment.production) {
-            let head = document.getElementsByTagName('head')[0];
-            let gtagmgrNode = document.createElement('script');
+        if (environment.production) {
+            const head = document.getElementsByTagName('head')[0];
+            const gtagmgrNode = document.createElement('script');
             gtagmgrNode.src = 'https://www.googletagmanager.com/gtag/js?id=UA-135392629-1';
             gtagmgrNode.async = true;
             gtagmgrNode.charset = 'utf-8';
 
-            let gtagCodeNode = document.createElement('script');
+            const gtagCodeNode = document.createElement('script');
             gtagCodeNode.innerText = `
                 window.dataLayer = window.dataLayer || [];
                 function gtag(){dataLayer.push(arguments);}

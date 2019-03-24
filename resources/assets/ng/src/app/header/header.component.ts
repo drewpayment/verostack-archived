@@ -1,16 +1,17 @@
-import {Component, OnInit, Input, AfterViewInit, ViewChild, ElementRef} from '@angular/core';
+import {Component, OnInit, AfterViewInit, ViewChild} from '@angular/core';
 import { Location } from '@angular/common';
 import {BehaviorSubject, Observable, of} from 'rxjs';
 import {AuthService} from '../auth.service';
 import {SessionService} from '../session.service';
 import {User} from '../models/user.model';
-import {MatSidenav, MatDialog, MatToolbar} from '@angular/material';
+import {MatDialog, MatToolbar} from '@angular/material';
 import {ClientSelectorComponent} from '../client-selector/client-selector.component';
-import {Router, NavigationEnd, ActivatedRoute} from '@angular/router';
+import {Router, NavigationEnd} from '@angular/router';
 import {UserService} from '../user-features/user.service';
 import { SidenavService } from '@app/sidenav/sidenav.service';
 import { UserType } from '@app/models';
 import { filter } from 'rxjs/operators';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
     selector: 'app-header',
@@ -18,17 +19,19 @@ import { filter } from 'rxjs/operators';
     styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit, AfterViewInit {
-    private defaultTitle: string = 'Payment Dynamics';
+    private defaultTitle = 'Payment Dynamics';
 
     isLoggedIn: boolean;
     user: User;
     isAdmin: boolean;
-    menuTitle: BehaviorSubject<string> = new BehaviorSubject<string>(this.defaultTitle);
+    menuTitle = new BehaviorSubject<string>(this.defaultTitle);
     showClientSelector: boolean;
-    loggedInStatus: Observable<boolean>;
+    loggedInStatus:Observable<boolean>;
     navOpen:Observable<boolean>;
 
     @ViewChild('toolbar') toolbar:MatToolbar;
+
+    isMobile = false;
 
     constructor(
         private authService: AuthService,
@@ -37,9 +40,14 @@ export class HeaderComponent implements OnInit, AfterViewInit {
         private dialog: MatDialog,
         private location:Location,
         private router: Router,
-        private sidenavService:SidenavService
+        private sidenavService:SidenavService,
+        private breakpointObserver:BreakpointObserver
     ) {
-
+        this.breakpointObserver.observe([
+            Breakpoints.Handset
+        ]).subscribe(result => {
+            this.isMobile = result.matches;
+        });
     }
 
     ngOnInit() {
@@ -95,7 +103,7 @@ export class HeaderComponent implements OnInit, AfterViewInit {
             data: this.user
         });
 
-        dialogRef.afterClosed().subscribe(result => {
+        dialogRef.afterClosed().subscribe(() => {
             // console.log('dialog was closed');
         });
     }

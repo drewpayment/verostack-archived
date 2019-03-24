@@ -1,2 +1,7 @@
-<div #spinnerContainer [ngClass]="{'visible': showSpinner, 'hidden': !showSpinner, 'spinner': true, 'center': true}" [innerHTML]="template"></div>
-<h1 [style.zIndex]="zIndex" [ngClass]="{'visible': showSpinner, 'hidden': !showSpinner, 'loading-text': true}"> {{loadingText}} </h1>
+
+<div
+    [ngClass]="{'visible': showSpinner, 'hidden': !showSpinner, 'spinner': true, 'center': true}"
+    class="d-flex justify-content-center align-items-center"
+>
+    <div class="lds-dual-ring"></div>
+</div>

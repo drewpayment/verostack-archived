@@ -12,23 +12,29 @@ import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.comp
 import { BaseModule } from '@app/base/base.module';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    BrowserModule,
-    MaterialModule,
-    FormsModule,
-    MomentModule,
-    CampaignsModule,
-    UserFeaturesModule,
-    ReactiveFormsModule,
-    BaseModule
-  ],
-  entryComponents: [
-    ClientSelectorComponent,
-    SelectMapperComponent,
-    LoadingSpinnerComponent
-  ],
-  declarations: [],
-  providers: []
+    imports: [
+        CommonModule,
+        BrowserModule,
+        MaterialModule,
+        FormsModule,
+        MomentModule,
+        CampaignsModule,
+        UserFeaturesModule,
+        ReactiveFormsModule,
+        BaseModule
+    ],
+    // declarations: [
+    //     ClientSelectorComponent,
+    //     SelectMapperComponent,
+    //     LoadingSpinnerComponent
+    // ],
+    //   entryComponents: [
+    //     ClientSelectorComponent,
+    //     SelectMapperComponent,
+    //     LoadingSpinnerComponent
+    //   ],
+    // exports: [ClientSelectorComponent, SelectMapperComponent, LoadingSpinnerComponent],
+    
+    providers: []
 })
-export class SharedModule { }
+export class SharedModule {}

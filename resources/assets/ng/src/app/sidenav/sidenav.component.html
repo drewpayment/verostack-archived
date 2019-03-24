@@ -19,6 +19,10 @@
         <mat-icon>info_outline</mat-icon>
         <span>My Information</span>
     </a>
+    <a mat-list-item [routerLink]="['users', 'payroll', 'list']" *ngIf="user?.role?.role < roleType.companyAdmin">
+        <mat-icon>attach_money</mat-icon>
+        <span>My Earnings</span>
+    </a>
     <a mat-list-item 
         routerLink="daily-tracker" 
         routerLinkActive="mat-router-link-active"

@@ -9,6 +9,8 @@ import {User, IToken, ILocalStorage} from '../models/index';
 import {UserService} from '../user-features/user.service';
 import { MessageService } from '@app/message.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Router } from '@angular/router';
+import { Role } from '@app/models/role.model';
 
 @Component({
     selector: 'app-login',
@@ -30,12 +32,13 @@ export class LoginComponent implements OnInit, AfterViewChecked, OnDestroy {
         public authService: AuthService,
         private session: SessionService,
         private userService: UserService,
-        private msg: MessageService
+        private msg: MessageService,
+        private router:Router
     ) {}
 
     ngOnInit() {
-        this.userService.user.subscribe((next: User) => {
-            this.user = next;
+        this.session.getUserItem().subscribe(u => {
+            this.user = u;
             this.session.hideLoader();
         });
     }
@@ -69,7 +72,13 @@ export class LoginComponent implements OnInit, AfterViewChecked, OnDestroy {
                 };
 
                 this.session.login(sessionToken);
-                this.userService.storeNgUser(response.user);                    
+                this.userService.storeNgUser(response.user);      
+                
+                if (this.user.role.role < Role.companyAdmin) {
+                    this.router.navigate(['users', 'payroll', 'list']);
+                } else {
+                    this.router.navigate(['daily-tracker']);
+                }
 
             }, (err: HttpErrorResponse) => this.httpErrorHandler(err));
         }

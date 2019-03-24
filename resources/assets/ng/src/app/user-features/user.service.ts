@@ -211,7 +211,7 @@ export class UserService {
 
     storeNgUser(user: User): void {
 
-        if(!user.sessionUser) {
+        if (!user.sessionUser) {
             this.createNewSessionUser(user)
                 .subscribe(sessionUser => {
                     user.sessionUser = sessionUser;

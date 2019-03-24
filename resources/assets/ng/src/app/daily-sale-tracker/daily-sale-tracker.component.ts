@@ -21,6 +21,7 @@ import {trigger, style, state, transition, animate} from '@angular/animations';
 import {FloatBtnService} from '@app/fab-float-btn/float-btn.service';
 import { coerceNumberProperty } from '@app/utils';
 import { startWith, map, distinctUntilChanged, debounceTime } from 'rxjs/operators';
+import { SessionService } from '@app/session.service';
 
 interface DataStore {
     statuses: SaleStatus[];
@@ -102,7 +103,8 @@ export class DailySaleTrackerComponent implements OnInit, AfterViewInit {
         private trackerService: DailySaleTrackerService,
         private dialog: MatDialog,
         private fb: FormBuilder,
-        private floatBtnService: FloatBtnService
+        private floatBtnService: FloatBtnService,
+        private session:SessionService
     ) {
         /** why are we doing this? why not just use an observable w/async pipe to dataSource$? */
         this.dataSource$.subscribe(next => {
@@ -149,7 +151,8 @@ export class DailySaleTrackerComponent implements OnInit, AfterViewInit {
 
     ngOnInit() {
         this.createForm();
-        this.userService.user.subscribe(u => {
+        
+        this.session.getUserItem().subscribe(u => {
             this.userInfo = u;
 
             forkJoin(
@@ -167,7 +170,7 @@ export class DailySaleTrackerComponent implements OnInit, AfterViewInit {
                     active: true
                 });
 
-                if(this.campaigns.length) {
+                if (this.campaigns.length) {
                     this.selectedCampaign = this.campaigns[0];
                 } else {
                     this.selectedCampaign = {
@@ -175,7 +178,7 @@ export class DailySaleTrackerComponent implements OnInit, AfterViewInit {
                         clientId: null,
                         name: null,
                         active: false
-                    }
+                    };
                 }
 
                 this.refreshDailySales(this.startDate, this.endDate);

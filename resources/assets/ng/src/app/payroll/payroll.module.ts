@@ -27,6 +27,7 @@ import { AuthGuard } from '@app/auth.guard';
 import { PaycheckDetailComponent } from './paycheck-detail/paycheck-detail.component';
 import { PaycheckDetailService } from './paycheck-detail/paycheck-detail.service';
 import { PaycheckDetailGuard } from './paycheck-detail.guard';
+import { AgentPayrollViewComponent } from './agent-payroll-view/agent-payroll-view.component';
 
 const routes:Route[] = [{ 
     path: 'admin/pay', 
@@ -43,6 +44,11 @@ const routes:Route[] = [{
                 data: PaycheckDetailService
             }
         }
+    ]
+}, {
+    path: 'users/payroll',
+    children: [
+        { path: 'list', component: AgentPayrollViewComponent, canActivate: [AuthGuard] }
     ]
 }];
 
@@ -76,7 +82,8 @@ const routes:Route[] = [{
         PayCycleComponent,
         EditPayCycleComponent,
         ConfirmUnpaidSelectionDialogComponent,
-        PaycheckDetailComponent
+        PaycheckDetailComponent,
+        AgentPayrollViewComponent
     ],
     exports: [
         // not sure why i was exporting these??? 

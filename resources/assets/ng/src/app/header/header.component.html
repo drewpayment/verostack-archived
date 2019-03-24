@@ -6,7 +6,8 @@
       </button>
     </span>
     
-    <span routerLink="/" class="font-weight-light h1 mb-0 d-flex align-items-center clickable">
+    <span routerLink="/" [class.h1]="!isMobile" [class.h5]="isMobile" 
+        class="font-weight-light mb-0 d-flex align-items-center clickable">
         <img src="dist/assets/images/logo-notext.svg" class="mr-2" width="40" height="40" />
         {{menuTitle | async}}
     </span>

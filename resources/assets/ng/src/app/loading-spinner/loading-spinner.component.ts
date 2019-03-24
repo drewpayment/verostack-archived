@@ -1,32 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { LoadingSpinnerService } from './loading-spinner.service';
+import { SessionService } from '@app/session.service';
 
 @Component({
-  selector: 'vero-loading-spinner',
-  templateUrl: './loading-spinner.component.html',
-  styleUrls: ['./loading-spinner.component.css']
+    selector: 'vero-loading-spinner',
+    templateUrl: './loading-spinner.component.html',
+    styleUrls: ['./loading-spinner.component.scss']
 })
 export class LoadingSpinnerComponent implements OnInit {
+    showSpinner: boolean;
 
-  showSpinner: boolean;
-  loadingText = '';
-  zIndex = 9999;
-  template = "\n  <div class=\"lds-roller\"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>";
+    constructor(private session: SessionService) {}
 
-  constructor(private service: LoadingSpinnerService) { }
-
-  ngOnInit() {
-    this.service.showSpinner.subscribe((next: boolean) => {
-      this.showSpinner = next;
-    });
-  }
-
-  show(): void {
-    this.service.show();
-  }
-
-  hide(): void {
-    this.service.hide();
-  }
-
+    ngOnInit() {
+        this.session.loading$.subscribe(n => (this.showSpinner = n));
+    }
+    
 }
