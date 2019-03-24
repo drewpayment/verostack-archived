@@ -93,7 +93,7 @@ class PayrollDetailController extends Controller
          */
         $pdf = base64_encode(file_get_contents($baseStoragePath . '/' . $clientId . '/' . $userId . '/' . $date . '-' . $randomIdentifier . '.pdf'));
 
-        return response()->json($pdf, 200, 
+        return response()->json(['data' => $pdf], 200, 
             ['Content-Type' => 'application/json; charset=utf-8', 'Content-Length' => strlen($pdf)]);
     }
 

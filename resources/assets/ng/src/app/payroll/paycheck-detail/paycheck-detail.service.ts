@@ -81,9 +81,9 @@ export class PaycheckDetailService implements Resolve<PayrollDetails> {
      * @param clientId 
      * @param payrollDetailsId 
      */
-    generatePdf(clientId:number, payrollDetailsId:number):Observable<string> {
+    generatePdf(clientId:number, payrollDetailsId:number):Observable<{ data:string }> {
         const url = `${this.api}/clients/${clientId}/payroll-details/${payrollDetailsId}/generate-pdf`;
-        return this.http.get<string>(url);
+        return this.http.get<{ data:string }>(url);
     }
 
 }

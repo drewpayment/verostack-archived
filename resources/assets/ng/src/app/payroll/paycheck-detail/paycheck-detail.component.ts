@@ -56,7 +56,7 @@ export class PaycheckDetailComponent implements OnInit {
             .subscribe(result => {
                 this.session.hideLoader();
                 
-                const byteChars = atob(result);
+                const byteChars = atob(result.data);
                 const byteNumbers = [byteChars.length];
                 for (let i = 0; i < byteChars.length; i++) {
                     byteNumbers[i] = byteChars.charCodeAt(i);
