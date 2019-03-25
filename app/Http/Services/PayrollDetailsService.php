@@ -93,4 +93,32 @@ class PayrollDetailsService
 
         return $result->setData($details);
     }
+
+    public function getAgentPaychecks(Request $params, $clientId, $agentId)
+    {
+        $result = new ApiResource();
+
+        $filterByDates = !is_null($params->startDate) && !is_null($params->endDate);
+
+        $details = PayrollDetail::with(['payroll.payCycle', 'agent.pairings', 'overrides.agent', 'expenses'])
+            ->select('payroll_details.*', 
+                DB::raw('
+                    (SELECT p.release_date 
+                    FROM payrolls p
+                    WHERE p.client_id = ?
+                    AND p.payroll_id = payroll_details.payroll_id) AS release_date
+                '))
+            ->setBindings([$clientId])
+            ->byAgentId($agentId)
+            ->latest('release_date', 'desc')
+            ->when($filterByDates, function($qry) use ($params) {
+                $qry->whereHas('payroll', function($pq) use ($params) {
+                    $pq->where('is_released', 1)
+                        ->whereBetween('release_date', [$params->startDate, $params->endDate]);
+                });
+            })
+            ->paginate($params->resultsPerPage, ['*'], 'page', $params->page);
+
+        return $result->setData($details);
+    }
 }

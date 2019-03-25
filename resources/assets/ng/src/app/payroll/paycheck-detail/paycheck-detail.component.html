@@ -36,7 +36,10 @@
                     <mat-card-subtitle class="px-4">
                         <h4 class="text-body pb-3 w-100 d-flex justify-content-between">
                             <span>{{client?.name}}</span>
-                            <small>Campaign: {{detail?.payroll?.campaign?.name}}</small>
+                            <small *ngIf="detail?.payroll; else agentView">Campaign: {{detail?.payroll?.campaign?.name}}</small>
+                            <ng-template #agentView>
+                                <small>Campaign: {{detail?.campaign?.name}}</small>
+                            </ng-template>
                         </h4>
                         <div class="d-flex justify-content-between">
                             <address>

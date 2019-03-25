@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRouteSnapshot, ActivatedRoute } from '@angular/router';
-import { PayrollDetails, User, IClient, DailySale, IOverride, IExpense } from '@app/models';
+import { PayrollDetails, User, IClient, DailySale, IOverride, IExpense, Payroll } from '@app/models';
 import { BehaviorSubject, forkJoin } from 'rxjs';
 import { SessionService } from '@app/session.service';
 import { DailySaleTrackerService } from '@app/daily-sale-tracker/daily-sale-tracker.service';
@@ -72,6 +72,8 @@ export class PaycheckDetailComponent implements OnInit {
     private initializeComponent(detailData:PayrollDetails) {
         this.session.getUserItem().subscribe(u => {
             this.user = u;
+
+            /** THIS IS THE HEADLESS PDF LOGIC, THIS IS ONLY GETS HIT FROM PUPPETEER API */
             if (this.user == null) {
                 const payload = this.paycheckDetailService.headlessPayload;
                 this.user = payload.user;
@@ -105,6 +107,14 @@ export class PaycheckDetailComponent implements OnInit {
                     });
     
                     this.sales = sales;
+
+                    const detail = this.detail$.getValue();
+                    if (detail.payroll == null && this.sales.length) {
+                        detail.payroll = {
+                            campaign: this.sales[0].campaign
+                        } as Payroll;
+                        this.detail$.next(detail);
+                    }
                 });
             }
         });

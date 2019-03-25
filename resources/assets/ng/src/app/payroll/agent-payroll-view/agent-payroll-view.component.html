@@ -13,7 +13,7 @@
         <div class="col-md-12">
             <mat-card class="border-top-primary">
                 <mat-card-content>
-                    <mat-table [dataSource]="payrolls">
+                    <mat-table [dataSource]="paychecks">
                         <ng-container matColumnDef="date">
                             <mat-header-cell *matHeaderCellDef>Date</mat-header-cell>
                             <mat-cell *matCellDef="let item">
@@ -24,19 +24,12 @@
                         <ng-container matColumnDef="gross">
                             <mat-header-cell *matHeaderCellDef>Gross Pay</mat-header-cell>
                             <mat-cell *matCellDef="let item">
-                                {{ item?.gross | currency }}
+                                {{ item?.grossTotal | currency }}
                             </mat-cell>
                         </ng-container>
 
-                        <ng-container matColumnDef="net">
-                            <mat-header-cell *matHeaderCellDef>Net Pay</mat-header-cell>
-                            <mat-cell *matCellDef="let item">
-                                {{ item?.net | currency }}
-                            </mat-cell>
-                        </ng-container>
-
-                        <mat-header-row *matHeaderRowDef="['date', 'gross', 'net']"></mat-header-row>
-                        <mat-row *matRowDef="let item; columns: ['date', 'gross', 'net']"></mat-row>
+                        <mat-header-row *matHeaderRowDef="['date', 'gross']"></mat-header-row>
+                        <mat-row *matRowDef="let item; columns: ['date', 'gross']" (click)="viewPaycheck(item)"></mat-row>
                     </mat-table>
                 </mat-card-content>
             </mat-card>
@@ -47,10 +40,10 @@
                         
         <div class="row mb-2">
             <div class="col-md-12">
-                <ng-container *ngIf="(payrolls|async) != null; noMobilePayrolls">
+                <ng-container *ngIf="(paychecks|async) != null; noMobilePayrolls">
 
-                    <mat-card *ngFor="let p of payrolls|async">
-                        <h4 mat-card-title>{{p?.gross | currency}}</h4>
+                    <mat-card *ngFor="let p of paychecks|async">
+                        <h4 mat-card-title>{{p?.grossTotal | currency}}</h4>
                         <mat-card-content>
                             {{ p?.releaseDate | date:'shortDate' }}
                         </mat-card-content>

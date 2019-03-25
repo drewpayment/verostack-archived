@@ -79,14 +79,22 @@ class SalesPairingsController extends Controller
         $user = User::with('role')->userId(Auth::user()->id)->first();
 
         // if the user isn't a company admin, they're not allowed to make this api call
-        if($user->role->role < 6)
-            return $result->setToFail()->throwApiException()->getResponse();
+        if($user->role->role < 6) {
+            $user->load('agent');
 
-		return $this->service
-			->getSalesPairingsByClientId($clientId)
-			->mergeInto($result)
-			->throwApiException()
-			->getResponse();
+            return $this->service
+                ->getSalesPairingsByAgentId($user->agent->agent_id, $clientId)
+                ->mergeInto($result)
+                ->throwApiException()
+                ->getResponse();
+
+        } else {
+            return $this->service
+                ->getSalesPairingsByClientId($clientId)
+                ->mergeInto($result)
+                ->throwApiException()
+                ->getResponse();
+        }
 	}
 
 	/**

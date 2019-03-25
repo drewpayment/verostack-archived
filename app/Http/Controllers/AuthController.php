@@ -47,13 +47,16 @@ class AuthController extends Controller
 
         $user = Auth::user();
 
-        $u = User::with(['detail', 'role', 'clients', 'sessionUser', 'sessionUser.client'])
+        $u = User::with(['detail', 'role', 'clients', 'sessionUser.client'])
                 ->userId($user->id)
-                ->first()
-                ->toArray();
+                ->first();
+
+        if($u->role->role < 6) {
+            $u->load('agent');
+        }
 
         $response = [
-            'user' => $this->helper->normalizeLaravelObject($u),
+            'user' => $this->helper->normalizeLaravelObject($u->toArray()),
             'token' => $user->createToken('auth')->accessToken
         ];
 

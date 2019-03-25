@@ -88,4 +88,9 @@ class PayrollDetail extends Model
         return $query->where('payroll_id', $id);
     }
 
+    public function scopeByAgentId($query, $id)
+    {
+        return $query->where('agent_id', $id);
+    }
+
 }

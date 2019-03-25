@@ -132,4 +132,21 @@ class PayrollDetailController extends Controller
             ->throwApiException()->getResponse();
     }
 
+    public function getPaycheckList(Request $request, $clientId, $agentId)
+    {
+        $result = new ApiResource();
+
+        $result
+            ->checkAccessByClient($clientId, Auth::user()->id)
+            ->mergeInto($result);
+
+        if($result->hasError)
+            return $result->throwApiException()->getResponse();
+
+        $this->service->getAgentPaychecks($request, $clientId, $agentId)->mergeInto($result);
+
+        return $result->throwApiException()
+            ->getResponse();
+    }
+
 }

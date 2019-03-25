@@ -12,5 +12,6 @@ export interface IAgent {
   isActive?:boolean,
   createdAt?:Date | Moment,
   pairings?:ISalesPairing[],
+  salesPairings?:ISalesPairing[],
   role?:IRole
 }

@@ -48,7 +48,15 @@ const routes:Route[] = [{
 }, {
     path: 'users/payroll',
     children: [
-        { path: 'list', component: AgentPayrollViewComponent, canActivate: [AuthGuard] }
+        { path: 'list', component: AgentPayrollViewComponent, canActivate: [AuthGuard] },
+        { 
+            path: 'paycheck-detail', 
+            component: PaycheckDetailComponent, 
+            canActivate: [PaycheckDetailGuard],
+            resolve: {
+                data: PaycheckDetailService
+            }
+        }
     ]
 }];
 

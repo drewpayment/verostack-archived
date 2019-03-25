@@ -1,0 +1,8 @@
+
+/deep/ .mat-row {
+
+    &:hover {
+        background-color: darken(#fff, 5%);
+        cursor: pointer;
+    }
+}

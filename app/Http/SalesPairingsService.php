@@ -57,7 +57,7 @@ class SalesPairingsService {
 		$result = new ApiResource();
 		return $result
 			->setData(SalesPairing::clientId($clientId)->get());
-	}
+    }
 
 	/**
 	 * @param $agentId
@@ -68,7 +68,7 @@ class SalesPairingsService {
 	{
 		$result = new ApiResource();
 		return $result
-			->setData(SalesPairing::clientId($clientId)->agentId($agentId)->get());
+			->setData(SalesPairing::with('campaign')->clientId($clientId)->agentId($agentId)->get());
 	}
 
 	/**

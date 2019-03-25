@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '@env/environment';
-import { Observable } from 'rxjs';
+import { Observable, Observer } from 'rxjs';
 import { PayrollDetails, Paginator } from '@app/models';
 import { Moment } from '@app/shared';
 import * as moment from 'moment';
@@ -38,5 +38,38 @@ export class PaycheckService {
         const url = `${this.api}/clients/${clientId}/payroll-details/${payrollDetailsId}`;
         const params = new HttpParams().set('page', page.toString());
         return this.http.get<any>(url, { params: params });
+    }
+
+    /**
+     * USER PAYCHECK API ENDPOINTS
+     * 
+     * 
+     */
+
+    getAgentPaycheckList(
+        clientId:number, 
+        agentId:number, 
+        page:number = 1, 
+        resultsPerPage?:number,
+        startDateArgs?:any, 
+        endDateArgs?:any
+    ):Observable<Paginator<PayrollDetails>> {
+        const url = `${this.api}/clients/${clientId}/agents/${agentId}/earnings`;
+        let params = new HttpParams().set('page', page.toString());
+        if (resultsPerPage) params = params.append('resultsPerPage', resultsPerPage.toString());
+        if (startDateArgs && endDateArgs) {
+            const startDate = moment(startDateArgs);
+            const endDate = moment(endDateArgs);
+            if (!startDate.isValid() || !endDate.isValid()) {
+                // throw new Error('Both start and end date are required!');
+                return Observable.create((observer:Observer<Paginator<PayrollDetails>>) => {
+                    observer.error(`Both start and end date are required.`);
+                    observer.complete();
+                });
+            }
+            params = params.append('startDate', startDate.format('YYYY-MM-DD'));
+            params = params.append('endDate', endDate.format('YYYY-MM-DD'));
+        }
+        return this.http.post<Paginator<PayrollDetails>>(url, { params: params });
     }
 }

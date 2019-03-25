@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Agent;
+use App\Campaign;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -54,6 +55,11 @@ class SalesPairing extends Model
     public function agent()
     {
         return $this->belongsTo(Agent::class, 'agent_id');
+    }
+
+    public function campaign()
+    {
+        return $this->belongsTo(Campaign::class, 'campaign_id');
     }
 
 	/**

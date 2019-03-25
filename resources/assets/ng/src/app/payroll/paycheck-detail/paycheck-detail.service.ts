@@ -6,6 +6,8 @@ import { environment } from '@env/environment';
 import { HttpClient } from '@angular/common/http';
 import { HeadlessPayload } from '@app/models/headless-payload.model';
 import { map, tap } from 'rxjs/operators';
+import { SessionService } from '@app/session.service';
+import { Role } from '@app/models/role.model';
 
 @Injectable()
 export class PaycheckDetailService implements Resolve<PayrollDetails> {
@@ -26,7 +28,7 @@ export class PaycheckDetailService implements Resolve<PayrollDetails> {
         return this._headlessPayload;
     }
 
-    constructor(private router:Router, private http:HttpClient) {}
+    constructor(private router:Router, private http:HttpClient, private session:SessionService) {}
 
     resolve(route:ActivatedRouteSnapshot, state:RouterStateSnapshot):Observable<PayrollDetails> {
         return Observable.create((observer:Observer<PayrollDetails>) => {
@@ -59,9 +61,17 @@ export class PaycheckDetailService implements Resolve<PayrollDetails> {
 
     private _noDetailsRedirect(observer:Observer<PayrollDetails>):void {
         console.error('No payroll details, please reload the page and try again.');
-        this.router.navigate(['/admin/pay/paycheck-list']);
-        observer.next(null);
-        observer.complete(); 
+
+        this.session.getUserItem().subscribe(user => {
+            if (user.role.role < Role.companyAdmin) {
+                this.router.navigate(['users', 'payroll', 'list']);
+            } else {
+                this.router.navigate(['admin', 'pay', 'paycheck-list']);
+            }
+
+            observer.next(null);
+            observer.complete(); 
+        });
     }
 
     navigateToDetail(detail:PayrollDetails):void {

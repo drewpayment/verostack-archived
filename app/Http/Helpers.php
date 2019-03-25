@@ -89,11 +89,13 @@ class Helpers
 
 	public function generateUserSession($username)
     {
-        $user = User::with('clients')
-	                ->with('detail')
-	                ->with('role')
-                    ->with('sessionUser')
-                    ->username($username)->first();
+        $user = User::with(['clients', 'detail', 'role', 'sessionUser'])
+            ->username($username)
+            ->first();
+
+        if($user->role->role < 6) {
+            $user->load('agent');
+        }
 
         if(!is_null($user->sessionUser))
         {

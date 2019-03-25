@@ -161,7 +161,7 @@ class Agent extends Model
 
 	public function salesPairings()
 	{
-		return $this->hasMany(SalesPairing::class);
+		return $this->hasMany(SalesPairing::class, 'agent_id');
 	}
 
     public function pairings()
