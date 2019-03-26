@@ -33,7 +33,8 @@ import { PortalModule } from '@angular/cdk/portal';
     AgentAddSaleDialog
   ],
   entryComponents: [
-    AgentAddSaleDialog
+    AgentAddSaleDialog,
+    ClientSelectorComponent
   ],
   exports: [
       SelectMapperComponent,
