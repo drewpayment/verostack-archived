@@ -12,7 +12,7 @@ import {UserService} from '@app/user-features/user.service';
 import {DailySaleTrackerService} from './daily-sale-tracker.service';
 import {MatDatepickerInputEvent, MatDialog, MatSelectChange, MatChipInputEvent} from '@angular/material';
 import {Moment} from 'moment';
-import {AddSaleDialog} from '@app/daily-sale-tracker/dialogs/add-sale.component';
+import {AddSaleDialogComponent} from '@app/daily-sale-tracker/dialogs/add-sale.component';
 import {CampaignService} from '@app/campaigns/campaign.service';
 import {States, IState} from '@app/shared/models/state.model';
 import {FormGroup, FormBuilder, FormArray, Validators, FormControl} from '@angular/forms';
@@ -228,7 +228,7 @@ export class DailySaleTrackerComponent implements OnInit, AfterViewInit {
     showAddSaleDialog(): void {
         this.floatBtnService.open();
         this.dialog
-            .open(AddSaleDialog, {
+            .open(AddSaleDialogComponent, {
                 width: '800px',
                 data: {
                     statuses: this.store.statuses,
@@ -361,7 +361,7 @@ export class DailySaleTrackerComponent implements OnInit, AfterViewInit {
         }
 
         this.dialog
-            .open(AddSaleDialog, {
+            .open(AddSaleDialogComponent, {
                 width: '800px',
                 data: {
                     agents: this.agents,

@@ -10,7 +10,7 @@ import { LoginComponent } from '../login/login.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '@app/material/material.module';
-import { AgentAddSaleDialog } from '@app/dashboard/dialogs/add-sale-dialog.component';
+import { AgentAddSaleDialogComponent } from '@app/dashboard/dialogs/add-sale-dialog.component';
 import { PortalModule } from '@angular/cdk/portal';
 
 @NgModule({
@@ -30,10 +30,10 @@ import { PortalModule } from '@angular/cdk/portal';
     ClientInformationComponent,
     SelectMapperComponent,
     LoadingSpinnerComponent,
-    AgentAddSaleDialog
+    AgentAddSaleDialogComponent
   ],
   entryComponents: [
-    AgentAddSaleDialog,
+    AgentAddSaleDialogComponent,
     ClientSelectorComponent
   ],
   exports: [

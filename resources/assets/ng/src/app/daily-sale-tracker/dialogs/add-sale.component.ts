@@ -33,7 +33,7 @@ interface ViewRemark extends Remark {
     styleUrls: ['./add-sale.component.scss'],
     animations: [...showFieldAnimation]
 })
-export class AddSaleDialog implements OnInit, AfterViewInit {
+export class AddSaleDialogComponent implements OnInit, AfterViewInit {
     form: FormGroup;
     statuses:SaleStatus[] = [];
     agents:IAgent[] = [];
@@ -65,7 +65,7 @@ export class AddSaleDialog implements OnInit, AfterViewInit {
     @ViewChild(MatAutocomplete) agentAutocomplete:MatAutocomplete;
 
     constructor(
-        public ref: MatDialogRef<AddSaleDialog>,
+        public ref: MatDialogRef<AddSaleDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: DialogData,
         private fb: FormBuilder,
         private campaignService: CampaignService,
@@ -81,7 +81,7 @@ export class AddSaleDialog implements OnInit, AfterViewInit {
         this.remarks = this.data.sale != null ? this.data.sale.remarks : [];
         this.sortRemarks();
         this.statuses = this.data.statuses.filter(s => s.isActive);
-        this.agents = this.data.agents;
+        this.agents = this.data.agents.filter(a => a.isActive);
         this.selectedCampaign = this.data.selectedCampaign;
         this.user = this.data.user;
 

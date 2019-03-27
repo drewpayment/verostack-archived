@@ -20,7 +20,7 @@ interface DialogData {
     templateUrl: './add-sale-dialog.component.html',
     styleUrls: ['./add-sale-dialog.component.scss']
 })
-export class AgentAddSaleDialog implements OnInit {
+export class AgentAddSaleDialogComponent implements OnInit {
     user:User;
     form:FormGroup;
     agent:IAgent;
@@ -30,7 +30,7 @@ export class AgentAddSaleDialog implements OnInit {
     states:IState[] = States.$get();
 
     constructor(
-        public ref:MatDialogRef<AgentAddSaleDialog>,
+        public ref:MatDialogRef<AgentAddSaleDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data:DialogData,
         private fb:FormBuilder,
         private dailySaleService:DailySaleTrackerService
@@ -62,7 +62,7 @@ export class AgentAddSaleDialog implements OnInit {
         if(account == null || account.length < 1) return;
         this.dailySaleService.checkUniquePodAccount(account)
             .subscribe((unique:boolean) => {
-                if(!unique)
+                if (!unique)
                     this.form.controls.podAccount.setErrors({ 'notUnique': true });
             }); 
     }

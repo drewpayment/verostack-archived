@@ -10,7 +10,7 @@ import {User, IAgent, ICampaign, SaleStatus, DailySale, PaidStatusType} from '@a
 import {SessionService} from '@app/session.service';
 import {AgentsService} from '@app/core/agents/agents.service';
 import {MatDialog, MatSelectChange, MatDatepickerInputEvent, MatButtonToggleChange} from '@angular/material';
-import {AgentAddSaleDialog} from '@app/dashboard/dialogs/add-sale-dialog.component';
+import {AgentAddSaleDialogComponent} from '@app/dashboard/dialogs/add-sale-dialog.component';
 import {CampaignService} from '@app/campaigns/campaign.service';
 import {ClientService} from '@app/client-information/client.service';
 import {DailySaleTrackerService} from '@app/daily-sale-tracker/daily-sale-tracker.service';
@@ -390,7 +390,7 @@ export class DashboardComponent implements OnInit, AfterContentInit {
 
     showAddSaleDialog(): void {
         this.dialog
-            .open(AgentAddSaleDialog, {
+            .open(AgentAddSaleDialogComponent, {
                 width: '600px',
                 data: {
                     user: this.store.user,

@@ -13,7 +13,7 @@ import { MessagesComponent } from '@app/messages/messages.component';
 import { FabFloatBtnModule } from '@app/fab-float-btn/fab-float-btn.module';
 import { AddAgentDialogComponent } from '@app/core/agents/dialogs/add-agent.component';
 import { AddSaleStatusDialog } from '@app/client-information/dialogs/add-sale-status.component';
-import { AddSaleDialog } from '@app/daily-sale-tracker/dialogs/add-sale.component';
+import { AddSaleDialogComponent } from '@app/daily-sale-tracker/dialogs/add-sale.component';
 import { DailySaleTrackerComponent } from '@app/daily-sale-tracker/daily-sale-tracker.component';
 import { DeleteSaleDialog } from '@app/daily-sale-tracker/dialogs/delete-sale.component';
 import { RouterModule } from '@angular/router';
@@ -37,7 +37,7 @@ import { DirectivesModule } from '@app/directives/directives.module';
     MessagesComponent,
     AddAgentDialogComponent,
     AddSaleStatusDialog,
-    AddSaleDialog,
+    AddSaleDialogComponent,
     DailySaleTrackerComponent,
     DeleteSaleDialog
   ],
@@ -52,7 +52,7 @@ import { DirectivesModule } from '@app/directives/directives.module';
   entryComponents: [
     AddAgentDialogComponent,
     AddSaleStatusDialog,
-    AddSaleDialog,
+    AddSaleDialogComponent,
     DeleteSaleDialog
   ]
 })
