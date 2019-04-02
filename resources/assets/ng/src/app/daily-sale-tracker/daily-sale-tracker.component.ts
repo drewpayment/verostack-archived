@@ -1,4 +1,4 @@
-import {Component, OnInit, AfterViewInit} from '@angular/core';
+import {Component, OnInit, AfterViewInit, NgZone} from '@angular/core';
 import {DailySale, IAgent, SaleStatus, User, ICampaign, Remark, PaidStatusType} from '@app/models';
 
 import * as moment from 'moment';
@@ -104,7 +104,8 @@ export class DailySaleTrackerComponent implements OnInit, AfterViewInit {
         private dialog: MatDialog,
         private fb: FormBuilder,
         private floatBtnService: FloatBtnService,
-        private session:SessionService
+        private session:SessionService,
+        private ngZone:NgZone
     ) {
         /** why are we doing this? why not just use an observable w/async pipe to dataSource$? */
         this.dataSource$.subscribe(next => {
@@ -216,13 +217,15 @@ export class DailySaleTrackerComponent implements OnInit, AfterViewInit {
     }
 
     expandedRowHover(row: any): void {
-        if(row.remarks.length < 1) return;
+        if (row.remarks.length < 1) return;
         row.showNotes = row.showNotes == null ? true : !row.showNotes;
         this.showNotes = !this.showNotes;
         row = this.showNotes ? row : null;
-        setTimeout(() => {
-            this.expandedElement = row;
-        }, 250);
+
+        this.ngZone.run(() => this.expandedElement = row);
+        // setTimeout(() => {
+        //     this.expandedElement = row;
+        // }, 250);
     }
 
     showAddSaleDialog(): void {

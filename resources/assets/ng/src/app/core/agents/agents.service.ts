@@ -18,6 +18,7 @@ export class AgentsService {
   constructor(private http:HttpClient) { }
 
   /**
+   * TODO: Refactor to return Observable<IAgent[]>
    * Get all agents by active status.
    *
    * @param activeOnly

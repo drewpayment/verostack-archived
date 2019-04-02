@@ -35,7 +35,7 @@ class AgentController extends Controller
 		$activeOnly = is_null($activeOnly) ? true : false;
 
 		return $result
-			->setData(Agent::activeOnly($activeOnly)->get())
+			->setData(Agent::with('salesPairings')->activeOnly($activeOnly)->get())
 			->throwApiException()
 			->getResponse();
 	}

@@ -1,4 +1,4 @@
-import {Component, OnInit, Inject, ViewChild, SimpleChanges, AfterViewInit, ElementRef, ComponentRef} from '@angular/core';
+import {Component, OnInit, Inject, ViewChild, SimpleChanges, AfterViewInit, ElementRef, ComponentRef, ChangeDetectorRef} from '@angular/core';
 import {MatDialogRef, MAT_DIALOG_DATA, MatTooltip, MatAutocomplete, MatButtonToggleChange} from '@angular/material';
 import {FormBuilder, FormGroup, Validators, FormArray, FormControl, ValidatorFn, AbstractControl} from '@angular/forms';
 import {SaleStatus, IAgent, ICampaign, DailySale, User, Remark, PaidStatusType, Utility, ContactType} from '@app/models';
@@ -13,6 +13,7 @@ import { Contact } from '@app/models/contact.model';
 import { ContactService } from '@app/contact/contact.service';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { coerceNumberProperty, showFieldAnimation } from '@app/utils';
+import { Role } from '@app/models/role.model';
 
 interface DialogData {
     statuses: SaleStatus[];
@@ -70,7 +71,8 @@ export class AddSaleDialogComponent implements OnInit, AfterViewInit {
         private fb: FormBuilder,
         private campaignService: CampaignService,
         private router: Router,
-        private contactService:ContactService
+        private contactService:ContactService,
+        private _cd:ChangeDetectorRef
     ) {}
 
     ngOnInit() {
@@ -92,17 +94,36 @@ export class AddSaleDialogComponent implements OnInit, AfterViewInit {
                 this._setObservables();
             });
 
-        if (this.isExistingSale && this.data.campaigns == null) {
-            this.campaignService.getCampaigns(this.user.sessionUser.sessionClient, false).then(results => {
-                this.campaigns = results;
-            });
-        } else {
-            let campaigns = this.data.campaigns;
-            // remove "all campaigns" option, so that the user has to be pick a valid campaign
-            this.campaigns = campaigns.filter(c => c.campaignId != 0);
+        if (this._checkForSelfEntryUser()) {
+            this.agents = this.agents.filter(a => a.userId == this.user.id);
         }
 
+        if (this.isExistingSale && this.data.campaigns == null) {
+            this.campaignService.getCampaigns(this.user.sessionUser.sessionClient, false).then(results => {
+
+                if (this._checkForSelfEntryUser()) {
+                    this.campaigns = results.filter(r => this.agents[0].salesPairings.filter(sp => sp.campaignId == r.campaignId));
+                } else {
+                    this.campaigns = results;
+                }
+
+            });
+        } else {
+            if (this._checkForSelfEntryUser()) {
+                this.campaigns = this.data.campaigns.filter(c => this.agents[0].salesPairings.find(sp => sp.campaignId == c.campaignId));
+            } else {
+                this.campaigns = this.data.campaigns;
+            }
+        }
+
+        // remove "all campaigns" option, so that the user has to be pick a valid campaign
+        this.campaigns = this.campaigns.filter(c => c.campaignId != 0);
+
         this.createForm();
+    }
+
+    private _checkForSelfEntryUser():boolean {
+        return this.user.role.role < Role.companyAdmin && this.user.role.isSalesAdmin;
     }
 
     onNoClick(): void {
@@ -116,16 +137,19 @@ export class AddSaleDialogComponent implements OnInit, AfterViewInit {
         this.form.controls.campaign.valueChanges.subscribe(val => this._updateUtilities(val));
 
         this.form.controls.paidDate.valueChanges.subscribe(val =>
-            this.form.patchValue({ paidStatus: val == null ? PaidStatusType.unpaid.toString() : PaidStatusType.paid.toString() }, doNotEmit));
+            this.form.patchValue({ paidStatus: val == null 
+                ? PaidStatusType.unpaid.toString() : PaidStatusType.paid.toString() }, doNotEmit));
 
         this.form.controls.repaidDate.valueChanges.subscribe(val => 
-            this.form.patchValue({ paidStatus: val == null ? PaidStatusType.unpaid.toString() : PaidStatusType.repaid.toString() }, doNotEmit));
+            this.form.patchValue({ paidStatus: val == null 
+                ? PaidStatusType.unpaid.toString() : PaidStatusType.repaid.toString() }, doNotEmit));
 
         this.form.controls.chargeDate.valueChanges.subscribe(val =>
-            this.form.patchValue({ paidStatus: val == null ? PaidStatusType.unpaid.toString() : PaidStatusType.chargeback.toString() }, doNotEmit));
+            this.form.patchValue({ paidStatus: val == null 
+                ? PaidStatusType.unpaid.toString() : PaidStatusType.chargeback.toString() }, doNotEmit));
 
         this.form.controls.paidStatus.valueChanges.subscribe((value:PaidStatusType) => {
-            switch(coerceNumberProperty(value)) {
+            switch (coerceNumberProperty(value)) {
                 case PaidStatusType.paid:
                     this.form.patchValue({ paidDate: moment() });
                     break;
@@ -141,6 +165,14 @@ export class AddSaleDialogComponent implements OnInit, AfterViewInit {
                     break;    
             }
         });
+
+        if (this._checkForSelfEntryUser()) {
+            this.selectedCampaign = this.campaigns[0];
+            this.form.get('campaign').setValue(this.campaigns[0].campaignId);
+            this.form.get('agent').setValue(this.agents[0]);
+        }
+
+        this._cd.detectChanges();
     }
 
     private _updateUtilities(campaignId:number):void {
@@ -369,7 +401,8 @@ export class AddSaleDialogComponent implements OnInit, AfterViewInit {
         this.form = this.fb.group({
             saleDate: this.fb.control(this.existingSale.saleDate || this.today, [Validators.required]),
             agent: this.fb.control(this.agents.find(a => a.agentId == this.existingSale.agentId), [Validators.required]),
-            campaign: this.fb.control({ value: this.selectedCampaign.campaignId || '', disabled: this.isExistingSale}, [Validators.required]),
+            campaign: this.fb.control({ value: this.selectedCampaign.campaignId || '', 
+                disabled: this.isExistingSale}, [Validators.required]),
             utilityId: this.fb.control(this.existingSale.utilityId || '', [Validators.required]),
             account: this.fb.control(this.existingSale.podAccount || '', [Validators.required]),
             status: this.fb.control(this.existingSale.status || '', [Validators.required]),
