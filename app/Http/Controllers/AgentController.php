@@ -34,8 +34,16 @@ class AgentController extends Controller
 
 		$activeOnly = is_null($activeOnly) ? true : false;
 
+		$user = Auth::user();
+		$clientId = $user->load('sessionUser')->sessionUser->session_client;
+
+		$agents = Agent::with('salesPairings')
+			->byClient($clientId)
+			->activeOnly($activeOnly)
+			->get();
+
 		return $result
-			->setData(Agent::with('salesPairings')->activeOnly($activeOnly)->get())
+			->setData($agents)
 			->throwApiException()
 			->getResponse();
 	}
