@@ -122,7 +122,7 @@ class Agent extends Model
 	 */
 	public function scopeManagerId($query, $managerId)
 	{
-		return $query->where('manager_id', $managerId);
+		return $this->scopeByManager($query, $managerId);
 	}
 
     /**

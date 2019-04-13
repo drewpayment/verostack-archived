@@ -22,7 +22,7 @@ class AgentController extends Controller
 	}
 
 	/**
-	 * Get all agents by active state.
+	 * Get all agents by active state by client, restricted to Company Admins and System Admins.
 	 *
 	 * @param bool $activeOnly
 	 *
@@ -35,12 +35,21 @@ class AgentController extends Controller
 		$activeOnly = is_null($activeOnly) ? true : false;
 
 		$user = Auth::user();
-		$clientId = $user->load('sessionUser')->sessionUser->session_client;
+		$user = $user->load(['sessionUser', 'role']);
+		$clientId = $user->sessionUser->session_client;
 
-		$agents = Agent::with('salesPairings')
+		$query = Agent::with('salesPairings')
 			->byClient($clientId)
-			->activeOnly($activeOnly)
-			->get();
+			->activeOnly($activeOnly);
+
+		// if the user isn't a company admin, they shouldn't be able to make this call... 
+		if ($user->role->role == 3 || $user->role->role == 4) {
+			$query->byManager($user->id);
+		} else if ($user->role->role < 6 && $user->role->role != 5) {
+			return response()->json([]);
+		}
+
+		$agents = $query->get();
 
 		return $result
 			->setData($agents)
@@ -60,7 +69,7 @@ class AgentController extends Controller
 		$result = new ApiResource();
 
 		$result
-			->checkAccessByClient($clientId, Auth::user()->id)
+			->checkAccessByClient($clientId)
 			->mergeInto($result);
 
 		if($result->hasError)

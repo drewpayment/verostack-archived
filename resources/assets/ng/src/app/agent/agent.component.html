@@ -185,12 +185,18 @@
                 </div>
             </div>
         </div>
+        <ng-container *ngIf="(users|async) == null">
+            <div class="col-md-12">
+                <h3 class="font-italic text-muted text-center">You do not have any agents assigned to you.</h3>
+            </div>
+        </ng-container>
     </div>
 </div>
 
 
 <vs-float-button
-  mat-icon="add"
-  (callback)="showAddAgent()"
-  [isOpen]="floatOpen$"
+    *ngIf="user?.role?.role > 5"
+    mat-icon="add"
+    (callback)="showAddAgent()"
+    [isOpen]="floatOpen$"
 ></vs-float-button>

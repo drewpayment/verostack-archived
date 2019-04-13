@@ -1,7 +1,7 @@
-import {Component, Inject, OnInit, ViewChildren, QueryList, AfterContentInit, AfterContentChecked, AfterViewChecked, ViewChild, ElementRef} from '@angular/core';
+import {Component, Inject, OnInit, ViewChildren, QueryList } from '@angular/core';
 import {MatDialogRef, MAT_DIALOG_DATA, MatInput} from '@angular/material';
 import {User, IUserDetail, IAgent} from '@app/models';
-import {FormGroup, FormBuilder, Validators, FormControl, NgControl} from '@angular/forms';
+import {FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import {IState, States} from '@app/shared/models/state.model';
 import {MessageService} from '@app/message.service';
 import {AgentsService} from '@app/core/agents/agents.service';
@@ -13,8 +13,7 @@ import { catchError } from 'rxjs/operators';
 import { RoleType } from '@app/models/role.model';
 import { AgentService } from '@app/agent/agent.service';
 import { Observable, of } from 'rxjs';
-import { ValidatorError, ValidatorErrorDetail, LaravelErrorResponse } from '@app/models/validator-error.model';
-import { HttpErrorResponse } from '@angular/common/http';
+import { LaravelErrorResponse } from '@app/models/validator-error.model';
 
 interface IKeyValue {
     key: string | number;
@@ -144,7 +143,7 @@ export class AddAgentDialogComponent implements OnInit {
                 })
             )
             .subscribe(result => {
-                if(!result) return;
+                if (!result) return;
                 this.msg.addMessage('User added!', 'dismiss', 6000);
                 this.ref.close(result);
             });
@@ -217,13 +216,7 @@ export class AddAgentDialogComponent implements OnInit {
             bankRouting: this.fb.control('', []),
             verifyRouting: this.fb.control('', []),
             bankAccount: this.fb.control('', []),
-            verifyAccount: this.fb.control('', []),
-            saleOneId: this.fb.control('', []),
-            saleOneCampaignId: this.fb.control('', []),
-            saleTwoId: this.fb.control('', []),
-            saleTwoCampaignId: this.fb.control('', []),
-            saleThreeId: this.fb.control('', []),
-            saleThreeCampaignId: this.fb.control('', [])
+            verifyAccount: this.fb.control('', [])
         });
     }
 
