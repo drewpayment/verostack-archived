@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewChildren, QueryList, ElementRef, OnDestroy, AfterViewChecked, ChangeDetectorRef} from '@angular/core';
 import {AgentService} from '@app/agent/agent.service';
-import { IAgent, User, ICampaign } from '@app/models';
-import { Subject, Observable, Subscription } from 'rxjs';
+import { IAgent, User, ICampaign, UpdateAgentMetaData } from '@app/models';
+import { Subject, Observable, Subscription, Observer } from 'rxjs';
 import { SessionService } from '@app/session.service';
 import * as _ from 'lodash';
 import * as moment from 'moment';
@@ -79,7 +79,8 @@ export class AgentComponent implements OnInit, AfterViewChecked, OnDestroy {
         private msg:MessageService,
         private changeDetector:ChangeDetectorRef,
         private userService:UserService,
-        private currencyPipe:CurrencyPipe
+        private currencyPipe:CurrencyPipe,
+        private agentService:AgentService
     ) {
         this.floatOpen$ = this.floatBtnService.opened$.asObservable();
         this.users = this.users$.asObservable();
@@ -414,20 +415,44 @@ export class AgentComponent implements OnInit, AfterViewChecked, OnDestroy {
             }
         })
         .afterClosed()
-        .subscribe(result => {
+        .subscribe((result:UpdateAgentMetaData) => {
             if (result == null) return; /** If the result is undefined, the user canceled the changes. */
+            this.session.showLoader();
 
-            if (result.detail != null && result.detail.ssn < 1) {
-                delete result.detail.ssn;
+            if (result.updateDetail) {
+                this.userService.saveDetailEntity(result.user.detail)
+                    .then(detail => {
+                        user.detail = detail;
+                        this.session.hideLoader();
+                    });
             }
 
-            let payload = {
-                id: user.id
-            } as User;
+            if (result.updateAgent) {
+                this.agentService.updateAgent(result.user.agent)
+                    .subscribe(agent => {
+                        user.agent = agent;
+                        this.session.hideLoader();
+                    });
+            }
 
-            payload = Object.assign(payload, result);
+            if (result.updateUser) {
+                const dto:User = result.user;
+                dto.id = user.id;
+                if (dto.detail) delete dto.detail;
+                if (dto.agent) delete dto.agent;
 
-            console.dir(payload);
+                this.userService.updateUserEntity(dto)
+                    .then(res => {
+                        const display = user.display;
+                        const detail = this.user.detail;
+                        const agent = this.user.agent;
+                        user = <UserView>res;
+                        user.display = display;
+                        user.detail = detail;
+                        user.agent = agent;
+                        this.session.hideLoader();
+                    });
+            }
 
             // this.session.showLoader();
             // this.service.updateUserWithRelationships(this.user.sessionUser.sessionClient, result)
@@ -450,6 +475,12 @@ export class AgentComponent implements OnInit, AfterViewChecked, OnDestroy {
             //         }
             //     });
         });    
+    }
+
+    private sendUserAgentUpdates():Observable<UserView> {
+        return Observable.create((observer:Observer<UserView>) => {
+            // need to move all API calls here and not return until after they're all complete... 
+        });
     }
 
     searchAgents(event) {

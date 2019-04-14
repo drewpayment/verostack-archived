@@ -127,14 +127,28 @@ class AgentController extends Controller
 
 		$curr = Agent::id($agentId)->first();
 
+		$user = Auth::user();
+		$clientId = $user->load('sessionUser')->sessionUser->session_client;
+
+		$result->checkAccessByClient($clientId, $user->id)
+			->mergeInto($result);
+
 		$result
 			->checkAccessByUser($curr->user_id)
 			->mergeInto($result);
 
-		$curr->first_name = $request->firstName;
-		$curr->last_name = $request->lastName;
-		$curr->manager_id = $request->managerId;
-		$curr->is_active = $request->isActive;
+		if ($result->hasError)
+			return $result->throwApiException()
+				->getResponse();
+
+		if (!is_null($request->firstName) && $request->firstName != $curr->first_name)
+			$curr->first_name = $request->firstName;
+		if (!is_null($request->lastName) && $request->lastName != $curr->last_name)
+			$curr->last_name = $request->lastName;
+		if (!is_null($request->managerId) && $request->managerId != $curr->manager_id)
+			$curr->manager_id = $request->managerId;
+		if (!is_null($request->isActive) && $request->isActive != $curr->is_active)
+			$curr->is_active = $request->isActive;
 
 		$saved = $curr->save();
 

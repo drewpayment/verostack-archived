@@ -102,6 +102,10 @@ export class AgentService {
         return this.http.get<RoleType[]>(`${this.api}/role-types?inactive=${includeInactive}`);
     }
 
+    updateAgent(agent:IAgent):Observable<IAgent> {
+        return this.http.post(this.api + 'agents/' + agent.agentId, agent);
+    }
+
     private handleError(error: HttpErrorResponse) {
         if (error.error instanceof ErrorEvent) {
             console.log('Error occurred: ', error.error.message || error.message);

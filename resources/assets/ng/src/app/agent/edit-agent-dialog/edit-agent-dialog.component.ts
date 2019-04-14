@@ -1,5 +1,5 @@
 import {Component, OnInit, Inject} from '@angular/core';
-import {User} from '@app/models';
+import {User, UpdateAgentMetaData} from '@app/models';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { IState, States } from '@app/shared/models/state.model';
@@ -23,6 +23,8 @@ export class EditAgentDialogComponent implements OnInit {
     managers:User[];
     states:IState[] = States.$get();
     userAgentDict:{ [key:string]:any };
+
+    update:UpdateAgentMetaData = {} as UpdateAgentMetaData;
 
     constructor(
         private fb:FormBuilder, 
@@ -49,9 +51,10 @@ export class EditAgentDialogComponent implements OnInit {
     }
 
     saveAgentChanges():void {
-        const model = this.getChangedProperties(this.prepareModel()) as User;
+        this.update.user = this.getChangedProperties(this.prepareModel());
+        this.checkForUserPropertiesChanged(this.update.user);
 
-        this.ref.close(model);
+        this.ref.close(this.update);
     }
 
     private flattenObject(item:any):any {
@@ -73,7 +76,7 @@ export class EditAgentDialogComponent implements OnInit {
         return type === 'function' || type === 'object';
     }
 
-    private getChangedProperties(model:any, key:string = null):{ [key:string]:any } {
+    private getChangedProperties(model:any, key:string = null) {
         const tempModel = key == null ? model : model[key];
 
         for (const p in tempModel) {
@@ -91,7 +94,44 @@ export class EditAgentDialogComponent implements OnInit {
             model = tempModel;
         }
 
+        if (model) {
+            if (model.detail && !this.isEmptyObject(model.detail)) {
+                model.detail.userDetailId = this.userAgent.detail.userDetailId;
+                if (model.detail.ssn == 0) delete model.detail.ssn;
+                this.update.updateDetail = true;
+            } else {
+                delete model.detail;
+            }
+
+            if (model.agent && !this.isEmptyObject(model.agent)) {
+                model.agent.agentId = this.userAgent.agent.agentId;
+                this.update.updateAgent = true;
+            } else {
+                delete model.agent;
+            }
+
+        }
+
         return model;
+    }
+
+    private isEmptyObject(obj:any):boolean {
+        for (const o in obj) {
+            if (obj.hasOwnProperty(o)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private checkForUserPropertiesChanged(user:User):User { 
+        for (const p in user) {
+            if (p.toLowerCase() != 'id' && !this.isObject(user[p])) {
+                console.log(p);
+                this.update.updateUser = true;
+            }
+        }
+        return user;
     }
 
     /** Creates a form that has separate form groups for the user entity, user_detail entity and the agent entity. */

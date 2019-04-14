@@ -510,7 +510,7 @@ var AgentDisplay;
 })(AgentDisplay || (AgentDisplay = {}));
 var PAIRING_KEYS = ['agentId', 'campaignId', 'commission', 'clientId', 'salesId', 'salesPairingsId'];
 var AgentComponent = /** @class */ (function () {
-    function AgentComponent(service, session, dialog, floatBtnService, campaignService, fb, msg, changeDetector, userService, currencyPipe) {
+    function AgentComponent(service, session, dialog, floatBtnService, campaignService, fb, msg, changeDetector, userService, currencyPipe, agentService) {
         var _this = this;
         this.service = service;
         this.session = session;
@@ -522,6 +522,7 @@ var AgentComponent = /** @class */ (function () {
         this.changeDetector = changeDetector;
         this.userService = userService;
         this.currencyPipe = currencyPipe;
+        this.agentService = agentService;
         this.store = {};
         this.users$ = new rxjs__WEBPACK_IMPORTED_MODULE_3__["Subject"]();
         this.managers$ = new rxjs__WEBPACK_IMPORTED_MODULE_3__["Subject"]();
@@ -821,6 +822,7 @@ var AgentComponent = /** @class */ (function () {
         return input.substr(start, end) + calculatedReplacement + input.substr(end, calculatedReplacement.length);
     };
     AgentComponent.prototype.editAgent = function (user) {
+        var _this = this;
         var displayType = user.display;
         this.dialog.open(_app_agent_edit_agent_dialog_edit_agent_dialog_component__WEBPACK_IMPORTED_MODULE_12__["EditAgentDialogComponent"], {
             width: '600px',
@@ -834,14 +836,40 @@ var AgentComponent = /** @class */ (function () {
             .subscribe(function (result) {
             if (result == null)
                 return; /** If the result is undefined, the user canceled the changes. */
-            if (result.detail != null && result.detail.ssn < 1) {
-                delete result.detail.ssn;
+            _this.session.showLoader();
+            if (result.updateDetail) {
+                _this.userService.saveDetailEntity(result.user.detail)
+                    .then(function (detail) {
+                    user.detail = detail;
+                    _this.session.hideLoader();
+                });
             }
-            var payload = {
-                id: user.id
-            };
-            payload = Object.assign(payload, result);
-            console.dir(payload);
+            if (result.updateAgent) {
+                _this.agentService.updateAgent(result.user.agent)
+                    .subscribe(function (agent) {
+                    user.agent = agent;
+                    _this.session.hideLoader();
+                });
+            }
+            if (result.updateUser) {
+                var dto = result.user;
+                dto.id = user.id;
+                if (dto.detail)
+                    delete dto.detail;
+                if (dto.agent)
+                    delete dto.agent;
+                _this.userService.updateUserEntity(dto)
+                    .then(function (res) {
+                    var display = user.display;
+                    var detail = _this.user.detail;
+                    var agent = _this.user.agent;
+                    user = res;
+                    user.display = display;
+                    user.detail = detail;
+                    user.agent = agent;
+                    _this.session.hideLoader();
+                });
+            }
             // this.session.showLoader();
             // this.service.updateUserWithRelationships(this.user.sessionUser.sessionClient, result)
             //     .subscribe((user:UserView) => {
@@ -860,6 +888,11 @@ var AgentComponent = /** @class */ (function () {
             //             this.session.hideLoader();
             //         }
             //     });
+        });
+    };
+    AgentComponent.prototype.sendUserAgentUpdates = function () {
+        return rxjs__WEBPACK_IMPORTED_MODULE_3__["Observable"].create(function (observer) {
+            // need to move all API calls here and not return until after they're all complete... 
         });
     };
     AgentComponent.prototype.searchAgents = function (event) {
@@ -907,7 +940,8 @@ var AgentComponent = /** @class */ (function () {
             _app_message_service__WEBPACK_IMPORTED_MODULE_15__["MessageService"],
             _angular_core__WEBPACK_IMPORTED_MODULE_1__["ChangeDetectorRef"],
             _app_user_features_user_service__WEBPACK_IMPORTED_MODULE_13__["UserService"],
-            _angular_common__WEBPACK_IMPORTED_MODULE_17__["CurrencyPipe"]])
+            _angular_common__WEBPACK_IMPORTED_MODULE_17__["CurrencyPipe"],
+            _app_agent_agent_service__WEBPACK_IMPORTED_MODULE_2__["AgentService"]])
     ], AgentComponent);
     return AgentComponent;
 }());
@@ -1011,6 +1045,9 @@ var AgentService = /** @class */ (function () {
         if (includeInactive === void 0) { includeInactive = false; }
         return this.http.get(this.api + "/role-types?inactive=" + includeInactive);
     };
+    AgentService.prototype.updateAgent = function (agent) {
+        return this.http.post(this.api + 'agents/' + agent.agentId, agent);
+    };
     AgentService.prototype.handleError = function (error) {
         if (error.error instanceof ErrorEvent) {
             console.log('Error occurred: ', error.error.message || error.message);
@@ -1081,6 +1118,7 @@ var EditAgentDialogComponent = /** @class */ (function () {
         this.data = data;
         this.ref = ref;
         this.states = _app_shared_models_state_model__WEBPACK_IMPORTED_MODULE_4__["States"].$get();
+        this.update = {};
     }
     EditAgentDialogComponent.prototype.ngOnInit = function () {
         this.userAgent = this.data.agent;
@@ -1097,8 +1135,9 @@ var EditAgentDialogComponent = /** @class */ (function () {
         this.ref.close();
     };
     EditAgentDialogComponent.prototype.saveAgentChanges = function () {
-        var model = this.getChangedProperties(this.prepareModel());
-        this.ref.close(model);
+        this.update.user = this.getChangedProperties(this.prepareModel());
+        this.checkForUserPropertiesChanged(this.update.user);
+        this.ref.close(this.update);
     };
     EditAgentDialogComponent.prototype.flattenObject = function (item) {
         var result = {};
@@ -1133,7 +1172,42 @@ var EditAgentDialogComponent = /** @class */ (function () {
         else {
             model = tempModel;
         }
+        if (model) {
+            if (model.detail && !this.isEmptyObject(model.detail)) {
+                model.detail.userDetailId = this.userAgent.detail.userDetailId;
+                if (model.detail.ssn == 0)
+                    delete model.detail.ssn;
+                this.update.updateDetail = true;
+            }
+            else {
+                delete model.detail;
+            }
+            if (model.agent && !this.isEmptyObject(model.agent)) {
+                model.agent.agentId = this.userAgent.agent.agentId;
+                this.update.updateAgent = true;
+            }
+            else {
+                delete model.agent;
+            }
+        }
         return model;
+    };
+    EditAgentDialogComponent.prototype.isEmptyObject = function (obj) {
+        for (var o in obj) {
+            if (obj.hasOwnProperty(o)) {
+                return false;
+            }
+        }
+        return true;
+    };
+    EditAgentDialogComponent.prototype.checkForUserPropertiesChanged = function (user) {
+        for (var p in user) {
+            if (p.toLowerCase() != 'id' && !this.isObject(user[p])) {
+                console.log(p);
+                this.update.updateUser = true;
+            }
+        }
+        return user;
     };
     /** Creates a form that has separate form groups for the user entity, user_detail entity and the agent entity. */
     EditAgentDialogComponent.prototype.createForm = function () {
@@ -7638,7 +7712,7 @@ var ContactType;
 /*!*********************************!*\
   !*** ./src/app/models/index.ts ***!
   \*********************************/
-/*! exports provided: AgentSale, PaidStatusType, PayrollFilterType, UserType, ContactType */
+/*! exports provided: AgentSale, PayrollFilterType, UserType, ContactType, PaidStatusType */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
