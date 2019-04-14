@@ -48,7 +48,7 @@ export class AgentService {
     }
 
     updateUserWithRelationships(clientId: number, user: User): Observable<User> {
-        let url = `${this.api}/clients/${clientId}/users/${user.id}`;
+        const url = `${this.api}/clients/${clientId}/users/${user.id}`;
         return this.http.post<User>(url, user).pipe(catchError(this.handleError));
     }
 
@@ -100,6 +100,10 @@ export class AgentService {
 
     getRoleTypes(includeInactive: boolean = false): Observable<RoleType[]> {
         return this.http.get<RoleType[]>(`${this.api}/role-types?inactive=${includeInactive}`);
+    }
+
+    updateAgent(agent:IAgent):Observable<IAgent> {
+        return this.http.post(this.api + '/agents/' + agent.agentId, agent);
     }
 
     private handleError(error: HttpErrorResponse) {

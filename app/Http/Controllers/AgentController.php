@@ -22,7 +22,7 @@ class AgentController extends Controller
 	}
 
 	/**
-	 * Get all agents by active state.
+	 * Get all agents by active state by client, restricted to Company Admins and System Admins.
 	 *
 	 * @param bool $activeOnly
 	 *
@@ -34,8 +34,25 @@ class AgentController extends Controller
 
 		$activeOnly = is_null($activeOnly) ? true : false;
 
+		$user = Auth::user();
+		$user = $user->load(['sessionUser', 'role']);
+		$clientId = $user->sessionUser->session_client;
+
+		$query = Agent::with('salesPairings')
+			->byClient($clientId)
+			->activeOnly($activeOnly);
+
+		// if the user isn't a company admin, they shouldn't be able to make this call... 
+		if ($user->role->role == 3 || $user->role->role == 4) {
+			$query->byManager($user->id);
+		} else if ($user->role->role < 6 && $user->role->role != 5) {
+			return response()->json([]);
+		}
+
+		$agents = $query->get();
+
 		return $result
-			->setData(Agent::with('salesPairings')->activeOnly($activeOnly)->get())
+			->setData($agents)
 			->throwApiException()
 			->getResponse();
 	}
@@ -52,7 +69,7 @@ class AgentController extends Controller
 		$result = new ApiResource();
 
 		$result
-			->checkAccessByClient($clientId, Auth::user()->id)
+			->checkAccessByClient($clientId)
 			->mergeInto($result);
 
 		if($result->hasError)
@@ -108,16 +125,30 @@ class AgentController extends Controller
 	{
 		$result = new ApiResource();
 
-		$curr = Agent::id($agentId)->first();
+		$curr = Agent::byAgentId($agentId)->first();
+
+		$user = Auth::user();
+		$clientId = $user->load('sessionUser')->sessionUser->session_client;
+
+		$result->checkAccessByClient($clientId, $user->id)
+			->mergeInto($result);
 
 		$result
 			->checkAccessByUser($curr->user_id)
 			->mergeInto($result);
 
-		$curr->first_name = $request->firstName;
-		$curr->last_name = $request->lastName;
-		$curr->manager_id = $request->managerId;
-		$curr->is_active = $request->isActive;
+		if ($result->hasError)
+			return $result->throwApiException()
+				->getResponse();
+
+		if (!is_null($request->firstName) && $request->firstName != $curr->first_name)
+			$curr->first_name = $request->firstName;
+		if (!is_null($request->lastName) && $request->lastName != $curr->last_name)
+			$curr->last_name = $request->lastName;
+		if (!is_null($request->managerId) && $request->managerId != $curr->manager_id)
+			$curr->manager_id = $request->managerId;
+		if (!is_null($request->isActive) && $request->isActive != $curr->is_active)
+			$curr->is_active = $request->isActive;
 
 		$saved = $curr->save();
 

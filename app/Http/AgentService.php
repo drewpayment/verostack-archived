@@ -12,6 +12,7 @@ namespace App\Http;
 use App\Agent;
 use App\Client;
 use App\Http\Resources\ApiResource;
+use Illuminate\Support\Facades\Auth;
 
 class AgentService {
 
@@ -66,13 +67,21 @@ class AgentService {
 	public function getUserAgentsByClient($clientId)
 	{
 		$result = new ApiResource();
+		$user = Auth::user();
+		$user->load('role');
 
-		$agents = Client::with(['users.agent', 'users.detail', 'users.agent.pairings', 'users.role'])
-	                    ->clientId($clientId)
-						->first()
-						->users;
+		$userAgents = Client::with(['users.agent.pairings', 'users.detail', 'users.role'])
+			->clientId($clientId)
+			->first()
+			->users;
 
-		return $result->setData($agents);
+		if ($user->role->role < 5) {
+			$userAgents = $userAgents->filter(function($ua) use ($user) {
+				return $ua->agent->manager_id == $user->id;
+			});
+		}
+
+		return $result->setData($userAgents);
 	}
 
 }

@@ -4,6 +4,7 @@ namespace App;
 
 use App\Payroll;
 use App\PayrollDetail;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -54,6 +55,7 @@ class Agent extends Model
 
 	protected $fillable = [
 		'agent_id',
+		'client_id',
 		'user_id',
 		'first_name',
 		'last_name',
@@ -98,7 +100,17 @@ class Agent extends Model
     public function scopeByUser($query, $userId)
     {
         return $query->where('user_id', $userId);
-    }
+	}
+	
+	public function scopeByClient($query, $id = null) 
+	{
+		if (is_null($id)) {
+			$user = Auth::user();
+			$id = $user->load('sessionUser')->sessionUser->session_client;
+		}
+		
+		return $query->where('client_id', $id);
+	}
 
 	/**
 	 * Get a list of agents by their manager's agent_id.
@@ -110,7 +122,7 @@ class Agent extends Model
 	 */
 	public function scopeManagerId($query, $managerId)
 	{
-		return $query->where('manager_id', $managerId);
+		return $this->scopeByManager($query, $managerId);
 	}
 
     /**

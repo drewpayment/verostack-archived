@@ -9,9 +9,10 @@
 namespace App\Http\Resources;
 
 
-use App\Http\Helpers;
 use App\User;
+use App\Http\Helpers;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 
 class ApiResource {
 
@@ -199,9 +200,10 @@ class ApiResource {
 	 *
 	 * @return ApiResource
 	 */
-	public function checkAccessByClient($clientId, $userId)
+	public function checkAccessByClient($clientId, $userId = null)
 	{
-		$user = User::find($userId)->first();
+		$user = Auth::user();
+		$user->load('sessionUser');
 		$selectedClient = $user->sessionUser->session_client;
 		$authorized = $clientId == $selectedClient;
 

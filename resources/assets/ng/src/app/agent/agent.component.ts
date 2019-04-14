@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewChildren, QueryList, ElementRef, OnDestroy, AfterViewChecked, ChangeDetectorRef} from '@angular/core';
 import {AgentService} from '@app/agent/agent.service';
-import { IAgent, User, ICampaign } from '@app/models';
-import { Subject, Observable, Subscription } from 'rxjs';
+import { IAgent, User, ICampaign, UpdateAgentMetaData } from '@app/models';
+import { Subject, Observable, Subscription, Observer } from 'rxjs';
 import { SessionService } from '@app/session.service';
 import * as _ from 'lodash';
 import * as moment from 'moment';
@@ -79,7 +79,8 @@ export class AgentComponent implements OnInit, AfterViewChecked, OnDestroy {
         private msg:MessageService,
         private changeDetector:ChangeDetectorRef,
         private userService:UserService,
-        private currencyPipe:CurrencyPipe
+        private currencyPipe:CurrencyPipe,
+        private agentService:AgentService
     ) {
         this.floatOpen$ = this.floatBtnService.opened$.asObservable();
         this.users = this.users$.asObservable();
@@ -414,29 +415,53 @@ export class AgentComponent implements OnInit, AfterViewChecked, OnDestroy {
             }
         })
         .afterClosed()
-        .subscribe(result => {
+        .subscribe((result:UpdateAgentMetaData) => {
             if (result == null) return; /** If the result is undefined, the user canceled the changes. */
+            this.session.showLoader();
 
-            this.session.showLoader();            
-            this.service.updateUserWithRelationships(this.user.sessionUser.sessionClient, result)
-                .subscribe((user:UserView) => {
-                    const idx = _.findIndex(this.store.users, {id:user.id});
-                    if (idx < 0) {
-                        // this will be for a new user
-                    } else {
-                        user.display = displayType || AgentDisplay.Summary;
+            if (result.updateDetail) {
+                this.userService.saveDetailEntity(result.user.detail)
+                    .then(detail => {
+                        user.detail = detail;
+                        this.session.hideLoader();
+                    });
+            }
 
-                        if (user.agent.pairings != null && user.agent.pairings.length)
-                            user.pairingsForm = this.createPairingsForm(user.agent.pairings);
-                        else
-                            user.pairingsForm = this.createPairingsForm([]);
+            if (result.updateAgent) {
+                this.agentService.updateAgent(result.user.agent)
+                    .subscribe(agent => {
+                        user.agent = agent;
+                        this.session.hideLoader();
+                    });
+            }
 
+            if (result.updateUser) {
+                const dto:User = result.user;
+                dto.id = user.id;
+                if (dto.detail) delete dto.detail;
+                if (dto.agent) delete dto.agent;
+
+                this.userService.updateUserEntity(dto)
+                    .then(res => {
+                        const display = user.display;
+                        const detail = this.user.detail;
+                        const agent = this.user.agent;
+                        user = <UserView>res;
+                        user.display = display;
+                        user.detail = detail;
+                        user.agent = agent;
+
+                        const idx = this.store.users.findIndex(u => u.id == user.id);
                         this.store.users[idx] = user;
+                        if (user.agent.pairings) {
+                            user.pairingsForm = this.createPairingsForm(user.agent.pairings);
+                        }
                         this.users$.next(this.store.users as UserView[]);
                         this.setManagers(this.store.users);
+
                         this.session.hideLoader();
-                    }
-                });
+                    });
+            }
         });    
     }
 
