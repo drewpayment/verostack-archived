@@ -417,26 +417,38 @@ export class AgentComponent implements OnInit, AfterViewChecked, OnDestroy {
         .subscribe(result => {
             if (result == null) return; /** If the result is undefined, the user canceled the changes. */
 
-            this.session.showLoader();            
-            this.service.updateUserWithRelationships(this.user.sessionUser.sessionClient, result)
-                .subscribe((user:UserView) => {
-                    const idx = _.findIndex(this.store.users, {id:user.id});
-                    if (idx < 0) {
-                        // this will be for a new user
-                    } else {
-                        user.display = displayType || AgentDisplay.Summary;
+            if (result.detail != null && result.detail.ssn < 1) {
+                delete result.detail.ssn;
+            }
 
-                        if (user.agent.pairings != null && user.agent.pairings.length)
-                            user.pairingsForm = this.createPairingsForm(user.agent.pairings);
-                        else
-                            user.pairingsForm = this.createPairingsForm([]);
+            let payload = {
+                id: user.id
+            } as User;
 
-                        this.store.users[idx] = user;
-                        this.users$.next(this.store.users as UserView[]);
-                        this.setManagers(this.store.users);
-                        this.session.hideLoader();
-                    }
-                });
+            payload = Object.assign(payload, result);
+
+            console.dir(payload);
+
+            // this.session.showLoader();
+            // this.service.updateUserWithRelationships(this.user.sessionUser.sessionClient, result)
+            //     .subscribe((user:UserView) => {
+            //         const idx = _.findIndex(this.store.users, { id: user.id });
+            //         if (idx < 0) {
+            //             // this will be for a new user
+            //         } else {
+            //             user.display = displayType || AgentDisplay.Summary;
+
+            //             if (user.agent.pairings != null && user.agent.pairings.length)
+            //                 user.pairingsForm = this.createPairingsForm(user.agent.pairings);
+            //             else
+            //                 user.pairingsForm = this.createPairingsForm([]);
+
+            //             this.store.users[idx] = user;
+            //             this.users$.next(this.store.users as UserView[]);
+            //             this.setManagers(this.store.users);
+            //             this.session.hideLoader();
+            //         }
+            //     });
         });    
     }
 

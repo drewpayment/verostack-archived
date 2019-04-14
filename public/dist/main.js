@@ -821,7 +821,6 @@ var AgentComponent = /** @class */ (function () {
         return input.substr(start, end) + calculatedReplacement + input.substr(end, calculatedReplacement.length);
     };
     AgentComponent.prototype.editAgent = function (user) {
-        var _this = this;
         var displayType = user.display;
         this.dialog.open(_app_agent_edit_agent_dialog_edit_agent_dialog_component__WEBPACK_IMPORTED_MODULE_12__["EditAgentDialogComponent"], {
             width: '600px',
@@ -835,25 +834,32 @@ var AgentComponent = /** @class */ (function () {
             .subscribe(function (result) {
             if (result == null)
                 return; /** If the result is undefined, the user canceled the changes. */
-            _this.session.showLoader();
-            _this.service.updateUserWithRelationships(_this.user.sessionUser.sessionClient, result)
-                .subscribe(function (user) {
-                var idx = lodash__WEBPACK_IMPORTED_MODULE_5__["findIndex"](_this.store.users, { id: user.id });
-                if (idx < 0) {
-                    // this will be for a new user
-                }
-                else {
-                    user.display = displayType || AgentDisplay.Summary;
-                    if (user.agent.pairings != null && user.agent.pairings.length)
-                        user.pairingsForm = _this.createPairingsForm(user.agent.pairings);
-                    else
-                        user.pairingsForm = _this.createPairingsForm([]);
-                    _this.store.users[idx] = user;
-                    _this.users$.next(_this.store.users);
-                    _this.setManagers(_this.store.users);
-                    _this.session.hideLoader();
-                }
-            });
+            if (result.detail != null && result.detail.ssn < 1) {
+                delete result.detail.ssn;
+            }
+            var payload = {
+                id: user.id
+            };
+            payload = Object.assign(payload, result);
+            console.dir(payload);
+            // this.session.showLoader();
+            // this.service.updateUserWithRelationships(this.user.sessionUser.sessionClient, result)
+            //     .subscribe((user:UserView) => {
+            //         const idx = _.findIndex(this.store.users, { id: user.id });
+            //         if (idx < 0) {
+            //             // this will be for a new user
+            //         } else {
+            //             user.display = displayType || AgentDisplay.Summary;
+            //             if (user.agent.pairings != null && user.agent.pairings.length)
+            //                 user.pairingsForm = this.createPairingsForm(user.agent.pairings);
+            //             else
+            //                 user.pairingsForm = this.createPairingsForm([]);
+            //             this.store.users[idx] = user;
+            //             this.users$.next(this.store.users as UserView[]);
+            //             this.setManagers(this.store.users);
+            //             this.session.hideLoader();
+            //         }
+            //     });
         });
     };
     AgentComponent.prototype.searchAgents = function (event) {
@@ -1077,7 +1083,7 @@ var EditAgentDialogComponent = /** @class */ (function () {
         this.states = _app_shared_models_state_model__WEBPACK_IMPORTED_MODULE_4__["States"].$get();
     }
     EditAgentDialogComponent.prototype.ngOnInit = function () {
-        this.agent = this.data.agent;
+        this.userAgent = this.data.agent;
         this.managers = this.data.managers;
         this.managers.unshift({
             id: -1,
@@ -1085,54 +1091,90 @@ var EditAgentDialogComponent = /** @class */ (function () {
             lastName: 'Manager'
         });
         this.createForm();
+        this.userAgentDict = this.flattenObject(this.userAgent);
     };
     EditAgentDialogComponent.prototype.onNoClick = function () {
         this.ref.close();
     };
     EditAgentDialogComponent.prototype.saveAgentChanges = function () {
-        var updatedAgent = this.prepareModel();
-        this.ref.close(updatedAgent);
+        var model = this.getChangedProperties(this.prepareModel());
+        this.ref.close(model);
+    };
+    EditAgentDialogComponent.prototype.flattenObject = function (item) {
+        var result = {};
+        for (var p in item) {
+            if (this.isObject(item[p])) {
+                result = Object.assign(result, item[p]);
+            }
+            else {
+                result[p] = item[p];
+            }
+        }
+        return result;
+    };
+    EditAgentDialogComponent.prototype.isObject = function (test) {
+        var type = typeof test;
+        return type === 'function' || type === 'object';
+    };
+    EditAgentDialogComponent.prototype.getChangedProperties = function (model, key) {
+        if (key === void 0) { key = null; }
+        var tempModel = key == null ? model : model[key];
+        for (var p in tempModel) {
+            if (this.isObject(tempModel[p]) && tempModel[p] != null) {
+                tempModel[p] = this.getChangedProperties(tempModel[p]);
+            }
+            else if (tempModel[p] == this.userAgentDict[p]) {
+                delete tempModel[p];
+            }
+        }
+        if (key != null) {
+            model[key] = tempModel;
+        }
+        else {
+            model = tempModel;
+        }
+        return model;
     };
     /** Creates a form that has separate form groups for the user entity, user_detail entity and the agent entity. */
     EditAgentDialogComponent.prototype.createForm = function () {
         this.form = this.fb.group({
             user: this.fb.group({
-                firstName: this.fb.control(this.agent.firstName, [_angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].required]),
-                lastName: this.fb.control(this.agent.lastName, [_angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].required]),
-                username: this.fb.control(this.agent.username, [_angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].required]),
-                email: this.fb.control(this.agent.email, [_angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].required, _angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].email]),
-                active: this.fb.control(this.agent.active)
+                firstName: this.fb.control(this.userAgent.firstName, [_angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].required]),
+                lastName: this.fb.control(this.userAgent.lastName, [_angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].required]),
+                username: this.fb.control(this.userAgent.username, [_angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].required]),
+                email: this.fb.control(this.userAgent.email, [_angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].required, _angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].email]),
+                active: this.fb.control(this.userAgent.active)
             }),
             detail: this.fb.group({
-                street: this.fb.control(this.agent.detail.street, [_angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].required]),
-                street2: this.fb.control(this.agent.detail.street2),
-                city: this.fb.control(this.agent.detail.city, [_angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].required]),
-                state: this.fb.control(this.agent.detail.state, [_angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].required]),
-                zip: this.fb.control(this.agent.detail.zip, [_angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].required, _angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].pattern('[0-9]+')]),
-                ssn: this.fb.control(this.agent.detail.ssn || ''),
-                birthDate: this.fb.control(this.agent.detail.birthDate, [_angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].required]),
-                phone: this.fb.control(this.agent.detail.phone, [_angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].required, _angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].pattern('[0-9]+')]),
-                routing: this.fb.control(this.agent.detail.bankRouting),
-                account: this.fb.control(this.agent.detail.bankAccount)
+                street: this.fb.control(this.userAgent.detail.street, [_angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].required]),
+                street2: this.fb.control(this.userAgent.detail.street2),
+                city: this.fb.control(this.userAgent.detail.city, [_angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].required]),
+                state: this.fb.control(this.userAgent.detail.state, [_angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].required]),
+                zip: this.fb.control(this.userAgent.detail.zip, [_angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].required, _angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].pattern('[0-9]+')]),
+                ssn: this.fb.control(this.userAgent.detail.ssn || ''),
+                birthDate: this.fb.control(this.userAgent.detail.birthDate, [_angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].required]),
+                phone: this.fb.control(this.userAgent.detail.phone, [_angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].required, _angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].pattern('[0-9]+')]),
+                routing: this.fb.control(this.userAgent.detail.bankRouting),
+                account: this.fb.control(this.userAgent.detail.bankAccount)
             }),
             agent: this.fb.group({
-                manager: this.fb.control(this.agent.agent.managerId, [_angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].required]),
-                isManager: this.fb.control(this.agent.agent.isManager),
-                active: this.fb.control(this.agent.agent.isActive)
+                manager: this.fb.control(this.userAgent.agent.managerId, [_angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].required]),
+                isManager: this.fb.control(this.userAgent.agent.isManager),
+                active: this.fb.control(this.userAgent.agent.isActive)
             })
         });
     };
     EditAgentDialogComponent.prototype.prepareModel = function () {
         return {
-            id: this.agent.id,
+            id: this.userAgent.id,
             firstName: this.form.value.user.firstName,
             lastName: this.form.value.user.lastName,
             email: this.form.value.user.email,
             username: this.form.value.user.username,
             active: this.form.value.user.active,
             detail: {
-                userDetailId: this.agent.detail.userDetailId || 0,
-                userId: this.agent.detail.userId,
+                userDetailId: this.userAgent.detail.userDetailId || 0,
+                userId: this.userAgent.detail.userId,
                 street: this.form.value.detail.street,
                 street2: this.form.value.detail.street2,
                 city: this.form.value.detail.city,
@@ -1145,7 +1187,7 @@ var EditAgentDialogComponent = /** @class */ (function () {
                 bankAccount: this.form.value.detail.account
             },
             agent: {
-                agentId: this.agent.agent.agentId || 0,
+                agentId: this.userAgent.agent.agentId || 0,
                 firstName: this.form.value.user.firstName,
                 lastName: this.form.value.user.lastName,
                 managerId: this.form.value.agent.manager,

@@ -19,9 +19,10 @@ interface DialogData {
 export class EditAgentDialogComponent implements OnInit {
 
     form:FormGroup;
-    agent:User;
+    userAgent:User;
     managers:User[];
     states:IState[] = States.$get();
+    userAgentDict:{ [key:string]:any };
 
     constructor(
         private fb:FormBuilder, 
@@ -30,7 +31,7 @@ export class EditAgentDialogComponent implements OnInit {
     ) {}
 
     ngOnInit() {
-        this.agent = this.data.agent;
+        this.userAgent = this.data.agent;
         this.managers = this.data.managers;
         this.managers.unshift({
             id: -1,
@@ -39,6 +40,8 @@ export class EditAgentDialogComponent implements OnInit {
         } as User);
 
         this.createForm();
+
+        this.userAgentDict = this.flattenObject(this.userAgent);
     }
 
     onNoClick():void {
@@ -46,51 +49,92 @@ export class EditAgentDialogComponent implements OnInit {
     }
 
     saveAgentChanges():void {
-        const updatedAgent = this.prepareModel();
-        this.ref.close(updatedAgent);
+        const model = this.getChangedProperties(this.prepareModel()) as User;
+
+        this.ref.close(model);
+    }
+
+    private flattenObject(item:any):any {
+        let result = {};
+
+        for (const p in item) {
+            if (this.isObject(item[p])) {
+                result = Object.assign(result, item[p]);
+            } else {
+                result[p] = item[p];
+            }
+        }
+
+        return result;
+    }
+
+    private isObject(test:any):boolean {
+        const type = typeof test;
+        return type === 'function' || type === 'object';
+    }
+
+    private getChangedProperties(model:any, key:string = null):{ [key:string]:any } {
+        const tempModel = key == null ? model : model[key];
+
+        for (const p in tempModel) {
+
+            if (this.isObject(tempModel[p]) && tempModel[p] != null) {
+                tempModel[p] = this.getChangedProperties(tempModel[p]);
+            } else if (tempModel[p] == this.userAgentDict[p]) {
+                delete tempModel[p];
+            }
+        }
+
+        if (key != null) {
+            model[key] = tempModel;
+        } else {
+            model = tempModel;
+        }
+
+        return model;
     }
 
     /** Creates a form that has separate form groups for the user entity, user_detail entity and the agent entity. */
     private createForm():void {
         this.form = this.fb.group({
             user: this.fb.group({
-                firstName: this.fb.control(this.agent.firstName, [Validators.required]),
-                lastName: this.fb.control(this.agent.lastName, [Validators.required]),
-                username: this.fb.control(this.agent.username, [Validators.required]),
-                email: this.fb.control(this.agent.email, [Validators.required, Validators.email]),
-                active: this.fb.control(this.agent.active)
+                firstName: this.fb.control(this.userAgent.firstName, [Validators.required]),
+                lastName: this.fb.control(this.userAgent.lastName, [Validators.required]),
+                username: this.fb.control(this.userAgent.username, [Validators.required]),
+                email: this.fb.control(this.userAgent.email, [Validators.required, Validators.email]),
+                active: this.fb.control(this.userAgent.active)
             }),
             detail: this.fb.group({
-                street: this.fb.control(this.agent.detail.street, [Validators.required]),
-                street2: this.fb.control(this.agent.detail.street2),
-                city: this.fb.control(this.agent.detail.city, [Validators.required]),
-                state: this.fb.control(this.agent.detail.state, [Validators.required]),
-                zip: this.fb.control(this.agent.detail.zip, [Validators.required, Validators.pattern('[0-9]+')]),
-                ssn: this.fb.control(this.agent.detail.ssn || ''),
-                birthDate: this.fb.control(this.agent.detail.birthDate, [Validators.required]),
-                phone: this.fb.control(this.agent.detail.phone, [Validators.required, Validators.pattern('[0-9]+')]),
-                routing: this.fb.control(this.agent.detail.bankRouting),
-                account: this.fb.control(this.agent.detail.bankAccount)
+                street: this.fb.control(this.userAgent.detail.street, [Validators.required]),
+                street2: this.fb.control(this.userAgent.detail.street2),
+                city: this.fb.control(this.userAgent.detail.city, [Validators.required]),
+                state: this.fb.control(this.userAgent.detail.state, [Validators.required]),
+                zip: this.fb.control(this.userAgent.detail.zip, [Validators.required, Validators.pattern('[0-9]+')]),
+                ssn: this.fb.control(this.userAgent.detail.ssn || ''),
+                birthDate: this.fb.control(this.userAgent.detail.birthDate, [Validators.required]),
+                phone: this.fb.control(this.userAgent.detail.phone, [Validators.required, Validators.pattern('[0-9]+')]),
+                routing: this.fb.control(this.userAgent.detail.bankRouting),
+                account: this.fb.control(this.userAgent.detail.bankAccount)
             }),
             agent: this.fb.group({
-                manager: this.fb.control(this.agent.agent.managerId, [Validators.required]),
-                isManager: this.fb.control(this.agent.agent.isManager),
-                active: this.fb.control(this.agent.agent.isActive)
+                manager: this.fb.control(this.userAgent.agent.managerId, [Validators.required]),
+                isManager: this.fb.control(this.userAgent.agent.isManager),
+                active: this.fb.control(this.userAgent.agent.isActive)
             })
-        })
+        });
     }
 
     private prepareModel():User {
         return {
-            id: this.agent.id,
+            id: this.userAgent.id,
             firstName: this.form.value.user.firstName,
             lastName: this.form.value.user.lastName,
             email: this.form.value.user.email,
             username: this.form.value.user.username,
             active: this.form.value.user.active,
             detail: {
-                userDetailId: this.agent.detail.userDetailId || 0,
-                userId: this.agent.detail.userId,
+                userDetailId: this.userAgent.detail.userDetailId || 0,
+                userId: this.userAgent.detail.userId,
                 street: this.form.value.detail.street,
                 street2: this.form.value.detail.street2,
                 city: this.form.value.detail.city,
@@ -103,13 +147,13 @@ export class EditAgentDialogComponent implements OnInit {
                 bankAccount: this.form.value.detail.account
             },
             agent: {
-                agentId: this.agent.agent.agentId || 0,
+                agentId: this.userAgent.agent.agentId || 0,
                 firstName: this.form.value.user.firstName,
                 lastName: this.form.value.user.lastName,
                 managerId: this.form.value.agent.manager,
                 isManager: this.form.value.agent.isManager,
                 isActive: this.form.value.agent.active
             }
-        }
+        };
     }
 }

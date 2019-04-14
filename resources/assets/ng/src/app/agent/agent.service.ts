@@ -48,7 +48,7 @@ export class AgentService {
     }
 
     updateUserWithRelationships(clientId: number, user: User): Observable<User> {
-        let url = `${this.api}/clients/${clientId}/users/${user.id}`;
+        const url = `${this.api}/clients/${clientId}/users/${user.id}`;
         return this.http.post<User>(url, user).pipe(catchError(this.handleError));
     }
 
