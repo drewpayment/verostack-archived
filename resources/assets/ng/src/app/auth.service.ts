@@ -35,7 +35,7 @@ export class AuthService {
    * @param data
    * @param callback
    */
-  login(data: any) : Promise<any> {
+  login(data: any): Promise<any> {
     this.loading = true;
     this.session.clearStorage();
     const url = this.apiUrl + 'oauth/token';
