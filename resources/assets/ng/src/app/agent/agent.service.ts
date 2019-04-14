@@ -103,7 +103,7 @@ export class AgentService {
     }
 
     updateAgent(agent:IAgent):Observable<IAgent> {
-        return this.http.post(this.api + 'agents/' + agent.agentId, agent);
+        return this.http.post(this.api + '/agents/' + agent.agentId, agent);
     }
 
     private handleError(error: HttpErrorResponse) {

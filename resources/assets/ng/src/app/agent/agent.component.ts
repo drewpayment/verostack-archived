@@ -450,37 +450,19 @@ export class AgentComponent implements OnInit, AfterViewChecked, OnDestroy {
                         user.display = display;
                         user.detail = detail;
                         user.agent = agent;
+
+                        const idx = this.store.users.findIndex(u => u.id == user.id);
+                        this.store.users[idx] = user;
+                        if (user.agent.pairings) {
+                            user.pairingsForm = this.createPairingsForm(user.agent.pairings);
+                        }
+                        this.users$.next(this.store.users as UserView[]);
+                        this.setManagers(this.store.users);
+
                         this.session.hideLoader();
                     });
             }
-
-            // this.session.showLoader();
-            // this.service.updateUserWithRelationships(this.user.sessionUser.sessionClient, result)
-            //     .subscribe((user:UserView) => {
-            //         const idx = _.findIndex(this.store.users, { id: user.id });
-            //         if (idx < 0) {
-            //             // this will be for a new user
-            //         } else {
-            //             user.display = displayType || AgentDisplay.Summary;
-
-            //             if (user.agent.pairings != null && user.agent.pairings.length)
-            //                 user.pairingsForm = this.createPairingsForm(user.agent.pairings);
-            //             else
-            //                 user.pairingsForm = this.createPairingsForm([]);
-
-            //             this.store.users[idx] = user;
-            //             this.users$.next(this.store.users as UserView[]);
-            //             this.setManagers(this.store.users);
-            //             this.session.hideLoader();
-            //         }
-            //     });
         });    
-    }
-
-    private sendUserAgentUpdates():Observable<UserView> {
-        return Observable.create((observer:Observer<UserView>) => {
-            // need to move all API calls here and not return until after they're all complete... 
-        });
     }
 
     searchAgents(event) {

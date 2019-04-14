@@ -125,7 +125,7 @@ class AgentController extends Controller
 	{
 		$result = new ApiResource();
 
-		$curr = Agent::id($agentId)->first();
+		$curr = Agent::byAgentId($agentId)->first();
 
 		$user = Auth::user();
 		$clientId = $user->load('sessionUser')->sessionUser->session_client;

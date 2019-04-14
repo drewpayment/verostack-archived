@@ -52,8 +52,6 @@ export class EditAgentDialogComponent implements OnInit {
 
     saveAgentChanges():void {
         this.update.user = this.getChangedProperties(this.prepareModel());
-        this.checkForUserPropertiesChanged(this.update.user);
-
         this.ref.close(this.update);
     }
 
@@ -83,9 +81,7 @@ export class EditAgentDialogComponent implements OnInit {
 
             if (this.isObject(tempModel[p]) && tempModel[p] != null) {
                 tempModel[p] = this.getChangedProperties(tempModel[p]);
-            } else if (tempModel[p] == this.userAgentDict[p]) {
-                delete tempModel[p];
-            }
+            } 
         }
 
         if (key != null) {
@@ -110,6 +106,7 @@ export class EditAgentDialogComponent implements OnInit {
                 delete model.agent;
             }
 
+            this.update.updateUser = true;
         }
 
         return model;
@@ -122,16 +119,6 @@ export class EditAgentDialogComponent implements OnInit {
             }
         }
         return true;
-    }
-
-    private checkForUserPropertiesChanged(user:User):User { 
-        for (const p in user) {
-            if (p.toLowerCase() != 'id' && !this.isObject(user[p])) {
-                console.log(p);
-                this.update.updateUser = true;
-            }
-        }
-        return user;
     }
 
     /** Creates a form that has separate form groups for the user entity, user_detail entity and the agent entity. */

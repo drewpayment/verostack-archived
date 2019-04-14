@@ -263,10 +263,12 @@ class UserController extends Controller
 
 	    $user = User::userId($userId)->first();
 
-	    $user->first_name = $r->firstName;
-	    $user->last_name = $r->lastName;
-	    $user->email = $r->email;
-	    $user->username = $r->username;
+		if (!is_null($r->firstName) && $r->firstName != $user->first_name)
+			$user->first_name = $r->firstName;
+		if (!is_null($r->lastName) && $r->lastName != $user->last_name)
+			$user->last_name = $r->lastName;
+		if (!is_null($r->email) && $r->email != $user->email)
+			$user->email = $r->email;
 
 	    if(!is_null($r->active))
 	    	$user->active = $r->active;
