@@ -74,7 +74,7 @@ export class LoginComponent implements OnInit, AfterViewChecked, OnDestroy {
                 this.session.login(sessionToken);
                 this.userService.storeNgUser(response.user);      
                 
-                if (this.user.role.role < Role.companyAdmin) {
+                if (response.user.role.role < Role.companyAdmin) {
                     this.router.navigate(['users', 'payroll', 'list']);
                 } else {
                     this.router.navigate(['daily-tracker']);

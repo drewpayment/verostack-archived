@@ -80,6 +80,8 @@
           placeholder="Phone No"
           (keypress)="phoneNoKeyPress($event)"
           formControlName="phone"
+          [value]="detailForm.get('phone').value | phone"
+          maxlength="10"
           required
         />
       </mat-form-field>

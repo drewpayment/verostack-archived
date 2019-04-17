@@ -18,6 +18,7 @@ import { DailySaleTrackerComponent } from '@app/daily-sale-tracker/daily-sale-tr
 import { DeleteSaleDialog } from '@app/daily-sale-tracker/dialogs/delete-sale.component';
 import { RouterModule } from '@angular/router';
 import { DirectivesModule } from '@app/directives/directives.module';
+import { PipesModule } from '@app/pipes/pipes.module';
 
 @NgModule({
   imports: [
@@ -31,7 +32,8 @@ import { DirectivesModule } from '@app/directives/directives.module';
     MomentModule,
     FabFloatBtnModule,
     RouterModule,
-    DirectivesModule
+    DirectivesModule,
+    PipesModule
   ],
   declarations: [
     MessagesComponent,

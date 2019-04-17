@@ -239,8 +239,12 @@ class UserController extends Controller
 			return $result->throwApiException()->getResponse();
 
 		$a['userId'] = $savedUser->id;
+		$a['clientId'] = $clientId;
 
 		$this->agentService->saveNewAgentEntity($a)->mergeInto($result);
+
+		if($result->hasError) 
+			return $result->throwApiException()->getResponse();
 
 		return $result
 			->setData(User::with(['detail', 'agent', 'role'])->userId($savedUser->id)->first())

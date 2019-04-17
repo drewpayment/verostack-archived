@@ -28,10 +28,11 @@ class AgentService {
 
 		$agent = new Agent();
 		$agent->user_id = $a['userId'];
+		$agent->client_id = $a['clientId'];
 		$agent->first_name = $a['firstName'];
 		$agent->last_name = $a['lastName'];
 		$agent->manager_id = $a['managerId'];
-		$agent->is_manager = (bool)$a['isManager'] ? 1 : 0;
+		$agent->is_manager = $a['isManager'];
 		$agent->is_active = true;
 
 		$success = $agent->save();
@@ -39,9 +40,7 @@ class AgentService {
 		if(!$success)
 			return $result->setToFail();
 
-		$result->setToSuccess();
-
-		return $result;
+		return $result->setToSuccess();
 	}
 
 	/**

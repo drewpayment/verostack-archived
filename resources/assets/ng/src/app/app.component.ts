@@ -7,6 +7,7 @@ import {MomentExtensions} from '@app/shared/moment-extensions';
 import {SidenavService} from '@app/sidenav/sidenav.service';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Router } from '@angular/router';
+import { UserService } from './user-features/user.service';
 
 @Component({
     selector: 'app-root',
@@ -30,7 +31,8 @@ export class AppComponent implements OnInit, AfterViewChecked {
         private cd: ChangeDetectorRef,
         private sidenavService: SidenavService,
         private breakpointObserver:BreakpointObserver,
-        private router:Router
+        private router:Router,
+        private userService:UserService
     ) {
         // wire up our extension methods
         MomentExtensions.init();
@@ -47,7 +49,12 @@ export class AppComponent implements OnInit, AfterViewChecked {
             this._loggedIn = next;
         });
 
-        this.session.getAuthenticationStorageItems().subscribe();
+        this.session.getAuthenticationStorageItems()
+            .subscribe(storage => {
+                if (storage && storage.token && storage.user) {
+                    this.userService.loadUser(storage.user.data.username);
+                }
+            });
     }
 
     ngAfterViewChecked() {

@@ -39,6 +39,7 @@ export class AgentPayrollViewComponent implements OnInit {
 
     ngOnInit() {
         this.session.getUserItem().subscribe(u => {
+            if (u == null) return;
             this.user = u;
 
             if (this.user.role.role > Role.humanResources) {

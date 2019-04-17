@@ -1,15 +1,16 @@
 import {Component, Inject, OnInit, ViewChildren, QueryList } from '@angular/core';
 import {MatDialogRef, MAT_DIALOG_DATA, MatInput} from '@angular/material';
 import {User, IUserDetail, IAgent} from '@app/models';
-import {FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
+import {FormGroup, FormBuilder, Validators, FormControl, AbstractControl } from '@angular/forms';
 import {IState, States} from '@app/shared/models/state.model';
 import {MessageService} from '@app/message.service';
 import {AgentsService} from '@app/core/agents/agents.service';
+import { isValidNumber, NationalNumber, parseNumber } from 'libphonenumber-js';
 
 import * as _ from 'lodash';
 import {UserService} from '@app/user-features/user.service';
 import {SessionService} from '@app/session.service';
-import { catchError } from 'rxjs/operators';
+import { catchError, startWith } from 'rxjs/operators';
 import { RoleType } from '@app/models/role.model';
 import { AgentService } from '@app/agent/agent.service';
 import { Observable, of } from 'rxjs';
@@ -211,7 +212,16 @@ export class AddAgentDialogComponent implements OnInit {
             state: this.fb.control('', [Validators.required]),
             zip: this.fb.control('', [Validators.required, Validators.pattern(/^\d{5}?$/)]),
             ssn: this.fb.control('', [Validators.pattern(/^\d{3}-?\d{2}-?\d{4}$/)]),
-            phone: this.fb.control('', [Validators.required, Validators.pattern(/^\d{10}?$/)]),
+            phone: this.fb.control('', {
+                validators: [Validators.required, (control:AbstractControl) => {
+                    const phNo = parseNumber(control.value, 'US');
+                    if (!isValidNumber(phNo)) {
+                        return { phone: true };
+                    }
+                    return null;
+                }],
+                updateOn: 'blur'
+            }),
             birthDate: this.fb.control('', [Validators.required]),
             bankRouting: this.fb.control('', []),
             verifyRouting: this.fb.control('', []),
