@@ -25,7 +25,7 @@
         }
     </script>
 
-<link rel="stylesheet" href="dist/styles.css"></head>
+<link rel="stylesheet" href="dist/styles.a051f7f07470159f475b.css"></head>
 <body>
 
     <app-root>
@@ -51,5 +51,5 @@
 
 
     <small class="text-muted font-weight-light text-center legal-footer">Payment Group, Inc. &#xa9;2018</small>
-<script type="text/javascript" src="dist/runtime.js"></script><script type="text/javascript" src="dist/polyfills.js"></script><script type="text/javascript" src="dist/vend.lib.js"></script><script type="text/javascript" src="dist/vendor.js"></script><script type="text/javascript" src="dist/main.js"></script></body>
+<script type="text/javascript" src="dist/runtime.1f65e96502b1159895e8.js"></script><script type="text/javascript" src="dist/polyfills.30b5c0daca886afc0d4e.js"></script><script type="text/javascript" src="dist/vend.lib.917d066848c5f8907f85.js"></script><script type="text/javascript" src="dist/main.debc4397f2a602c22b3b.js"></script></body>
 </html>
