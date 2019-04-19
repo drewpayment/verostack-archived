@@ -83,7 +83,7 @@ var ContactListComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"crm-toolbar\">\n    <div class=\"container-fluid\">\n        <nav class=\"navbar navbar-expand-lg navbar-dark bg-dark pl-5 mb-3\">\n            <a href=\"#\" class=\"navbar-brand\">\n                <i class=\"material-icons md-48\">location_city</i>\n            </a>\n            <button class=\"navbar-toggler\" type=\"button\" data-toggle=\"collapse\" data-target=\"#navbarCollapseContent\" \n                aria-controls=\"navbarSupportedContent\" aria-expanded=\"false\" aria-label=\"Toggle navigation\">\n                <span class=\"navbar-toggler-icon\"></span>\n            </button>\n\n            <div class=\"collapse navbar-collapse\" id=\"navbarCollapseContent\">\n                <ul class=\"navbar-nav mr-auto\">\n                    <li class=\"nav-item active\">\n                        <a href=\"#\" class=\"nav-link text-uppercase\">Contacts</a>\n                    </li>\n                    <li class=\"nav-item\">\n                        <a href=\"#\" class=\"nav-link text-uppercase\">Deals</a>\n                    </li>\n                    <li class=\"nav-item\">\n                        <a href=\"#\" class=\"nav-link text-uppercase\">Leads</a>\n                    </li>\n                </ul>\n                <div class=\"form-inline my-2 my-lg-0\">\n                    <input class=\"form-control mr-sm-2\" type=\"search\" placeholder=\"Search\" />\n                    <button type=\"button\" class=\"btn btn-outline-light my-2 my-lg-0\">Search</button>\n                </div>\n            </div>\n        </nav>\n\n        <div class=\"row\">\n            <div class=\"col-md-12\"> \n                <router-outlet></router-outlet>\n            </div>\n        </div>\n    </div>\n</div>\n"
+module.exports = "<div class=\"crm-toolbar\">\n    <div class=\"container-fluid\">\n        <nav class=\"navbar navbar-expand-lg navbar-dark bg-dark pl-5 mb-3\">\n            <a href=\"#\" class=\"navbar-brand\">\n                <i class=\"material-icons md-48\">location_city</i>\n            </a>\n            <button class=\"navbar-toggler\" type=\"button\" data-toggle=\"collapse\" data-target=\"#navbarCollapseContent\" \n                aria-controls=\"navbarSupportedContent\" aria-expanded=\"false\" aria-label=\"Toggle navigation\">\n                <span class=\"navbar-toggler-icon\"></span>\n            </button>\n\n            <div class=\"collapse navbar-collapse\" id=\"navbarCollapseContent\">\n                <ul class=\"navbar-nav mr-auto\">\n                    <li class=\"nav-item active\">\n                        <a href=\"#\" class=\"nav-link text-uppercase\">Contacts</a>\n                    </li>\n                    <li class=\"nav-item\">\n                        <a routerLink=\"/contacts/knock-list\" class=\"nav-link text-uppercase\">Restricted Contacts</a>\n                    </li>\n                    <!-- <li class=\"nav-item\">\n                        <a href=\"#\" class=\"nav-link text-uppercase\">Deals</a>\n                    </li>\n                    <li class=\"nav-item\">\n                        <a href=\"#\" class=\"nav-link text-uppercase\">Leads</a>\n                    </li> -->\n                </ul>\n                <div class=\"form-inline my-2 my-lg-0\">\n                    <input class=\"form-control mr-sm-2\" type=\"search\" placeholder=\"Search\" />\n                    <button type=\"button\" class=\"btn btn-outline-light my-2 my-lg-0\">Search</button>\n                </div>\n            </div>\n        </nav>\n\n        <div class=\"row\">\n            <div class=\"col-md-12\"> \n                <router-outlet></router-outlet>\n            </div>\n        </div>\n    </div>\n</div>\n"
 
 /***/ }),
 
@@ -151,6 +151,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _app_material_material_module__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @app/material/material.module */ "./src/app/material/material.module.ts");
 /* harmony import */ var _contact_outlet_contact_outlet_component__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./contact-outlet/contact-outlet.component */ "./src/app/contact/contact-outlet/contact-outlet.component.ts");
 /* harmony import */ var _app_pipes_pipes_module__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @app/pipes/pipes.module */ "./src/app/pipes/pipes.module.ts");
+/* harmony import */ var _knock_list_knock_list_component__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./knock-list/knock-list.component */ "./src/app/contact/knock-list/knock-list.component.ts");
+/* harmony import */ var _knock_list_knock_list_service__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./knock-list/knock-list.service */ "./src/app/contact/knock-list/knock-list.service.ts");
+
+
 
 
 
@@ -166,7 +170,15 @@ var routes = [
         component: _contact_outlet_contact_outlet_component__WEBPACK_IMPORTED_MODULE_7__["ContactOutletComponent"], canActivate: [_app_auth_guard__WEBPACK_IMPORTED_MODULE_5__["AuthGuard"]],
         children: [
             { path: '', redirectTo: 'list', pathMatch: 'full' },
-            { path: 'list', component: _contact_list_contact_list_component__WEBPACK_IMPORTED_MODULE_3__["ContactListComponent"], canActivate: [_app_auth_guard__WEBPACK_IMPORTED_MODULE_5__["AuthGuard"]] }
+            { path: 'list', component: _contact_list_contact_list_component__WEBPACK_IMPORTED_MODULE_3__["ContactListComponent"], canActivate: [_app_auth_guard__WEBPACK_IMPORTED_MODULE_5__["AuthGuard"]] },
+            {
+                path: 'knock-list',
+                component: _knock_list_knock_list_component__WEBPACK_IMPORTED_MODULE_9__["KnockListComponent"],
+                canActivate: [_app_auth_guard__WEBPACK_IMPORTED_MODULE_5__["AuthGuard"]],
+                resolve: {
+                    contacts: _knock_list_knock_list_service__WEBPACK_IMPORTED_MODULE_10__["KnockListService"]
+                }
+            }
         ]
     }
 ];
@@ -183,15 +195,118 @@ var ContactModule = /** @class */ (function () {
             ],
             declarations: [
                 _contact_list_contact_list_component__WEBPACK_IMPORTED_MODULE_3__["ContactListComponent"],
-                _contact_outlet_contact_outlet_component__WEBPACK_IMPORTED_MODULE_7__["ContactOutletComponent"]
+                _contact_outlet_contact_outlet_component__WEBPACK_IMPORTED_MODULE_7__["ContactOutletComponent"],
+                _knock_list_knock_list_component__WEBPACK_IMPORTED_MODULE_9__["KnockListComponent"]
             ],
             exports: [
                 _contact_list_contact_list_component__WEBPACK_IMPORTED_MODULE_3__["ContactListComponent"],
                 _contact_outlet_contact_outlet_component__WEBPACK_IMPORTED_MODULE_7__["ContactOutletComponent"]
+            ],
+            providers: [
+                _knock_list_knock_list_service__WEBPACK_IMPORTED_MODULE_10__["KnockListService"]
             ]
         })
     ], ContactModule);
     return ContactModule;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/contact/knock-list/knock-list.component.html":
+/*!**************************************************************!*\
+  !*** ./src/app/contact/knock-list/knock-list.component.html ***!
+  \**************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<p>\n  {{ contacts | json }}\n</p>\n"
+
+/***/ }),
+
+/***/ "./src/app/contact/knock-list/knock-list.component.scss":
+/*!**************************************************************!*\
+  !*** ./src/app/contact/knock-list/knock-list.component.scss ***!
+  \**************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzcmMvYXBwL2NvbnRhY3Qva25vY2stbGlzdC9rbm9jay1saXN0LmNvbXBvbmVudC5zY3NzIn0= */"
+
+/***/ }),
+
+/***/ "./src/app/contact/knock-list/knock-list.component.ts":
+/*!************************************************************!*\
+  !*** ./src/app/contact/knock-list/knock-list.component.ts ***!
+  \************************************************************/
+/*! exports provided: KnockListComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "KnockListComponent", function() { return KnockListComponent; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+
+
+
+var KnockListComponent = /** @class */ (function () {
+    function KnockListComponent(route) {
+        this.route = route;
+    }
+    KnockListComponent.prototype.ngOnInit = function () {
+        this.contacts = this.route.snapshot.data['contacts'];
+    };
+    KnockListComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
+            selector: 'vs-knock-list',
+            template: __webpack_require__(/*! ./knock-list.component.html */ "./src/app/contact/knock-list/knock-list.component.html"),
+            styles: [__webpack_require__(/*! ./knock-list.component.scss */ "./src/app/contact/knock-list/knock-list.component.scss")]
+        }),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_router__WEBPACK_IMPORTED_MODULE_2__["ActivatedRoute"]])
+    ], KnockListComponent);
+    return KnockListComponent;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/contact/knock-list/knock-list.service.ts":
+/*!**********************************************************!*\
+  !*** ./src/app/contact/knock-list/knock-list.service.ts ***!
+  \**********************************************************/
+/*! exports provided: KnockListService */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "KnockListService", function() { return KnockListService; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
+/* harmony import */ var _env_environment__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @env/environment */ "./src/environments/environment.ts");
+
+
+
+
+var KnockListService = /** @class */ (function () {
+    function KnockListService(http) {
+        this.http = http;
+        this.api = _env_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].apiUrl + 'api';
+    }
+    KnockListService.prototype.resolve = function (route, state) {
+        return this.http.get(this.api + "/get-dnc-contacts");
+    };
+    KnockListService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
+            providedIn: 'root'
+        }),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"]])
+    ], KnockListService);
+    return KnockListService;
 }());
 
 

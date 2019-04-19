@@ -7,6 +7,8 @@ import { MaterialModule } from '@app/material/material.module';
 import { FabFloatBtnModule } from '@app/fab-float-btn/fab-float-btn.module';
 import { ContactOutletComponent } from './contact-outlet/contact-outlet.component';
 import { PipesModule } from '@app/pipes/pipes.module';
+import { KnockListComponent } from './knock-list/knock-list.component';
+import { KnockListService } from './knock-list/knock-list.service';
 
 const routes: Route[] = [
     { 
@@ -14,7 +16,15 @@ const routes: Route[] = [
         component: ContactOutletComponent, canActivate: [AuthGuard],
         children: [
             { path: '', redirectTo: 'list', pathMatch: 'full' },
-            { path: 'list', component: ContactListComponent, canActivate: [AuthGuard] }
+            { path: 'list', component: ContactListComponent, canActivate: [AuthGuard] },
+            { 
+                path: 'knock-list', 
+                component: KnockListComponent, 
+                canActivate: [AuthGuard],
+                resolve: {
+                    contacts: KnockListService
+                }
+            }
         ]
     }
 ];
@@ -30,12 +40,17 @@ const routes: Route[] = [
 
     declarations: [
         ContactListComponent,
-        ContactOutletComponent
+        ContactOutletComponent,
+        KnockListComponent
     ],
 
     exports: [
         ContactListComponent,
         ContactOutletComponent
+    ],
+
+    providers: [
+        KnockListService
     ]
 })
 export class ContactModule {}
