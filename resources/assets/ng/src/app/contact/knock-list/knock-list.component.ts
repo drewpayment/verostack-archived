@@ -73,6 +73,7 @@ export class KnockListComponent implements OnInit, OnDestroy {
 
     addDncContact() {
         console.log('Add a do not solicit contact!');
+        
     }
 
 }
