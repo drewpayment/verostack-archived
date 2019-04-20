@@ -149,10 +149,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
 /* harmony import */ var _app_auth_guard__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @app/auth.guard */ "./src/app/auth.guard.ts");
 /* harmony import */ var _app_material_material_module__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @app/material/material.module */ "./src/app/material/material.module.ts");
-/* harmony import */ var _contact_outlet_contact_outlet_component__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./contact-outlet/contact-outlet.component */ "./src/app/contact/contact-outlet/contact-outlet.component.ts");
-/* harmony import */ var _app_pipes_pipes_module__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @app/pipes/pipes.module */ "./src/app/pipes/pipes.module.ts");
-/* harmony import */ var _knock_list_knock_list_component__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./knock-list/knock-list.component */ "./src/app/contact/knock-list/knock-list.component.ts");
-/* harmony import */ var _knock_list_knock_list_service__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./knock-list/knock-list.service */ "./src/app/contact/knock-list/knock-list.service.ts");
+/* harmony import */ var _app_fab_float_btn_fab_float_btn_module__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @app/fab-float-btn/fab-float-btn.module */ "./src/app/fab-float-btn/fab-float-btn.module.ts");
+/* harmony import */ var _contact_outlet_contact_outlet_component__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./contact-outlet/contact-outlet.component */ "./src/app/contact/contact-outlet/contact-outlet.component.ts");
+/* harmony import */ var _app_pipes_pipes_module__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @app/pipes/pipes.module */ "./src/app/pipes/pipes.module.ts");
+/* harmony import */ var _knock_list_knock_list_component__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./knock-list/knock-list.component */ "./src/app/contact/knock-list/knock-list.component.ts");
+/* harmony import */ var _knock_list_knock_list_service__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./knock-list/knock-list.service */ "./src/app/contact/knock-list/knock-list.service.ts");
+
 
 
 
@@ -167,16 +169,16 @@ __webpack_require__.r(__webpack_exports__);
 var routes = [
     {
         path: '',
-        component: _contact_outlet_contact_outlet_component__WEBPACK_IMPORTED_MODULE_7__["ContactOutletComponent"], canActivate: [_app_auth_guard__WEBPACK_IMPORTED_MODULE_5__["AuthGuard"]],
+        component: _contact_outlet_contact_outlet_component__WEBPACK_IMPORTED_MODULE_8__["ContactOutletComponent"], canActivate: [_app_auth_guard__WEBPACK_IMPORTED_MODULE_5__["AuthGuard"]],
         children: [
             { path: '', redirectTo: 'list', pathMatch: 'full' },
             { path: 'list', component: _contact_list_contact_list_component__WEBPACK_IMPORTED_MODULE_3__["ContactListComponent"], canActivate: [_app_auth_guard__WEBPACK_IMPORTED_MODULE_5__["AuthGuard"]] },
             {
                 path: 'knock-list',
-                component: _knock_list_knock_list_component__WEBPACK_IMPORTED_MODULE_9__["KnockListComponent"],
+                component: _knock_list_knock_list_component__WEBPACK_IMPORTED_MODULE_10__["KnockListComponent"],
                 canActivate: [_app_auth_guard__WEBPACK_IMPORTED_MODULE_5__["AuthGuard"]],
                 resolve: {
-                    contacts: _knock_list_knock_list_service__WEBPACK_IMPORTED_MODULE_10__["KnockListService"]
+                    contacts: _knock_list_knock_list_service__WEBPACK_IMPORTED_MODULE_11__["KnockListService"]
                 }
             }
         ]
@@ -190,20 +192,21 @@ var ContactModule = /** @class */ (function () {
             imports: [
                 _angular_common__WEBPACK_IMPORTED_MODULE_2__["CommonModule"],
                 _app_material_material_module__WEBPACK_IMPORTED_MODULE_6__["MaterialModule"],
-                _app_pipes_pipes_module__WEBPACK_IMPORTED_MODULE_8__["PipesModule"],
+                _app_pipes_pipes_module__WEBPACK_IMPORTED_MODULE_9__["PipesModule"],
+                _app_fab_float_btn_fab_float_btn_module__WEBPACK_IMPORTED_MODULE_7__["FabFloatBtnModule"],
                 _angular_router__WEBPACK_IMPORTED_MODULE_4__["RouterModule"].forChild(routes)
             ],
             declarations: [
                 _contact_list_contact_list_component__WEBPACK_IMPORTED_MODULE_3__["ContactListComponent"],
-                _contact_outlet_contact_outlet_component__WEBPACK_IMPORTED_MODULE_7__["ContactOutletComponent"],
-                _knock_list_knock_list_component__WEBPACK_IMPORTED_MODULE_9__["KnockListComponent"]
+                _contact_outlet_contact_outlet_component__WEBPACK_IMPORTED_MODULE_8__["ContactOutletComponent"],
+                _knock_list_knock_list_component__WEBPACK_IMPORTED_MODULE_10__["KnockListComponent"]
             ],
             exports: [
                 _contact_list_contact_list_component__WEBPACK_IMPORTED_MODULE_3__["ContactListComponent"],
-                _contact_outlet_contact_outlet_component__WEBPACK_IMPORTED_MODULE_7__["ContactOutletComponent"]
+                _contact_outlet_contact_outlet_component__WEBPACK_IMPORTED_MODULE_8__["ContactOutletComponent"]
             ],
             providers: [
-                _knock_list_knock_list_service__WEBPACK_IMPORTED_MODULE_10__["KnockListService"]
+                _knock_list_knock_list_service__WEBPACK_IMPORTED_MODULE_11__["KnockListService"]
             ]
         })
     ], ContactModule);
@@ -221,7 +224,7 @@ var ContactModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n<mat-toolbar>\n    <h3>Non-Solicitation List</h3>\n</mat-toolbar>\n\n<p class=\"mx-2\">\n    The following contacts and locations are listed as registered with the supplier, FTC or other regulatory body\n    and cannot be visited. \n</p>\n\n<!-- action bar -->\n<mat-toolbar class=\"action-bar\">\n    <button type=\"button\" mat-flat-button class=\"align-items-baseline\">\n        <mat-icon>delete</mat-icon>\n        Remove\n    </button>\n</mat-toolbar>\n\n<mat-table [dataSource]=\"contacts\" class=\"mat-elevation-z1\">\n    <ng-container matColumnDef=\"name\">\n        <mat-header-cell *matHeaderCellDef>Location</mat-header-cell>\n        <mat-cell *matCellDef=\"let item\">\n            <ng-container *ngIf=\"item.firstName && item.lastName; else noName;\">\n                {{ item.firstName }} {{ item.lastName }}\n            </ng-container>\n            <ng-template #noName>\n                {{ item.description }}\n            </ng-template>\n        </mat-cell>\n    </ng-container>\n\n    <ng-container matColumnDef=\"address\">\n        <mat-header-cell *matHeaderCellDef>Address</mat-header-cell>\n        <mat-cell *matCellDef=\"let item\">{{ item.address }} {{ item.city }}</mat-cell>\n    </ng-container>\n\n    <ng-container matColumnDef=\"notes\">\n        <mat-header-cell *matHeaderCellDef>Notes</mat-header-cell>\n        <mat-cell *matCellDef=\"let item\">{{ item.note }}</mat-cell>\n    </ng-container>\n\n    <mat-header-row *matHeaderRowDef=\"displayColumns\"></mat-header-row>\n    <mat-row *matRowDef=\"let row; columns: displayColumns;\"></mat-row>\n</mat-table>\n"
+module.exports = "\n<mat-toolbar class=\"bg-transparent\">\n    <h3>Non-Solicitation List</h3>\n</mat-toolbar>\n\n<p class=\"pl-3\">\n    The following contacts and locations are listed as registered with the supplier, FTC or other regulatory body\n    and cannot be visited. \n</p>\n\n<!-- action bar -->\n<mat-toolbar class=\"action-bar bg-transparent\">\n    <button type=\"button\" mat-flat-button @showHideActionBar *ngIf=\"selection.selected.length\"\n        class=\"d-flex align-items-center\" inline=\"true\">\n        <mat-icon>delete</mat-icon>\n        Remove\n    </button>\n</mat-toolbar>\n\n<mat-table [dataSource]=\"contacts\" class=\"mat-elevation-z1\">\n    <ng-container matColumnDef=\"checked\">\n        <mat-header-cell *matHeaderCellDef class=\"check-column\">\n            <mat-checkbox (change)=\"$event ? selectAllToggle() : null\" [checked]=\"selection.hasValue() && isAllSelected()\"\n                [indeterminate]=\"selection.hasValue() && !isAllSelected()\"\n                [aria-label]=\"checkboxLabel()\"></mat-checkbox>\n        </mat-header-cell>\n        <mat-cell *matCellDef=\"let item\" class=\"check-column\">\n            <mat-checkbox (click)=\"$event.stopPropagation();\"\n                (change)=\"$event ? selection.toggle(item) : null\"\n                [checked]=\"selection.isSelected(item)\"\n                [aria-label]=\"checkboxLabel(item)\"></mat-checkbox>\n        </mat-cell>\n    </ng-container>\n\n    <ng-container matColumnDef=\"name\">\n        <mat-header-cell *matHeaderCellDef>Location</mat-header-cell>\n        <mat-cell *matCellDef=\"let item\">\n            <ng-container *ngIf=\"item.firstName && item.lastName; else noName;\">\n                {{ item.firstName }} {{ item.lastName }}\n            </ng-container>\n            <ng-template #noName>\n                {{ item.description }}\n            </ng-template>\n        </mat-cell>\n    </ng-container>\n\n    <ng-container matColumnDef=\"address\">\n        <mat-header-cell *matHeaderCellDef>Address</mat-header-cell>\n        <mat-cell *matCellDef=\"let item\">{{ item.address }} {{ item.city }}</mat-cell>\n    </ng-container>\n\n    <ng-container matColumnDef=\"notes\">\n        <mat-header-cell *matHeaderCellDef>Notes</mat-header-cell>\n        <mat-cell *matCellDef=\"let item\">{{ item.note }}</mat-cell>\n    </ng-container>\n\n    <mat-header-row *matHeaderRowDef=\"displayColumns\" class=\"mat-elevation-z1\"></mat-header-row>\n    <mat-row *matRowDef=\"let row; columns: displayColumns;\"></mat-row>\n</mat-table>\n\n<vs-float-button\n    mat-icon=\"add\"\n    color=\"accent\"\n    (callback)=\"addDncContact()\"\n    [isOpen]=\"isFabOpen$\"\n></vs-float-button>"
 
 /***/ }),
 
@@ -232,7 +235,7 @@ module.exports = "\n<mat-toolbar>\n    <h3>Non-Solicitation List</h3>\n</mat-too
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ".action-bar button {\n  font-size: 18px;\n  align-items: baseline; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy9kcmV3cGF5bWVudC9kZXYvYWN0aXZlL3Zlcm9zdGFjay9yZXNvdXJjZXMvYXNzZXRzL25nL3NyYy9hcHAvY29udGFjdC9rbm9jay1saXN0L2tub2NrLWxpc3QuY29tcG9uZW50LnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQ0E7RUFHRSxnQkFBZTtFQUNmLHNCQUFxQixFQUNyQiIsImZpbGUiOiJzcmMvYXBwL2NvbnRhY3Qva25vY2stbGlzdC9rbm9jay1saXN0LmNvbXBvbmVudC5zY3NzIiwic291cmNlc0NvbnRlbnQiOlsiXG4uYWN0aW9uLWJhciB7XG5cblx0YnV0dG9uIHtcblx0XHRmb250LXNpemU6IDE4cHg7XG5cdFx0YWxpZ24taXRlbXM6IGJhc2VsaW5lO1xuXHR9XG59Il19 */"
+module.exports = ".action-bar {\n  min-height: 64px; }\n  .action-bar button {\n    font-size: 18px;\n    align-items: center; }\n  mat-header-row {\n  background-color: #343a40; }\n  mat-header-row mat-header-cell {\n    vertical-align: middle;\n    font-size: 1.1rem;\n    color: #f1f1f1;\n    text-transform: uppercase;\n    letter-spacing: 0.1rem;\n    font-weight: 400; }\n  mat-header-row mat-header-cell ::ng-deep .mat-checkbox .mat-checkbox-frame {\n      border-color: #ffffff; }\n  mat-header-cell.check-column, mat-cell.check-column {\n  flex: 0 0 70px; }\n  mat-checkbox {\n  height: 1rem !important; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy9kcmV3cGF5bWVudC9kZXYvYWN0aXZlL3Zlcm9zdGFjay9yZXNvdXJjZXMvYXNzZXRzL25nL3NyYy9hcHAvY29udGFjdC9rbm9jay1saXN0L2tub2NrLWxpc3QuY29tcG9uZW50LnNjc3MiLCIvVXNlcnMvZHJld3BheW1lbnQvZGV2L2FjdGl2ZS92ZXJvc3RhY2svcmVzb3VyY2VzL2Fzc2V0cy9uZy9zcmMvc2Nzcy9fY29sb3JzLnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBRUE7RUFDQyxpQkFBZ0IsRUFNaEI7RUFQRDtJQUlFLGdCQUFlO0lBQ2Ysb0JBQW1CLEVBQ25CO0VBR0Y7RUFDQywwQkNBZ0IsRURjaEI7RUFmRDtJQUlFLHVCQUFzQjtJQUN0QixrQkFBaUI7SUFDakIsZUNoQmlCO0lEaUJqQiwwQkFBeUI7SUFDekIsdUJBQXNCO0lBQ3RCLGlCQUFnQixFQUtoQjtFQWRGO01BWUcsc0JDdkJlLEVEd0JmO0VBSUg7RUFHRSxlQUFjLEVBQ2Q7RUFHRjtFQUNDLHdCQUF1QixFQUN2QiIsImZpbGUiOiJzcmMvYXBwL2NvbnRhY3Qva25vY2stbGlzdC9rbm9jay1saXN0LmNvbXBvbmVudC5zY3NzIiwic291cmNlc0NvbnRlbnQiOlsiQGltcG9ydCAnLi4vLi4vLi4vc2Nzcy9jb2xvcnMnO1xuXG4uYWN0aW9uLWJhciB7XG5cdG1pbi1oZWlnaHQ6IDY0cHg7XG5cblx0YnV0dG9uIHtcblx0XHRmb250LXNpemU6IDE4cHg7XG5cdFx0YWxpZ24taXRlbXM6IGNlbnRlcjtcblx0fVxufVxuXG5tYXQtaGVhZGVyLXJvdyB7XG5cdGJhY2tncm91bmQtY29sb3I6ICRiZy1kYXJrO1xuXG5cdG1hdC1oZWFkZXItY2VsbCB7XG5cdFx0dmVydGljYWwtYWxpZ246IG1pZGRsZTtcblx0XHRmb250LXNpemU6IDEuMXJlbTtcblx0XHRjb2xvcjogJG9mZi13aGl0ZTtcblx0XHR0ZXh0LXRyYW5zZm9ybTogdXBwZXJjYXNlO1xuXHRcdGxldHRlci1zcGFjaW5nOiAwLjFyZW07XG5cdFx0Zm9udC13ZWlnaHQ6IDQwMDtcblxuXHRcdDo6bmctZGVlcCAubWF0LWNoZWNrYm94IC5tYXQtY2hlY2tib3gtZnJhbWUge1xuXHRcdFx0Ym9yZGVyLWNvbG9yOiAkd2hpdGU7XG5cdFx0fVxuXHR9XG59XG5cbm1hdC1oZWFkZXItY2VsbCwgbWF0LWNlbGwge1xuXHRcblx0Ji5jaGVjay1jb2x1bW4ge1xuXHRcdGZsZXg6IDAgMCA3MHB4O1xuXHR9XG59XG5cbm1hdC1jaGVja2JveCB7XG5cdGhlaWdodDogMXJlbSAhaW1wb3J0YW50O1xufSIsIiR3aGl0ZTogICAgI2ZmZmZmZiAhZGVmYXVsdDtcbiRvZmYtd2hpdGU6ICNmMWYxZjEgIWRlZmF1bHQ7XG4kZ3JheS0xMDA6ICNmOGY5ZmEgIWRlZmF1bHQ7XG4kZ3JheS0yMDA6ICNlOWVjZWYgIWRlZmF1bHQ7XG4kZ3JheS0zMDA6ICNkZWUyZTYgIWRlZmF1bHQ7XG4kZ3JheS00MDA6ICNjZWQ0ZGEgIWRlZmF1bHQ7XG4kZ3JheS01MDA6ICNhZGI1YmQgIWRlZmF1bHQ7XG4kZ3JheS02MDA6ICM2Yzc1N2QgIWRlZmF1bHQ7XG4kZ3JheS03MDA6ICM0OTUwNTcgIWRlZmF1bHQ7XG4kZ3JheS04MDA6ICMzNDNhNDAgIWRlZmF1bHQ7XG4kZ3JheS05MDA6ICMyMTI1MjkgIWRlZmF1bHQ7XG4kYmxhY2s6ICAgICMwMDAgIWRlZmF1bHQ7XG4kYmctZGFyazogIzM0M2E0MCAhZGVmYXVsdDtcblxuJGdyYXlzOiAoKSAhZGVmYXVsdDtcbiRncmF5czogbWFwLW1lcmdlKChcbiAgXCIxMDBcIjogJGdyYXktMTAwLFxuICBcIjIwMFwiOiAkZ3JheS0yMDAsXG4gIFwiMzAwXCI6ICRncmF5LTMwMCxcbiAgXCI0MDBcIjogJGdyYXktNDAwLFxuICBcIjUwMFwiOiAkZ3JheS01MDAsXG4gIFwiNjAwXCI6ICRncmF5LTYwMCxcbiAgXCI3MDBcIjogJGdyYXktNzAwLFxuICBcIjgwMFwiOiAkZ3JheS04MDAsXG4gIFwiOTAwXCI6ICRncmF5LTkwMFxuKSwgJGdyYXlzKTtcblxuJGJsdWU6ICAgICMwMDdiZmYgIWRlZmF1bHQ7XG4kaW5kaWdvOiAgIzY2MTBmMiAhZGVmYXVsdDtcbiRwdXJwbGU6ICAjNmY0MmMxICFkZWZhdWx0O1xuJHBpbms6ICAgICNlODNlOGMgIWRlZmF1bHQ7XG4kcmVkOiAgICAgI2RjMzU0NSAhZGVmYXVsdDtcbiRvcmFuZ2U6ICAjZmQ3ZTE0ICFkZWZhdWx0O1xuJHllbGxvdzogICNmZmMxMDcgIWRlZmF1bHQ7XG4kZ3JlZW46ICAgIzI4YTc0NSAhZGVmYXVsdDtcbiR0ZWFsOiAgICAjMjBjOTk3ICFkZWZhdWx0O1xuJGN5YW46ICAgICMxN2EyYjggIWRlZmF1bHQ7XG5cbiRjb2xvcnM6ICgpICFkZWZhdWx0O1xuJGNvbG9yczogbWFwLW1lcmdlKChcbiAgXCJibHVlXCI6ICAgICAgICRibHVlLFxuICBcImluZGlnb1wiOiAgICAgJGluZGlnbyxcbiAgXCJwdXJwbGVcIjogICAgICRwdXJwbGUsXG4gIFwicGlua1wiOiAgICAgICAkcGluayxcbiAgXCJyZWRcIjogICAgICAgICRyZWQsXG4gIFwib3JhbmdlXCI6ICAgICAkb3JhbmdlLFxuICBcInllbGxvd1wiOiAgICAgJHllbGxvdyxcbiAgXCJncmVlblwiOiAgICAgICRncmVlbixcbiAgXCJ0ZWFsXCI6ICAgICAgICR0ZWFsLFxuICBcImN5YW5cIjogICAgICAgJGN5YW4sXG4gIFwid2hpdGVcIjogICAgICAkd2hpdGUsXG4gIFwiZ3JheVwiOiAgICAgICAkZ3JheS02MDAsXG4gIFwiZ3JheS1kYXJrXCI6ICAkZ3JheS04MDBcbiksICRjb2xvcnMpO1xuXG4kcHJpbWFyeS1maWx0ZXI6ICMzZjUxYjUgIWRlZmF1bHQ7XG4kcHJpbWFyeS1maWx0ZXItbGlnaHQ6ICNhM2IxZmYgIWRlZmF1bHQ7XG4kdnMtaW5mbzogIzUzNmRmZSAhZGVmYXVsdDtcbiRiZy1tdXRlZDogJGdyYXktNjAwICFkZWZhdWx0O1xuJG1hdC1hY2NlbnQ6ICNmZjk4MDAgIWRlZmF1bHQ7XG4kbWF0LXByaW1hcnk6ICMzZjUxYjUgIWRlZmF1bHQ7XG4kY2hhcmNvYWw6ICRncmF5LTcwMCAhZGVmYXVsdDtcbiRib2R5LXRleHQ6ICRncmF5LTkwMCAhZGVmYXVsdDtcblxuJHByaW1hcnk6ICAgICAgICRibHVlICFkZWZhdWx0O1xuJHNlY29uZGFyeTogICAgICRncmF5LTYwMCAhZGVmYXVsdDtcbiRzdWNjZXNzOiAgICAgICAkZ3JlZW4gIWRlZmF1bHQ7XG4kaW5mbzogICAgICAgICAgJHZzLWluZm8gIWRlZmF1bHQ7XG4kd2FybmluZzogICAgICAgJHllbGxvdyAhZGVmYXVsdDtcbiRkYW5nZXI6ICAgICAgICAkcmVkICFkZWZhdWx0O1xuJGxpZ2h0OiAgICAgICAgICRncmF5LTEwMCAhZGVmYXVsdDtcbiRkYXJrOiAgICAgICAgICAkZ3JheS04MDAgIWRlZmF1bHQ7Il19 */"
 
 /***/ }),
 
@@ -250,6 +253,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
 /* harmony import */ var _app_session_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @app/session.service */ "./src/app/session.service.ts");
+/* harmony import */ var _angular_cdk_collections__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/cdk/collections */ "./node_modules/@angular/cdk/esm5/collections.es5.js");
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
+/* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @angular/material */ "./node_modules/@angular/material/esm5/material.es5.js");
+/* harmony import */ var _angular_animations__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @angular/animations */ "./node_modules/@angular/animations/fesm5/animations.js");
+
+
+
+
 
 
 
@@ -258,24 +269,57 @@ var KnockListComponent = /** @class */ (function () {
     function KnockListComponent(route, session) {
         this.route = route;
         this.session = session;
-        this.displayColumns = ['name', 'address', 'notes'];
+        this.contacts = new rxjs__WEBPACK_IMPORTED_MODULE_5__["BehaviorSubject"](null);
+        this.displayColumns = ['checked', 'name', 'address', 'notes'];
+        this.isFabOpen$ = new rxjs__WEBPACK_IMPORTED_MODULE_5__["BehaviorSubject"](false);
     }
     KnockListComponent.prototype.ngOnInit = function () {
         var _this = this;
-        this.contacts = this.route.snapshot.data['contacts'];
+        this.contacts.next(this.route.snapshot.data['contacts']);
+        this.dataSource = new _angular_material__WEBPACK_IMPORTED_MODULE_6__["MatTableDataSource"](this.contacts.getValue());
         this.session.getUserItem().subscribe(function (user) {
             _this.user = user;
             _this.siteTitle = _this.session.navigationTitle$.getValue();
             _this.session.setNavigationTitle('Contact Manager');
+            _this.selection = new _angular_cdk_collections__WEBPACK_IMPORTED_MODULE_4__["SelectionModel"](true, []);
         });
     };
     KnockListComponent.prototype.ngOnDestroy = function () {
         this.session.setNavigationTitle(this.siteTitle);
     };
+    KnockListComponent.prototype.selectAllToggle = function () {
+        var _this = this;
+        this.isAllSelected() ?
+            this.selection.clear() :
+            this.dataSource.data.forEach(function (r) { return _this.selection.select(r); });
+    };
+    KnockListComponent.prototype.checkboxLabel = function (row) {
+        if (!row) {
+            return (this.isAllSelected() ? 'select' : 'deselect') + " all";
+        }
+        return "" + (this.selection.isSelected(row) ? 'deselect' : 'select');
+    };
+    KnockListComponent.prototype.isAllSelected = function () {
+        return this.selection.selected.length === this.dataSource.data.length;
+    };
+    KnockListComponent.prototype.addDncContact = function () {
+        console.log('Add a do not solicit contact!');
+    };
     KnockListComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
             selector: 'vs-knock-list',
             template: __webpack_require__(/*! ./knock-list.component.html */ "./src/app/contact/knock-list/knock-list.component.html"),
+            animations: [
+                Object(_angular_animations__WEBPACK_IMPORTED_MODULE_7__["trigger"])('showHideActionBar', [
+                    Object(_angular_animations__WEBPACK_IMPORTED_MODULE_7__["transition"])(':enter', [
+                        Object(_angular_animations__WEBPACK_IMPORTED_MODULE_7__["style"])({ opacity: 0 }),
+                        Object(_angular_animations__WEBPACK_IMPORTED_MODULE_7__["animate"])('0.5s', Object(_angular_animations__WEBPACK_IMPORTED_MODULE_7__["style"])({ opacity: 1 }))
+                    ]),
+                    Object(_angular_animations__WEBPACK_IMPORTED_MODULE_7__["transition"])(':leave', [
+                        Object(_angular_animations__WEBPACK_IMPORTED_MODULE_7__["animate"])('0.5s', Object(_angular_animations__WEBPACK_IMPORTED_MODULE_7__["style"])({ opacity: 0 }))
+                    ])
+                ]),
+            ],
             styles: [__webpack_require__(/*! ./knock-list.component.scss */ "./src/app/contact/knock-list/knock-list.component.scss")]
         }),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_router__WEBPACK_IMPORTED_MODULE_2__["ActivatedRoute"], _app_session_service__WEBPACK_IMPORTED_MODULE_3__["SessionService"]])

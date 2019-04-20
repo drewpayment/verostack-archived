@@ -1,48 +1,51 @@
 import { Component, OnInit, ElementRef, Input, Output, EventEmitter } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
+import { FloatBtnService } from './float-btn.service';
 
 @Component({
   selector: 'vs-float-button',
   templateUrl: './fab-float-btn.component.html',
-  styleUrls: ['./fab-float-btn.component.scss']
+  styleUrls: ['./fab-float-btn.component.scss'],
+  providers: [
+    FloatBtnService
+  ]
 })
 export class FabFloatBtnComponent implements OnInit {
   @Output() callback:EventEmitter<any> = new EventEmitter();
   @Input() isOpen:Observable<boolean>;
 
-  colorType:string;
-  ariaLabel:string;
-  matIcon:string;
-  isMini:boolean;
-  disabled:string;
-  position:string;
-
-  topLeft:boolean;
-  topRight:boolean;
-  bottomLeft:boolean;
-  bottomRight:boolean;
+  @Input('aria-label') ariaLabel:string;
+  @Input('mat-icon') matIcon:string;
+  @Input('is-mini') isMini:boolean;
+  @Input() disabled = 'false';
+  private _position:string;
+  @Input() 
+  set position(value:string) {
+    if (typeof value !== 'string') {
+      value = '';
+    } 
+    this._position = value.toLowerCase();
+  }
+  get position():string {
+    return this._position;
+  }
+  @Input('color') colorType = 'accent';
+  get positionClass() {
+    return this.position === 'tl' 
+      ? 'top-left'
+      : this.position === 'tr'
+      ? 'top-right'
+      : this.position === 'bl'
+      ? 'bottom-left'
+      : 'bottom-right';
+  }
 
   buttonType:string;
 
-  constructor(el:ElementRef) {
-    let element = el.nativeElement;
-    this.colorType = element.getAttribute('color') || null;
-    this.ariaLabel = element.getAttribute('aria-label') || null;
-    this.matIcon = element.getAttribute('mat-icon') || null;
-    this.isMini = element.getAttribute('is-mini') != null ? true : false;
-    this.disabled = element.getAttribute('disabled') != null ? 'disabled' : 'false';
-    this.position = element.getAttribute('position');
-    this.topLeft = this.position == 'tl';
-    this.topRight = this.position == 'tr';
-    this.bottomLeft = this.position == 'bl';
-    this.bottomRight = this.position == 'br'
-      ? true
-      : (!this.topLeft && !this.topRight && !this.bottomLeft)
-      ? true
-      : false;
-  }
+  constructor(private svc:FloatBtnService) {}
 
   ngOnInit() {
+    this.svc.opened$.subscribe(o => of(this.isOpen));
     this.buttonType = this.isMini ? 'mat-mini-fab' : 'mat-fab';
   }
 

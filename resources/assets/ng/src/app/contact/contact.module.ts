@@ -34,6 +34,7 @@ const routes: Route[] = [
         CommonModule, 
         MaterialModule,
         PipesModule,
+        FabFloatBtnModule,
 
         RouterModule.forChild(routes)
     ],

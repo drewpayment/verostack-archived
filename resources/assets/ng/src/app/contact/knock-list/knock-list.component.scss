@@ -1,8 +1,38 @@
+@import '../../../scss/colors';
 
 .action-bar {
+	min-height: 64px;
 
 	button {
 		font-size: 18px;
-		align-items: baseline;
+		align-items: center;
 	}
+}
+
+mat-header-row {
+	background-color: $bg-dark;
+
+	mat-header-cell {
+		vertical-align: middle;
+		font-size: 1.1rem;
+		color: $off-white;
+		text-transform: uppercase;
+		letter-spacing: 0.1rem;
+		font-weight: 400;
+
+		::ng-deep .mat-checkbox .mat-checkbox-frame {
+			border-color: $white;
+		}
+	}
+}
+
+mat-header-cell, mat-cell {
+	
+	&.check-column {
+		flex: 0 0 70px;
+	}
+}
+
+mat-checkbox {
+	height: 1rem !important;
 }

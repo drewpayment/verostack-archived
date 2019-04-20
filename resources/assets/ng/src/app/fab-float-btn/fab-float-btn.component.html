@@ -1,10 +1,12 @@
 
 <button
   mat-fab
-  [ngClass]="{'vfb-resting': !(isOpen | async), 'vfb-open': (isOpen | async), 'bottom-left':bottomLeft, 'bottom-right':bottomRight, 'top-left':topLeft, 'top-right':topRight}"
+  [class]="positionClass + ' ' + buttonType"
+  [class.vfb-resting]="!(isOpen|async)"
+  [class.vfb-open]="isOpen|async"
   [attr.color]="colorType"
-  color="accent"
-  [attr.disabled]="disabled"
+  [color]="colorType"
+  [disabled]="disabled"
   (click)="onClick()"
 >
   <mat-icon [attr.aria-label]="ariaLabel">{{matIcon}}</mat-icon>
