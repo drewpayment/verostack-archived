@@ -7,7 +7,7 @@
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n<mat-table [dataSource]=\"contacts\" class=\"mat-elevation-z2\">\n\n    <ng-container matColumnDef=\"select\">\n        <mat-header-cell *matHeaderCellDef class=\"w-50\">&nbsp;</mat-header-cell>\n        <mat-cell *matCellDef=\"let item\">\n            <mat-checkbox></mat-checkbox>\n        </mat-cell>\n    </ng-container>\n\n    <ng-container matColumnDef=\"contactName\">\n        <mat-header-cell *matHeaderCellDef>Contact</mat-header-cell>\n        <mat-cell *matCellDef=\"let item\">\n            {{item.firstName}} {{item.lastName}}\n        </mat-cell>\n    </ng-container>\n\n    <ng-container matColumnDef=\"company\">\n        <mat-header-cell *matHeaderCellDef>Company</mat-header-cell>\n        <mat-cell *matCellDef=\"let item\">\n            {{item.businessName}}\n        </mat-cell>\n    </ng-container>\n\n    <ng-container matColumnDef=\"phone\">\n        <mat-header-cell *matHeaderCellDef>Phone</mat-header-cell>\n        <mat-cell *matCellDef=\"let item\">\n            {{item.phone | phone}}\n        </mat-cell>\n    </ng-container>\n\n    <ng-container matColumnDef=\"email\">\n        <mat-header-cell *matHeaderCellDef>Email</mat-header-cell>\n        <mat-cell *matCellDef=\"let item\">\n            {{item.email}}\n        </mat-cell>\n    </ng-container>\n\n    <mat-header-row *matHeaderRowDef=\"['select', 'contactName', 'company', 'phone', 'email']\"></mat-header-row>\n    <mat-row *matRowDef=\"let row; columns: ['select', 'contactName', 'company', 'phone', 'email']\"></mat-row>\n</mat-table>"
+module.exports = "\n<mat-table [dataSource]=\"contacts\" class=\"mat-elevation-z1\">\n\n    <ng-container matColumnDef=\"select\">\n        <mat-header-cell *matHeaderCellDef class=\"w-50\">&nbsp;</mat-header-cell>\n        <mat-cell *matCellDef=\"let item\">\n            <mat-checkbox></mat-checkbox>\n        </mat-cell>\n    </ng-container>\n\n    <ng-container matColumnDef=\"contactName\">\n        <mat-header-cell *matHeaderCellDef>Contact</mat-header-cell>\n        <mat-cell *matCellDef=\"let item\">\n            {{item.firstName}} {{item.lastName}}\n        </mat-cell>\n    </ng-container>\n\n    <ng-container matColumnDef=\"company\">\n        <mat-header-cell *matHeaderCellDef>Company</mat-header-cell>\n        <mat-cell *matCellDef=\"let item\">\n            {{item.businessName}}\n        </mat-cell>\n    </ng-container>\n\n    <ng-container matColumnDef=\"phone\">\n        <mat-header-cell *matHeaderCellDef>Phone</mat-header-cell>\n        <mat-cell *matCellDef=\"let item\">\n            {{item.phone | phone}}\n        </mat-cell>\n    </ng-container>\n\n    <ng-container matColumnDef=\"email\">\n        <mat-header-cell *matHeaderCellDef>Email</mat-header-cell>\n        <mat-cell *matCellDef=\"let item\">\n            {{item.email}}\n        </mat-cell>\n    </ng-container>\n\n    <mat-header-row *matHeaderRowDef=\"['select', 'contactName', 'company', 'phone', 'email']\"></mat-header-row>\n    <mat-row *matRowDef=\"let row; columns: ['select', 'contactName', 'company', 'phone', 'email']\"></mat-row>\n</mat-table>"
 
 /***/ }),
 
@@ -83,7 +83,7 @@ var ContactListComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"crm-toolbar\">\n    <div class=\"container-fluid\">\n        <nav class=\"navbar navbar-expand-lg navbar-dark bg-dark pl-5 mb-3\">\n            <a href=\"#\" class=\"navbar-brand\">\n                <i class=\"material-icons md-48\">location_city</i>\n            </a>\n            <button class=\"navbar-toggler\" type=\"button\" data-toggle=\"collapse\" data-target=\"#navbarCollapseContent\" \n                aria-controls=\"navbarSupportedContent\" aria-expanded=\"false\" aria-label=\"Toggle navigation\">\n                <span class=\"navbar-toggler-icon\"></span>\n            </button>\n\n            <div class=\"collapse navbar-collapse\" id=\"navbarCollapseContent\">\n                <ul class=\"navbar-nav mr-auto\">\n                    <li class=\"nav-item active\">\n                        <a href=\"#\" class=\"nav-link text-uppercase\">Contacts</a>\n                    </li>\n                    <li class=\"nav-item\">\n                        <a routerLink=\"/contacts/knock-list\" class=\"nav-link text-uppercase\">Restricted Contacts</a>\n                    </li>\n                    <!-- <li class=\"nav-item\">\n                        <a href=\"#\" class=\"nav-link text-uppercase\">Deals</a>\n                    </li>\n                    <li class=\"nav-item\">\n                        <a href=\"#\" class=\"nav-link text-uppercase\">Leads</a>\n                    </li> -->\n                </ul>\n                <div class=\"form-inline my-2 my-lg-0\">\n                    <input class=\"form-control mr-sm-2\" type=\"search\" placeholder=\"Search\" />\n                    <button type=\"button\" class=\"btn btn-outline-light my-2 my-lg-0\">Search</button>\n                </div>\n            </div>\n        </nav>\n\n        <div class=\"row\">\n            <div class=\"col-md-12\"> \n                <router-outlet></router-outlet>\n            </div>\n        </div>\n    </div>\n</div>\n"
+module.exports = "<div class=\"crm-toolbar\">\n    <div class=\"container-fluid\">\n        <nav class=\"navbar navbar-expand-lg navbar-dark bg-dark pl-5 mb-3\">\n            <a href=\"#\" class=\"navbar-brand\">\n                <i class=\"material-icons md-48\">location_city</i>\n            </a>\n            <button class=\"navbar-toggler\" type=\"button\" data-toggle=\"collapse\" data-target=\"#navbarCollapseContent\" \n                aria-controls=\"navbarSupportedContent\" aria-expanded=\"false\" aria-label=\"Toggle navigation\">\n                <span class=\"navbar-toggler-icon\"></span>\n            </button>\n\n            <div class=\"collapse navbar-collapse\" id=\"navbarCollapseContent\">\n                <ul class=\"navbar-nav mr-auto\">\n                    <li class=\"nav-item\">\n                        <a routerLink=\"/contacts/list\" routerLinkActive=\"active\" class=\"nav-link text-uppercase\">Contacts</a>\n                    </li>\n                    <li class=\"nav-item\">\n                        <a routerLink=\"/contacts/knock-list\" routerLinkActive=\"active\" class=\"nav-link text-uppercase\">Restricted Contacts</a>\n                    </li>\n                    <!-- <li class=\"nav-item\">\n                        <a href=\"#\" class=\"nav-link text-uppercase\">Deals</a>\n                    </li>\n                    <li class=\"nav-item\">\n                        <a href=\"#\" class=\"nav-link text-uppercase\">Leads</a>\n                    </li> -->\n                </ul>\n                <div class=\"form-inline my-2 my-lg-0\">\n                    <input class=\"form-control mr-sm-2\" type=\"search\" placeholder=\"Search\" />\n                    <button type=\"button\" class=\"btn btn-outline-light my-2 my-lg-0\">Search</button>\n                </div>\n            </div>\n        </nav>\n\n        <div class=\"row\">\n            <div class=\"col-md-12\"> \n                <router-outlet></router-outlet>\n            </div>\n        </div>\n    </div>\n</div>\n"
 
 /***/ }),
 
@@ -221,7 +221,7 @@ var ContactModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<p>\n  {{ contacts | json }}\n</p>\n"
+module.exports = "\n<mat-toolbar>\n    <h3>Non-Solicitation List</h3>\n</mat-toolbar>\n\n<p class=\"mx-2\">\n    The following contacts and locations are listed as registered with the supplier, FTC or other regulatory body\n    and cannot be visited. \n</p>\n\n<!-- action bar -->\n<mat-toolbar class=\"action-bar\">\n    <button type=\"button\" mat-flat-button class=\"align-items-baseline\">\n        <mat-icon>delete</mat-icon>\n        Remove\n    </button>\n</mat-toolbar>\n\n<mat-table [dataSource]=\"contacts\" class=\"mat-elevation-z1\">\n    <ng-container matColumnDef=\"name\">\n        <mat-header-cell *matHeaderCellDef>Location</mat-header-cell>\n        <mat-cell *matCellDef=\"let item\">\n            <ng-container *ngIf=\"item.firstName && item.lastName; else noName;\">\n                {{ item.firstName }} {{ item.lastName }}\n            </ng-container>\n            <ng-template #noName>\n                {{ item.description }}\n            </ng-template>\n        </mat-cell>\n    </ng-container>\n\n    <ng-container matColumnDef=\"address\">\n        <mat-header-cell *matHeaderCellDef>Address</mat-header-cell>\n        <mat-cell *matCellDef=\"let item\">{{ item.address }} {{ item.city }}</mat-cell>\n    </ng-container>\n\n    <ng-container matColumnDef=\"notes\">\n        <mat-header-cell *matHeaderCellDef>Notes</mat-header-cell>\n        <mat-cell *matCellDef=\"let item\">{{ item.note }}</mat-cell>\n    </ng-container>\n\n    <mat-header-row *matHeaderRowDef=\"displayColumns\"></mat-header-row>\n    <mat-row *matRowDef=\"let row; columns: displayColumns;\"></mat-row>\n</mat-table>\n"
 
 /***/ }),
 
@@ -232,7 +232,7 @@ module.exports = "<p>\n  {{ contacts | json }}\n</p>\n"
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzcmMvYXBwL2NvbnRhY3Qva25vY2stbGlzdC9rbm9jay1saXN0LmNvbXBvbmVudC5zY3NzIn0= */"
+module.exports = ".action-bar button {\n  font-size: 18px;\n  align-items: baseline; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy9kcmV3cGF5bWVudC9kZXYvYWN0aXZlL3Zlcm9zdGFjay9yZXNvdXJjZXMvYXNzZXRzL25nL3NyYy9hcHAvY29udGFjdC9rbm9jay1saXN0L2tub2NrLWxpc3QuY29tcG9uZW50LnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQ0E7RUFHRSxnQkFBZTtFQUNmLHNCQUFxQixFQUNyQiIsImZpbGUiOiJzcmMvYXBwL2NvbnRhY3Qva25vY2stbGlzdC9rbm9jay1saXN0LmNvbXBvbmVudC5zY3NzIiwic291cmNlc0NvbnRlbnQiOlsiXG4uYWN0aW9uLWJhciB7XG5cblx0YnV0dG9uIHtcblx0XHRmb250LXNpemU6IDE4cHg7XG5cdFx0YWxpZ24taXRlbXM6IGJhc2VsaW5lO1xuXHR9XG59Il19 */"
 
 /***/ }),
 
@@ -249,15 +249,28 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+/* harmony import */ var _app_session_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @app/session.service */ "./src/app/session.service.ts");
+
 
 
 
 var KnockListComponent = /** @class */ (function () {
-    function KnockListComponent(route) {
+    function KnockListComponent(route, session) {
         this.route = route;
+        this.session = session;
+        this.displayColumns = ['name', 'address', 'notes'];
     }
     KnockListComponent.prototype.ngOnInit = function () {
+        var _this = this;
         this.contacts = this.route.snapshot.data['contacts'];
+        this.session.getUserItem().subscribe(function (user) {
+            _this.user = user;
+            _this.siteTitle = _this.session.navigationTitle$.getValue();
+            _this.session.setNavigationTitle('Contact Manager');
+        });
+    };
+    KnockListComponent.prototype.ngOnDestroy = function () {
+        this.session.setNavigationTitle(this.siteTitle);
     };
     KnockListComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
@@ -265,7 +278,7 @@ var KnockListComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./knock-list.component.html */ "./src/app/contact/knock-list/knock-list.component.html"),
             styles: [__webpack_require__(/*! ./knock-list.component.scss */ "./src/app/contact/knock-list/knock-list.component.scss")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_router__WEBPACK_IMPORTED_MODULE_2__["ActivatedRoute"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_router__WEBPACK_IMPORTED_MODULE_2__["ActivatedRoute"], _app_session_service__WEBPACK_IMPORTED_MODULE_3__["SessionService"]])
     ], KnockListComponent);
     return KnockListComponent;
 }());

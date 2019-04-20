@@ -1,3 +1,44 @@
-<p>
-  {{ contacts | json }}
+
+<mat-toolbar>
+    <h3>Non-Solicitation List</h3>
+</mat-toolbar>
+
+<p class="mx-2">
+    The following contacts and locations are listed as registered with the supplier, FTC or other regulatory body
+    and cannot be visited. 
 </p>
+
+<!-- action bar -->
+<mat-toolbar class="action-bar">
+    <button type="button" mat-flat-button class="align-items-baseline">
+        <mat-icon>delete</mat-icon>
+        Remove
+    </button>
+</mat-toolbar>
+
+<mat-table [dataSource]="contacts" class="mat-elevation-z1">
+    <ng-container matColumnDef="name">
+        <mat-header-cell *matHeaderCellDef>Location</mat-header-cell>
+        <mat-cell *matCellDef="let item">
+            <ng-container *ngIf="item.firstName && item.lastName; else noName;">
+                {{ item.firstName }} {{ item.lastName }}
+            </ng-container>
+            <ng-template #noName>
+                {{ item.description }}
+            </ng-template>
+        </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="address">
+        <mat-header-cell *matHeaderCellDef>Address</mat-header-cell>
+        <mat-cell *matCellDef="let item">{{ item.address }} {{ item.city }}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="notes">
+        <mat-header-cell *matHeaderCellDef>Notes</mat-header-cell>
+        <mat-cell *matCellDef="let item">{{ item.note }}</mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayColumns;"></mat-row>
+</mat-table>
