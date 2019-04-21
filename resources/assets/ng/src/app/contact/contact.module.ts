@@ -9,6 +9,10 @@ import { ContactOutletComponent } from './contact-outlet/contact-outlet.componen
 import { PipesModule } from '@app/pipes/pipes.module';
 import { KnockListComponent } from './knock-list/knock-list.component';
 import { KnockListService } from './knock-list/knock-list.service';
+import { AddDncContactDialogComponent } from './knock-list/add-dnc-contact-dialog/add-dnc-contact-dialog.component';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 const routes: Route[] = [
     { 
@@ -35,6 +39,8 @@ const routes: Route[] = [
         MaterialModule,
         PipesModule,
         FabFloatBtnModule,
+        FormsModule,
+        ReactiveFormsModule,
 
         RouterModule.forChild(routes)
     ],
@@ -42,7 +48,8 @@ const routes: Route[] = [
     declarations: [
         ContactListComponent,
         ContactOutletComponent,
-        KnockListComponent
+        KnockListComponent,
+        AddDncContactDialogComponent
     ],
 
     exports: [
@@ -52,6 +59,10 @@ const routes: Route[] = [
 
     providers: [
         KnockListService
+    ],
+
+    entryComponents: [
+        AddDncContactDialogComponent
     ]
 })
 export class ContactModule {}

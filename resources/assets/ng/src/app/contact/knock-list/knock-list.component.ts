@@ -4,8 +4,9 @@ import { DncContact, User } from '@app/models';
 import { SessionService } from '@app/session.service';
 import { SelectionModel, DataSource } from '@angular/cdk/collections';
 import { BehaviorSubject } from 'rxjs';
-import { MatTableDataSource } from '@angular/material';
+import { MatTableDataSource, MatDialog } from '@angular/material';
 import { trigger, state, style, transition, animate } from '@angular/animations';
+import { AddDncContactDialogComponent } from './add-dnc-contact-dialog/add-dnc-contact-dialog.component';
 
 @Component({
     selector: 'vs-knock-list',
@@ -34,7 +35,7 @@ export class KnockListComponent implements OnInit, OnDestroy {
     selection:SelectionModel<DncContact>;
     isFabOpen$ = new BehaviorSubject<boolean>(false);
 
-    constructor(private route:ActivatedRoute, private session:SessionService) { }
+    constructor(private route:ActivatedRoute, private session:SessionService, private dialog:MatDialog) { }
 
     ngOnInit() {
         this.contacts.next(this.route.snapshot.data['contacts']);
@@ -74,6 +75,16 @@ export class KnockListComponent implements OnInit, OnDestroy {
     addDncContact() {
         console.log('Add a do not solicit contact!');
         
+        this.dialog.open(AddDncContactDialogComponent, {
+            width: '50vw',
+            minHeight: '50vh'
+        })
+        .afterClosed()
+        .subscribe(result => {
+            if (result == null) return;
+
+            console.dir(result);
+        });
     }
 
 }

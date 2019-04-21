@@ -6840,7 +6840,7 @@ var FabFloatBtnComponent = /** @class */ (function () {
     };
     FabFloatBtnComponent.prototype.onClick = function () {
         // call the callback!
-        this.callback.emit('any');
+        this.callback.emit();
     };
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Output"])(),

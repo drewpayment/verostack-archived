@@ -15,6 +15,14 @@ export class KnockListService implements Resolve<DncContact[]> {
     constructor(private http:HttpClient) { }
 
     resolve(route:ActivatedRouteSnapshot, state:RouterStateSnapshot):Observable<DncContact[]> {
-        return this.http.get<DncContact[]>(`${this.api}/get-dnc-contacts`);
+        return this.getDncContacts();
+    }
+
+    getDncContacts():Observable<DncContact[]> {
+        return this.http.get<DncContact[]>(`${this.api}/dnc-contacts`);
+    }
+
+    saveNewDncContact(contact:DncContact):Observable<DncContact> {
+        return this.http.post<DncContact>(`${this.api}/dnc-contacts`, { body: contact });
     }
 }

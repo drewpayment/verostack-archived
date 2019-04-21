@@ -3,9 +3,8 @@
 .action-bar {
 	min-height: 64px;
 
-	button {
-		font-size: 18px;
-		align-items: center;
+	* {
+		font-size: 1rem;
 	}
 }
 

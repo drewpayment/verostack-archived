@@ -51,7 +51,7 @@ export class FabFloatBtnComponent implements OnInit {
 
   onClick():void {
     // call the callback!
-    this.callback.emit('any');
+    this.callback.emit();
   }
 
 }

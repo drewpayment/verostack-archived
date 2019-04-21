@@ -10,11 +10,13 @@
 
 <!-- action bar -->
 <mat-toolbar class="action-bar bg-transparent">
-    <button type="button" mat-flat-button @showHideActionBar *ngIf="selection.selected.length"
-        class="d-flex align-items-center" inline="true">
-        <mat-icon>delete</mat-icon>
+
+    <!-- DELETE -->
+    <button type="button" mat-button @showHideActionBar *ngIf="selection.selected.length">
+        <mat-icon class="md-18">delete</mat-icon>
         Remove
     </button>
+    
 </mat-toolbar>
 
 <mat-table [dataSource]="contacts" class="mat-elevation-z1">

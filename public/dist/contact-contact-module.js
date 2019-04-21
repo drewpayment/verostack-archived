@@ -154,6 +154,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _app_pipes_pipes_module__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @app/pipes/pipes.module */ "./src/app/pipes/pipes.module.ts");
 /* harmony import */ var _knock_list_knock_list_component__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./knock-list/knock-list.component */ "./src/app/contact/knock-list/knock-list.component.ts");
 /* harmony import */ var _knock_list_knock_list_service__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./knock-list/knock-list.service */ "./src/app/contact/knock-list/knock-list.service.ts");
+/* harmony import */ var _knock_list_add_dnc_contact_dialog_add_dnc_contact_dialog_component__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./knock-list/add-dnc-contact-dialog/add-dnc-contact-dialog.component */ "./src/app/contact/knock-list/add-dnc-contact-dialog/add-dnc-contact-dialog.component.ts");
+/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
+
+
 
 
 
@@ -194,12 +198,15 @@ var ContactModule = /** @class */ (function () {
                 _app_material_material_module__WEBPACK_IMPORTED_MODULE_6__["MaterialModule"],
                 _app_pipes_pipes_module__WEBPACK_IMPORTED_MODULE_9__["PipesModule"],
                 _app_fab_float_btn_fab_float_btn_module__WEBPACK_IMPORTED_MODULE_7__["FabFloatBtnModule"],
+                _angular_forms__WEBPACK_IMPORTED_MODULE_13__["FormsModule"],
+                _angular_forms__WEBPACK_IMPORTED_MODULE_13__["ReactiveFormsModule"],
                 _angular_router__WEBPACK_IMPORTED_MODULE_4__["RouterModule"].forChild(routes)
             ],
             declarations: [
                 _contact_list_contact_list_component__WEBPACK_IMPORTED_MODULE_3__["ContactListComponent"],
                 _contact_outlet_contact_outlet_component__WEBPACK_IMPORTED_MODULE_8__["ContactOutletComponent"],
-                _knock_list_knock_list_component__WEBPACK_IMPORTED_MODULE_10__["KnockListComponent"]
+                _knock_list_knock_list_component__WEBPACK_IMPORTED_MODULE_10__["KnockListComponent"],
+                _knock_list_add_dnc_contact_dialog_add_dnc_contact_dialog_component__WEBPACK_IMPORTED_MODULE_12__["AddDncContactDialogComponent"]
             ],
             exports: [
                 _contact_list_contact_list_component__WEBPACK_IMPORTED_MODULE_3__["ContactListComponent"],
@@ -207,10 +214,171 @@ var ContactModule = /** @class */ (function () {
             ],
             providers: [
                 _knock_list_knock_list_service__WEBPACK_IMPORTED_MODULE_11__["KnockListService"]
+            ],
+            entryComponents: [
+                _knock_list_add_dnc_contact_dialog_add_dnc_contact_dialog_component__WEBPACK_IMPORTED_MODULE_12__["AddDncContactDialogComponent"]
             ]
         })
     ], ContactModule);
     return ContactModule;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/contact/knock-list/add-dnc-contact-dialog/add-dnc-contact-dialog.component.html":
+/*!*************************************************************************************************!*\
+  !*** ./src/app/contact/knock-list/add-dnc-contact-dialog/add-dnc-contact-dialog.component.html ***!
+  \*************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<div mat-dialog-title class=\"d-flex justify-content-between\">\n    <h3>New Non-Solicitation Contact</h3>\n    <button type=\"button\" mat-icon-button (click)=\"onNoClick()\">\n        <mat-icon>clear</mat-icon>\n    </button>\n</div>\n\n<div mat-dialog-content>\n    <div [formGroup]=\"form\" *ngIf=\"form\" class=\"form-container\">\n        <mat-form-field>\n            <input matInput type=\"text\" formControlName=\"firstName\" placeholder=\"First Name\" [required]=\"form.get('description').value == null\" />\n            <mat-error *ngIf=\"form.get('firstName').invalid && form.get('firstName').errors['required'] && (form.get('firstName').touched || formSubmitted)\">\n                Please enter a first name.\n            </mat-error>\n        </mat-form-field>\n\n        <mat-form-field>\n            <input matInput type=\"text\" formControlName=\"lastName\" placeholder=\"Last Name\" [required]=\"form.get('description').value == null\" />\n            <mat-error *ngIf=\"form.get('lastName').invalid && form.get('lastName').errors['required'] && (form.get('lastName').touched || formSubmitted)\">\n                Please enter a last name.\n            </mat-error>\n        </mat-form-field>\n\n        <mat-form-field>\n            <input matInput type=\"text\" formControlName=\"description\" placeholder=\"Description\"\n                [required]=\"form.get('firstName').value == null && form.get('lastName').value == null\" />\n            <mat-hint>Use <span class=\"font-italic\">description</span> if you have a location that doesn't have a person by name.</mat-hint>\n            <mat-error *ngIf=\"form.get('description').invalid && form.get('description').errors['required'] && (form.get('description').touched || formSubmitted)\">\n                Please enter a description.\n            </mat-error>\n        </mat-form-field>\n\n        <mat-form-field>\n            <input matInput type=\"text\" formControlName=\"address\" placeholder=\"Street Address\" required />\n            <mat-error *ngIf=\"form.get('address').invalid && (form.get('address').touched || formSubmitted)\">\n                Please enter a full address.\n            </mat-error>\n        </mat-form-field>\n\n        <mat-form-field>\n            <input matInput type=\"text\" formControlName=\"addressCont\" placeholder=\"Apt/Unit\" />\n        </mat-form-field>\n\n        <mat-form-field>\n            <input matInput type=\"text\" formControlName=\"city\" placeholder=\"City\" required />\n            <mat-error *ngIf=\"form.get('city').invalid && (form.get('city').touched || formSubmitted)\">\n                Please enter a city.\n            </mat-error>\n        </mat-form-field>\n\n        <mat-form-field>\n            <mat-select placeholder=\"State\" formControlName=\"state\" required>\n                <mat-option *ngFor=\"let s of states\" [value]=\"s.abbreviation\">\n                    {{s.name}}\n                </mat-option>\n            </mat-select>\n            <mat-error *ngIf=\"form.get('state').invalid && (form.get('state').invalid || formSubmitted)\">\n                Please select a state.\n            </mat-error>\n        </mat-form-field>\n\n        <mat-form-field>\n            <input matInput type=\"text\" formControlName=\"zip\" placeholder=\"Zip Code\" maxlength=\"9\" required />\n            <mat-error *ngIf=\"form.get('zip').invalid && (form.get('zip').invalid || formSubmitted)\">\n                <ng-container *ngIf=\"form.get('zip').errors['required']\">\n                    Please enter a zip code.\n                </ng-container>\n                <ng-container *ngIf=\"form.get('zip').errors['pattern']\">\n                    Please enter alphanumerics please.\n                </ng-container>\n            </mat-error>\n        </mat-form-field>\n\n        <mat-form-field>\n            <textarea matInput formControlName=\"note\" placeholder=\"Notes\" rows=\"3\"></textarea>\n        </mat-form-field>\n    </div>\n</div>\n\n<div mat-dialog-actions class=\"d-flex justify-content-end\">\n    <button type=\"button\" mat-button color=\"primary\" (click)=\"saveDncContact()\">\n        <mat-icon inline=\"true\">save</mat-icon>\n        Save\n    </button>\n    <button type=\"button\" mat-button (click)=\"onNoClick()\">\n        <mat-icon inline=\"true\">clear</mat-icon>\n        Cancel\n    </button>\n</div>"
+
+/***/ }),
+
+/***/ "./src/app/contact/knock-list/add-dnc-contact-dialog/add-dnc-contact-dialog.component.scss":
+/*!*************************************************************************************************!*\
+  !*** ./src/app/contact/knock-list/add-dnc-contact-dialog/add-dnc-contact-dialog.component.scss ***!
+  \*************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = ".form-container {\n  display: flex;\n  flex-direction: column; }\n  .form-container * {\n    width: 100%; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy9kcmV3cGF5bWVudC9kZXYvYWN0aXZlL3Zlcm9zdGFjay9yZXNvdXJjZXMvYXNzZXRzL25nL3NyYy9hcHAvY29udGFjdC9rbm9jay1saXN0L2FkZC1kbmMtY29udGFjdC1kaWFsb2cvYWRkLWRuYy1jb250YWN0LWRpYWxvZy5jb21wb25lbnQuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFDQTtFQUNDLGNBQWE7RUFDYix1QkFBc0IsRUFLdEI7RUFQRDtJQUtFLFlBQVcsRUFDWCIsImZpbGUiOiJzcmMvYXBwL2NvbnRhY3Qva25vY2stbGlzdC9hZGQtZG5jLWNvbnRhY3QtZGlhbG9nL2FkZC1kbmMtY29udGFjdC1kaWFsb2cuY29tcG9uZW50LnNjc3MiLCJzb3VyY2VzQ29udGVudCI6WyJcbi5mb3JtLWNvbnRhaW5lciB7XG5cdGRpc3BsYXk6IGZsZXg7XG5cdGZsZXgtZGlyZWN0aW9uOiBjb2x1bW47XG5cblx0KiB7XG5cdFx0d2lkdGg6IDEwMCU7XG5cdH1cbn0iXX0= */"
+
+/***/ }),
+
+/***/ "./src/app/contact/knock-list/add-dnc-contact-dialog/add-dnc-contact-dialog.component.ts":
+/*!***********************************************************************************************!*\
+  !*** ./src/app/contact/knock-list/add-dnc-contact-dialog/add-dnc-contact-dialog.component.ts ***!
+  \***********************************************************************************************/
+/*! exports provided: AddDncContactDialogComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AddDncContactDialogComponent", function() { return AddDncContactDialogComponent; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/material */ "./node_modules/@angular/material/esm5/material.es5.js");
+/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
+/* harmony import */ var _app_session_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @app/session.service */ "./src/app/session.service.ts");
+/* harmony import */ var _app_shared__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @app/shared */ "./src/app/shared/index.ts");
+/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
+
+
+
+
+
+
+
+var AddDncContactDialogComponent = /** @class */ (function () {
+    function AddDncContactDialogComponent(ref, data, fb, session) {
+        this.ref = ref;
+        this.data = data;
+        this.fb = fb;
+        this.session = session;
+        this.formSubmitted = false;
+        this.states = _app_shared__WEBPACK_IMPORTED_MODULE_5__["States"].$get();
+    }
+    AddDncContactDialogComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this.session.getUserItem().subscribe(function (user) {
+            _this.user = user;
+            _this.initializeComponent();
+        });
+    };
+    AddDncContactDialogComponent.prototype.initializeComponent = function () {
+        var _this = this;
+        this.createForm();
+        // TODO: this logic is buggy af
+        this.form.valueChanges
+            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_6__["distinctUntilChanged"])())
+            .subscribe(function (value) {
+            var firstName = value.firstName;
+            var lastName = value.lastName;
+            var desc = value.description;
+            if (firstName) {
+                _this.form.get('description').clearValidators();
+                _this.form.get('lastName').setValidators(_this.requiredValidator);
+            }
+            if (lastName) {
+                _this.form.get('description').clearValidators();
+                _this.form.get('firstName').setValidators(_this.requiredValidator);
+            }
+            if (!firstName && !lastName) {
+                _this.form.get('description').setValidators(_this.requiredValidator);
+                // this.form.get('description').updateValueAndValidity({ emitEvent: false });
+            }
+            if (desc) {
+                _this.form.get('firstName').clearValidators();
+                _this.form.get('lastName').clearValidators();
+            }
+            else {
+                _this.form.get('firstName').setValidators(_this.requiredValidator);
+                _this.form.get('lastName').setValidators(_this.requiredValidator);
+            }
+            _this.form.updateValueAndValidity({ emitEvent: false });
+        });
+    };
+    AddDncContactDialogComponent.prototype.requiredValidator = function (control) {
+        if (control.value)
+            return null;
+        return {
+            required: true
+        };
+    };
+    AddDncContactDialogComponent.prototype.createForm = function () {
+        this.form = this.fb.group({
+            clientId: this.fb.control(this.user.selectedClient),
+            firstName: this.fb.control(''),
+            lastName: this.fb.control(''),
+            description: this.fb.control(''),
+            address: this.fb.control('', [_angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required]),
+            addressCont: this.fb.control(''),
+            city: this.fb.control('', [_angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required]),
+            state: this.fb.control('', [_angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required]),
+            zip: this.fb.control('', [_angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required, _angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].pattern(/\[0-9]+/)]),
+            note: this.fb.control('')
+        });
+    };
+    AddDncContactDialogComponent.prototype.prepareModel = function () {
+        return {
+            dncContactId: null,
+            clientId: this.form.value.clientId,
+            firstName: this.form.value.firstName,
+            lastName: this.form.value.lastName,
+            description: this.form.value.description,
+            address: this.form.value.address,
+            addressCont: this.form.value.addressCont,
+            city: this.form.value.city,
+            state: this.form.value.state,
+            zip: this.form.value.zip,
+            note: this.form.value.note
+        };
+    };
+    AddDncContactDialogComponent.prototype.onNoClick = function () {
+        this.ref.close();
+    };
+    AddDncContactDialogComponent.prototype.saveDncContact = function () {
+        this.formSubmitted = true;
+        if (this.form.valid) {
+            var model = this.prepareModel();
+            this.ref.close(model);
+        }
+    };
+    AddDncContactDialogComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
+            selector: 'vs-add-dnc-contact-dialog',
+            template: __webpack_require__(/*! ./add-dnc-contact-dialog.component.html */ "./src/app/contact/knock-list/add-dnc-contact-dialog/add-dnc-contact-dialog.component.html"),
+            styles: [__webpack_require__(/*! ./add-dnc-contact-dialog.component.scss */ "./src/app/contact/knock-list/add-dnc-contact-dialog/add-dnc-contact-dialog.component.scss")]
+        }),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__param"](1, Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Inject"])(_angular_material__WEBPACK_IMPORTED_MODULE_2__["MAT_DIALOG_DATA"])),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_material__WEBPACK_IMPORTED_MODULE_2__["MatDialogRef"], Object, _angular_forms__WEBPACK_IMPORTED_MODULE_3__["FormBuilder"],
+            _app_session_service__WEBPACK_IMPORTED_MODULE_4__["SessionService"]])
+    ], AddDncContactDialogComponent);
+    return AddDncContactDialogComponent;
 }());
 
 
@@ -224,7 +392,7 @@ var ContactModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n<mat-toolbar class=\"bg-transparent\">\n    <h3>Non-Solicitation List</h3>\n</mat-toolbar>\n\n<p class=\"pl-3\">\n    The following contacts and locations are listed as registered with the supplier, FTC or other regulatory body\n    and cannot be visited. \n</p>\n\n<!-- action bar -->\n<mat-toolbar class=\"action-bar bg-transparent\">\n    <button type=\"button\" mat-flat-button @showHideActionBar *ngIf=\"selection.selected.length\"\n        class=\"d-flex align-items-center\" inline=\"true\">\n        <mat-icon>delete</mat-icon>\n        Remove\n    </button>\n</mat-toolbar>\n\n<mat-table [dataSource]=\"contacts\" class=\"mat-elevation-z1\">\n    <ng-container matColumnDef=\"checked\">\n        <mat-header-cell *matHeaderCellDef class=\"check-column\">\n            <mat-checkbox (change)=\"$event ? selectAllToggle() : null\" [checked]=\"selection.hasValue() && isAllSelected()\"\n                [indeterminate]=\"selection.hasValue() && !isAllSelected()\"\n                [aria-label]=\"checkboxLabel()\"></mat-checkbox>\n        </mat-header-cell>\n        <mat-cell *matCellDef=\"let item\" class=\"check-column\">\n            <mat-checkbox (click)=\"$event.stopPropagation();\"\n                (change)=\"$event ? selection.toggle(item) : null\"\n                [checked]=\"selection.isSelected(item)\"\n                [aria-label]=\"checkboxLabel(item)\"></mat-checkbox>\n        </mat-cell>\n    </ng-container>\n\n    <ng-container matColumnDef=\"name\">\n        <mat-header-cell *matHeaderCellDef>Location</mat-header-cell>\n        <mat-cell *matCellDef=\"let item\">\n            <ng-container *ngIf=\"item.firstName && item.lastName; else noName;\">\n                {{ item.firstName }} {{ item.lastName }}\n            </ng-container>\n            <ng-template #noName>\n                {{ item.description }}\n            </ng-template>\n        </mat-cell>\n    </ng-container>\n\n    <ng-container matColumnDef=\"address\">\n        <mat-header-cell *matHeaderCellDef>Address</mat-header-cell>\n        <mat-cell *matCellDef=\"let item\">{{ item.address }} {{ item.city }}</mat-cell>\n    </ng-container>\n\n    <ng-container matColumnDef=\"notes\">\n        <mat-header-cell *matHeaderCellDef>Notes</mat-header-cell>\n        <mat-cell *matCellDef=\"let item\">{{ item.note }}</mat-cell>\n    </ng-container>\n\n    <mat-header-row *matHeaderRowDef=\"displayColumns\" class=\"mat-elevation-z1\"></mat-header-row>\n    <mat-row *matRowDef=\"let row; columns: displayColumns;\"></mat-row>\n</mat-table>\n\n<vs-float-button\n    mat-icon=\"add\"\n    color=\"accent\"\n    (callback)=\"addDncContact()\"\n    [isOpen]=\"isFabOpen$\"\n></vs-float-button>"
+module.exports = "\n<mat-toolbar class=\"bg-transparent\">\n    <h3>Non-Solicitation List</h3>\n</mat-toolbar>\n\n<p class=\"pl-3\">\n    The following contacts and locations are listed as registered with the supplier, FTC or other regulatory body\n    and cannot be visited. \n</p>\n\n<!-- action bar -->\n<mat-toolbar class=\"action-bar bg-transparent\">\n\n    <!-- DELETE -->\n    <button type=\"button\" mat-button @showHideActionBar *ngIf=\"selection.selected.length\">\n        <mat-icon class=\"md-18\">delete</mat-icon>\n        Remove\n    </button>\n    \n</mat-toolbar>\n\n<mat-table [dataSource]=\"contacts\" class=\"mat-elevation-z1\">\n    <ng-container matColumnDef=\"checked\">\n        <mat-header-cell *matHeaderCellDef class=\"check-column\">\n            <mat-checkbox (change)=\"$event ? selectAllToggle() : null\" [checked]=\"selection.hasValue() && isAllSelected()\"\n                [indeterminate]=\"selection.hasValue() && !isAllSelected()\"\n                [aria-label]=\"checkboxLabel()\"></mat-checkbox>\n        </mat-header-cell>\n        <mat-cell *matCellDef=\"let item\" class=\"check-column\">\n            <mat-checkbox (click)=\"$event.stopPropagation();\"\n                (change)=\"$event ? selection.toggle(item) : null\"\n                [checked]=\"selection.isSelected(item)\"\n                [aria-label]=\"checkboxLabel(item)\"></mat-checkbox>\n        </mat-cell>\n    </ng-container>\n\n    <ng-container matColumnDef=\"name\">\n        <mat-header-cell *matHeaderCellDef>Location</mat-header-cell>\n        <mat-cell *matCellDef=\"let item\">\n            <ng-container *ngIf=\"item.firstName && item.lastName; else noName;\">\n                {{ item.firstName }} {{ item.lastName }}\n            </ng-container>\n            <ng-template #noName>\n                {{ item.description }}\n            </ng-template>\n        </mat-cell>\n    </ng-container>\n\n    <ng-container matColumnDef=\"address\">\n        <mat-header-cell *matHeaderCellDef>Address</mat-header-cell>\n        <mat-cell *matCellDef=\"let item\">{{ item.address }} {{ item.city }}</mat-cell>\n    </ng-container>\n\n    <ng-container matColumnDef=\"notes\">\n        <mat-header-cell *matHeaderCellDef>Notes</mat-header-cell>\n        <mat-cell *matCellDef=\"let item\">{{ item.note }}</mat-cell>\n    </ng-container>\n\n    <mat-header-row *matHeaderRowDef=\"displayColumns\" class=\"mat-elevation-z1\"></mat-header-row>\n    <mat-row *matRowDef=\"let row; columns: displayColumns;\"></mat-row>\n</mat-table>\n\n<vs-float-button\n    mat-icon=\"add\"\n    color=\"accent\"\n    (callback)=\"addDncContact()\"\n    [isOpen]=\"isFabOpen$\"\n></vs-float-button>"
 
 /***/ }),
 
@@ -235,7 +403,7 @@ module.exports = "\n<mat-toolbar class=\"bg-transparent\">\n    <h3>Non-Solicita
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ".action-bar {\n  min-height: 64px; }\n  .action-bar button {\n    font-size: 18px;\n    align-items: center; }\n  mat-header-row {\n  background-color: #343a40; }\n  mat-header-row mat-header-cell {\n    vertical-align: middle;\n    font-size: 1.1rem;\n    color: #f1f1f1;\n    text-transform: uppercase;\n    letter-spacing: 0.1rem;\n    font-weight: 400; }\n  mat-header-row mat-header-cell ::ng-deep .mat-checkbox .mat-checkbox-frame {\n      border-color: #ffffff; }\n  mat-header-cell.check-column, mat-cell.check-column {\n  flex: 0 0 70px; }\n  mat-checkbox {\n  height: 1rem !important; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy9kcmV3cGF5bWVudC9kZXYvYWN0aXZlL3Zlcm9zdGFjay9yZXNvdXJjZXMvYXNzZXRzL25nL3NyYy9hcHAvY29udGFjdC9rbm9jay1saXN0L2tub2NrLWxpc3QuY29tcG9uZW50LnNjc3MiLCIvVXNlcnMvZHJld3BheW1lbnQvZGV2L2FjdGl2ZS92ZXJvc3RhY2svcmVzb3VyY2VzL2Fzc2V0cy9uZy9zcmMvc2Nzcy9fY29sb3JzLnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBRUE7RUFDQyxpQkFBZ0IsRUFNaEI7RUFQRDtJQUlFLGdCQUFlO0lBQ2Ysb0JBQW1CLEVBQ25CO0VBR0Y7RUFDQywwQkNBZ0IsRURjaEI7RUFmRDtJQUlFLHVCQUFzQjtJQUN0QixrQkFBaUI7SUFDakIsZUNoQmlCO0lEaUJqQiwwQkFBeUI7SUFDekIsdUJBQXNCO0lBQ3RCLGlCQUFnQixFQUtoQjtFQWRGO01BWUcsc0JDdkJlLEVEd0JmO0VBSUg7RUFHRSxlQUFjLEVBQ2Q7RUFHRjtFQUNDLHdCQUF1QixFQUN2QiIsImZpbGUiOiJzcmMvYXBwL2NvbnRhY3Qva25vY2stbGlzdC9rbm9jay1saXN0LmNvbXBvbmVudC5zY3NzIiwic291cmNlc0NvbnRlbnQiOlsiQGltcG9ydCAnLi4vLi4vLi4vc2Nzcy9jb2xvcnMnO1xuXG4uYWN0aW9uLWJhciB7XG5cdG1pbi1oZWlnaHQ6IDY0cHg7XG5cblx0YnV0dG9uIHtcblx0XHRmb250LXNpemU6IDE4cHg7XG5cdFx0YWxpZ24taXRlbXM6IGNlbnRlcjtcblx0fVxufVxuXG5tYXQtaGVhZGVyLXJvdyB7XG5cdGJhY2tncm91bmQtY29sb3I6ICRiZy1kYXJrO1xuXG5cdG1hdC1oZWFkZXItY2VsbCB7XG5cdFx0dmVydGljYWwtYWxpZ246IG1pZGRsZTtcblx0XHRmb250LXNpemU6IDEuMXJlbTtcblx0XHRjb2xvcjogJG9mZi13aGl0ZTtcblx0XHR0ZXh0LXRyYW5zZm9ybTogdXBwZXJjYXNlO1xuXHRcdGxldHRlci1zcGFjaW5nOiAwLjFyZW07XG5cdFx0Zm9udC13ZWlnaHQ6IDQwMDtcblxuXHRcdDo6bmctZGVlcCAubWF0LWNoZWNrYm94IC5tYXQtY2hlY2tib3gtZnJhbWUge1xuXHRcdFx0Ym9yZGVyLWNvbG9yOiAkd2hpdGU7XG5cdFx0fVxuXHR9XG59XG5cbm1hdC1oZWFkZXItY2VsbCwgbWF0LWNlbGwge1xuXHRcblx0Ji5jaGVjay1jb2x1bW4ge1xuXHRcdGZsZXg6IDAgMCA3MHB4O1xuXHR9XG59XG5cbm1hdC1jaGVja2JveCB7XG5cdGhlaWdodDogMXJlbSAhaW1wb3J0YW50O1xufSIsIiR3aGl0ZTogICAgI2ZmZmZmZiAhZGVmYXVsdDtcbiRvZmYtd2hpdGU6ICNmMWYxZjEgIWRlZmF1bHQ7XG4kZ3JheS0xMDA6ICNmOGY5ZmEgIWRlZmF1bHQ7XG4kZ3JheS0yMDA6ICNlOWVjZWYgIWRlZmF1bHQ7XG4kZ3JheS0zMDA6ICNkZWUyZTYgIWRlZmF1bHQ7XG4kZ3JheS00MDA6ICNjZWQ0ZGEgIWRlZmF1bHQ7XG4kZ3JheS01MDA6ICNhZGI1YmQgIWRlZmF1bHQ7XG4kZ3JheS02MDA6ICM2Yzc1N2QgIWRlZmF1bHQ7XG4kZ3JheS03MDA6ICM0OTUwNTcgIWRlZmF1bHQ7XG4kZ3JheS04MDA6ICMzNDNhNDAgIWRlZmF1bHQ7XG4kZ3JheS05MDA6ICMyMTI1MjkgIWRlZmF1bHQ7XG4kYmxhY2s6ICAgICMwMDAgIWRlZmF1bHQ7XG4kYmctZGFyazogIzM0M2E0MCAhZGVmYXVsdDtcblxuJGdyYXlzOiAoKSAhZGVmYXVsdDtcbiRncmF5czogbWFwLW1lcmdlKChcbiAgXCIxMDBcIjogJGdyYXktMTAwLFxuICBcIjIwMFwiOiAkZ3JheS0yMDAsXG4gIFwiMzAwXCI6ICRncmF5LTMwMCxcbiAgXCI0MDBcIjogJGdyYXktNDAwLFxuICBcIjUwMFwiOiAkZ3JheS01MDAsXG4gIFwiNjAwXCI6ICRncmF5LTYwMCxcbiAgXCI3MDBcIjogJGdyYXktNzAwLFxuICBcIjgwMFwiOiAkZ3JheS04MDAsXG4gIFwiOTAwXCI6ICRncmF5LTkwMFxuKSwgJGdyYXlzKTtcblxuJGJsdWU6ICAgICMwMDdiZmYgIWRlZmF1bHQ7XG4kaW5kaWdvOiAgIzY2MTBmMiAhZGVmYXVsdDtcbiRwdXJwbGU6ICAjNmY0MmMxICFkZWZhdWx0O1xuJHBpbms6ICAgICNlODNlOGMgIWRlZmF1bHQ7XG4kcmVkOiAgICAgI2RjMzU0NSAhZGVmYXVsdDtcbiRvcmFuZ2U6ICAjZmQ3ZTE0ICFkZWZhdWx0O1xuJHllbGxvdzogICNmZmMxMDcgIWRlZmF1bHQ7XG4kZ3JlZW46ICAgIzI4YTc0NSAhZGVmYXVsdDtcbiR0ZWFsOiAgICAjMjBjOTk3ICFkZWZhdWx0O1xuJGN5YW46ICAgICMxN2EyYjggIWRlZmF1bHQ7XG5cbiRjb2xvcnM6ICgpICFkZWZhdWx0O1xuJGNvbG9yczogbWFwLW1lcmdlKChcbiAgXCJibHVlXCI6ICAgICAgICRibHVlLFxuICBcImluZGlnb1wiOiAgICAgJGluZGlnbyxcbiAgXCJwdXJwbGVcIjogICAgICRwdXJwbGUsXG4gIFwicGlua1wiOiAgICAgICAkcGluayxcbiAgXCJyZWRcIjogICAgICAgICRyZWQsXG4gIFwib3JhbmdlXCI6ICAgICAkb3JhbmdlLFxuICBcInllbGxvd1wiOiAgICAgJHllbGxvdyxcbiAgXCJncmVlblwiOiAgICAgICRncmVlbixcbiAgXCJ0ZWFsXCI6ICAgICAgICR0ZWFsLFxuICBcImN5YW5cIjogICAgICAgJGN5YW4sXG4gIFwid2hpdGVcIjogICAgICAkd2hpdGUsXG4gIFwiZ3JheVwiOiAgICAgICAkZ3JheS02MDAsXG4gIFwiZ3JheS1kYXJrXCI6ICAkZ3JheS04MDBcbiksICRjb2xvcnMpO1xuXG4kcHJpbWFyeS1maWx0ZXI6ICMzZjUxYjUgIWRlZmF1bHQ7XG4kcHJpbWFyeS1maWx0ZXItbGlnaHQ6ICNhM2IxZmYgIWRlZmF1bHQ7XG4kdnMtaW5mbzogIzUzNmRmZSAhZGVmYXVsdDtcbiRiZy1tdXRlZDogJGdyYXktNjAwICFkZWZhdWx0O1xuJG1hdC1hY2NlbnQ6ICNmZjk4MDAgIWRlZmF1bHQ7XG4kbWF0LXByaW1hcnk6ICMzZjUxYjUgIWRlZmF1bHQ7XG4kY2hhcmNvYWw6ICRncmF5LTcwMCAhZGVmYXVsdDtcbiRib2R5LXRleHQ6ICRncmF5LTkwMCAhZGVmYXVsdDtcblxuJHByaW1hcnk6ICAgICAgICRibHVlICFkZWZhdWx0O1xuJHNlY29uZGFyeTogICAgICRncmF5LTYwMCAhZGVmYXVsdDtcbiRzdWNjZXNzOiAgICAgICAkZ3JlZW4gIWRlZmF1bHQ7XG4kaW5mbzogICAgICAgICAgJHZzLWluZm8gIWRlZmF1bHQ7XG4kd2FybmluZzogICAgICAgJHllbGxvdyAhZGVmYXVsdDtcbiRkYW5nZXI6ICAgICAgICAkcmVkICFkZWZhdWx0O1xuJGxpZ2h0OiAgICAgICAgICRncmF5LTEwMCAhZGVmYXVsdDtcbiRkYXJrOiAgICAgICAgICAkZ3JheS04MDAgIWRlZmF1bHQ7Il19 */"
+module.exports = ".action-bar {\n  min-height: 64px; }\n  .action-bar * {\n    font-size: 1rem; }\n  mat-header-row {\n  background-color: #343a40; }\n  mat-header-row mat-header-cell {\n    vertical-align: middle;\n    font-size: 1.1rem;\n    color: #f1f1f1;\n    text-transform: uppercase;\n    letter-spacing: 0.1rem;\n    font-weight: 400; }\n  mat-header-row mat-header-cell ::ng-deep .mat-checkbox .mat-checkbox-frame {\n      border-color: #ffffff; }\n  mat-header-cell.check-column, mat-cell.check-column {\n  flex: 0 0 70px; }\n  mat-checkbox {\n  height: 1rem !important; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy9kcmV3cGF5bWVudC9kZXYvYWN0aXZlL3Zlcm9zdGFjay9yZXNvdXJjZXMvYXNzZXRzL25nL3NyYy9hcHAvY29udGFjdC9rbm9jay1saXN0L2tub2NrLWxpc3QuY29tcG9uZW50LnNjc3MiLCIvVXNlcnMvZHJld3BheW1lbnQvZGV2L2FjdGl2ZS92ZXJvc3RhY2svcmVzb3VyY2VzL2Fzc2V0cy9uZy9zcmMvc2Nzcy9fY29sb3JzLnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBRUE7RUFDQyxpQkFBZ0IsRUFLaEI7RUFORDtJQUlFLGdCQUFlLEVBQ2Y7RUFHRjtFQUNDLDBCQ0NnQixFRGFoQjtFQWZEO0lBSUUsdUJBQXNCO0lBQ3RCLGtCQUFpQjtJQUNqQixlQ2ZpQjtJRGdCakIsMEJBQXlCO0lBQ3pCLHVCQUFzQjtJQUN0QixpQkFBZ0IsRUFLaEI7RUFkRjtNQVlHLHNCQ3RCZSxFRHVCZjtFQUlIO0VBR0UsZUFBYyxFQUNkO0VBR0Y7RUFDQyx3QkFBdUIsRUFDdkIiLCJmaWxlIjoic3JjL2FwcC9jb250YWN0L2tub2NrLWxpc3Qva25vY2stbGlzdC5jb21wb25lbnQuc2NzcyIsInNvdXJjZXNDb250ZW50IjpbIkBpbXBvcnQgJy4uLy4uLy4uL3Njc3MvY29sb3JzJztcblxuLmFjdGlvbi1iYXIge1xuXHRtaW4taGVpZ2h0OiA2NHB4O1xuXG5cdCoge1xuXHRcdGZvbnQtc2l6ZTogMXJlbTtcblx0fVxufVxuXG5tYXQtaGVhZGVyLXJvdyB7XG5cdGJhY2tncm91bmQtY29sb3I6ICRiZy1kYXJrO1xuXG5cdG1hdC1oZWFkZXItY2VsbCB7XG5cdFx0dmVydGljYWwtYWxpZ246IG1pZGRsZTtcblx0XHRmb250LXNpemU6IDEuMXJlbTtcblx0XHRjb2xvcjogJG9mZi13aGl0ZTtcblx0XHR0ZXh0LXRyYW5zZm9ybTogdXBwZXJjYXNlO1xuXHRcdGxldHRlci1zcGFjaW5nOiAwLjFyZW07XG5cdFx0Zm9udC13ZWlnaHQ6IDQwMDtcblxuXHRcdDo6bmctZGVlcCAubWF0LWNoZWNrYm94IC5tYXQtY2hlY2tib3gtZnJhbWUge1xuXHRcdFx0Ym9yZGVyLWNvbG9yOiAkd2hpdGU7XG5cdFx0fVxuXHR9XG59XG5cbm1hdC1oZWFkZXItY2VsbCwgbWF0LWNlbGwge1xuXHRcblx0Ji5jaGVjay1jb2x1bW4ge1xuXHRcdGZsZXg6IDAgMCA3MHB4O1xuXHR9XG59XG5cbm1hdC1jaGVja2JveCB7XG5cdGhlaWdodDogMXJlbSAhaW1wb3J0YW50O1xufSIsIiR3aGl0ZTogICAgI2ZmZmZmZiAhZGVmYXVsdDtcbiRvZmYtd2hpdGU6ICNmMWYxZjEgIWRlZmF1bHQ7XG4kZ3JheS0xMDA6ICNmOGY5ZmEgIWRlZmF1bHQ7XG4kZ3JheS0yMDA6ICNlOWVjZWYgIWRlZmF1bHQ7XG4kZ3JheS0zMDA6ICNkZWUyZTYgIWRlZmF1bHQ7XG4kZ3JheS00MDA6ICNjZWQ0ZGEgIWRlZmF1bHQ7XG4kZ3JheS01MDA6ICNhZGI1YmQgIWRlZmF1bHQ7XG4kZ3JheS02MDA6ICM2Yzc1N2QgIWRlZmF1bHQ7XG4kZ3JheS03MDA6ICM0OTUwNTcgIWRlZmF1bHQ7XG4kZ3JheS04MDA6ICMzNDNhNDAgIWRlZmF1bHQ7XG4kZ3JheS05MDA6ICMyMTI1MjkgIWRlZmF1bHQ7XG4kYmxhY2s6ICAgICMwMDAgIWRlZmF1bHQ7XG4kYmctZGFyazogIzM0M2E0MCAhZGVmYXVsdDtcblxuJGdyYXlzOiAoKSAhZGVmYXVsdDtcbiRncmF5czogbWFwLW1lcmdlKChcbiAgXCIxMDBcIjogJGdyYXktMTAwLFxuICBcIjIwMFwiOiAkZ3JheS0yMDAsXG4gIFwiMzAwXCI6ICRncmF5LTMwMCxcbiAgXCI0MDBcIjogJGdyYXktNDAwLFxuICBcIjUwMFwiOiAkZ3JheS01MDAsXG4gIFwiNjAwXCI6ICRncmF5LTYwMCxcbiAgXCI3MDBcIjogJGdyYXktNzAwLFxuICBcIjgwMFwiOiAkZ3JheS04MDAsXG4gIFwiOTAwXCI6ICRncmF5LTkwMFxuKSwgJGdyYXlzKTtcblxuJGJsdWU6ICAgICMwMDdiZmYgIWRlZmF1bHQ7XG4kaW5kaWdvOiAgIzY2MTBmMiAhZGVmYXVsdDtcbiRwdXJwbGU6ICAjNmY0MmMxICFkZWZhdWx0O1xuJHBpbms6ICAgICNlODNlOGMgIWRlZmF1bHQ7XG4kcmVkOiAgICAgI2RjMzU0NSAhZGVmYXVsdDtcbiRvcmFuZ2U6ICAjZmQ3ZTE0ICFkZWZhdWx0O1xuJHllbGxvdzogICNmZmMxMDcgIWRlZmF1bHQ7XG4kZ3JlZW46ICAgIzI4YTc0NSAhZGVmYXVsdDtcbiR0ZWFsOiAgICAjMjBjOTk3ICFkZWZhdWx0O1xuJGN5YW46ICAgICMxN2EyYjggIWRlZmF1bHQ7XG5cbiRjb2xvcnM6ICgpICFkZWZhdWx0O1xuJGNvbG9yczogbWFwLW1lcmdlKChcbiAgXCJibHVlXCI6ICAgICAgICRibHVlLFxuICBcImluZGlnb1wiOiAgICAgJGluZGlnbyxcbiAgXCJwdXJwbGVcIjogICAgICRwdXJwbGUsXG4gIFwicGlua1wiOiAgICAgICAkcGluayxcbiAgXCJyZWRcIjogICAgICAgICRyZWQsXG4gIFwib3JhbmdlXCI6ICAgICAkb3JhbmdlLFxuICBcInllbGxvd1wiOiAgICAgJHllbGxvdyxcbiAgXCJncmVlblwiOiAgICAgICRncmVlbixcbiAgXCJ0ZWFsXCI6ICAgICAgICR0ZWFsLFxuICBcImN5YW5cIjogICAgICAgJGN5YW4sXG4gIFwid2hpdGVcIjogICAgICAkd2hpdGUsXG4gIFwiZ3JheVwiOiAgICAgICAkZ3JheS02MDAsXG4gIFwiZ3JheS1kYXJrXCI6ICAkZ3JheS04MDBcbiksICRjb2xvcnMpO1xuXG4kcHJpbWFyeS1maWx0ZXI6ICMzZjUxYjUgIWRlZmF1bHQ7XG4kcHJpbWFyeS1maWx0ZXItbGlnaHQ6ICNhM2IxZmYgIWRlZmF1bHQ7XG4kdnMtaW5mbzogIzUzNmRmZSAhZGVmYXVsdDtcbiRiZy1tdXRlZDogJGdyYXktNjAwICFkZWZhdWx0O1xuJG1hdC1hY2NlbnQ6ICNmZjk4MDAgIWRlZmF1bHQ7XG4kbWF0LXByaW1hcnk6ICMzZjUxYjUgIWRlZmF1bHQ7XG4kY2hhcmNvYWw6ICRncmF5LTcwMCAhZGVmYXVsdDtcbiRib2R5LXRleHQ6ICRncmF5LTkwMCAhZGVmYXVsdDtcblxuJHByaW1hcnk6ICAgICAgICRibHVlICFkZWZhdWx0O1xuJHNlY29uZGFyeTogICAgICRncmF5LTYwMCAhZGVmYXVsdDtcbiRzdWNjZXNzOiAgICAgICAkZ3JlZW4gIWRlZmF1bHQ7XG4kaW5mbzogICAgICAgICAgJHZzLWluZm8gIWRlZmF1bHQ7XG4kd2FybmluZzogICAgICAgJHllbGxvdyAhZGVmYXVsdDtcbiRkYW5nZXI6ICAgICAgICAkcmVkICFkZWZhdWx0O1xuJGxpZ2h0OiAgICAgICAgICRncmF5LTEwMCAhZGVmYXVsdDtcbiRkYXJrOiAgICAgICAgICAkZ3JheS04MDAgIWRlZmF1bHQ7Il19 */"
 
 /***/ }),
 
@@ -257,6 +425,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
 /* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @angular/material */ "./node_modules/@angular/material/esm5/material.es5.js");
 /* harmony import */ var _angular_animations__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @angular/animations */ "./node_modules/@angular/animations/fesm5/animations.js");
+/* harmony import */ var _add_dnc_contact_dialog_add_dnc_contact_dialog_component__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./add-dnc-contact-dialog/add-dnc-contact-dialog.component */ "./src/app/contact/knock-list/add-dnc-contact-dialog/add-dnc-contact-dialog.component.ts");
+
 
 
 
@@ -266,9 +436,10 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var KnockListComponent = /** @class */ (function () {
-    function KnockListComponent(route, session) {
+    function KnockListComponent(route, session, dialog) {
         this.route = route;
         this.session = session;
+        this.dialog = dialog;
         this.contacts = new rxjs__WEBPACK_IMPORTED_MODULE_5__["BehaviorSubject"](null);
         this.displayColumns = ['checked', 'name', 'address', 'notes'];
         this.isFabOpen$ = new rxjs__WEBPACK_IMPORTED_MODULE_5__["BehaviorSubject"](false);
@@ -304,6 +475,16 @@ var KnockListComponent = /** @class */ (function () {
     };
     KnockListComponent.prototype.addDncContact = function () {
         console.log('Add a do not solicit contact!');
+        this.dialog.open(_add_dnc_contact_dialog_add_dnc_contact_dialog_component__WEBPACK_IMPORTED_MODULE_8__["AddDncContactDialogComponent"], {
+            width: '50vw',
+            minHeight: '50vh'
+        })
+            .afterClosed()
+            .subscribe(function (result) {
+            if (result == null)
+                return;
+            console.dir(result);
+        });
     };
     KnockListComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
@@ -322,7 +503,7 @@ var KnockListComponent = /** @class */ (function () {
             ],
             styles: [__webpack_require__(/*! ./knock-list.component.scss */ "./src/app/contact/knock-list/knock-list.component.scss")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_router__WEBPACK_IMPORTED_MODULE_2__["ActivatedRoute"], _app_session_service__WEBPACK_IMPORTED_MODULE_3__["SessionService"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_router__WEBPACK_IMPORTED_MODULE_2__["ActivatedRoute"], _app_session_service__WEBPACK_IMPORTED_MODULE_3__["SessionService"], _angular_material__WEBPACK_IMPORTED_MODULE_6__["MatDialog"]])
     ], KnockListComponent);
     return KnockListComponent;
 }());
@@ -355,7 +536,13 @@ var KnockListService = /** @class */ (function () {
         this.api = _env_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].apiUrl + 'api';
     }
     KnockListService.prototype.resolve = function (route, state) {
-        return this.http.get(this.api + "/get-dnc-contacts");
+        return this.getDncContacts();
+    };
+    KnockListService.prototype.getDncContacts = function () {
+        return this.http.get(this.api + "/dnc-contacts");
+    };
+    KnockListService.prototype.saveNewDncContact = function (contact) {
+        return this.http.post(this.api + "/dnc-contacts", { body: contact });
     };
     KnockListService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
