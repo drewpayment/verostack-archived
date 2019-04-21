@@ -12,7 +12,7 @@
 <mat-toolbar class="action-bar bg-transparent">
 
     <!-- DELETE -->
-    <button type="button" mat-button @showHideActionBar *ngIf="selection.selected.length">
+    <button type="button" mat-button @showHideActionBar *ngIf="selection.selected.length" (click)="deleteDncContacts()">
         <mat-icon class="md-18">delete</mat-icon>
         Remove
     </button>
@@ -48,7 +48,7 @@
 
     <ng-container matColumnDef="address">
         <mat-header-cell *matHeaderCellDef>Address</mat-header-cell>
-        <mat-cell *matCellDef="let item">{{ item.address }} {{ item.city }}</mat-cell>
+        <mat-cell *matCellDef="let item">{{ item.address }} {{ item.addressCont }} {{ item.city }}, {{ item.state }}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="notes">

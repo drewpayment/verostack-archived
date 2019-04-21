@@ -23,6 +23,6 @@ export class KnockListService implements Resolve<DncContact[]> {
     }
 
     saveNewDncContact(contact:DncContact):Observable<DncContact> {
-        return this.http.post<DncContact>(`${this.api}/dnc-contacts`, { body: contact });
+        return this.http.post<DncContact>(`${this.api}/dnc-contacts`, contact);
     }
 }

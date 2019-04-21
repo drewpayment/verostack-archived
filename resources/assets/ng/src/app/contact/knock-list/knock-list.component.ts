@@ -4,9 +4,12 @@ import { DncContact, User } from '@app/models';
 import { SessionService } from '@app/session.service';
 import { SelectionModel, DataSource } from '@angular/cdk/collections';
 import { BehaviorSubject } from 'rxjs';
-import { MatTableDataSource, MatDialog } from '@angular/material';
+import { MatTableDataSource, MatDialog, MatBottomSheet } from '@angular/material';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { AddDncContactDialogComponent } from './add-dnc-contact-dialog/add-dnc-contact-dialog.component';
+import { KnockListService } from './knock-list.service';
+import { MessageService } from '@app/message.service';
+import { ConfirmDeleteSheetComponent } from './confirm-delete-sheet/confirm-delete-sheet.component';
 
 @Component({
     selector: 'vs-knock-list',
@@ -35,10 +38,17 @@ export class KnockListComponent implements OnInit, OnDestroy {
     selection:SelectionModel<DncContact>;
     isFabOpen$ = new BehaviorSubject<boolean>(false);
 
-    constructor(private route:ActivatedRoute, private session:SessionService, private dialog:MatDialog) { }
+    constructor(
+        private route:ActivatedRoute, 
+        private session:SessionService, 
+        private dialog:MatDialog, 
+        private service:KnockListService,
+        private message:MessageService,
+        private sheet:MatBottomSheet
+    ) { }
 
     ngOnInit() {
-        this.contacts.next(this.route.snapshot.data['contacts']);
+        this.contacts.next(this.route.snapshot.data['contacts'].sort(this.sortContacts));
         this.dataSource = new MatTableDataSource<DncContact>(this.contacts.getValue());
 
         this.session.getUserItem().subscribe(user => {
@@ -73,18 +83,46 @@ export class KnockListComponent implements OnInit, OnDestroy {
     }
 
     addDncContact() {
-        console.log('Add a do not solicit contact!');
-        
         this.dialog.open(AddDncContactDialogComponent, {
             width: '50vw',
             minHeight: '50vh'
         })
         .afterClosed()
-        .subscribe(result => {
+        .subscribe((result:DncContact) => {
             if (result == null) return;
+            this.session.showLoader();
 
-            console.dir(result);
+            result.clientId = this.user.sessionUser.sessionClient;
+            this.service.saveNewDncContact(result)
+                .subscribe(dnc => {
+                    this.session.hideLoader();
+
+                    const updatedList = this.contacts.getValue();
+                    updatedList.push(dnc);
+                    this.contacts.next(updatedList.sort(this.sortContacts));
+                    this.message.addMessage('Saved new DNK Contact!', 'dismiss', 2500);
+                });
         });
+    }
+
+    deleteDncContacts() { 
+        this.sheet.open(ConfirmDeleteSheetComponent, {
+            closeOnNavigation: true
+        })
+        .afterDismissed()
+        .subscribe(res => {
+            if (res == null) return;
+
+            // delete selected contacs here... 
+        });
+    }
+
+    sortContacts(a:DncContact, b:DncContact):number {
+        const aField = a.lastName ? a.lastName : a.firstName ? a.firstName : a.description;
+        const bField = b.lastName ? b.lastName : b.firstName ? b.firstName : b.description;
+        if (aField < bField) return -1;
+        if (aField > bField) return 1;
+        return 0;
     }
 
 }

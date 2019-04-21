@@ -37,42 +37,6 @@ export class AddDncContactDialogComponent implements OnInit {
 
     initializeComponent() {
         this.createForm();
-
-        // TODO: this logic is buggy af
-        // this.form.valueChanges
-        //     .pipe(
-        //         distinctUntilChanged()
-        //     )
-        //     .subscribe(value => {
-        //         const firstName = value.firstName;
-        //         const lastName = value.lastName;
-        //         const desc = value.description;
-
-        //         if (firstName) {
-        //             this.form.get('description').clearValidators();
-        //             this.form.get('lastName').setValidators(this.requiredValidator);
-        //         }
-
-        //         if (lastName) {
-        //             this.form.get('description').clearValidators();
-        //             this.form.get('firstName').setValidators(this.requiredValidator);
-        //         }
-
-        //         if (!firstName && !lastName) {
-        //             this.form.get('description').setValidators(this.requiredValidator);
-        //             // this.form.get('description').updateValueAndValidity({ emitEvent: false });
-        //         }
-
-        //         if (desc) {
-        //             this.form.get('firstName').clearValidators();
-        //             this.form.get('lastName').clearValidators();
-        //         } else {
-        //             this.form.get('firstName').setValidators(this.requiredValidator);
-        //             this.form.get('lastName').setValidators(this.requiredValidator);
-        //         }
-
-        //         this.form.updateValueAndValidity({ emitEvent: false });
-        //     });
     }
 
     requiredValidator(control:AbstractControl):ValidationErrors | null {
@@ -92,7 +56,7 @@ export class AddDncContactDialogComponent implements OnInit {
             addressCont: this.fb.control(''),
             city: this.fb.control('', [Validators.required]),
             state: this.fb.control('', [Validators.required]),
-            zip: this.fb.control('', [Validators.required, Validators.pattern(/\[0-9]+/)]),
+            zip: this.fb.control('', [Validators.required, Validators.pattern(/^\d+$/)]),
             note: this.fb.control('')
         });
     }
@@ -119,7 +83,7 @@ export class AddDncContactDialogComponent implements OnInit {
 
     saveDncContact() {
         
-        if (!this.form.value.firstName != null && !this.form.value.lastName != null && !this.form.value.description != null) {
+        if (!this.form.value.firstName && !this.form.value.lastName && !this.form.value.description) {
             this.form.get('firstName').setErrors({ required: true });
             this.form.get('lastName').setErrors({ required: true });
             this.form.get('description').setErrors({ required: true });

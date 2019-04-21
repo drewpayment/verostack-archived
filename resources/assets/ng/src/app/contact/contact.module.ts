@@ -13,6 +13,7 @@ import { AddDncContactDialogComponent } from './knock-list/add-dnc-contact-dialo
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ConfirmDeleteSheetComponent } from './knock-list/confirm-delete-sheet/confirm-delete-sheet.component';
 
 const routes: Route[] = [
     { 
@@ -49,7 +50,8 @@ const routes: Route[] = [
         ContactListComponent,
         ContactOutletComponent,
         KnockListComponent,
-        AddDncContactDialogComponent
+        AddDncContactDialogComponent,
+        ConfirmDeleteSheetComponent
     ],
 
     exports: [
@@ -62,7 +64,8 @@ const routes: Route[] = [
     ],
 
     entryComponents: [
-        AddDncContactDialogComponent
+        AddDncContactDialogComponent,
+        ConfirmDeleteSheetComponent
     ]
 })
 export class ContactModule {}

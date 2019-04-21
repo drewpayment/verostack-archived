@@ -156,6 +156,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _knock_list_knock_list_service__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./knock-list/knock-list.service */ "./src/app/contact/knock-list/knock-list.service.ts");
 /* harmony import */ var _knock_list_add_dnc_contact_dialog_add_dnc_contact_dialog_component__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./knock-list/add-dnc-contact-dialog/add-dnc-contact-dialog.component */ "./src/app/contact/knock-list/add-dnc-contact-dialog/add-dnc-contact-dialog.component.ts");
 /* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
+/* harmony import */ var _knock_list_confirm_delete_sheet_confirm_delete_sheet_component__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./knock-list/confirm-delete-sheet/confirm-delete-sheet.component */ "./src/app/contact/knock-list/confirm-delete-sheet/confirm-delete-sheet.component.ts");
+
 
 
 
@@ -206,7 +208,8 @@ var ContactModule = /** @class */ (function () {
                 _contact_list_contact_list_component__WEBPACK_IMPORTED_MODULE_3__["ContactListComponent"],
                 _contact_outlet_contact_outlet_component__WEBPACK_IMPORTED_MODULE_8__["ContactOutletComponent"],
                 _knock_list_knock_list_component__WEBPACK_IMPORTED_MODULE_10__["KnockListComponent"],
-                _knock_list_add_dnc_contact_dialog_add_dnc_contact_dialog_component__WEBPACK_IMPORTED_MODULE_12__["AddDncContactDialogComponent"]
+                _knock_list_add_dnc_contact_dialog_add_dnc_contact_dialog_component__WEBPACK_IMPORTED_MODULE_12__["AddDncContactDialogComponent"],
+                _knock_list_confirm_delete_sheet_confirm_delete_sheet_component__WEBPACK_IMPORTED_MODULE_14__["ConfirmDeleteSheetComponent"]
             ],
             exports: [
                 _contact_list_contact_list_component__WEBPACK_IMPORTED_MODULE_3__["ContactListComponent"],
@@ -216,7 +219,8 @@ var ContactModule = /** @class */ (function () {
                 _knock_list_knock_list_service__WEBPACK_IMPORTED_MODULE_11__["KnockListService"]
             ],
             entryComponents: [
-                _knock_list_add_dnc_contact_dialog_add_dnc_contact_dialog_component__WEBPACK_IMPORTED_MODULE_12__["AddDncContactDialogComponent"]
+                _knock_list_add_dnc_contact_dialog_add_dnc_contact_dialog_component__WEBPACK_IMPORTED_MODULE_12__["AddDncContactDialogComponent"],
+                _knock_list_confirm_delete_sheet_confirm_delete_sheet_component__WEBPACK_IMPORTED_MODULE_14__["ConfirmDeleteSheetComponent"]
             ]
         })
     ], ContactModule);
@@ -234,7 +238,7 @@ var ContactModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div mat-dialog-title class=\"d-flex justify-content-between\">\n    <h3>Non-Solicitation Contact</h3>\n    <button type=\"button\" mat-icon-button (click)=\"onNoClick()\">\n        <mat-icon>clear</mat-icon>\n    </button>\n</div>\n\n<div mat-dialog-content>\n    <p class=\"text-muted font-italic\">Please enter a name OR description for the Do Not Knock entry.</p>\n    <div [formGroup]=\"form\" *ngIf=\"form\" class=\"form-container\">\n        <mat-form-field>\n            <input matInput type=\"text\" formControlName=\"firstName\" placeholder=\"First Name\" [required]=\"form.get('description').value == null\" />\n            <mat-error *ngIf=\"form.get('firstName').errors != null && form.get('firstName').errors['required'] && (form.get('firstName').touched || formSubmitted)\">\n                Please enter a first name.\n            </mat-error>\n        </mat-form-field>\n\n        <mat-form-field>\n            <input matInput type=\"text\" formControlName=\"lastName\" placeholder=\"Last Name\" [required]=\"form.get('description').value == null\" />\n            <mat-error *ngIf=\"form.get('lastName').errors != null && form.get('lastName').errors['required'] && (form.get('lastName').touched || formSubmitted)\">\n                Please enter a last name.\n            </mat-error>\n        </mat-form-field>\n\n        <mat-form-field>\n            <input matInput type=\"text\" formControlName=\"description\" placeholder=\"Description\"\n                [required]=\"form.get('firstName').value == null && form.get('lastName').value == null\" />\n            <mat-hint>Use <span class=\"font-italic\">description</span> if you have a location that doesn't have a person by name.</mat-hint>\n            <mat-error *ngIf=\"form.get('description').errors != null && form.get('description').errors['required'] && (form.get('description').touched || formSubmitted)\">\n                Please enter a description.\n            </mat-error>\n        </mat-form-field>\n\n        <mat-form-field>\n            <input matInput type=\"text\" formControlName=\"address\" placeholder=\"Street Address\" required />\n            <mat-error *ngIf=\"form.get('address').invalid && (form.get('address').touched || formSubmitted)\">\n                Please enter a full address.\n            </mat-error>\n        </mat-form-field>\n\n        <mat-form-field>\n            <input matInput type=\"text\" formControlName=\"addressCont\" placeholder=\"Apt/Unit\" />\n        </mat-form-field>\n\n        <mat-form-field>\n            <input matInput type=\"text\" formControlName=\"city\" placeholder=\"City\" required />\n            <mat-error *ngIf=\"form.get('city').invalid && (form.get('city').touched || formSubmitted)\">\n                Please enter a city.\n            </mat-error>\n        </mat-form-field>\n\n        <mat-form-field>\n            <mat-select placeholder=\"State\" formControlName=\"state\" required>\n                <mat-option *ngFor=\"let s of states\" [value]=\"s.abbreviation\">\n                    {{s.name}}\n                </mat-option>\n            </mat-select>\n            <mat-error *ngIf=\"form.get('state').invalid && (form.get('state').invalid || formSubmitted)\">\n                Please select a state.\n            </mat-error>\n        </mat-form-field>\n\n        <mat-form-field>\n            <input matInput type=\"text\" formControlName=\"zip\" placeholder=\"Zip Code\" maxlength=\"9\" required />\n            <mat-error *ngIf=\"form.get('zip').invalid && (form.get('zip').invalid || formSubmitted)\">\n                <ng-container *ngIf=\"form.get('zip').errors['required']\">\n                    Please enter a zip code.\n                </ng-container>\n                <ng-container *ngIf=\"form.get('zip').errors['pattern']\">\n                    Please enter alphanumerics please.\n                </ng-container>\n            </mat-error>\n        </mat-form-field>\n\n        <mat-form-field>\n            <textarea matInput formControlName=\"note\" placeholder=\"Notes\" rows=\"3\"></textarea>\n        </mat-form-field>\n    </div>\n</div>\n\n<div mat-dialog-actions class=\"d-flex justify-content-end\">\n    <button type=\"button\" mat-button color=\"primary\" (click)=\"saveDncContact()\">\n        <mat-icon inline=\"true\">save</mat-icon>\n        Save\n    </button>\n    <button type=\"button\" mat-button (click)=\"onNoClick()\">\n        <mat-icon inline=\"true\">clear</mat-icon>\n        Cancel\n    </button>\n</div>"
+module.exports = "<div mat-dialog-title class=\"d-flex justify-content-between\">\n    <h3>Non-Solicitation Contact</h3>\n    <button type=\"button\" mat-icon-button (click)=\"onNoClick()\">\n        <mat-icon>clear</mat-icon>\n    </button>\n</div>\n\n<div mat-dialog-content>\n    <p class=\"text-muted font-italic\">Please enter a name OR description for the Do Not Knock entry.</p>\n    <div [formGroup]=\"form\" *ngIf=\"form\" class=\"form-container\">\n        <mat-form-field>\n            <input matInput type=\"text\" formControlName=\"firstName\" placeholder=\"First Name\" [required]=\"form.get('description').value == null\" />\n            <mat-error *ngIf=\"form.get('firstName').errors != null && form.get('firstName').errors['required'] && (form.get('firstName').touched || formSubmitted)\">\n                Please enter a first name.\n            </mat-error>\n        </mat-form-field>\n\n        <mat-form-field>\n            <input matInput type=\"text\" formControlName=\"lastName\" placeholder=\"Last Name\" [required]=\"form.get('description').value == null\" />\n            <mat-error *ngIf=\"form.get('lastName').errors != null && form.get('lastName').errors['required'] && (form.get('lastName').touched || formSubmitted)\">\n                Please enter a last name.\n            </mat-error>\n        </mat-form-field>\n\n        <mat-form-field>\n            <input matInput type=\"text\" formControlName=\"description\" placeholder=\"Description\"\n                [required]=\"form.get('firstName').value == null && form.get('lastName').value == null\" />\n            <mat-hint>Use <span class=\"font-italic\">description</span> if you have a location that doesn't have a person by name.</mat-hint>\n            <mat-error *ngIf=\"form.get('description').errors != null && form.get('description').errors['required'] && (form.get('description').touched || formSubmitted)\">\n                Please enter a description.\n            </mat-error>\n        </mat-form-field>\n\n        <mat-form-field>\n            <input matInput type=\"text\" formControlName=\"address\" placeholder=\"Street Address\" required />\n            <mat-error *ngIf=\"form.get('address').invalid && (form.get('address').touched || formSubmitted)\">\n                Please enter a full address.\n            </mat-error>\n        </mat-form-field>\n\n        <mat-form-field>\n            <input matInput type=\"text\" formControlName=\"addressCont\" placeholder=\"Apt/Unit\" />\n        </mat-form-field>\n\n        <mat-form-field>\n            <input matInput type=\"text\" formControlName=\"city\" placeholder=\"City\" required />\n            <mat-error *ngIf=\"form.get('city').invalid && (form.get('city').touched || formSubmitted)\">\n                Please enter a city.\n            </mat-error>\n        </mat-form-field>\n\n        <mat-form-field>\n            <mat-select placeholder=\"State\" formControlName=\"state\" required>\n                <mat-option *ngFor=\"let s of states\" [value]=\"s.abbreviation\">\n                    {{s.name}}\n                </mat-option>\n            </mat-select>\n            <mat-error *ngIf=\"form.get('state').invalid && (form.get('state').invalid || formSubmitted)\">\n                Please select a state.\n            </mat-error>\n        </mat-form-field>\n\n        <mat-form-field>\n            <input matInput type=\"text\" formControlName=\"zip\" placeholder=\"Zip Code\" maxlength=\"9\" required />\n            <mat-error *ngIf=\"form.get('zip').invalid && (form.get('zip').invalid || formSubmitted)\">\n                <ng-container *ngIf=\"form.get('zip').errors['required']\">\n                    Please enter a zip code.\n                </ng-container>\n                <ng-container *ngIf=\"form.get('zip').errors['pattern']\">\n                    Numbers only please.\n                </ng-container>\n            </mat-error>\n        </mat-form-field>\n\n        <mat-form-field>\n            <textarea matInput formControlName=\"note\" placeholder=\"Notes\" rows=\"3\"></textarea>\n        </mat-form-field>\n    </div>\n</div>\n\n<div mat-dialog-actions class=\"d-flex justify-content-end\">\n    <button type=\"button\" mat-button color=\"primary\" (click)=\"saveDncContact()\">\n        <mat-icon inline=\"true\">save</mat-icon>\n        Save\n    </button>\n    <button type=\"button\" mat-button (click)=\"onNoClick()\">\n        <mat-icon inline=\"true\">clear</mat-icon>\n        Cancel\n    </button>\n</div>"
 
 /***/ }),
 
@@ -292,36 +296,6 @@ var AddDncContactDialogComponent = /** @class */ (function () {
     };
     AddDncContactDialogComponent.prototype.initializeComponent = function () {
         this.createForm();
-        // TODO: this logic is buggy af
-        // this.form.valueChanges
-        //     .pipe(
-        //         distinctUntilChanged()
-        //     )
-        //     .subscribe(value => {
-        //         const firstName = value.firstName;
-        //         const lastName = value.lastName;
-        //         const desc = value.description;
-        //         if (firstName) {
-        //             this.form.get('description').clearValidators();
-        //             this.form.get('lastName').setValidators(this.requiredValidator);
-        //         }
-        //         if (lastName) {
-        //             this.form.get('description').clearValidators();
-        //             this.form.get('firstName').setValidators(this.requiredValidator);
-        //         }
-        //         if (!firstName && !lastName) {
-        //             this.form.get('description').setValidators(this.requiredValidator);
-        //             // this.form.get('description').updateValueAndValidity({ emitEvent: false });
-        //         }
-        //         if (desc) {
-        //             this.form.get('firstName').clearValidators();
-        //             this.form.get('lastName').clearValidators();
-        //         } else {
-        //             this.form.get('firstName').setValidators(this.requiredValidator);
-        //             this.form.get('lastName').setValidators(this.requiredValidator);
-        //         }
-        //         this.form.updateValueAndValidity({ emitEvent: false });
-        //     });
     };
     AddDncContactDialogComponent.prototype.requiredValidator = function (control) {
         if (control.value)
@@ -340,7 +314,7 @@ var AddDncContactDialogComponent = /** @class */ (function () {
             addressCont: this.fb.control(''),
             city: this.fb.control('', [_angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required]),
             state: this.fb.control('', [_angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required]),
-            zip: this.fb.control('', [_angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required, _angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].pattern(/\[0-9]+/)]),
+            zip: this.fb.control('', [_angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required, _angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].pattern(/^\d+$/)]),
             note: this.fb.control('')
         });
     };
@@ -363,7 +337,7 @@ var AddDncContactDialogComponent = /** @class */ (function () {
         this.ref.close();
     };
     AddDncContactDialogComponent.prototype.saveDncContact = function () {
-        if (!this.form.value.firstName != null && !this.form.value.lastName != null && !this.form.value.description != null) {
+        if (!this.form.value.firstName && !this.form.value.lastName && !this.form.value.description) {
             this.form.get('firstName').setErrors({ required: true });
             this.form.get('lastName').setErrors({ required: true });
             this.form.get('description').setErrors({ required: true });
@@ -396,6 +370,50 @@ var AddDncContactDialogComponent = /** @class */ (function () {
 
 /***/ }),
 
+/***/ "./src/app/contact/knock-list/confirm-delete-sheet/confirm-delete-sheet.component.html":
+/*!*********************************************************************************************!*\
+  !*** ./src/app/contact/knock-list/confirm-delete-sheet/confirm-delete-sheet.component.html ***!
+  \*********************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<mat-nav-list>\n    <div mat-list-item (click)=\"openLink($event)\">\n        <span mat-line>Google Keep</span>\n        <span mat-line>Add to a note</span>\n    </div>\n\n    <div mat-list-item (click)=\"openLink($event)\">\n        <span mat-line>Google Docs</span>\n        <span mat-line>Embed in a document</span>\n    </div>\n\n    <div mat-list-item (click)=\"openLink($event)\">\n        <span mat-line>Google Plus</span>\n        <span mat-line>Share with your friends</span>\n    </div>\n\n    <div mat-list-item (click)=\"openLink($event)\">\n        <span mat-line>Google Hangouts</span>\n        <span mat-line>Show to your coworkers</span>\n    </div>\n</mat-nav-list>\n"
+
+/***/ }),
+
+/***/ "./src/app/contact/knock-list/confirm-delete-sheet/confirm-delete-sheet.component.ts":
+/*!*******************************************************************************************!*\
+  !*** ./src/app/contact/knock-list/confirm-delete-sheet/confirm-delete-sheet.component.ts ***!
+  \*******************************************************************************************/
+/*! exports provided: ConfirmDeleteSheetComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ConfirmDeleteSheetComponent", function() { return ConfirmDeleteSheetComponent; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+
+
+var ConfirmDeleteSheetComponent = /** @class */ (function () {
+    function ConfirmDeleteSheetComponent() {
+    }
+    ConfirmDeleteSheetComponent.prototype.ngOnInit = function () {
+    };
+    ConfirmDeleteSheetComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
+            selector: 'vs-confirm-delete-sheet',
+            template: __webpack_require__(/*! ./confirm-delete-sheet.component.html */ "./src/app/contact/knock-list/confirm-delete-sheet/confirm-delete-sheet.component.html")
+        }),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [])
+    ], ConfirmDeleteSheetComponent);
+    return ConfirmDeleteSheetComponent;
+}());
+
+
+
+/***/ }),
+
 /***/ "./src/app/contact/knock-list/knock-list.component.html":
 /*!**************************************************************!*\
   !*** ./src/app/contact/knock-list/knock-list.component.html ***!
@@ -403,7 +421,7 @@ var AddDncContactDialogComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n<mat-toolbar class=\"bg-transparent\">\n    <h3>Non-Solicitation List</h3>\n</mat-toolbar>\n\n<p class=\"pl-3\">\n    The following contacts and locations are listed as registered with the supplier, FTC or other regulatory body\n    and cannot be visited. \n</p>\n\n<!-- action bar -->\n<mat-toolbar class=\"action-bar bg-transparent\">\n\n    <!-- DELETE -->\n    <button type=\"button\" mat-button @showHideActionBar *ngIf=\"selection.selected.length\">\n        <mat-icon class=\"md-18\">delete</mat-icon>\n        Remove\n    </button>\n    \n</mat-toolbar>\n\n<mat-table [dataSource]=\"contacts\" class=\"mat-elevation-z1\">\n    <ng-container matColumnDef=\"checked\">\n        <mat-header-cell *matHeaderCellDef class=\"check-column\">\n            <mat-checkbox (change)=\"$event ? selectAllToggle() : null\" [checked]=\"selection.hasValue() && isAllSelected()\"\n                [indeterminate]=\"selection.hasValue() && !isAllSelected()\"\n                [aria-label]=\"checkboxLabel()\"></mat-checkbox>\n        </mat-header-cell>\n        <mat-cell *matCellDef=\"let item\" class=\"check-column\">\n            <mat-checkbox (click)=\"$event.stopPropagation();\"\n                (change)=\"$event ? selection.toggle(item) : null\"\n                [checked]=\"selection.isSelected(item)\"\n                [aria-label]=\"checkboxLabel(item)\"></mat-checkbox>\n        </mat-cell>\n    </ng-container>\n\n    <ng-container matColumnDef=\"name\">\n        <mat-header-cell *matHeaderCellDef>Location</mat-header-cell>\n        <mat-cell *matCellDef=\"let item\">\n            <ng-container *ngIf=\"item.firstName && item.lastName; else noName;\">\n                {{ item.firstName }} {{ item.lastName }}\n            </ng-container>\n            <ng-template #noName>\n                {{ item.description }}\n            </ng-template>\n        </mat-cell>\n    </ng-container>\n\n    <ng-container matColumnDef=\"address\">\n        <mat-header-cell *matHeaderCellDef>Address</mat-header-cell>\n        <mat-cell *matCellDef=\"let item\">{{ item.address }} {{ item.city }}</mat-cell>\n    </ng-container>\n\n    <ng-container matColumnDef=\"notes\">\n        <mat-header-cell *matHeaderCellDef>Notes</mat-header-cell>\n        <mat-cell *matCellDef=\"let item\">{{ item.note }}</mat-cell>\n    </ng-container>\n\n    <mat-header-row *matHeaderRowDef=\"displayColumns\" class=\"mat-elevation-z1\"></mat-header-row>\n    <mat-row *matRowDef=\"let row; columns: displayColumns;\"></mat-row>\n</mat-table>\n\n<vs-float-button\n    mat-icon=\"add\"\n    color=\"accent\"\n    (callback)=\"addDncContact()\"\n    [isOpen]=\"isFabOpen$\"\n></vs-float-button>"
+module.exports = "\n<mat-toolbar class=\"bg-transparent\">\n    <h3>Non-Solicitation List</h3>\n</mat-toolbar>\n\n<p class=\"pl-3\">\n    The following contacts and locations are listed as registered with the supplier, FTC or other regulatory body\n    and cannot be visited. \n</p>\n\n<!-- action bar -->\n<mat-toolbar class=\"action-bar bg-transparent\">\n\n    <!-- DELETE -->\n    <button type=\"button\" mat-button @showHideActionBar *ngIf=\"selection.selected.length\" (click)=\"deleteDncContacts()\">\n        <mat-icon class=\"md-18\">delete</mat-icon>\n        Remove\n    </button>\n    \n</mat-toolbar>\n\n<mat-table [dataSource]=\"contacts\" class=\"mat-elevation-z1\">\n    <ng-container matColumnDef=\"checked\">\n        <mat-header-cell *matHeaderCellDef class=\"check-column\">\n            <mat-checkbox (change)=\"$event ? selectAllToggle() : null\" [checked]=\"selection.hasValue() && isAllSelected()\"\n                [indeterminate]=\"selection.hasValue() && !isAllSelected()\"\n                [aria-label]=\"checkboxLabel()\"></mat-checkbox>\n        </mat-header-cell>\n        <mat-cell *matCellDef=\"let item\" class=\"check-column\">\n            <mat-checkbox (click)=\"$event.stopPropagation();\"\n                (change)=\"$event ? selection.toggle(item) : null\"\n                [checked]=\"selection.isSelected(item)\"\n                [aria-label]=\"checkboxLabel(item)\"></mat-checkbox>\n        </mat-cell>\n    </ng-container>\n\n    <ng-container matColumnDef=\"name\">\n        <mat-header-cell *matHeaderCellDef>Location</mat-header-cell>\n        <mat-cell *matCellDef=\"let item\">\n            <ng-container *ngIf=\"item.firstName && item.lastName; else noName;\">\n                {{ item.firstName }} {{ item.lastName }}\n            </ng-container>\n            <ng-template #noName>\n                {{ item.description }}\n            </ng-template>\n        </mat-cell>\n    </ng-container>\n\n    <ng-container matColumnDef=\"address\">\n        <mat-header-cell *matHeaderCellDef>Address</mat-header-cell>\n        <mat-cell *matCellDef=\"let item\">{{ item.address }} {{ item.addressCont }} {{ item.city }}, {{ item.state }}</mat-cell>\n    </ng-container>\n\n    <ng-container matColumnDef=\"notes\">\n        <mat-header-cell *matHeaderCellDef>Notes</mat-header-cell>\n        <mat-cell *matCellDef=\"let item\">{{ item.note }}</mat-cell>\n    </ng-container>\n\n    <mat-header-row *matHeaderRowDef=\"displayColumns\" class=\"mat-elevation-z1\"></mat-header-row>\n    <mat-row *matRowDef=\"let row; columns: displayColumns;\"></mat-row>\n</mat-table>\n\n<vs-float-button\n    mat-icon=\"add\"\n    color=\"accent\"\n    (callback)=\"addDncContact()\"\n    [isOpen]=\"isFabOpen$\"\n></vs-float-button>"
 
 /***/ }),
 
@@ -437,6 +455,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @angular/material */ "./node_modules/@angular/material/esm5/material.es5.js");
 /* harmony import */ var _angular_animations__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @angular/animations */ "./node_modules/@angular/animations/fesm5/animations.js");
 /* harmony import */ var _add_dnc_contact_dialog_add_dnc_contact_dialog_component__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./add-dnc-contact-dialog/add-dnc-contact-dialog.component */ "./src/app/contact/knock-list/add-dnc-contact-dialog/add-dnc-contact-dialog.component.ts");
+/* harmony import */ var _knock_list_service__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./knock-list.service */ "./src/app/contact/knock-list/knock-list.service.ts");
+/* harmony import */ var _app_message_service__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @app/message.service */ "./src/app/message.service.ts");
+/* harmony import */ var _confirm_delete_sheet_confirm_delete_sheet_component__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./confirm-delete-sheet/confirm-delete-sheet.component */ "./src/app/contact/knock-list/confirm-delete-sheet/confirm-delete-sheet.component.ts");
+
+
+
 
 
 
@@ -447,17 +471,20 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var KnockListComponent = /** @class */ (function () {
-    function KnockListComponent(route, session, dialog) {
+    function KnockListComponent(route, session, dialog, service, message, sheet) {
         this.route = route;
         this.session = session;
         this.dialog = dialog;
+        this.service = service;
+        this.message = message;
+        this.sheet = sheet;
         this.contacts = new rxjs__WEBPACK_IMPORTED_MODULE_5__["BehaviorSubject"](null);
         this.displayColumns = ['checked', 'name', 'address', 'notes'];
         this.isFabOpen$ = new rxjs__WEBPACK_IMPORTED_MODULE_5__["BehaviorSubject"](false);
     }
     KnockListComponent.prototype.ngOnInit = function () {
         var _this = this;
-        this.contacts.next(this.route.snapshot.data['contacts']);
+        this.contacts.next(this.route.snapshot.data['contacts'].sort(this.sortContacts));
         this.dataSource = new _angular_material__WEBPACK_IMPORTED_MODULE_6__["MatTableDataSource"](this.contacts.getValue());
         this.session.getUserItem().subscribe(function (user) {
             _this.user = user;
@@ -485,7 +512,7 @@ var KnockListComponent = /** @class */ (function () {
         return this.selection.selected.length === this.dataSource.data.length;
     };
     KnockListComponent.prototype.addDncContact = function () {
-        console.log('Add a do not solicit contact!');
+        var _this = this;
         this.dialog.open(_add_dnc_contact_dialog_add_dnc_contact_dialog_component__WEBPACK_IMPORTED_MODULE_8__["AddDncContactDialogComponent"], {
             width: '50vw',
             minHeight: '50vh'
@@ -494,8 +521,37 @@ var KnockListComponent = /** @class */ (function () {
             .subscribe(function (result) {
             if (result == null)
                 return;
-            console.dir(result);
+            _this.session.showLoader();
+            result.clientId = _this.user.sessionUser.sessionClient;
+            _this.service.saveNewDncContact(result)
+                .subscribe(function (dnc) {
+                _this.session.hideLoader();
+                var updatedList = _this.contacts.getValue();
+                updatedList.push(dnc);
+                _this.contacts.next(updatedList.sort(_this.sortContacts));
+                _this.message.addMessage('Saved new DNK Contact!', 'dismiss', 2500);
+            });
         });
+    };
+    KnockListComponent.prototype.deleteDncContacts = function () {
+        this.sheet.open(_confirm_delete_sheet_confirm_delete_sheet_component__WEBPACK_IMPORTED_MODULE_11__["ConfirmDeleteSheetComponent"], {
+            closeOnNavigation: true
+        })
+            .afterDismissed()
+            .subscribe(function (res) {
+            if (res == null)
+                return;
+            // delete selected contacs here... 
+        });
+    };
+    KnockListComponent.prototype.sortContacts = function (a, b) {
+        var aField = a.lastName ? a.lastName : a.firstName ? a.firstName : a.description;
+        var bField = b.lastName ? b.lastName : b.firstName ? b.firstName : b.description;
+        if (aField < bField)
+            return -1;
+        if (aField > bField)
+            return 1;
+        return 0;
     };
     KnockListComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
@@ -514,7 +570,12 @@ var KnockListComponent = /** @class */ (function () {
             ],
             styles: [__webpack_require__(/*! ./knock-list.component.scss */ "./src/app/contact/knock-list/knock-list.component.scss")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_router__WEBPACK_IMPORTED_MODULE_2__["ActivatedRoute"], _app_session_service__WEBPACK_IMPORTED_MODULE_3__["SessionService"], _angular_material__WEBPACK_IMPORTED_MODULE_6__["MatDialog"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_router__WEBPACK_IMPORTED_MODULE_2__["ActivatedRoute"],
+            _app_session_service__WEBPACK_IMPORTED_MODULE_3__["SessionService"],
+            _angular_material__WEBPACK_IMPORTED_MODULE_6__["MatDialog"],
+            _knock_list_service__WEBPACK_IMPORTED_MODULE_9__["KnockListService"],
+            _app_message_service__WEBPACK_IMPORTED_MODULE_10__["MessageService"],
+            _angular_material__WEBPACK_IMPORTED_MODULE_6__["MatBottomSheet"]])
     ], KnockListComponent);
     return KnockListComponent;
 }());
@@ -553,7 +614,7 @@ var KnockListService = /** @class */ (function () {
         return this.http.get(this.api + "/dnc-contacts");
     };
     KnockListService.prototype.saveNewDncContact = function (contact) {
-        return this.http.post(this.api + "/dnc-contacts", { body: contact });
+        return this.http.post(this.api + "/dnc-contacts", contact);
     };
     KnockListService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
