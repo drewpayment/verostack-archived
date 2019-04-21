@@ -5,6 +5,7 @@ import { User, DncContact } from '@app/models';
 import { SessionService } from '@app/session.service';
 import { States } from '@app/shared';
 import { distinctUntilChanged } from 'rxjs/operators';
+import { MessageService } from '@app/message.service';
 
 @Component({
     selector: 'vs-add-dnc-contact-dialog',
@@ -23,7 +24,8 @@ export class AddDncContactDialogComponent implements OnInit {
         public ref: MatDialogRef<AddDncContactDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any,
         private fb:FormBuilder,
-        private session:SessionService
+        private session:SessionService,
+        private message:MessageService
     ) { }
 
     ngOnInit() {
@@ -37,40 +39,40 @@ export class AddDncContactDialogComponent implements OnInit {
         this.createForm();
 
         // TODO: this logic is buggy af
-        this.form.valueChanges
-            .pipe(
-                distinctUntilChanged()
-            )
-            .subscribe(value => {
-                const firstName = value.firstName;
-                const lastName = value.lastName;
-                const desc = value.description;
+        // this.form.valueChanges
+        //     .pipe(
+        //         distinctUntilChanged()
+        //     )
+        //     .subscribe(value => {
+        //         const firstName = value.firstName;
+        //         const lastName = value.lastName;
+        //         const desc = value.description;
 
-                if (firstName) {
-                    this.form.get('description').clearValidators();
-                    this.form.get('lastName').setValidators(this.requiredValidator);
-                }
+        //         if (firstName) {
+        //             this.form.get('description').clearValidators();
+        //             this.form.get('lastName').setValidators(this.requiredValidator);
+        //         }
 
-                if (lastName) {
-                    this.form.get('description').clearValidators();
-                    this.form.get('firstName').setValidators(this.requiredValidator);
-                }
+        //         if (lastName) {
+        //             this.form.get('description').clearValidators();
+        //             this.form.get('firstName').setValidators(this.requiredValidator);
+        //         }
 
-                if (!firstName && !lastName) {
-                    this.form.get('description').setValidators(this.requiredValidator);
-                    // this.form.get('description').updateValueAndValidity({ emitEvent: false });
-                }
+        //         if (!firstName && !lastName) {
+        //             this.form.get('description').setValidators(this.requiredValidator);
+        //             // this.form.get('description').updateValueAndValidity({ emitEvent: false });
+        //         }
 
-                if (desc) {
-                    this.form.get('firstName').clearValidators();
-                    this.form.get('lastName').clearValidators();
-                } else {
-                    this.form.get('firstName').setValidators(this.requiredValidator);
-                    this.form.get('lastName').setValidators(this.requiredValidator);
-                }
+        //         if (desc) {
+        //             this.form.get('firstName').clearValidators();
+        //             this.form.get('lastName').clearValidators();
+        //         } else {
+        //             this.form.get('firstName').setValidators(this.requiredValidator);
+        //             this.form.get('lastName').setValidators(this.requiredValidator);
+        //         }
 
-                this.form.updateValueAndValidity({ emitEvent: false });
-            });
+        //         this.form.updateValueAndValidity({ emitEvent: false });
+        //     });
     }
 
     requiredValidator(control:AbstractControl):ValidationErrors | null {
@@ -116,7 +118,18 @@ export class AddDncContactDialogComponent implements OnInit {
     }
 
     saveDncContact() {
+        
+        if (!this.form.value.firstName != null && !this.form.value.lastName != null && !this.form.value.description != null) {
+            this.form.get('firstName').setErrors({ required: true });
+            this.form.get('lastName').setErrors({ required: true });
+            this.form.get('description').setErrors({ required: true });
+            this.message.addMessage('Please enter one of the following: First & Last Names OR Description');
+        }
+
         this.formSubmitted = true;
+        this.form.updateValueAndValidity();
+        console.log(`The form is valid: ${this.form.valid}`);
+        console.dir(this.form);
 
         if (this.form.valid) {
             const model = this.prepareModel();

@@ -234,7 +234,7 @@ var ContactModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div mat-dialog-title class=\"d-flex justify-content-between\">\n    <h3>New Non-Solicitation Contact</h3>\n    <button type=\"button\" mat-icon-button (click)=\"onNoClick()\">\n        <mat-icon>clear</mat-icon>\n    </button>\n</div>\n\n<div mat-dialog-content>\n    <div [formGroup]=\"form\" *ngIf=\"form\" class=\"form-container\">\n        <mat-form-field>\n            <input matInput type=\"text\" formControlName=\"firstName\" placeholder=\"First Name\" [required]=\"form.get('description').value == null\" />\n            <mat-error *ngIf=\"form.get('firstName').invalid && form.get('firstName').errors['required'] && (form.get('firstName').touched || formSubmitted)\">\n                Please enter a first name.\n            </mat-error>\n        </mat-form-field>\n\n        <mat-form-field>\n            <input matInput type=\"text\" formControlName=\"lastName\" placeholder=\"Last Name\" [required]=\"form.get('description').value == null\" />\n            <mat-error *ngIf=\"form.get('lastName').invalid && form.get('lastName').errors['required'] && (form.get('lastName').touched || formSubmitted)\">\n                Please enter a last name.\n            </mat-error>\n        </mat-form-field>\n\n        <mat-form-field>\n            <input matInput type=\"text\" formControlName=\"description\" placeholder=\"Description\"\n                [required]=\"form.get('firstName').value == null && form.get('lastName').value == null\" />\n            <mat-hint>Use <span class=\"font-italic\">description</span> if you have a location that doesn't have a person by name.</mat-hint>\n            <mat-error *ngIf=\"form.get('description').invalid && form.get('description').errors['required'] && (form.get('description').touched || formSubmitted)\">\n                Please enter a description.\n            </mat-error>\n        </mat-form-field>\n\n        <mat-form-field>\n            <input matInput type=\"text\" formControlName=\"address\" placeholder=\"Street Address\" required />\n            <mat-error *ngIf=\"form.get('address').invalid && (form.get('address').touched || formSubmitted)\">\n                Please enter a full address.\n            </mat-error>\n        </mat-form-field>\n\n        <mat-form-field>\n            <input matInput type=\"text\" formControlName=\"addressCont\" placeholder=\"Apt/Unit\" />\n        </mat-form-field>\n\n        <mat-form-field>\n            <input matInput type=\"text\" formControlName=\"city\" placeholder=\"City\" required />\n            <mat-error *ngIf=\"form.get('city').invalid && (form.get('city').touched || formSubmitted)\">\n                Please enter a city.\n            </mat-error>\n        </mat-form-field>\n\n        <mat-form-field>\n            <mat-select placeholder=\"State\" formControlName=\"state\" required>\n                <mat-option *ngFor=\"let s of states\" [value]=\"s.abbreviation\">\n                    {{s.name}}\n                </mat-option>\n            </mat-select>\n            <mat-error *ngIf=\"form.get('state').invalid && (form.get('state').invalid || formSubmitted)\">\n                Please select a state.\n            </mat-error>\n        </mat-form-field>\n\n        <mat-form-field>\n            <input matInput type=\"text\" formControlName=\"zip\" placeholder=\"Zip Code\" maxlength=\"9\" required />\n            <mat-error *ngIf=\"form.get('zip').invalid && (form.get('zip').invalid || formSubmitted)\">\n                <ng-container *ngIf=\"form.get('zip').errors['required']\">\n                    Please enter a zip code.\n                </ng-container>\n                <ng-container *ngIf=\"form.get('zip').errors['pattern']\">\n                    Please enter alphanumerics please.\n                </ng-container>\n            </mat-error>\n        </mat-form-field>\n\n        <mat-form-field>\n            <textarea matInput formControlName=\"note\" placeholder=\"Notes\" rows=\"3\"></textarea>\n        </mat-form-field>\n    </div>\n</div>\n\n<div mat-dialog-actions class=\"d-flex justify-content-end\">\n    <button type=\"button\" mat-button color=\"primary\" (click)=\"saveDncContact()\">\n        <mat-icon inline=\"true\">save</mat-icon>\n        Save\n    </button>\n    <button type=\"button\" mat-button (click)=\"onNoClick()\">\n        <mat-icon inline=\"true\">clear</mat-icon>\n        Cancel\n    </button>\n</div>"
+module.exports = "<div mat-dialog-title class=\"d-flex justify-content-between\">\n    <h3>Non-Solicitation Contact</h3>\n    <button type=\"button\" mat-icon-button (click)=\"onNoClick()\">\n        <mat-icon>clear</mat-icon>\n    </button>\n</div>\n\n<div mat-dialog-content>\n    <p class=\"text-muted font-italic\">Please enter a name OR description for the Do Not Knock entry.</p>\n    <div [formGroup]=\"form\" *ngIf=\"form\" class=\"form-container\">\n        <mat-form-field>\n            <input matInput type=\"text\" formControlName=\"firstName\" placeholder=\"First Name\" [required]=\"form.get('description').value == null\" />\n            <mat-error *ngIf=\"form.get('firstName').errors != null && form.get('firstName').errors['required'] && (form.get('firstName').touched || formSubmitted)\">\n                Please enter a first name.\n            </mat-error>\n        </mat-form-field>\n\n        <mat-form-field>\n            <input matInput type=\"text\" formControlName=\"lastName\" placeholder=\"Last Name\" [required]=\"form.get('description').value == null\" />\n            <mat-error *ngIf=\"form.get('lastName').errors != null && form.get('lastName').errors['required'] && (form.get('lastName').touched || formSubmitted)\">\n                Please enter a last name.\n            </mat-error>\n        </mat-form-field>\n\n        <mat-form-field>\n            <input matInput type=\"text\" formControlName=\"description\" placeholder=\"Description\"\n                [required]=\"form.get('firstName').value == null && form.get('lastName').value == null\" />\n            <mat-hint>Use <span class=\"font-italic\">description</span> if you have a location that doesn't have a person by name.</mat-hint>\n            <mat-error *ngIf=\"form.get('description').errors != null && form.get('description').errors['required'] && (form.get('description').touched || formSubmitted)\">\n                Please enter a description.\n            </mat-error>\n        </mat-form-field>\n\n        <mat-form-field>\n            <input matInput type=\"text\" formControlName=\"address\" placeholder=\"Street Address\" required />\n            <mat-error *ngIf=\"form.get('address').invalid && (form.get('address').touched || formSubmitted)\">\n                Please enter a full address.\n            </mat-error>\n        </mat-form-field>\n\n        <mat-form-field>\n            <input matInput type=\"text\" formControlName=\"addressCont\" placeholder=\"Apt/Unit\" />\n        </mat-form-field>\n\n        <mat-form-field>\n            <input matInput type=\"text\" formControlName=\"city\" placeholder=\"City\" required />\n            <mat-error *ngIf=\"form.get('city').invalid && (form.get('city').touched || formSubmitted)\">\n                Please enter a city.\n            </mat-error>\n        </mat-form-field>\n\n        <mat-form-field>\n            <mat-select placeholder=\"State\" formControlName=\"state\" required>\n                <mat-option *ngFor=\"let s of states\" [value]=\"s.abbreviation\">\n                    {{s.name}}\n                </mat-option>\n            </mat-select>\n            <mat-error *ngIf=\"form.get('state').invalid && (form.get('state').invalid || formSubmitted)\">\n                Please select a state.\n            </mat-error>\n        </mat-form-field>\n\n        <mat-form-field>\n            <input matInput type=\"text\" formControlName=\"zip\" placeholder=\"Zip Code\" maxlength=\"9\" required />\n            <mat-error *ngIf=\"form.get('zip').invalid && (form.get('zip').invalid || formSubmitted)\">\n                <ng-container *ngIf=\"form.get('zip').errors['required']\">\n                    Please enter a zip code.\n                </ng-container>\n                <ng-container *ngIf=\"form.get('zip').errors['pattern']\">\n                    Please enter alphanumerics please.\n                </ng-container>\n            </mat-error>\n        </mat-form-field>\n\n        <mat-form-field>\n            <textarea matInput formControlName=\"note\" placeholder=\"Notes\" rows=\"3\"></textarea>\n        </mat-form-field>\n    </div>\n</div>\n\n<div mat-dialog-actions class=\"d-flex justify-content-end\">\n    <button type=\"button\" mat-button color=\"primary\" (click)=\"saveDncContact()\">\n        <mat-icon inline=\"true\">save</mat-icon>\n        Save\n    </button>\n    <button type=\"button\" mat-button (click)=\"onNoClick()\">\n        <mat-icon inline=\"true\">clear</mat-icon>\n        Cancel\n    </button>\n</div>"
 
 /***/ }),
 
@@ -265,7 +265,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
 /* harmony import */ var _app_session_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @app/session.service */ "./src/app/session.service.ts");
 /* harmony import */ var _app_shared__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @app/shared */ "./src/app/shared/index.ts");
-/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
+/* harmony import */ var _app_message_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @app/message.service */ "./src/app/message.service.ts");
 
 
 
@@ -274,11 +274,12 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var AddDncContactDialogComponent = /** @class */ (function () {
-    function AddDncContactDialogComponent(ref, data, fb, session) {
+    function AddDncContactDialogComponent(ref, data, fb, session, message) {
         this.ref = ref;
         this.data = data;
         this.fb = fb;
         this.session = session;
+        this.message = message;
         this.formSubmitted = false;
         this.states = _app_shared__WEBPACK_IMPORTED_MODULE_5__["States"].$get();
     }
@@ -290,37 +291,37 @@ var AddDncContactDialogComponent = /** @class */ (function () {
         });
     };
     AddDncContactDialogComponent.prototype.initializeComponent = function () {
-        var _this = this;
         this.createForm();
         // TODO: this logic is buggy af
-        this.form.valueChanges
-            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_6__["distinctUntilChanged"])())
-            .subscribe(function (value) {
-            var firstName = value.firstName;
-            var lastName = value.lastName;
-            var desc = value.description;
-            if (firstName) {
-                _this.form.get('description').clearValidators();
-                _this.form.get('lastName').setValidators(_this.requiredValidator);
-            }
-            if (lastName) {
-                _this.form.get('description').clearValidators();
-                _this.form.get('firstName').setValidators(_this.requiredValidator);
-            }
-            if (!firstName && !lastName) {
-                _this.form.get('description').setValidators(_this.requiredValidator);
-                // this.form.get('description').updateValueAndValidity({ emitEvent: false });
-            }
-            if (desc) {
-                _this.form.get('firstName').clearValidators();
-                _this.form.get('lastName').clearValidators();
-            }
-            else {
-                _this.form.get('firstName').setValidators(_this.requiredValidator);
-                _this.form.get('lastName').setValidators(_this.requiredValidator);
-            }
-            _this.form.updateValueAndValidity({ emitEvent: false });
-        });
+        // this.form.valueChanges
+        //     .pipe(
+        //         distinctUntilChanged()
+        //     )
+        //     .subscribe(value => {
+        //         const firstName = value.firstName;
+        //         const lastName = value.lastName;
+        //         const desc = value.description;
+        //         if (firstName) {
+        //             this.form.get('description').clearValidators();
+        //             this.form.get('lastName').setValidators(this.requiredValidator);
+        //         }
+        //         if (lastName) {
+        //             this.form.get('description').clearValidators();
+        //             this.form.get('firstName').setValidators(this.requiredValidator);
+        //         }
+        //         if (!firstName && !lastName) {
+        //             this.form.get('description').setValidators(this.requiredValidator);
+        //             // this.form.get('description').updateValueAndValidity({ emitEvent: false });
+        //         }
+        //         if (desc) {
+        //             this.form.get('firstName').clearValidators();
+        //             this.form.get('lastName').clearValidators();
+        //         } else {
+        //             this.form.get('firstName').setValidators(this.requiredValidator);
+        //             this.form.get('lastName').setValidators(this.requiredValidator);
+        //         }
+        //         this.form.updateValueAndValidity({ emitEvent: false });
+        //     });
     };
     AddDncContactDialogComponent.prototype.requiredValidator = function (control) {
         if (control.value)
@@ -362,7 +363,16 @@ var AddDncContactDialogComponent = /** @class */ (function () {
         this.ref.close();
     };
     AddDncContactDialogComponent.prototype.saveDncContact = function () {
+        if (!this.form.value.firstName != null && !this.form.value.lastName != null && !this.form.value.description != null) {
+            this.form.get('firstName').setErrors({ required: true });
+            this.form.get('lastName').setErrors({ required: true });
+            this.form.get('description').setErrors({ required: true });
+            this.message.addMessage('Please enter one of the following: First & Last Names OR Description');
+        }
         this.formSubmitted = true;
+        this.form.updateValueAndValidity();
+        console.log("The form is valid: " + this.form.valid);
+        console.dir(this.form);
         if (this.form.valid) {
             var model = this.prepareModel();
             this.ref.close(model);
@@ -376,7 +386,8 @@ var AddDncContactDialogComponent = /** @class */ (function () {
         }),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__param"](1, Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Inject"])(_angular_material__WEBPACK_IMPORTED_MODULE_2__["MAT_DIALOG_DATA"])),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_material__WEBPACK_IMPORTED_MODULE_2__["MatDialogRef"], Object, _angular_forms__WEBPACK_IMPORTED_MODULE_3__["FormBuilder"],
-            _app_session_service__WEBPACK_IMPORTED_MODULE_4__["SessionService"]])
+            _app_session_service__WEBPACK_IMPORTED_MODULE_4__["SessionService"],
+            _app_message_service__WEBPACK_IMPORTED_MODULE_6__["MessageService"]])
     ], AddDncContactDialogComponent);
     return AddDncContactDialogComponent;
 }());

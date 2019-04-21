@@ -1,22 +1,23 @@
 <div mat-dialog-title class="d-flex justify-content-between">
-    <h3>New Non-Solicitation Contact</h3>
+    <h3>Non-Solicitation Contact</h3>
     <button type="button" mat-icon-button (click)="onNoClick()">
         <mat-icon>clear</mat-icon>
     </button>
 </div>
 
 <div mat-dialog-content>
+    <p class="text-muted font-italic">Please enter a name OR description for the Do Not Knock entry.</p>
     <div [formGroup]="form" *ngIf="form" class="form-container">
         <mat-form-field>
             <input matInput type="text" formControlName="firstName" placeholder="First Name" [required]="form.get('description').value == null" />
-            <mat-error *ngIf="form.get('firstName').invalid && form.get('firstName').errors['required'] && (form.get('firstName').touched || formSubmitted)">
+            <mat-error *ngIf="form.get('firstName').errors != null && form.get('firstName').errors['required'] && (form.get('firstName').touched || formSubmitted)">
                 Please enter a first name.
             </mat-error>
         </mat-form-field>
 
         <mat-form-field>
             <input matInput type="text" formControlName="lastName" placeholder="Last Name" [required]="form.get('description').value == null" />
-            <mat-error *ngIf="form.get('lastName').invalid && form.get('lastName').errors['required'] && (form.get('lastName').touched || formSubmitted)">
+            <mat-error *ngIf="form.get('lastName').errors != null && form.get('lastName').errors['required'] && (form.get('lastName').touched || formSubmitted)">
                 Please enter a last name.
             </mat-error>
         </mat-form-field>
@@ -25,7 +26,7 @@
             <input matInput type="text" formControlName="description" placeholder="Description"
                 [required]="form.get('firstName').value == null && form.get('lastName').value == null" />
             <mat-hint>Use <span class="font-italic">description</span> if you have a location that doesn't have a person by name.</mat-hint>
-            <mat-error *ngIf="form.get('description').invalid && form.get('description').errors['required'] && (form.get('description').touched || formSubmitted)">
+            <mat-error *ngIf="form.get('description').errors != null && form.get('description').errors['required'] && (form.get('description').touched || formSubmitted)">
                 Please enter a description.
             </mat-error>
         </mat-form-field>
