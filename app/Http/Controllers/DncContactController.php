@@ -7,6 +7,8 @@ use App\Http\Resources\ApiResource;
 use Illuminate\Support\Facades\Auth;
 use App\DncContact;
 use App\Http\Services\DncContactService;
+use Illuminate\Support\Facades\DB;
+use function GuzzleHttp\json_decode;
 
 class DncContactController extends Controller
 {
@@ -19,6 +21,7 @@ class DncContactController extends Controller
     
     /**
      * ~/api/dnc-contacts
+     * GET
      *
      * @return Array(DncContact)
      */
@@ -35,6 +38,7 @@ class DncContactController extends Controller
 
     /**
      * ~/api/dnc-contacts
+     * POST
      *
      * @param Request $request
      * @return DncContact
@@ -50,7 +54,31 @@ class DncContactController extends Controller
 
         $this->service->saveNewDncContact($request)->mergeInto($result);
 
-        return $result->getResponse();
+        return $result->throwApiException()->getResponse();
+    }
+
+    /**
+     * ~/api/dnc-contacts
+     * DELETE
+     *
+     * @param Request $request
+     * @return void
+     */
+    public function deleteDncContacts(Request $request) 
+    {
+        $result = new ApiResource();
+        $user = ApiResource::getUserInfo();
+
+        $rawIds = $request->dncContactIds;
+        $ids = explode(',', $rawIds);
+
+        $result->checkAccessByClient($user->sessionUser->session_client)->mergeInto($result);
+
+        if ($result->hasError) return $result->throwApiException()->getResponse();
+
+        $this->service->deleteDncContacts($ids)->mergeInto($result);
+
+        return $result->throwApiException()->getResponse();
     }
 
 }

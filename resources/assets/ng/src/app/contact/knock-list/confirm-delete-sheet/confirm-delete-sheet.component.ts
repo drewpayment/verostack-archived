@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
+import { MatBottomSheetRef, MAT_BOTTOM_SHEET_DATA } from '@angular/material';
 
 @Component({
     selector: 'vs-confirm-delete-sheet',
@@ -6,9 +7,20 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ConfirmDeleteSheetComponent implements OnInit {
 
-    constructor() { }
+    pendingDeletes:number;
+
+    constructor(
+        private ref: MatBottomSheetRef<ConfirmDeleteSheetComponent>,
+        @Inject(MAT_BOTTOM_SHEET_DATA) public data: { pendingCount:number }
+    ) { 
+        this.pendingDeletes = this.data.pendingCount;
+    }
 
     ngOnInit() {
+    }
+
+    confirmDelete(confirmed:boolean) {
+        this.ref.dismiss(confirmed);
     }
 
 }

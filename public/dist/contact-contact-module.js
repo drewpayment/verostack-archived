@@ -377,7 +377,7 @@ var AddDncContactDialogComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<mat-nav-list>\n    <div mat-list-item (click)=\"openLink($event)\">\n        <span mat-line>Google Keep</span>\n        <span mat-line>Add to a note</span>\n    </div>\n\n    <div mat-list-item (click)=\"openLink($event)\">\n        <span mat-line>Google Docs</span>\n        <span mat-line>Embed in a document</span>\n    </div>\n\n    <div mat-list-item (click)=\"openLink($event)\">\n        <span mat-line>Google Plus</span>\n        <span mat-line>Share with your friends</span>\n    </div>\n\n    <div mat-list-item (click)=\"openLink($event)\">\n        <span mat-line>Google Hangouts</span>\n        <span mat-line>Show to your coworkers</span>\n    </div>\n</mat-nav-list>\n"
+module.exports = "<mat-nav-list>\n    <a mat-list-item (click)=\"$event.preventDefault(); confirmDelete(true)\" class=\"text-danger\">\n        <span mat-line class=\"font-weight-bold\">Delete {{pendingDeletes}} selected {{ pendingDeletes > 1 ? 'contacts' : 'contact' }}?</span>\n        <span mat-line>Click Here to Confirm</span>\n    </a>\n\n    <a mat-list-item (click)=\"$event.preventDefault(); confirmDelete(false)\">\n        <span mat-line class=\"font-weight-bold\">Do NOT delete selected contacts</span>\n        <span mat-line>Click Here to Cancel</span>\n    </a>\n</mat-nav-list>\n"
 
 /***/ }),
 
@@ -393,19 +393,28 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ConfirmDeleteSheetComponent", function() { return ConfirmDeleteSheetComponent; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/material */ "./node_modules/@angular/material/esm5/material.es5.js");
+
 
 
 var ConfirmDeleteSheetComponent = /** @class */ (function () {
-    function ConfirmDeleteSheetComponent() {
+    function ConfirmDeleteSheetComponent(ref, data) {
+        this.ref = ref;
+        this.data = data;
+        this.pendingDeletes = this.data.pendingCount;
     }
     ConfirmDeleteSheetComponent.prototype.ngOnInit = function () {
+    };
+    ConfirmDeleteSheetComponent.prototype.confirmDelete = function (confirmed) {
+        this.ref.dismiss(confirmed);
     };
     ConfirmDeleteSheetComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
             selector: 'vs-confirm-delete-sheet',
             template: __webpack_require__(/*! ./confirm-delete-sheet.component.html */ "./src/app/contact/knock-list/confirm-delete-sheet/confirm-delete-sheet.component.html")
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__param"](1, Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Inject"])(_angular_material__WEBPACK_IMPORTED_MODULE_2__["MAT_BOTTOM_SHEET_DATA"])),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_material__WEBPACK_IMPORTED_MODULE_2__["MatBottomSheetRef"], Object])
     ], ConfirmDeleteSheetComponent);
     return ConfirmDeleteSheetComponent;
 }());
@@ -534,14 +543,30 @@ var KnockListComponent = /** @class */ (function () {
         });
     };
     KnockListComponent.prototype.deleteDncContacts = function () {
+        var _this = this;
+        var pendingDelete = this.selection.selected;
         this.sheet.open(_confirm_delete_sheet_confirm_delete_sheet_component__WEBPACK_IMPORTED_MODULE_11__["ConfirmDeleteSheetComponent"], {
-            closeOnNavigation: true
+            data: {
+                pendingCount: pendingDelete.length
+            }
         })
             .afterDismissed()
             .subscribe(function (res) {
-            if (res == null)
-                return;
-            // delete selected contacs here... 
+            // user confirmed to delete contacts
+            if (res) {
+                var deleteIds_1 = pendingDelete.map(function (pd) { return pd.dncContactId; });
+                _this.service.deleteDncContacts(deleteIds_1)
+                    .subscribe(function (result) {
+                    var contacts = _this.contacts.getValue();
+                    for (var i = 0; i < contacts.length; i++) {
+                        if (deleteIds_1.includes(contacts[i].dncContactId)) {
+                            contacts.splice(i, 1);
+                        }
+                    }
+                    _this.contacts.next(contacts);
+                    _this.message.addMessage("Deleted " + deleteIds_1.length + " " + (deleteIds_1.length > 1 ? 'contacts' : 'contact'), 'dismiss', 2500);
+                });
+            }
         });
     };
     KnockListComponent.prototype.sortContacts = function (a, b) {
@@ -615,6 +640,11 @@ var KnockListService = /** @class */ (function () {
     };
     KnockListService.prototype.saveNewDncContact = function (contact) {
         return this.http.post(this.api + "/dnc-contacts", contact);
+    };
+    KnockListService.prototype.deleteDncContacts = function (dncContactIds) {
+        var params = new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpParams"]().set('dncContactIds', dncContactIds.join(','));
+        // dncContactIds.forEach(d => params = params.append('dncContactIds', d.toString()));
+        return this.http.delete(this.api + "/dnc-contacts", { params: params });
     };
     KnockListService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({

@@ -106,14 +106,31 @@ export class KnockListComponent implements OnInit, OnDestroy {
     }
 
     deleteDncContacts() { 
+        const pendingDelete = this.selection.selected;
         this.sheet.open(ConfirmDeleteSheetComponent, {
-            closeOnNavigation: true
+            data: {
+                pendingCount: pendingDelete.length
+            }
         })
         .afterDismissed()
         .subscribe(res => {
-            if (res == null) return;
-
-            // delete selected contacs here... 
+            // user confirmed to delete contacts
+            if (res) {
+                const deleteIds = pendingDelete.map(pd => pd.dncContactId);
+                this.service.deleteDncContacts(deleteIds)
+                    .subscribe(result => {
+                        const contacts = this.contacts.getValue();
+                        for (let i = 0; i < contacts.length; i ++) {
+                            if (deleteIds.includes(contacts[i].dncContactId)) {
+                                contacts.splice(i, 1);
+                            }
+                        }
+                        this.contacts.next(contacts);
+                        this.message.addMessage(
+                            `Deleted ${deleteIds.length} ${deleteIds.length > 1 ? 'contacts' : 'contact'}`, 
+                            'dismiss', 2500);
+                    });
+            } 
         });
     }
 

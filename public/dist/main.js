@@ -7490,7 +7490,8 @@ var modules = [
     _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatTooltipModule"],
     _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatStepperModule"],
     _angular_material_moment_adapter__WEBPACK_IMPORTED_MODULE_3__["MatMomentDateModule"],
-    _angular_cdk_drag_drop__WEBPACK_IMPORTED_MODULE_4__["DragDropModule"]
+    _angular_cdk_drag_drop__WEBPACK_IMPORTED_MODULE_4__["DragDropModule"],
+    _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatBottomSheetModule"]
 ];
 var MaterialModule = /** @class */ (function () {
     function MaterialModule() {

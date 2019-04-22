@@ -1,21 +1,11 @@
 <mat-nav-list>
-    <div mat-list-item (click)="openLink($event)">
-        <span mat-line>Google Keep</span>
-        <span mat-line>Add to a note</span>
-    </div>
+    <a mat-list-item (click)="$event.preventDefault(); confirmDelete(true)" class="text-danger">
+        <span mat-line class="font-weight-bold">Delete {{pendingDeletes}} selected {{ pendingDeletes > 1 ? 'contacts' : 'contact' }}?</span>
+        <span mat-line>Click Here to Confirm</span>
+    </a>
 
-    <div mat-list-item (click)="openLink($event)">
-        <span mat-line>Google Docs</span>
-        <span mat-line>Embed in a document</span>
-    </div>
-
-    <div mat-list-item (click)="openLink($event)">
-        <span mat-line>Google Plus</span>
-        <span mat-line>Share with your friends</span>
-    </div>
-
-    <div mat-list-item (click)="openLink($event)">
-        <span mat-line>Google Hangouts</span>
-        <span mat-line>Show to your coworkers</span>
-    </div>
+    <a mat-list-item (click)="$event.preventDefault(); confirmDelete(false)">
+        <span mat-line class="font-weight-bold">Do NOT delete selected contacts</span>
+        <span mat-line>Click Here to Cancel</span>
+    </a>
 </mat-nav-list>

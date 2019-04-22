@@ -31,7 +31,8 @@ import {
     MatToolbarModule,
     MatTooltipModule,
     MatStepperModule,
-    MatBadgeModule
+    MatBadgeModule,
+    MatBottomSheetModule
 } from '@angular/material';
 import {MatMomentDateModule} from '@angular/material-moment-adapter';
 import {DragDropModule} from '@angular/cdk/drag-drop';
@@ -70,7 +71,8 @@ const modules = [
     MatTooltipModule,
     MatStepperModule,
     MatMomentDateModule,
-    DragDropModule
+    DragDropModule,
+    MatBottomSheetModule
 ];
 
 @NgModule({

@@ -19,6 +19,30 @@ class DncContact extends Model
     ];
 
     /**
+     * Filter by dnc_contact_id.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param int $id
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeByDncContactId($query, $id) 
+    {
+        return $query->where('dnc_contact_id', $id);
+    }
+
+    /**
+     * Filter by dnc_contact_id list.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param int $id
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeByDncContactList($query, $ids) 
+    {
+        return $query->whereIn('dnc_contact_id', $ids);
+    }
+
+    /**
      * Filter DncContacts by Client ID.
      *
      * @param \Illuminate\Database\Eloquent\Builder $query

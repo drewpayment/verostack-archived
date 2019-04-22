@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Resolve, ActivatedRoute, RouterStateSnapshot, ActivatedRouteSnapshot } from '@angular/router';
 import { DncContact } from '@app/models';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '@env/environment';
 import { Observable } from 'rxjs';
 
@@ -24,5 +24,11 @@ export class KnockListService implements Resolve<DncContact[]> {
 
     saveNewDncContact(contact:DncContact):Observable<DncContact> {
         return this.http.post<DncContact>(`${this.api}/dnc-contacts`, contact);
+    }
+
+    deleteDncContacts(dncContactIds:number[]) {
+        const params = new HttpParams().set('dncContactIds', dncContactIds.join(','));
+        // dncContactIds.forEach(d => params = params.append('dncContactIds', d.toString()));
+        return this.http.delete(`${this.api}/dnc-contacts`, { params: params });
     }
 }
