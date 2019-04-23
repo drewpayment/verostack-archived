@@ -1,0 +1,68 @@
+
+<mat-toolbar class="bg-transparent">
+    <h3>Non-Solicitation List</h3>
+</mat-toolbar>
+
+<p class="pl-3">
+    The following contacts and locations are listed as registered with the supplier, FTC or other regulatory body
+    and cannot be visited. 
+</p>
+
+<!-- action bar -->
+<mat-toolbar class="action-bar bg-transparent">
+
+    <!-- DELETE -->
+    <button type="button" mat-button @showHideActionBar *ngIf="selection.selected.length" (click)="deleteDncContacts()">
+        <mat-icon class="md-18">delete</mat-icon>
+        Remove
+    </button>
+    
+</mat-toolbar>
+
+<mat-table [dataSource]="contacts" class="mat-elevation-z1">
+    <ng-container matColumnDef="checked">
+        <mat-header-cell *matHeaderCellDef class="check-column">
+            <mat-checkbox (change)="$event ? selectAllToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
+                [indeterminate]="selection.hasValue() && !isAllSelected()"
+                [aria-label]="checkboxLabel()"></mat-checkbox>
+        </mat-header-cell>
+        <mat-cell *matCellDef="let item" class="check-column">
+            <mat-checkbox (click)="$event.stopPropagation();"
+                (change)="$event ? selection.toggle(item) : null"
+                [checked]="selection.isSelected(item)"
+                [aria-label]="checkboxLabel(item)"></mat-checkbox>
+        </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="name">
+        <mat-header-cell *matHeaderCellDef>Location</mat-header-cell>
+        <mat-cell *matCellDef="let item">
+            <ng-container *ngIf="item.firstName && item.lastName; else noName;">
+                {{ item.firstName }} {{ item.lastName }}
+            </ng-container>
+            <ng-template #noName>
+                {{ item.description }}
+            </ng-template>
+        </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="address">
+        <mat-header-cell *matHeaderCellDef>Address</mat-header-cell>
+        <mat-cell *matCellDef="let item">{{ item.address }} {{ item.addressCont }} {{ item.city }}, {{ item.state }}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="notes">
+        <mat-header-cell *matHeaderCellDef>Notes</mat-header-cell>
+        <mat-cell *matCellDef="let item">{{ item.note }}</mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayColumns" class="mat-elevation-z1"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayColumns;"></mat-row>
+</mat-table>
+
+<vs-float-button
+    mat-icon="add"
+    color="accent"
+    (callback)="addDncContact()"
+    [isOpen]="isFabOpen$"
+></vs-float-button>

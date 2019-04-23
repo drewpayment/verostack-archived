@@ -28,3 +28,4 @@ export * from './paginator.model';
 export * from './user-type.enum';
 export * from './enums/contact-type.enum';
 export * from './update-agent-meta.model';
+export * from './dnc-contact.model';

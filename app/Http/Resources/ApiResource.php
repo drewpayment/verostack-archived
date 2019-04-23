@@ -236,4 +236,17 @@ class ApiResource {
 		return response()->json($data, $this->status);
 	}
 
+	/**
+	 * Get this user's session info. This includes the related SessionUser entity that has their 
+	 * selected client on it. 
+	 *
+	 * @return \App\User
+	 */
+	public static function getUserInfo()
+	{
+		$user = Auth::user();
+		$user->load('sessionUser');
+		return $user;
+	}
+
 }

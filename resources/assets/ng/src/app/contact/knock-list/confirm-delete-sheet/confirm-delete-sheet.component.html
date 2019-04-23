@@ -1,0 +1,11 @@
+<mat-nav-list>
+    <a mat-list-item (click)="$event.preventDefault(); confirmDelete(true)" class="text-danger">
+        <span mat-line class="font-weight-bold">Delete {{pendingDeletes}} selected {{ pendingDeletes > 1 ? 'contacts' : 'contact' }}?</span>
+        <span mat-line>Click Here to Confirm</span>
+    </a>
+
+    <a mat-list-item (click)="$event.preventDefault(); confirmDelete(false)">
+        <span mat-line class="font-weight-bold">Do NOT delete selected contacts</span>
+        <span mat-line>Click Here to Cancel</span>
+    </a>
+</mat-nav-list>

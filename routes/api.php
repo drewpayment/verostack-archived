@@ -29,6 +29,7 @@ include('core/payrolls.php');
 include('core/payroll-details.php');
 include('core/utility.php');
 include('core/session-user.php');
+include('core/dnc-contacts.php');
 
 //Route::middleware('auth:api')->get('/user', function (Request $request) {
 //    return $request->user();

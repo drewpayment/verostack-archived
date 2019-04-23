@@ -366,6 +366,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
+@angular/material/list
+
 chartjs-color
 MIT
 Copyright (c) 2012 Heather Arthur
@@ -391,8 +393,12 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
 
+@angular/material/select
+
 @angular/core
 MIT
+
+@angular/material/toolbar
 
 @ngx-pwa/local-storage
 MIT
@@ -517,6 +523,10 @@ licenses; we recommend you read them, as their terms may differ from the
 terms above.
 
 
+@angular/material/core
+
+@angular/material/icon
+
 @angular/animations
 MIT
 
@@ -591,6 +601,8 @@ MIT
 MIT
 
 @angular/material/button
+
+@angular/material/form-field
 
 @angular/forms
 MIT
@@ -769,6 +781,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
+@angular/material/bottom-sheet
+
 semver-compare
 MIT
 This software is released under the MIT license:
@@ -791,18 +805,10 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-@angular/material/icon
-
-@angular/material/form-field
-
 @angular/material/expansion
 
 ngx-quill
 MIT
-
-@angular/material/select
-
-@angular/material/core
 
 @angular/material/divider
 
@@ -811,8 +817,6 @@ MIT
 @angular/material/autocomplete
 
 @angular/material/button-toggle
-
-@angular/material/list
 
 @angular/material/card
 
@@ -831,8 +835,6 @@ MIT
 @angular/material/menu
 
 @angular/material/sidenav
-
-@angular/material/toolbar
 
 ngx-loading
 MIT

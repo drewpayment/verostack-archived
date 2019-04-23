@@ -7,6 +7,13 @@ import { MaterialModule } from '@app/material/material.module';
 import { FabFloatBtnModule } from '@app/fab-float-btn/fab-float-btn.module';
 import { ContactOutletComponent } from './contact-outlet/contact-outlet.component';
 import { PipesModule } from '@app/pipes/pipes.module';
+import { KnockListComponent } from './knock-list/knock-list.component';
+import { KnockListService } from './knock-list/knock-list.service';
+import { AddDncContactDialogComponent } from './knock-list/add-dnc-contact-dialog/add-dnc-contact-dialog.component';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ConfirmDeleteSheetComponent } from './knock-list/confirm-delete-sheet/confirm-delete-sheet.component';
 
 const routes: Route[] = [
     { 
@@ -14,7 +21,15 @@ const routes: Route[] = [
         component: ContactOutletComponent, canActivate: [AuthGuard],
         children: [
             { path: '', redirectTo: 'list', pathMatch: 'full' },
-            { path: 'list', component: ContactListComponent, canActivate: [AuthGuard] }
+            { path: 'list', component: ContactListComponent, canActivate: [AuthGuard] },
+            { 
+                path: 'knock-list', 
+                component: KnockListComponent, 
+                canActivate: [AuthGuard],
+                resolve: {
+                    contacts: KnockListService
+                }
+            }
         ]
     }
 ];
@@ -24,18 +39,33 @@ const routes: Route[] = [
         CommonModule, 
         MaterialModule,
         PipesModule,
+        FabFloatBtnModule,
+        FormsModule,
+        ReactiveFormsModule,
 
         RouterModule.forChild(routes)
     ],
 
     declarations: [
         ContactListComponent,
-        ContactOutletComponent
+        ContactOutletComponent,
+        KnockListComponent,
+        AddDncContactDialogComponent,
+        ConfirmDeleteSheetComponent
     ],
 
     exports: [
         ContactListComponent,
         ContactOutletComponent
+    ],
+
+    providers: [
+        KnockListService
+    ],
+
+    entryComponents: [
+        AddDncContactDialogComponent,
+        ConfirmDeleteSheetComponent
     ]
 })
 export class ContactModule {}

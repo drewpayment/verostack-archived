@@ -1,0 +1,90 @@
+<div mat-dialog-title class="d-flex justify-content-between">
+    <h3>Non-Solicitation Contact</h3>
+    <button type="button" mat-icon-button (click)="onNoClick()">
+        <mat-icon>clear</mat-icon>
+    </button>
+</div>
+
+<div mat-dialog-content>
+    <p class="text-muted font-italic">Please enter a name OR description for the Do Not Knock entry.</p>
+    <div [formGroup]="form" *ngIf="form" class="form-container">
+        <mat-form-field>
+            <input matInput type="text" formControlName="firstName" placeholder="First Name" [required]="form.get('description').value == null" />
+            <mat-error *ngIf="form.get('firstName').errors != null && form.get('firstName').errors['required'] && (form.get('firstName').touched || formSubmitted)">
+                Please enter a first name.
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+            <input matInput type="text" formControlName="lastName" placeholder="Last Name" [required]="form.get('description').value == null" />
+            <mat-error *ngIf="form.get('lastName').errors != null && form.get('lastName').errors['required'] && (form.get('lastName').touched || formSubmitted)">
+                Please enter a last name.
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+            <input matInput type="text" formControlName="description" placeholder="Description"
+                [required]="form.get('firstName').value == null && form.get('lastName').value == null" />
+            <mat-hint>Use <span class="font-italic">description</span> if you have a location that doesn't have a person by name.</mat-hint>
+            <mat-error *ngIf="form.get('description').errors != null && form.get('description').errors['required'] && (form.get('description').touched || formSubmitted)">
+                Please enter a description.
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+            <input matInput type="text" formControlName="address" placeholder="Street Address" required />
+            <mat-error *ngIf="form.get('address').invalid && (form.get('address').touched || formSubmitted)">
+                Please enter a full address.
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+            <input matInput type="text" formControlName="addressCont" placeholder="Apt/Unit" />
+        </mat-form-field>
+
+        <mat-form-field>
+            <input matInput type="text" formControlName="city" placeholder="City" required />
+            <mat-error *ngIf="form.get('city').invalid && (form.get('city').touched || formSubmitted)">
+                Please enter a city.
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-select placeholder="State" formControlName="state" required>
+                <mat-option *ngFor="let s of states" [value]="s.abbreviation">
+                    {{s.name}}
+                </mat-option>
+            </mat-select>
+            <mat-error *ngIf="form.get('state').invalid && (form.get('state').invalid || formSubmitted)">
+                Please select a state.
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+            <input matInput type="text" formControlName="zip" placeholder="Zip Code" maxlength="9" required />
+            <mat-error *ngIf="form.get('zip').invalid && (form.get('zip').invalid || formSubmitted)">
+                <ng-container *ngIf="form.get('zip').errors['required']">
+                    Please enter a zip code.
+                </ng-container>
+                <ng-container *ngIf="form.get('zip').errors['pattern']">
+                    Numbers only please.
+                </ng-container>
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+            <textarea matInput formControlName="note" placeholder="Notes" rows="3"></textarea>
+        </mat-form-field>
+    </div>
+</div>
+
+<div mat-dialog-actions class="d-flex justify-content-end">
+    <button type="button" mat-button color="primary" (click)="saveDncContact()">
+        <mat-icon inline="true">save</mat-icon>
+        Save
+    </button>
+    <button type="button" mat-button (click)="onNoClick()">
+        <mat-icon inline="true">clear</mat-icon>
+        Cancel
+    </button>
+</div>
