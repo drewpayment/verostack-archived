@@ -121,10 +121,13 @@ export class KnockListComponent implements OnInit, OnDestroy {
                     .subscribe(result => {
                         const contacts = this.contacts.getValue();
                         for (let i = 0; i < contacts.length; i ++) {
-                            if (deleteIds.includes(contacts[i].dncContactId)) {
-                                contacts.splice(i, 1);
-                            }
+                            for (let j = 0; j < deleteIds.length; j++) {
+                                if (contacts[i].dncContactId === deleteIds[j]) {
+                                    contacts.splice(i, 1);
+                                }
+                            } 
                         }
+
                         this.contacts.next(contacts);
                         this.message.addMessage(
                             `Deleted ${deleteIds.length} ${deleteIds.length > 1 ? 'contacts' : 'contact'}`, 

@@ -559,8 +559,10 @@ var KnockListComponent = /** @class */ (function () {
                     .subscribe(function (result) {
                     var contacts = _this.contacts.getValue();
                     for (var i = 0; i < contacts.length; i++) {
-                        if (deleteIds_1.includes(contacts[i].dncContactId)) {
-                            contacts.splice(i, 1);
+                        for (var j = 0; j < deleteIds_1.length; j++) {
+                            if (contacts[i].dncContactId === deleteIds_1[j]) {
+                                contacts.splice(i, 1);
+                            }
                         }
                     }
                     _this.contacts.next(contacts);

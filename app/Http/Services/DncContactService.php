@@ -52,7 +52,7 @@ class DncContactService
 
 		DB::beginTransaction();
         try {
-            $deletedDncContacts = DncContact::byDncContactIdList($dncContactIds)->delete();
+            $deletedDncContacts = DncContact::byDncContactList($dncContactIds)->delete();
             DB::commit();
 
             $result->setData($deletedDncContacts);
