@@ -15,7 +15,7 @@ class DncContact extends Model
 
     protected $fillable = [
         'dnc_contact_id', 'client_id', 'first_name', 'last_name', 'description', 'address', 'address_cont', 
-        'city', 'state', 'zip', 'note'
+        'city', 'state', 'zip', 'note', 'lat', 'long'
     ];
 
     /**

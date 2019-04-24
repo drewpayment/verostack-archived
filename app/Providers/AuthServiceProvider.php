@@ -3,9 +3,10 @@
 namespace App\Providers;
 
 use Carbon\Carbon;
-use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Route;
 use Laravel\Passport\Passport;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -34,5 +35,9 @@ class AuthServiceProvider extends ServiceProvider
         Passport::refreshTokensExpireIn(Carbon::now()->addDays(10));
 
         Passport::enableImplicitGrant();
+
+        Auth::viaRequest('firebase', function ($request) {
+            return app(FirebaseGuard::class)->user($request);
+        });
     }
 }
