@@ -2,10 +2,11 @@
 
 namespace App\Providers;
 
-use App\Client;
-use App\Observers\RelationshipObserver;
-use App\SessionUser;
 use App\User;
+use App\Client;
+use App\SessionUser;
+use Firebase\Auth\Token\Verifier;
+use App\Observers\RelationshipObserver;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider

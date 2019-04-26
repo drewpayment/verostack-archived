@@ -2,7 +2,10 @@
 
 namespace App\Firebase;
 
+use Closure;
+use Illuminate\Http\Request;
 use Firebase\Auth\Token\Verifier;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class Guard
 {

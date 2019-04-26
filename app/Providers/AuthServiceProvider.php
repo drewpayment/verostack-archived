@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Carbon\Carbon;
+use App\Firebase\Guard;
 use Laravel\Passport\Passport;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -37,7 +38,7 @@ class AuthServiceProvider extends ServiceProvider
         Passport::enableImplicitGrant();
 
         Auth::viaRequest('firebase', function ($request) {
-            return app(FirebaseGuard::class)->user($request);
+            return app(Guard::class)->user($request);
         });
     }
 }

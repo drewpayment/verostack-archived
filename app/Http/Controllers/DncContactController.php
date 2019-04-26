@@ -23,7 +23,7 @@ class DncContactController extends Controller
      * ~/api/dnc-contacts
      * GET
      *
-     * @return Array(DncContact)
+     * @return DncContact[]
      */
     public function getDncContacts()
     {

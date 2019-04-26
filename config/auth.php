@@ -1,5 +1,7 @@
 <?php
 
+use App\Firebase\User;
+
 return [
 
     /*
@@ -45,10 +47,6 @@ return [
             'driver' => 'passport',
             'provider' => 'users',
         ],
-
-        'firebase' => [
-            'driver' => 'firebase',
-        ]
     ],
 
     /*
