@@ -33,7 +33,8 @@ class AppServiceProvider extends ServiceProvider
         }
 
         $this->app->singleton(Verifier::class, function ($app) {
-            return new Verifier(config('services.firebase.project_id'));
+            $projectId = config('services.firebase.project_id');
+            return new Verifier($projectId);
         });
     }
 }

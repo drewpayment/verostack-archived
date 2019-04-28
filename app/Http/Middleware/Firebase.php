@@ -3,9 +3,17 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Firebase\Auth\Token\Verifier;
 
 class Firebase
 {
+	protected $verifier;
+
+	public function __construct(Verifier $_verifier)
+	{
+		$this->verifier = $_verifier;
+	}
+
     /**
      * Handle an incoming request.
      *
@@ -15,22 +23,12 @@ class Firebase
      */
     public function handle($request, Closure $next)
 	{
-		$authorization = null;
-		$authHeaders = $request->headers->all();
+		$hasAuthHeader = $request->hasHeader('authorization');
+		$token = $request->bearerToken();
 
-		foreach($authHeaders as $k => $v) {
-			if (trim($k) === 'authorization') {
-				$authorization = $v;
-			}
-		}
-
-		if ($authorization == null) {
+		if (!$hasAuthHeader) {
 			return response()->json('Authorizaton header not found.', 401);
 		}
-
-		$rawToken = $authHeaders[0];
-		$rawTokenArr = explode(" ", $rawToken);
-		$token = $rawTokenArr[1];
 
 		if ($token == null) {
 			return response()->json('No token provided', 401);
@@ -40,7 +38,7 @@ class Firebase
 			$token = $this->verifier->verifyIdToken($token);
 			return $next($request);
 		} catch (\Exception $e) {
-			return new HttpException(401, 'Unauthorized.');
+			return response()->json('Unauthorized.', 401);
 		}
 	}
 }
