@@ -249,4 +249,18 @@ class ApiResource {
 		return $user;
 	}
 
+	/**
+	 * Build user session info by firebase login.
+	 *
+	 * @param string $email
+	 * @return void
+	 */
+	public static function getUserInfoByFirebase($email)
+	{
+		$user = User::byEmail($email)->first();
+		Auth::login($user);
+		$user->load('sessionUser');
+		return $user;
+	}
+
 }

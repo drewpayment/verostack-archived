@@ -9,6 +9,7 @@ use App\DncContact;
 use App\Http\Services\DncContactService;
 use Illuminate\Support\Facades\DB;
 use function GuzzleHttp\json_decode;
+use Kreait\Firebase;
 
 class DncContactController extends Controller
 {
@@ -25,14 +26,24 @@ class DncContactController extends Controller
      *
      * @return DncContact[]
      */
-    public function getDncContacts()
+    public function getDncContacts(Request $request)
     {
         $result = new ApiResource();
-        $user = ApiResource::getUserInfo();
+        $uid = $request->fbid;
 
-        $result->setData(DncContact::byClient($user->sessionUser->session_client)->get());
+        if ($uid != null) {
+            $auth = app()->firebase->getAuth();
+            $fbUser = $auth->getUser($uid);
+            $user = ApiResource::getUserInfoByFirebase($fbUser->email);
+        } else {
+            $user = ApiResource::getUserInfo();
+        }
 
-        return $result->throwApiException()
+        $clientId = $user->sessionUser->session_client;
+        $contacts = DncContact::byClient($clientId)->get();
+
+        return $result->setData($contacts)
+            ->throwApiException()
             ->getResponse();
     }
 

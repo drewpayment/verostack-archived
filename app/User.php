@@ -207,5 +207,17 @@ class User extends Authenticatable
 	public function scopeUserId($query, $userId)
     {
     	return $query->where('id', $userId);
-    }
+	}
+	
+	/**
+	 * Scope by email
+	 *
+	 * @param \Illuminate\Database\Eloquent\Builder $query
+	 * @param string $email
+	 * @return void
+	 */
+	public function scopeByEmail($query, $email)
+	{
+		return $query->where('email', $email);
+	}
 }
