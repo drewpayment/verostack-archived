@@ -5,7 +5,7 @@ namespace PHPSTORM_META {
 
    /**
     * PhpStorm Meta file, to provide autocomplete information for PhpStorm
-    * Generated on 2019-04-22 22:14:05.
+    * Generated on 2019-04-28 09:09:05.
     *
     * @author Barry vd. Heuvel <barryvdh@gmail.com>
     * @see https://github.com/barryvdh/laravel-ide-helper
@@ -13,6 +13,7 @@ namespace PHPSTORM_META {
     override(new \Illuminate\Contracts\Container\Container, map([
         '' => '@',
         'Asm89\Stack\CorsService' => \Asm89\Stack\CorsService::class,
+        'Firebase\Auth\Token\Verifier' => \Firebase\Auth\Token\Verifier::class,
         'Illuminate\Broadcasting\BroadcastManager' => \Illuminate\Broadcasting\BroadcastManager::class,
         'Illuminate\Bus\Dispatcher' => \Illuminate\Bus\Dispatcher::class,
         'Illuminate\Console\Scheduling\Schedule' => \Illuminate\Console\Scheduling\Schedule::class,
@@ -156,6 +157,7 @@ namespace PHPSTORM_META {
     override(\Illuminate\Contracts\Container\Container::make(0), map([
         '' => '@',
         'Asm89\Stack\CorsService' => \Asm89\Stack\CorsService::class,
+        'Firebase\Auth\Token\Verifier' => \Firebase\Auth\Token\Verifier::class,
         'Illuminate\Broadcasting\BroadcastManager' => \Illuminate\Broadcasting\BroadcastManager::class,
         'Illuminate\Bus\Dispatcher' => \Illuminate\Bus\Dispatcher::class,
         'Illuminate\Console\Scheduling\Schedule' => \Illuminate\Console\Scheduling\Schedule::class,
@@ -299,6 +301,7 @@ namespace PHPSTORM_META {
     override(\Illuminate\Contracts\Container\Container::makeWith(0), map([
         '' => '@',
         'Asm89\Stack\CorsService' => \Asm89\Stack\CorsService::class,
+        'Firebase\Auth\Token\Verifier' => \Firebase\Auth\Token\Verifier::class,
         'Illuminate\Broadcasting\BroadcastManager' => \Illuminate\Broadcasting\BroadcastManager::class,
         'Illuminate\Bus\Dispatcher' => \Illuminate\Bus\Dispatcher::class,
         'Illuminate\Console\Scheduling\Schedule' => \Illuminate\Console\Scheduling\Schedule::class,
@@ -442,6 +445,7 @@ namespace PHPSTORM_META {
     override(\App::make(0), map([
         '' => '@',
         'Asm89\Stack\CorsService' => \Asm89\Stack\CorsService::class,
+        'Firebase\Auth\Token\Verifier' => \Firebase\Auth\Token\Verifier::class,
         'Illuminate\Broadcasting\BroadcastManager' => \Illuminate\Broadcasting\BroadcastManager::class,
         'Illuminate\Bus\Dispatcher' => \Illuminate\Bus\Dispatcher::class,
         'Illuminate\Console\Scheduling\Schedule' => \Illuminate\Console\Scheduling\Schedule::class,
@@ -585,6 +589,7 @@ namespace PHPSTORM_META {
     override(\App::makeWith(0), map([
         '' => '@',
         'Asm89\Stack\CorsService' => \Asm89\Stack\CorsService::class,
+        'Firebase\Auth\Token\Verifier' => \Firebase\Auth\Token\Verifier::class,
         'Illuminate\Broadcasting\BroadcastManager' => \Illuminate\Broadcasting\BroadcastManager::class,
         'Illuminate\Bus\Dispatcher' => \Illuminate\Bus\Dispatcher::class,
         'Illuminate\Console\Scheduling\Schedule' => \Illuminate\Console\Scheduling\Schedule::class,
@@ -728,6 +733,7 @@ namespace PHPSTORM_META {
     override(\app(0), map([
         '' => '@',
         'Asm89\Stack\CorsService' => \Asm89\Stack\CorsService::class,
+        'Firebase\Auth\Token\Verifier' => \Firebase\Auth\Token\Verifier::class,
         'Illuminate\Broadcasting\BroadcastManager' => \Illuminate\Broadcasting\BroadcastManager::class,
         'Illuminate\Bus\Dispatcher' => \Illuminate\Bus\Dispatcher::class,
         'Illuminate\Console\Scheduling\Schedule' => \Illuminate\Console\Scheduling\Schedule::class,
@@ -871,6 +877,7 @@ namespace PHPSTORM_META {
     override(\resolve(0), map([
         '' => '@',
         'Asm89\Stack\CorsService' => \Asm89\Stack\CorsService::class,
+        'Firebase\Auth\Token\Verifier' => \Firebase\Auth\Token\Verifier::class,
         'Illuminate\Broadcasting\BroadcastManager' => \Illuminate\Broadcasting\BroadcastManager::class,
         'Illuminate\Bus\Dispatcher' => \Illuminate\Bus\Dispatcher::class,
         'Illuminate\Console\Scheduling\Schedule' => \Illuminate\Console\Scheduling\Schedule::class,
