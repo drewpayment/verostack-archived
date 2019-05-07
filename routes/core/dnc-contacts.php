@@ -1,6 +1,6 @@
 <?php
 
-Route::middleware(['auth:api'])->group(function() {
+Route::group(['auth:api'], function() {
 	
 	Route::get('dnc-contacts', 'DncContactController@getDncContacts');
 
