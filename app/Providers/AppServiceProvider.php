@@ -47,6 +47,6 @@ class AppServiceProvider extends ServiceProvider
                 ->create();
         });
 
-        $this->app->alias(Firebase::class, 'firebase');
+        // $this->app->alias(Firebase::class, 'firebase');
     }
 }
