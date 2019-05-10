@@ -48,7 +48,7 @@ class Kernel extends HttpKernel
         'apiv2' => [
             'throttle:60,1',
             'bindings',
-            'firebase'
+            'driver' => 'firebase'
         ]
     ];
 
