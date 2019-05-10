@@ -2,14 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\DncContact;
 use Illuminate\Http\Request;
 use App\Http\Resources\ApiResource;
 use Illuminate\Support\Facades\Auth;
-use App\DncContact;
 use App\Http\Services\DncContactService;
-use Illuminate\Support\Facades\DB;
-use function GuzzleHttp\json_decode;
-use Kreait\Firebase;
 
 class DncContactController extends Controller
 {
@@ -36,7 +33,8 @@ class DncContactController extends Controller
             $fbUser = $auth->getUser($uid);
             $user = ApiResource::getUserInfoByFirebase($fbUser->email);
         } else {
-            $user = ApiResource::getUserInfo();
+            $user = Auth::user();
+            $user->load('sessionUser');
         }
 
         $clientId = $user->sessionUser->session_client;
