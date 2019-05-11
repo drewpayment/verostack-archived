@@ -96,18 +96,9 @@ class AgentController extends Controller
 			return $result->throwApiException()
 				->getResponse();
 
-        $users = $this->service->getUserAgentsByClient($clientId)->getData();
+        $agents = Agent::byClient()->get();
 
-        $resultAgents = [];
-        $agents = array_filter(array_map(function(array $arr) {
-            return $arr['agent'];
-        }, $users), function($agent) { return !is_null($agent); });
-
-        foreach($agents as $a) {
-            $resultAgents[] = $a;
-        }
-
-        return $result->overrideData($resultAgents)
+        return $result->setData($agents)
             ->throwApiException()
             ->getResponse();
     }

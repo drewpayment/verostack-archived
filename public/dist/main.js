@@ -4328,16 +4328,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
-/* harmony import */ var _app_session_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @app/session.service */ "./src/app/session.service.ts");
-/* harmony import */ var _app_contact_contact_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @app/contact/contact.service */ "./src/app/contact/contact.service.ts");
-/* harmony import */ var _app_agent_agent_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @app/agent/agent.service */ "./src/app/agent/agent.service.ts");
-/* harmony import */ var _app_campaigns_campaign_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @app/campaigns/campaign.service */ "./src/app/campaigns/campaign.service.ts");
+/* harmony import */ var _session_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../session.service */ "./src/app/session.service.ts");
+/* harmony import */ var _contact_contact_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../contact/contact.service */ "./src/app/contact/contact.service.ts");
+/* harmony import */ var _agent_agent_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../agent/agent.service */ "./src/app/agent/agent.service.ts");
+/* harmony import */ var _campaigns_campaign_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../campaigns/campaign.service */ "./src/app/campaigns/campaign.service.ts");
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
 /* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
-/* harmony import */ var _app_shared_models_state_model__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @app/shared/models/state.model */ "./src/app/shared/models/state.model.ts");
-/* harmony import */ var _app_client_information_client_service__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @app/client-information/client.service */ "./src/app/client-information/client.service.ts");
-/* harmony import */ var _app_daily_sale_tracker_daily_sale_tracker_service__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @app/daily-sale-tracker/daily-sale-tracker.service */ "./src/app/daily-sale-tracker/daily-sale-tracker.service.ts");
-/* harmony import */ var _app_message_service__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @app/message.service */ "./src/app/message.service.ts");
+/* harmony import */ var _shared_models_state_model__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../../shared/models/state.model */ "./src/app/shared/models/state.model.ts");
+/* harmony import */ var _client_information_client_service__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../../client-information/client.service */ "./src/app/client-information/client.service.ts");
+/* harmony import */ var _daily_sale_tracker_daily_sale_tracker_service__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../../../daily-sale-tracker/daily-sale-tracker.service */ "./src/app/daily-sale-tracker/daily-sale-tracker.service.ts");
+/* harmony import */ var _message_service__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../../../message.service */ "./src/app/message.service.ts");
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
 
 
@@ -4371,7 +4371,7 @@ var NewSaleComponent = /** @class */ (function () {
         this.showNewRemarkField = false;
         this.saleStatuses = new rxjs__WEBPACK_IMPORTED_MODULE_7__["BehaviorSubject"]([]);
         this.utilities = new rxjs__WEBPACK_IMPORTED_MODULE_7__["BehaviorSubject"]([]);
-        this.states = _app_shared_models_state_model__WEBPACK_IMPORTED_MODULE_9__["States"].$get();
+        this.states = _shared_models_state_model__WEBPACK_IMPORTED_MODULE_9__["States"].$get();
         this.returnUrl = '';
     }
     NewSaleComponent.prototype.ngOnInit = function () {
@@ -4618,13 +4618,13 @@ var NewSaleComponent = /** @class */ (function () {
             styles: [__webpack_require__(/*! ./new-sale.component.scss */ "./src/app/daily-sale-tracker/components/new-sale/new-sale.component.scss")]
         }),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormBuilder"],
-            _app_session_service__WEBPACK_IMPORTED_MODULE_3__["SessionService"],
-            _app_contact_contact_service__WEBPACK_IMPORTED_MODULE_4__["ContactService"],
-            _app_agent_agent_service__WEBPACK_IMPORTED_MODULE_5__["AgentService"],
-            _app_campaigns_campaign_service__WEBPACK_IMPORTED_MODULE_6__["CampaignService"],
-            _app_client_information_client_service__WEBPACK_IMPORTED_MODULE_10__["ClientService"],
-            _app_daily_sale_tracker_daily_sale_tracker_service__WEBPACK_IMPORTED_MODULE_11__["DailySaleTrackerService"],
-            _app_message_service__WEBPACK_IMPORTED_MODULE_12__["MessageService"],
+            _session_service__WEBPACK_IMPORTED_MODULE_3__["SessionService"],
+            _contact_contact_service__WEBPACK_IMPORTED_MODULE_4__["ContactService"],
+            _agent_agent_service__WEBPACK_IMPORTED_MODULE_5__["AgentService"],
+            _campaigns_campaign_service__WEBPACK_IMPORTED_MODULE_6__["CampaignService"],
+            _client_information_client_service__WEBPACK_IMPORTED_MODULE_10__["ClientService"],
+            _daily_sale_tracker_daily_sale_tracker_service__WEBPACK_IMPORTED_MODULE_11__["DailySaleTrackerService"],
+            _message_service__WEBPACK_IMPORTED_MODULE_12__["MessageService"],
             _angular_router__WEBPACK_IMPORTED_MODULE_13__["Router"]])
     ], NewSaleComponent);
     return NewSaleComponent;

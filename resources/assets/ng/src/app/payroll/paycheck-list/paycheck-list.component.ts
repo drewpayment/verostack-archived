@@ -47,14 +47,6 @@ import { trigger, state, style, animate, keyframes, transition, sequence, query,
                     query('@slideInOutTrigger', animateChild())
                 ])
             ]),
-
-            // transition('void => *', [
-            //     style({ transform: 'translateX(-40%)' }),
-            //     animate(1000)
-            // ]),
-            // transition('* => void', [
-            //     animate(1000, style({ transform: 'translateX(100%)' }))
-            // ])
         ])
         
     ]
@@ -103,7 +95,7 @@ export class PaycheckListComponent implements OnInit {
             this.route.queryParams,
             this.session.getUserItem()
         ).subscribe(([params, user]) => {
-            if(this.pageLoadApiCallHappened) return;
+            if (this.pageLoadApiCallHappened) return;
             this.startDate = params['startDate'] || null;
             this.endDate = params['endDate'] || null;
             this.user = user;
@@ -127,13 +119,13 @@ export class PaycheckListComponent implements OnInit {
     }
 
     filterTableByDates():void {
-        if(this.startDateCtrl.value)
+        if (this.startDateCtrl.value)
             this.startDate = this.startDateCtrl.value;
-        if(this.endDateCtrl.value)
+        if (this.endDateCtrl.value)
             this.endDate = this.endDateCtrl.value;
 
-        if(this.startDateCtrl.invalid) return;
-        if(this.endDateCtrl.invalid) return;
+        if (this.startDateCtrl.invalid) return;
+        if (this.endDateCtrl.invalid) return;
 
         this.getPaychecks();
     }
@@ -201,47 +193,47 @@ export class PaycheckListComponent implements OnInit {
         const lessThanType = direction == 'asc' ? -1 : 1;
         const greaterThanType = direction == 'asc' ? 1 : -1;
 
-        if(prop == 'agentName') {
-            return this.paychecks$.getValue().sort((a,b) => {
-                if(a.agent.lastName < b.agent.lastName)
+        if (prop == 'agentName') {
+            return this.paychecks$.getValue().sort((a, b) => {
+                if (a.agent.lastName < b.agent.lastName)
                     return lessThanType;
-                if(a.agent.lastName > b.agent.lastName)
+                if (a.agent.lastName > b.agent.lastName)
                     return greaterThanType;
                 return 0;
-            }).sort((a,b) => {
-                if(a.agent.firstName < b.agent.firstName)
+            }).sort((a, b) => {
+                if (a.agent.firstName < b.agent.firstName)
                     return lessThanType;
-                if(a.agent.firstName > b.agent.firstName)
+                if (a.agent.firstName > b.agent.firstName)
                     return greaterThanType;
                 return 0;
             });
         }
         
-        if(prop == 'releaseDate') {
-            return this.paychecks$.getValue().sort((a,b) => {
-                if(Date.parse(<string>a.payroll.releaseDate) < Date.parse(<string>b.payroll.releaseDate))
+        if (prop == 'releaseDate') {
+            return this.paychecks$.getValue().sort((a, b) => {
+                if (Date.parse(<string>a.payroll.releaseDate) < Date.parse(<string>b.payroll.releaseDate))
                     return lessThanType;
-                if(Date.parse(<string>a.payroll.releaseDate) > Date.parse(<string>b.payroll.releaseDate))
+                if (Date.parse(<string>a.payroll.releaseDate) > Date.parse(<string>b.payroll.releaseDate))
                     return greaterThanType;
                 return 0;
             });
         }
 
-        if(prop == 'campaign') {
-            return this.paychecks$.getValue().sort((a,b) => {
-                if(a.payroll.campaign.name < b.payroll.campaign.name)
+        if (prop == 'campaign') {
+            return this.paychecks$.getValue().sort((a, b) => {
+                if (a.payroll.campaign.name < b.payroll.campaign.name)
                     return lessThanType;
-                if(a.payroll.campaign.name > b.payroll.campaign.name)
+                if (a.payroll.campaign.name > b.payroll.campaign.name)
                     return greaterThanType;
                 return 0;
             });
         }
 
-        if(prop == 'amount') {
-            return this.paychecks$.getValue().sort((a,b) => {
-                if(a.grossTotal < b.grossTotal) 
+        if (prop == 'amount') {
+            return this.paychecks$.getValue().sort((a, b) => {
+                if (a.grossTotal < b.grossTotal) 
                     return lessThanType;
-                if(a.grossTotal > b.grossTotal)
+                if (a.grossTotal > b.grossTotal)
                     return greaterThanType;
                 return 0;
             });

@@ -1,12 +1,11 @@
-import { Component, OnInit, Inject } from "@angular/core";
-import { IAgent, ICampaign, DailySale, User, SaleStatus, PaidStatusType } from "@app/models";
-import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material";
-import { FormGroup, FormBuilder, Validators } from "@angular/forms";
+import { Component, OnInit, Inject } from '@angular/core';
+import { IAgent, ICampaign, DailySale, User, SaleStatus, PaidStatusType } from '@app/models';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import * as moment from 'moment';
 import * as _ from 'lodash';
-import { IState, States } from "@app/shared/models/state.model";
+import { IState, States } from '@app/shared/models/state.model';
 import { DailySaleTrackerService } from '@app/daily-sale-tracker/daily-sale-tracker.service';
-import { MessageService } from '@app/message.service';
 
 interface DialogData {
     user:User,
