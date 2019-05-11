@@ -101,16 +101,16 @@ export class NewSaleComponent implements OnInit {
     }
 
     private setControlsTouched(group:FormGroup) {
-        for(var c in group.controls) {
+        for (const c in group.controls) {
             group.controls[c].markAsTouched();
-            if(this.hasProperty(group.controls[c], 'controls')) {
+            if (this.hasProperty(group.controls[c], 'controls')) {
                 this.setControlsTouched(group.controls[c]['controls']);
             }
         }
     }
 
     private hasProperty(obj, prop):boolean {
-        var proto = obj.__proto__ || obj.constructor.prototype;
+        const proto = obj.__proto__ || obj.constructor.prototype;
         return (prop in obj) &&
             (!(prop in proto) || proto[prop] !== obj[prop]);
     }
@@ -200,7 +200,7 @@ export class NewSaleComponent implements OnInit {
 
         this.setControlsTouched(this.form);
         this.form.updateValueAndValidity();
-        if(this.form.invalid) return;
+        if (this.form.invalid) return;
 
         const model = this.prepareModel();
 

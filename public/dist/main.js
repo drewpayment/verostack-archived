@@ -5396,6 +5396,9 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+/**
+ * This is the dialog used to create a sale as an admin from the daily-sale tracker
+ */
 var AddSaleDialogComponent = /** @class */ (function () {
     function AddSaleDialogComponent(ref, data, fb, campaignService, router, contactService, _cd) {
         this.ref = ref;
@@ -5577,7 +5580,14 @@ var AddSaleDialogComponent = /** @class */ (function () {
             this.form.get('agent').setErrors({ nonExistent: true });
     };
     AddSaleDialogComponent.prototype.showNewContactForm = function () {
-        this.resetContactForm('contact');
+        if (this.form.get('contact').dirty || this.form.get('contact').touched) {
+            this.resetContactForm('contact');
+            this.form.patchValue({
+                contact: {
+                    contactType: 1
+                }
+            }, { emitEvent: false });
+        }
         this.showNewContactFields = !this.showNewContactFields;
     };
     AddSaleDialogComponent.prototype.setNewContact = function () {
@@ -5700,10 +5710,11 @@ var AddSaleDialogComponent = /** @class */ (function () {
     };
     AddSaleDialogComponent.prototype.createForm = function () {
         var _this = this;
-        var contactType = this.existingSale != null && this.existingSale.contact != null
-            && this.existingSale.contact.contactType != null
+        var contactType = this.existingSale && this.existingSale.contact
+            && this.existingSale.contact.contactType
             ? this.existingSale.contact.contactType.toString()
             : _app_models__WEBPACK_IMPORTED_MODULE_4__["ContactType"].residential.toString();
+        contactType = contactType || _app_models__WEBPACK_IMPORTED_MODULE_4__["ContactType"].residential;
         this.form = this.fb.group({
             saleDate: this.fb.control(this.existingSale.saleDate || this.today, [_angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required]),
             agent: this.fb.control(this.agents.find(function (a) { return a.agentId == _this.existingSale.agentId; }), [_angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required]),
