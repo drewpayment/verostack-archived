@@ -8411,7 +8411,7 @@ var GrossTotalReleaseAmountPipe = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n<div mat-dialog-title class=\"d-flex justify-content-between\">\n    <h3>Paycheck Adjustments</h3>\n    <button type=\"button\" mat-icon-button (click)=\"onNoClick()\">\n        <mat-icon>clear</mat-icon>\n    </button>\n</div>\n<mat-dialog-content>\n    <mat-tab-group [formGroup]=\"f\">\n\n        <!-- OVERRIDES TAB -->\n        <mat-tab label=\"Overrides\" formArrayName=\"overrides\" #overrideTab>\n            \n            <ng-container *ngFor=\"let o of detail.overrides; let i = index\">\n                <div class=\"row mt-4 mb-2\" [formGroupName]=\"i\">\n                    <div class=\"col-md-4\">\n                        <mat-form-field class=\"w-100\">\n                            <mat-select placeholder=\"Agent\" formControlName=\"agentId\" required>\n                                <mat-option *ngFor=\"let a of agents\" [value]=\"a.agentId\">\n                                    {{a.firstName}} {{a.lastName}}\n                                </mat-option>\n                            </mat-select>\n                            <mat-error *ngIf=\"f.get(['overrides', i, 'agentId']).hasError('required')\">\n                                Please select an agent\n                            </mat-error>\n                        </mat-form-field>\n                    </div>\n                    <div class=\"col-md-4\">\n                        <mat-form-field class=\"w-100\">\n                            <input type=\"text\" matInput\n                                placeholder=\"No. of Units\"\n                                formControlName=\"units\" \n                                required />\n                            <mat-error *ngIf=\"f.get(['overrides', i, 'units']).hasError('required')\">\n                                Please enter a number of units\n                            </mat-error>\n                        </mat-form-field>\n                    </div>\n                    <div class=\"col-md-4 d-flex\">\n                        <div>\n                            <mat-form-field class=\"w-100\">\n                                <input type=\"text\" matInput\n                                    placeholder=\"Amount per Unit\"        \n                                    (ngModelChange)=\"updateOverrideAmount($event, i)\"                          \n                                    formControlName=\"amount\"\n                                    required />\n                                <mat-error *ngIf=\"f.get(['overrides', i, 'amount']).hasError('required')\">\n                                    Please enter an amount per unit\n                                </mat-error>\n                            </mat-form-field>\n                        </div>\n                        <button type=\"button\"\n                            mat-icon-button\n                            *ngIf=\"detail.overrides[i].overrideId == null || detail.overrides[i].overrideId == 0\"\n                            (click)=\"removeUnsavedOverride(i)\"\n                        >\n                            <mat-icon>remove_circle_outline</mat-icon>\n                        </button>\n                    </div>\n                </div>\n                <mat-divider></mat-divider>\n            </ng-container>\n            <ng-container *ngIf=\"detail.overrides == null || detail.overrides.length == 0\">\n                <div class=\"row my-4\">\n                    <div class=\"col-md-12\">\n                        <h5 class=\"text-muted font-italic\">\n                            No overrides for this paycheck. Click the add button below if you'd like to add one.\n                        </h5>\n                    </div>\n                </div>\n            </ng-container>\n            \n        </mat-tab>\n\n        <!-- EXPENSES TAB -->\n        <mat-tab label=\"Expenses\" formArrayName=\"expenses\" #expenseTab>\n            \n            <ng-container *ngFor=\"let e of detail.expenses; let i = index\">\n                <ng-container [formGroupName]=\"i\">\n                    <div class=\"row mt-4\">\n                        <div class=\"col-md-5\">\n                            <mat-form-field class=\"w-100\">\n                                <input type=\"text\" matInput\n                                    placeholder=\"Title\"\n                                    formControlName=\"title\"\n                                />\n                            </mat-form-field>\n                        </div>\n                        <div class=\"col-md-3\">\n                            <mat-form-field class=\"w-100\">\n                                <input type=\"text\" matInput\n                                    placeholder=\"Amount\"\n                                    (ngModelChange)=\"updateExpenseAmount($event, i)\"\n                                    formControlName=\"amount\"\n                                    required\n                                />\n                            </mat-form-field>\n                        </div>\n                        <div class=\"col-md-4 d-flex\">\n                            <div>\n                                <mat-form-field class=\"w-100\">\n                                    <input matInput\n                                        [matDatepicker]=\"expenseDatepicker\"\n                                        [max]=\"payCycle.endDate\"\n                                        placeholder=\"Date\"\n                                        formControlName=\"expenseDate\"\n                                        required\n                                    />\n                                    <mat-datepicker-toggle matSuffix [for]=\"expenseDatepicker\"></mat-datepicker-toggle>\n                                    <mat-datepicker #expenseDatepicker></mat-datepicker>\n                                </mat-form-field>\n                            </div>\n                            <button type=\"button\"\n                                mat-icon-button\n                                *ngIf=\"detail.expenses[i].expenseId == null || detail.expenses[i].expenseId == 0\"\n                                (click)=\"removeUnsavedExpense(i)\"\n                            >\n                                <mat-icon>remove_circle_outline</mat-icon>\n                            </button>\n                        </div>\n                    </div>\n                    <div class=\"row mb-2\">\n                        <div class=\"col-md-12\">\n                            <mat-form-field class=\"w-100\">\n                                <textarea matInput \n                                    placeholder=\"Description\" \n                                    formControlName=\"description\"\n                                    rows=\"2\"\n                                ></textarea>\n                            </mat-form-field>\n                        </div>\n                    </div>\n                </ng-container>\n                <mat-divider></mat-divider>\n            </ng-container>\n            <ng-container *ngIf=\"detail.expenses == null || detail.expenses.length == 0\">\n                <div class=\"row my-4\">\n                    <div class=\"col-md-12\">\n                        <h5 class=\"text-muted font-italic\">\n                            No expenses for this paycheck. Click the add button below if you'd like to add one.\n                        </h5>\n                    </div>\n                </div>\n            </ng-container>\n\n        </mat-tab>\n\n    </mat-tab-group>\n</mat-dialog-content>\n<mat-dialog-actions class=\"d-flex justify-content-end\">\n    <button type=\"button\" mat-button color=\"primary\" (click)=\"addAdjustment()\">\n        Add {{ getActiveTabTitle() }}\n    </button>\n    <ng-container *ngIf=\"f.dirty && f.touched\">\n        <div class=\"d-flex\" [@enter]>\n            <mat-divider inset=\"true\"></mat-divider>\n            <button type=\"button\" mat-button\n                color=\"warn\"\n                (click)=\"onNoClick()\"\n            >Cancel</button>\n            <button type=\"button\" mat-button\n                color=\"primary\"\n                (click)=\"saveForm()\"\n            >Save</button>\n        </div>\n    </ng-container>\n</mat-dialog-actions>"
+module.exports = "\n<div mat-dialog-title class=\"d-flex justify-content-between\">\n    <h3>Paycheck Adjustments</h3>\n    <button type=\"button\" mat-icon-button (click)=\"onNoClick()\">\n        <mat-icon>clear</mat-icon>\n    </button>\n</div>\n<mat-dialog-content>\n    <mat-tab-group [formGroup]=\"f\">\n\n        <!-- OVERRIDES TAB -->\n        <mat-tab label=\"Overrides\" formArrayName=\"overrides\" #overrideTab>\n            \n            <ng-container *ngFor=\"let o of detail.overrides; let i = index\">\n                <div class=\"row mt-4 mb-2\" [formGroupName]=\"i\">\n                    <div class=\"col-md-4\">\n                        <mat-form-field class=\"w-100\">\n                            <mat-select placeholder=\"Agent\" formControlName=\"agentId\" required>\n                                <mat-option *ngFor=\"let a of agents\" [value]=\"a.agentId\">\n                                    {{a.firstName}} {{a.lastName}}\n                                </mat-option>\n                            </mat-select>\n                            <mat-error *ngIf=\"f.get(['overrides', i, 'agentId']).hasError('required')\">\n                                Please select an agent\n                            </mat-error>\n                        </mat-form-field>\n                    </div>\n                    <div class=\"col-md-4\">\n                        <mat-form-field class=\"w-100\">\n                            <input type=\"text\" matInput\n                                placeholder=\"No. of Units\"\n                                formControlName=\"units\" \n                                required />\n                            <mat-error *ngIf=\"f.get(['overrides', i, 'units']).hasError('required')\">\n                                Please enter a number of units\n                            </mat-error>\n                        </mat-form-field>\n                    </div>\n                    <div class=\"col-md-4 d-flex\">\n                        <div>\n                            <mat-form-field class=\"w-100\">\n                                <input type=\"text\" matInput\n                                    placeholder=\"Amount per Unit\"        \n                                    [value]=\"f.get(['overrides', i, 'amount']).value | currency\"                      \n                                    formControlName=\"amount\"\n                                    required />\n                                <mat-error *ngIf=\"f.get(['overrides', i, 'amount']).hasError('required')\">\n                                    Please enter an amount per unit\n                                </mat-error>\n                            </mat-form-field>\n                        </div>\n                        <button type=\"button\"\n                            mat-icon-button\n                            *ngIf=\"detail.overrides[i].overrideId == null || detail.overrides[i].overrideId == 0\"\n                            (click)=\"removeUnsavedOverride(i)\"\n                        >\n                            <mat-icon>remove_circle_outline</mat-icon>\n                        </button>\n                    </div>\n                </div>\n                <mat-divider></mat-divider>\n            </ng-container>\n            <ng-container *ngIf=\"detail.overrides == null || detail.overrides.length == 0\">\n                <div class=\"row my-4\">\n                    <div class=\"col-md-12\">\n                        <h5 class=\"text-muted font-italic\">\n                            No overrides for this paycheck. Click the add button below if you'd like to add one.\n                        </h5>\n                    </div>\n                </div>\n            </ng-container>\n            \n        </mat-tab>\n\n        <!-- EXPENSES TAB -->\n        <mat-tab label=\"Expenses\" formArrayName=\"expenses\" #expenseTab>\n            \n            <ng-container *ngFor=\"let e of detail.expenses; let i = index\">\n                <ng-container [formGroupName]=\"i\">\n                    <div class=\"row mt-4\">\n                        <div class=\"col-md-5\">\n                            <mat-form-field class=\"w-100\">\n                                <input type=\"text\" matInput\n                                    placeholder=\"Title\"\n                                    formControlName=\"title\"\n                                />\n                            </mat-form-field>\n                        </div>\n                        <div class=\"col-md-3\">\n                            <mat-form-field class=\"w-100\">\n                                <input type=\"text\" matInput\n                                    placeholder=\"Amount\"\n                                    [value]=\"f.get(['expenses', i, 'amount']).value | currency\"\n                                    formControlName=\"amount\"\n                                    required\n                                />\n                            </mat-form-field>\n                        </div>\n                        <div class=\"col-md-4 d-flex\">\n                            <div>\n                                <mat-form-field class=\"w-100\">\n                                    <input matInput\n                                        [matDatepicker]=\"expenseDatepicker\"\n                                        [max]=\"payCycle.endDate\"\n                                        placeholder=\"Date\"\n                                        formControlName=\"expenseDate\"\n                                        required\n                                    />\n                                    <mat-datepicker-toggle matSuffix [for]=\"expenseDatepicker\"></mat-datepicker-toggle>\n                                    <mat-datepicker #expenseDatepicker></mat-datepicker>\n                                </mat-form-field>\n                            </div>\n                            <button type=\"button\"\n                                mat-icon-button\n                                *ngIf=\"detail.expenses[i].expenseId == null || detail.expenses[i].expenseId == 0\"\n                                (click)=\"removeUnsavedExpense(i)\"\n                            >\n                                <mat-icon>remove_circle_outline</mat-icon>\n                            </button>\n                        </div>\n                    </div>\n                    <div class=\"row mb-2\">\n                        <div class=\"col-md-12\">\n                            <mat-form-field class=\"w-100\">\n                                <textarea matInput \n                                    placeholder=\"Description\" \n                                    formControlName=\"description\"\n                                    rows=\"2\"\n                                ></textarea>\n                            </mat-form-field>\n                        </div>\n                    </div>\n                </ng-container>\n                <mat-divider></mat-divider>\n            </ng-container>\n            <ng-container *ngIf=\"detail.expenses == null || detail.expenses.length == 0\">\n                <div class=\"row my-4\">\n                    <div class=\"col-md-12\">\n                        <h5 class=\"text-muted font-italic\">\n                            No expenses for this paycheck. Click the add button below if you'd like to add one.\n                        </h5>\n                    </div>\n                </div>\n            </ng-container>\n\n        </mat-tab>\n\n    </mat-tab-group>\n</mat-dialog-content>\n<mat-dialog-actions class=\"d-flex justify-content-end\">\n    <button type=\"button\" mat-button color=\"primary\" (click)=\"addAdjustment()\">\n        Add {{ getActiveTabTitle() }}\n    </button>\n    <ng-container *ngIf=\"f.dirty && f.touched\">\n        <div class=\"d-flex\" [@enter]>\n            <mat-divider inset=\"true\"></mat-divider>\n            <button type=\"button\" mat-button\n                color=\"warn\"\n                (click)=\"onNoClick()\"\n            >Cancel</button>\n            <button type=\"button\" mat-button\n                color=\"primary\"\n                (click)=\"saveForm()\"\n            >Save</button>\n        </div>\n    </ng-container>\n</mat-dialog-actions>"
 
 /***/ }),
 
@@ -8506,27 +8506,6 @@ var OverrideExpenseDialogComponent = /** @class */ (function () {
             this.detail.expenses.splice(index, 1);
             this.f.get('expenses').removeAt(index);
         }
-    };
-    OverrideExpenseDialogComponent.prototype.formatCurrencyOnBlur = function (element, event) {
-        var result = event.target.value;
-        var i = result.lastIndexOf('.');
-        if (i == -1) {
-            result = result + ".00";
-        }
-        else if (result.slice(i).length < 2) {
-            var cents = result.slice(i);
-            if (cents == 0)
-                result = result.slice(0, i) + '00';
-            else
-                result = result.slice(0, result.length - 1) + '0';
-        }
-        else if (result.slice(i).length > 2) {
-            var cents = result.slice(i);
-            result = result.replace(cents, "." + cents.slice(-2));
-        }
-        if (result.charAt(0) != '$')
-            result = "$" + result;
-        element.patchValue(result);
     };
     OverrideExpenseDialogComponent.prototype.updateOverrideAmount = function (value, index) {
         var control = this.f.get(['overrides', index, 'amount']);
@@ -8647,7 +8626,7 @@ var OverrideExpenseDialogComponent = /** @class */ (function () {
                 payrollDetailsId: _this.fb.control(o.payrollDetailsId),
                 agentId: _this.fb.control(o.agentId, [_angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required]),
                 units: _this.fb.control(o.units, [_angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required]),
-                amount: _this.fb.control(_this.currencyPipe.transform(o.amount), { validators: _angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required, updateOn: 'blur' })
+                amount: _this.fb.control(o.amount, { validators: _angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required, updateOn: 'blur' })
             }));
         });
     };
@@ -8662,7 +8641,7 @@ var OverrideExpenseDialogComponent = /** @class */ (function () {
                 agentId: _this.fb.control(e.agentId),
                 title: _this.fb.control(e.title),
                 description: _this.fb.control(e.description),
-                amount: _this.fb.control(_this.currencyPipe.transform(e.amount), { validators: _angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required, updateOn: 'blur' }),
+                amount: _this.fb.control(e.amount, { validators: _angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required, updateOn: 'blur' }),
                 expenseDate: _this.fb.control(e.expenseDate, [_angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required])
             });
             _this.f.get('expenses').push(control);
@@ -10852,22 +10831,23 @@ var PayrollListComponent = /** @class */ (function () {
             .subscribe(function (result) {
             if (result == null)
                 return;
+            console.dir(result);
             /** I believe this is removing the $ from the string? */
-            if (isNaN(result.taxes.charAt(0)))
-                result.taxes = result.taxes.slice(0, 1);
-            if (isNaN(result.grossTotal.charAt(0)))
-                result.grossTotal = result.grossTotal.slice(0, 1);
-            if (isNaN(result.netTotal.charAt(0)))
-                result.netTotal = result.netTotal.slice(0, 1);
-            result.overrides.forEach(function (o, i, a) {
-                if (isNaN(o.amount.charAt(0)))
-                    a[i].amount = o.amount.slice(1);
-            });
-            result.expenses.forEach(function (e, i, a) {
-                if (isNaN(e.amount.charAt(0)))
-                    a[i].amount = e.amount.slice(1);
-                a[i].expenseId = e.expenseId > 0 ? e.expenseId : null;
-            });
+            // if (isNaN((<any>result.taxes).charAt(0)))
+            //     result.taxes = (<any>result.taxes).slice(0, 1);
+            // if (isNaN((<any>result.grossTotal).charAt(0)))
+            //     result.grossTotal = (<any>result.grossTotal).slice(0, 1);
+            // if (isNaN((<any>result.netTotal).charAt(0)))
+            //     result.netTotal = (<any>result.netTotal).slice(0, 1);
+            // result.overrides.forEach((o, i, a) => {
+            //     if (isNaN((<any>o.amount).charAt(0)))
+            //         a[i].amount = (<any>o.amount).slice(1);
+            // });
+            // result.expenses.forEach((e, i, a) => {
+            //     if (isNaN((<any>e.amount).charAt(0)))
+            //         a[i].amount = (<any>e.amount).slice(1);
+            //     a[i].expenseId = e.expenseId > 0 ? e.expenseId : null;
+            // });
             _this.service.savePayrollDetails(_this.user.sessionUser.sessionClient, result)
                 .subscribe(function (res) {
                 _this.setPayrolls(res);
@@ -11443,6 +11423,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PayrollDetailTotalsPipe", function() { return PayrollDetailTotalsPipe; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _app_utils__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @app/utils */ "./src/app/utils/index.ts");
+
 
 
 var PayrollDetailTotalsPipe = /** @class */ (function () {
@@ -11456,10 +11438,16 @@ var PayrollDetailTotalsPipe = /** @class */ (function () {
             return this.calculateNetTotal(value);
     };
     PayrollDetailTotalsPipe.prototype.calculateGrossTotal = function (detail) {
-        var expenses = detail.expenses.map(function (e) { return e.amount; }).reduce(function (t, n) { return t + n; }, 0);
-        var overrides = detail.overrides.map(function (o) { return (o.amount * o.units); }).reduce(function (t, n) { return t + n; }, 0);
-        var result = +detail.grossTotal + +expenses + +overrides;
-        return result;
+        var expenses = detail.expenses.map(function (e) { return e.amount; }).reduce(function (t, n) {
+            return Object(_app_utils__WEBPACK_IMPORTED_MODULE_2__["coerceNumberProperty"])(t) + Object(_app_utils__WEBPACK_IMPORTED_MODULE_2__["coerceNumberProperty"])(n);
+        }, 0);
+        var overrides = detail.overrides.map(function (o) { return (o.amount * o.units); }).reduce(function (t, n) {
+            return Object(_app_utils__WEBPACK_IMPORTED_MODULE_2__["coerceNumberProperty"])(t) + Object(_app_utils__WEBPACK_IMPORTED_MODULE_2__["coerceNumberProperty"])(n);
+        }, 0);
+        expenses = Object(_app_utils__WEBPACK_IMPORTED_MODULE_2__["coerceNumberProperty"])(expenses);
+        overrides = Object(_app_utils__WEBPACK_IMPORTED_MODULE_2__["coerceNumberProperty"])(overrides);
+        var currGross = Object(_app_utils__WEBPACK_IMPORTED_MODULE_2__["coerceNumberProperty"])(detail.grossTotal);
+        return currGross + expenses + overrides;
     };
     PayrollDetailTotalsPipe.prototype.calculateNetTotal = function (detail) {
         var result = this.calculateGrossTotal(detail);

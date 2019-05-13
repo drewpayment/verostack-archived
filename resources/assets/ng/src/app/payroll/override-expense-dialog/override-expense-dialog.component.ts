@@ -73,7 +73,7 @@ export class OverrideExpenseDialogComponent implements OnInit, AfterViewInit {
     }
 
     getActiveTabTitle() {
-        if(this.overrideTab.isActive) {
+        if (this.overrideTab.isActive) {
             return 'Override';
         } else if (this.expenseTab.isActive) {
             return 'Expense';
@@ -90,40 +90,17 @@ export class OverrideExpenseDialogComponent implements OnInit, AfterViewInit {
     }
 
     removeUnsavedOverride(index:number) {
-        if(this.detail.overrides[index].overrideId == null || this.detail.overrides[index].overrideId == 0) {
+        if (this.detail.overrides[index].overrideId == null || this.detail.overrides[index].overrideId == 0) {
             this.detail.overrides.splice(index, 1);
             (<FormArray>this.f.get('overrides')).removeAt(index);
         }
     }
 
     removeUnsavedExpense(index:number) {
-        if(this.detail.expenses[index].expenseId == null || this.detail.expenses[index].expenseId == 0) {
+        if (this.detail.expenses[index].expenseId == null || this.detail.expenses[index].expenseId == 0) {
             this.detail.expenses.splice(index, 1);
             (<FormArray>this.f.get('expenses')).removeAt(index);
         }
-    }
-
-    formatCurrencyOnBlur(element:FormControl, event) {
-        let result = event.target.value;
-        let i = result.lastIndexOf('.');
-
-        if(i == -1) {
-            result = `${result}.00`;
-        } else if(result.slice(i).length < 2) {
-            let cents = result.slice(i);
-            if(cents == 0)
-                result = result.slice(0, i) + '00';
-            else
-                result = result.slice(0, result.length - 1) + '0';
-        } else if(result.slice(i).length > 2) {
-            let cents = result.slice(i);
-            result = result.replace(cents, `.${cents.slice(-2)}`);
-        }
-
-        if(result.charAt(0) != '$')
-            result = `$${result}`;
-
-        element.patchValue(result);
     }
 
     updateOverrideAmount(value:string, index:number) {
@@ -149,7 +126,7 @@ export class OverrideExpenseDialogComponent implements OnInit, AfterViewInit {
     }
 
     saveForm() {
-        if(!this.f.valid) return;
+        if (!this.f.valid) return;
         const model = this.prepareModel();
         this.ref.close(model);
     }
@@ -157,8 +134,8 @@ export class OverrideExpenseDialogComponent implements OnInit, AfterViewInit {
     private prepareModel() {
         const overridesForm = this.f.get('overrides') as FormArray;
         const expensesForm = this.f.get('expenses') as FormArray;
-        let overrides = [] as IOverride[];
-        let expenses = [] as IExpense[];
+        const overrides = [] as IOverride[];
+        const expenses = [] as IExpense[];
 
         overridesForm.value.forEach((o:IOverride) => {
             overrides.push({
@@ -189,7 +166,7 @@ export class OverrideExpenseDialogComponent implements OnInit, AfterViewInit {
     }
 
     private isNumericKeyPress(key) {
-        const numericKeys = [0,1,2,3,4,5,6,7,8,9,0];
+        const numericKeys = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
         return numericKeys.includes(key);
     }
 
@@ -251,14 +228,14 @@ export class OverrideExpenseDialogComponent implements OnInit, AfterViewInit {
     }
 
     private createOverridesFormArray() {
-        if(this.detail.overrides == null || this.detail.overrides.length == 0) return;
+        if (this.detail.overrides == null || this.detail.overrides.length == 0) return;
         this.detail.overrides.forEach(o => {
             (<FormArray>this.f.get('overrides')).push(this.fb.group({
                 overrideId: this.fb.control(o.overrideId),
                 payrollDetailsId: this.fb.control(o.payrollDetailsId),
                 agentId: this.fb.control(o.agentId, [Validators.required]),
                 units: this.fb.control(o.units, [Validators.required]),
-                amount: this.fb.control(this.currencyPipe.transform(o.amount), { validators: Validators.required, updateOn: 'blur' })
+                amount: this.fb.control(o.amount, { validators: Validators.required, updateOn: 'blur' })
             }));
         });
     }
@@ -272,7 +249,7 @@ export class OverrideExpenseDialogComponent implements OnInit, AfterViewInit {
                 agentId: this.fb.control(e.agentId),
                 title: this.fb.control(e.title),
                 description: this.fb.control(e.description),
-                amount: this.fb.control(this.currencyPipe.transform(e.amount), { validators: Validators.required, updateOn: 'blur' }),
+                amount: this.fb.control(e.amount, { validators: Validators.required, updateOn: 'blur' }),
                 expenseDate: this.fb.control(e.expenseDate, [Validators.required])
             });
 
