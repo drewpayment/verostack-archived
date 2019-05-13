@@ -2163,7 +2163,7 @@ var CampaignService = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"container\">\n    <div class=\"row\">\n        <div class=\"col-md-12\">\n            <mat-card class=\"page-header-accent\">\n                <mat-card-content>\n                    <div class=\"row\">\n                        <div class=\"col-md-10\">\n                            <h3>Campaign Management</h3>\n                        </div>\n                        <div class=\"col-md-2 d-flex justify-content-end align-items-center\">\n                            <button type=\"button\" \n                                mat-icon-button \n                                color=\"primary\" \n                                (click)=\"setFilters()\" \n                                [class.filter-active]=\"filterActive\"\n                            >\n                                <mat-icon>filter_list</mat-icon>\n                            </button>\n                            <button type=\"button\"\n                                class=\"ml-2\"\n                                mat-flat-button\n                                color=\"primary\"\n                                [matBadge]=\"numFilters\"\n                                matBadgePosition=\"after\"\n                                matBadgeColor=\"accent\"\n                                [matBadgeHidden]=\"!filterActive\"\n                                matBadgeOverlap=\"true\"\n                                (click)=\"clearFilters()\"\n                                *ngIf=\"filterActive\"\n                            >\n                                Clear Filters\n                            </button>\n                        </div>\n                    </div>\n                </mat-card-content>\n            </mat-card>\n        </div>\n    </div>\n\n    <div class=\"row\">\n        <div class=\"col-md-6 my-2\" *ngFor=\"let c of (campaigns | async); let i = index\">\n            <div class=\"card hoverable\">\n                <!-- <div class=\"card-header text-center\">{{c.name}}</div> -->\n                <div class=\"card-body px-3 pt-1 pb-2\" [ngClass]=\"c.active ? 'border-top-info' : 'border-top-light'\">\n                    <div class=\"row\">\n                        <div class=\"col-md-10 d-flex align-items-center\">\n                            <h5 class=\"card-title mb-0\" [class.text-muted]=\"!c.active\">{{c.name}}</h5>\n                        </div>\n                        <div class=\"col-md-2 d-flex align-items-start justify-content-end\">\n                            <button mat-icon-button type=\"button\" [matMenuTriggerFor]=\"menu\" class=\"float-right\" [class.text-muted]=\"!c.active\">\n                                <mat-icon>more_vert</mat-icon>\n                            </button>\n                            <mat-menu #menu>\n                                <button mat-menu-item (click)=\"editCampaign(c)\" *ngIf=\"c.active\">Edit</button>\n                                <button mat-menu-item *ngIf=\"c.active\" [routerLink]=\"'/campaigns/'+c.campaignId\">\n                                    Detail\n                                </button>\n                                <button mat-menu-item (click)=\"switchActiveStatus(c, i)\">{{c.active ? 'Deactivate' : 'Activate'}}</button>\n                            </mat-menu>\n                        </div>\n                    </div>\n                    \n                    <!-- <div \n                        class=\"card-text my-2\" \n                        *ngIf=\"c.mdDetails != null; else noDetail\" \n                        [innerHTML]=\"sanitize(c.mdDetails)\"\n                        [class.campaign-body]=\"c.mdDetails != null\"\n                    ></div>\n                    <ng-template #noDetail>\n                        <div \n                            class=\"card-text font-italic text-muted my-2\"\n                            [class.campaign-body]=\"c.mdDetails != null\"\n                        >No details saved.</div>\n                    </ng-template> -->\n\n                    <div class=\"card-text my-2\" *ngIf=\"c.utilities != null && c.utilities.length\">\n                        <h5 class=\"font-weight-bold\">Available Utilities</h5>\n                        <ul>\n                            <li *ngFor=\"let util of c.utilities\">\n                                {{util.utilityName}}\n                            </li>\n                        </ul>\n                    </div>\n\n                </div>\n                <div class=\"card-footer d-flex bg-light\" [ngClass]=\"c.compensation != null ? 'justify-content-between' : 'justify-content-end'\">\n                    <small class=\"font-italic text-dark\" *ngIf=\"c.compensation != null\">Compensation: ${{c.compensation}}</small>\n                    <small class=\"font-italic\" [ngClass]=\"!c.active ? 'text-muted' : 'text-info'\">\n                        {{c.active ? 'Active' : 'Inactive'}}\n                    </small>\n                </div>\n            </div>\n        </div>\n    </div>\n    \n</div>\n\n<vs-float-button\n  mat-icon=\"add\"\n  (callback)=\"addCampaign()\"\n  [isOpen]=\"floatIsOpen\"\n></vs-float-button>\n"
+module.exports = "<div class=\"container\">\n    <div class=\"row\">\n        <div class=\"col-md-12\">\n            <mat-card class=\"page-header-accent\">\n                <mat-card-content>\n                    <div class=\"row\">\n                        <div class=\"col-md-10\">\n                            <h3>Campaign Management</h3>\n                        </div>\n                        <div class=\"col-md-2 d-flex justify-content-end align-items-center\">\n                            <mat-slide-toggle (change)=\"changeViewHandler($event)\" class=\"mr-2\">Show All</mat-slide-toggle>\n                            <mat-form-field>\n                                <input type=\"text\" matInput [formControl]=\"searchText\" placeholder=\"Search Campaigns\" />\n                            </mat-form-field>\n                            \n                            <!-- <button type=\"button\" \n                                mat-icon-button \n                                color=\"primary\" \n                                (click)=\"setFilters()\" \n                                [class.filter-active]=\"filterActive\"\n                            >\n                                <mat-icon>filter_list</mat-icon>\n                            </button>\n                            <button type=\"button\"\n                                class=\"ml-2\"\n                                mat-flat-button\n                                color=\"primary\"\n                                [matBadge]=\"numFilters\"\n                                matBadgePosition=\"after\"\n                                matBadgeColor=\"accent\"\n                                [matBadgeHidden]=\"!filterActive\"\n                                matBadgeOverlap=\"true\"\n                                (click)=\"clearFilters()\"\n                                *ngIf=\"filterActive\"\n                            >\n                                Clear Filters\n                            </button> -->\n                        </div>\n                    </div>\n                </mat-card-content>\n            </mat-card>\n        </div>\n    </div>\n\n    <div class=\"row\">\n        <ng-container *ngIf=\"(campaigns|async)?.length\">\n            <div class=\"col-md-6 my-2\" *ngFor=\"let c of (campaigns | async); let i = index\">\n                <div class=\"card hoverable\">\n                    <!-- <div class=\"card-header text-center\">{{c.name}}</div> -->\n                    <div class=\"card-body px-3 pt-1 pb-2\" [ngClass]=\"c.active ? 'border-top-info' : 'border-top-light'\">\n                        <div class=\"row\">\n                            <div class=\"col-md-10 d-flex align-items-center\">\n                                <h5 class=\"card-title mb-0\" [class.text-muted]=\"!c.active\">{{c.name}}</h5>\n                            </div>\n                            <div class=\"col-md-2 d-flex align-items-start justify-content-end\">\n                                <button mat-icon-button type=\"button\" [matMenuTriggerFor]=\"menu\" class=\"float-right\" [class.text-muted]=\"!c.active\">\n                                    <mat-icon>more_vert</mat-icon>\n                                </button>\n                                <mat-menu #menu>\n                                    <button mat-menu-item (click)=\"editCampaign(c)\" *ngIf=\"c.active\">Edit</button>\n                                    <button mat-menu-item *ngIf=\"c.active\" [routerLink]=\"'/campaigns/'+c.campaignId\">\n                                        Detail\n                                    </button>\n                                    <button mat-menu-item (click)=\"switchActiveStatus(c, i)\">{{c.active ? 'Deactivate' : 'Activate'}}</button>\n                                </mat-menu>\n                            </div>\n                        </div>\n    \n                        <div class=\"card-text my-2\" *ngIf=\"c.utilities != null && c.utilities.length\">\n                            <h5 class=\"font-weight-bold\">Available Utilities</h5>\n                            <ul>\n                                <li *ngFor=\"let util of c.utilities\">\n                                    {{util.utilityName}}\n                                </li>\n                            </ul>\n                        </div>\n    \n                    </div>\n                    <div class=\"card-footer d-flex bg-light\" [ngClass]=\"c.compensation != null ? 'justify-content-between' : 'justify-content-end'\">\n                        <small class=\"font-italic text-dark\" *ngIf=\"c.compensation != null\">Compensation: ${{c.compensation}}</small>\n                        <small class=\"font-italic\" [ngClass]=\"!c.active ? 'text-muted' : 'text-info'\">\n                            {{c.active ? 'Active' : 'Inactive'}}\n                        </small>\n                    </div>\n                </div>\n            </div>\n        </ng-container>\n    </div>\n    \n</div>\n\n<vs-float-button\n  mat-icon=\"add\"\n  (callback)=\"addCampaign()\"\n  [isOpen]=\"floatIsOpen\"\n></vs-float-button>\n"
 
 /***/ }),
 
@@ -2202,6 +2202,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_platform_browser__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @angular/platform-browser */ "./node_modules/@angular/platform-browser/fesm5/platform-browser.js");
 /* harmony import */ var _app_models_campaign_filters_model__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @app/models/campaign-filters.model */ "./src/app/models/campaign-filters.model.ts");
 /* harmony import */ var _app_campaigns_campaign_filter_dialog_campaign_filter_dialog_component__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @app/campaigns/campaign-filter-dialog/campaign-filter-dialog.component */ "./src/app/campaigns/campaign-filter-dialog/campaign-filter-dialog.component.ts");
+/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
+/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
+
+
 
 
 
@@ -2223,7 +2227,7 @@ var CampaignsComponent = /** @class */ (function () {
         this.msg = msg;
         this.sanitizer = sanitizer;
         this.defaultFilter = {
-            activeStatus: 'all',
+            activeStatus: 'active',
             compOperator: _app_models_campaign_filters_model__WEBPACK_IMPORTED_MODULE_11__["CompOperator"].Equals,
             compensation: null,
             location: { name: 'Michigan', abbreviation: 'MI' }
@@ -2232,9 +2236,10 @@ var CampaignsComponent = /** @class */ (function () {
         this.store = {};
         this.activeTableColumns = ['name', 'campaignId', 'active', 'createdAt', 'updatedAt'];
         this.activeTableSource = [];
-        this.campaigns = new rxjs__WEBPACK_IMPORTED_MODULE_5__["Subject"]();
+        this.campaigns = new rxjs__WEBPACK_IMPORTED_MODULE_5__["BehaviorSubject"](null);
         this.inactiveTableSource = [];
         this.floatBtnIsOpen$ = new rxjs__WEBPACK_IMPORTED_MODULE_5__["BehaviorSubject"](false);
+        this.searchText = new _angular_forms__WEBPACK_IMPORTED_MODULE_13__["FormControl"]('');
         this.filter = this.defaultFilter;
     }
     CampaignsComponent.prototype.ngOnInit = function () {
@@ -2254,15 +2259,20 @@ var CampaignsComponent = /** @class */ (function () {
                 .getCampaigns(_this.user.sessionUser.sessionClient, false)
                 .then(function (campaigns) {
                 _this.store.campaigns = campaigns;
-                _this.campaigns.next(campaigns);
                 _this.session.hideLoader();
                 // TODO: remove after restructuring
                 _this.tableData = campaigns;
                 _this.sortCampaignsByStatus();
+                _this.updateCampaignsByFilter();
             })
                 .catch(_this.msg.showWebApiError);
         });
         this.floatIsOpen = this.floatBtnIsOpen$.asObservable();
+        this.searchText.valueChanges.pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_14__["distinctUntilChanged"])(), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_14__["debounceTime"])(500)).subscribe(function (val) {
+            var dataset = _this.processFilters();
+            var result = dataset.filter(function (c) { return c.name.toLowerCase().includes(val.trim().toLowerCase()); });
+            _this.campaigns.next(result);
+        });
     };
     CampaignsComponent.prototype.switchActiveStatus = function (item, index) {
         var _this = this;
@@ -2336,7 +2346,31 @@ var CampaignsComponent = /** @class */ (function () {
             _this.updateCampaignsByFilter();
         });
     };
+    CampaignsComponent.prototype.changeViewHandler = function (event) {
+        console.dir(event);
+        var isChecked = event.checked;
+        var newFilterValue = isChecked ? 'all' : 'active';
+        this.filter.activeStatus = newFilterValue;
+        this.updateCampaignsByFilter();
+    };
     CampaignsComponent.prototype.updateCampaignsByFilter = function () {
+        var result;
+        result = this.processFilters();
+        if (result != null)
+            this.campaigns.next(result);
+        this.filterActive = true;
+    };
+    CampaignsComponent.prototype.clearFilters = function () {
+        this.filterActive = false;
+        this.campaigns.next(this.store.campaigns);
+        this.filter = this.defaultFilter;
+        this.numFilters = 0;
+    };
+    CampaignsComponent.prototype.sanitize = function (value) {
+        return this.sanitizer.bypassSecurityTrustHtml(value);
+    };
+    // PRIVATE METHODS
+    CampaignsComponent.prototype.processFilters = function () {
         var _this = this;
         var result;
         this.numFilters = 0;
@@ -2344,19 +2378,17 @@ var CampaignsComponent = /** @class */ (function () {
             result = this.store.campaigns;
             this.numFilters++;
         }
-        else {
-            if (this.filter.activeStatus === 'active') {
-                result = lodash__WEBPACK_IMPORTED_MODULE_2__["filter"](this.store.campaigns, function (c) {
-                    return c.active;
-                });
-                this.numFilters++;
-            }
-            if (this.filter.activeStatus === 'inactive') {
-                result = lodash__WEBPACK_IMPORTED_MODULE_2__["filter"](this.store.campaigns, function (c) {
-                    return !c.active;
-                });
-                this.numFilters++;
-            }
+        else if (this.filter.activeStatus === 'active') {
+            result = lodash__WEBPACK_IMPORTED_MODULE_2__["filter"](this.store.campaigns, function (c) {
+                return c.active;
+            });
+            this.numFilters++;
+        }
+        else if (this.filter.activeStatus === 'inactive') {
+            result = lodash__WEBPACK_IMPORTED_MODULE_2__["filter"](this.store.campaigns, function (c) {
+                return !c.active;
+            });
+            this.numFilters++;
         }
         if (this.filter.compensation > 0) {
             if (this.filter.compOperator == _app_models_campaign_filters_model__WEBPACK_IMPORTED_MODULE_11__["CompOperator"].Equals) {
@@ -2386,26 +2418,8 @@ var CampaignsComponent = /** @class */ (function () {
             }
             this.numFilters++;
         }
-        // if(this.filter.location != null) {
-        // add this... 
-        // result = _.filter(result, (c:ICampaign) => {
-        //     return c.
-        // });
-        // }
-        if (result != null)
-            this.campaigns.next(result);
-        this.filterActive = true;
+        return result;
     };
-    CampaignsComponent.prototype.clearFilters = function () {
-        this.filterActive = false;
-        this.campaigns.next(this.store.campaigns);
-        this.filter = this.defaultFilter;
-        this.numFilters = 0;
-    };
-    CampaignsComponent.prototype.sanitize = function (value) {
-        return this.sanitizer.bypassSecurityTrustHtml(value);
-    };
-    // PRIVATE METHODS
     CampaignsComponent.prototype.sortCampaignsByStatus = function () {
         this.activeTableSource = [];
         this.inactiveTableSource = [];
@@ -2444,11 +2458,6 @@ var CampaignsComponent = /** @class */ (function () {
     return CampaignsComponent;
 }());
 
-var TABLE_DATA = [
-    { campaignId: 1, clientId: 0, name: 'Consumers', active: true, createdAt: new Date(), updatedAt: new Date() },
-    { campaignId: 2, clientId: 0, name: 'DTE', active: true, createdAt: new Date(), updatedAt: new Date() },
-    { campaignId: 3, clientId: 0, name: 'Spark', active: false, createdAt: new Date(), updatedAt: new Date() }
-];
 
 
 /***/ }),
