@@ -61,34 +61,31 @@ class PayrollDetailsService
     public function getPaychecksPaged(Request $request, $clientId)
     {
         $result = new ApiResource();
-
-        /**
-         * Need to update this so that the user can pass in filtering options to filter by a range of dates of the pay cycle.
-         * However, the start/end dates are on the pay cycle object which is a relationship through the Payroll entity. In order to check this,
-         * we're going to need to write a fairly complex conditional where clause using this: 
-         * https://laravel.com/docs/5.7/eloquent-relationships#querying-relationship-existence
-         * 
-         * UPDATE: This is working for now... feels like EGG SHELLS. 
-         */
+        
         $filterByDates = !is_null($request->startDate) && !is_null($request->endDate);
 
-        $details = PayrollDetail::with(['payroll.payCycle', 'agent', 'overrides.agent', 'expenses'])
+        $details = PayrollDetail::with(['payroll.payCycle', 'agent', 'overrides.agent', 'expenses', 'payroll'])
+            ->whereHas('payroll', function($q) use ($request, $clientId, $filterByDates) {
+                $q->where([
+                    ['client_id', $clientId],
+                    ['is_released', 1]
+                ]);
+                
+                //TODO: this is broken right now, it isn't filtering by the dates passed in... always returns empty set
+                if ($filterByDates) {
+                    $q->whereBetween('release_date', [$request->startDate, $request->endDate]);
+                }
+            })
             ->select('payroll_details.*', 
                 DB::raw('
                     (SELECT p.release_date 
                     FROM payrolls p
                     WHERE p.client_id = ?
                     AND p.payroll_id = payroll_details.payroll_id) AS release_date
-                '))
-            ->setBindings([$clientId])
+                ')
+            )
+            ->addBinding($clientId)
             ->latest('release_date', 'desc')
-            ->when($filterByDates, function($qry) use ($request) {
-                $qry->whereHas('payroll', function($pq) use ($request) {
-                    $pq->where('is_released', 1)
-                        ->whereBetween('release_date', [$request->startDate, $request->endDate]);
-                });
-            })
-            // TODO: ->whereNotNull('release_date') needs to make sure we're getting only released payrolls back
             ->paginate($request->resultsPerPage, ['*'], 'page', $request->page);
 
         return $result->setData($details);
