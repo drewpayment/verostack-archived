@@ -67,12 +67,15 @@
                         </div>
     
                         <div class="card-text my-2" *ngIf="c.utilities != null && c.utilities.length">
-                            <h5 class="font-weight-bold">Available Utilities</h5>
-                            <ul>
-                                <li *ngFor="let util of c.utilities">
-                                    {{util.utilityName}}
-                                </li>
-                            </ul>
+                            <p>Utilities</p>
+                            <mat-divider></mat-divider>
+                            <mat-list class="utility-list">
+                                <mat-list-item *ngFor="let u of c.utilities">
+                                    <mat-icon mat-list-icon>store</mat-icon>
+                                    <h5 mat-line>{{u.utilityName}}</h5>
+                                    <p mat-line class="font-italic text-muted">{{u.classification}}</p>
+                                </mat-list-item>
+                            </mat-list>
                         </div>
     
                     </div>

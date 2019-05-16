@@ -1,29 +1,26 @@
-
 .campaign-tab-group {
-  border: 1px solid #e8e8e8;
+    border: 1px solid #e8e8e8;
 }
 
 .campaign-tab-content {
-  padding: 16px;
+    padding: 16px;
 }
 
 .campaigns-table {
-
-  .active {
-    display: flex;
-    flex-direction: column;
-    max-height: 500px;
-    min-width: 300px;
-    overflow: auto;
-  }
-
+    .active {
+        display: flex;
+        flex-direction: column;
+        max-height: 500px;
+        min-width: 300px;
+        overflow: auto;
+    }
 }
 
 .active-table {
-  width: 100%;
+    width: 100%;
 }
 
-.campaign-body {
-    height: 200px;
+.utility-list {
+    height: 100px;
     overflow-y: auto;
 }

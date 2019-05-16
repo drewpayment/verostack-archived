@@ -174,7 +174,6 @@ export class CampaignsComponent implements OnInit {
     }
 
     changeViewHandler(event:MatSlideToggleChange) {
-        console.dir(event);
         const isChecked = event.checked;
         const newFilterValue = isChecked ? 'all' : 'active';
         this.filter.activeStatus = newFilterValue;
