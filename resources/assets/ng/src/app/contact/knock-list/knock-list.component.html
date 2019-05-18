@@ -19,7 +19,7 @@
     
 </mat-toolbar>
 
-<mat-table [dataSource]="contacts" class="mat-elevation-z1">
+<mat-table [dataSource]="dataSource" class="mat-elevation-z1">
     <ng-container matColumnDef="checked">
         <mat-header-cell *matHeaderCellDef class="check-column">
             <mat-checkbox (change)="$event ? selectAllToggle() : null" [checked]="selection.hasValue() && isAllSelected()"

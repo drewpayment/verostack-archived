@@ -17,6 +17,7 @@ export class ContactService {
     private api:string;
     _contacts:Contact[];
 
+    private restrictedContacts:DncContact[];
     _restrictedContacts$ = new BehaviorSubject<DncContact[]>(null);
 
     constructor(
@@ -56,15 +57,24 @@ export class ContactService {
             );
     }
 
+    setRestrictedContacts(contacts:DncContact[]) {
+        this.restrictedContacts = contacts;
+        this._restrictedContacts$.next(contacts);
+    }
+
+    getAllRestrictedContacts():DncContact[] {
+        return this.restrictedContacts;
+    }
+
     private handleError<T>(resp:LaravelErrorResponse, caught:Observable<T>):Observable<T> {
         const keys = Object.keys(resp.error.errors);
-        let errorMsg:string = 'Errors: ';
+        let errorMsg = 'Errors: ';
 
         keys.forEach(key => {
             const propErrors:string[] = resp.error.errors[key];
             if (!_.isArray(propErrors)) return; /** if this isn't an array, it means we don't have any errors and need to bail */
             propErrors.forEach((pe:string, i:number) => {
-                errorMsg += `(${i+1}) ${pe}`;
+                errorMsg += `(${i + 1}) ${pe}`;
             });
         });
         this.msg.addMessage(errorMsg);
