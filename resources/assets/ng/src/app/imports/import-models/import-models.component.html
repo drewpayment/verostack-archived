@@ -1,0 +1,30 @@
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+        <mat-card class="page-header-accent">
+          <mat-card-header>
+            <h3>Import Models</h3>
+          </mat-card-header>
+          <mat-card-content>
+            Create an Import Model to map the fields from a sales reporting spreadsheet or CSV to a sale in the commission system. 
+            In order to do so, add fields and type the exact column header description and then select from the paired dropdown to 
+            match it to the corresponding sale field in the commission system. 
+          </mat-card-content>
+        </mat-card>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <p class="font-italic">Material Table will go here...</p>
+    </div>
+  </div>
+</div>
+
+<vs-float-button
+  mat-icon="add"
+  color="accent"
+  (callback)="addImportModel()"
+  [isOpen]="isFabOpen$"
+></vs-float-button>
