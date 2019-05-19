@@ -17,7 +17,46 @@
 
   <div class="row">
     <div class="col-md-12">
-      <p class="font-italic">Material Table will go here...</p>
+      <mat-table [dataSource]="dataSource">
+        <ng-container matColumnDef="detailView">
+          <mat-header-cell *matHeaderCellDef>&nbsp;</mat-header-cell>
+          <mat-cell *matCellDef="let item">
+            <button type="button" mat-icon-button class="text-muted">
+              <mat-icon>remove_red_eye</mat-icon>
+            </button>
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="isActive">
+          <mat-header-cell *matHeaderCellDef class="d-flex justify-content-center">Active</mat-header-cell>
+          <mat-cell *matCellDef="let item" class="d-flex justify-content-center">
+            <mat-checkbox [checked]="item.deletedAt == null" (change)="changeActiveStatus($event)"></mat-checkbox>
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="shortDesc">
+          <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
+          <mat-cell *matCellDef="let item">{{item.shortDesc}}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="modifiedBy">
+          <mat-header-cell *matHeaderCellDef>Owner</mat-header-cell>
+          <mat-cell *matCellDef="let item">{{item.userId}}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="createdAt">
+          <mat-header-cell *matHeaderCellDef>Created</mat-header-cell>
+          <mat-cell *matCellDef="let item">{{item.createdAt | date:'shortDate'}}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="updatedAt">
+          <mat-header-cell *matHeaderCellDef>Modified Last</mat-header-cell>
+          <mat-cell *matCellDef="let item">{{item.updatedAt | date:'shortDate'}}</mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="['detailView', 'isActive', 'shortDesc', 'modifiedBy', 'createdAt', 'updatedAt']"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: ['detailView', 'isActive', 'shortDesc', 'modifiedBy', 'createdAt', 'updatedAt'];"></mat-row>
+      </mat-table>
     </div>
   </div>
 </div>

@@ -7,6 +7,7 @@ import { FabFloatBtnModule } from '@app/fab-float-btn/fab-float-btn.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ImportModelsComponent } from './import-models/import-models.component';
 import { AuthGuard } from '@app/auth.guard';
+import { AddImportModelComponent } from './dialogs/add-import-model/add-import-model.component';
 
 const routes: Route[] = [
     { path: '', redirectTo: 'models', pathMatch: 'full' },
@@ -15,7 +16,8 @@ const routes: Route[] = [
 
 @NgModule({
     declarations: [
-        ImportModelsComponent
+        ImportModelsComponent,
+        AddImportModelComponent
     ],
     imports: [
         CommonModule,
@@ -26,6 +28,9 @@ const routes: Route[] = [
         ReactiveFormsModule,
 
         RouterModule.forChild(routes)
+    ],
+    entryComponents: [
+        AddImportModelComponent
     ]
 })
 export class ImportsModule { }
