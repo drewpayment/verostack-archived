@@ -45,15 +45,30 @@ export class AddImportModelComponent implements OnInit {
     // TODO: this needs to be continued
     private createForm() {
         this.form = this.fb.group({
-            importModelId: this.fb.control(''),
-            clientId: this.fb.control(''),
             shortDesc: this.fb.control('', [Validators.required]),
             fullDesc: this.fb.control(''),
             map: this.fb.group({
-                agentId: this.fb.control('', [Validators.required]),
-                clientId: this.fb.control(this.user.selectedClient()),
-                utilityId: this.fb.control('', [Validators.required])
-                // TODO: FINISH THIS
+                utilityId: this.fb.control('', [Validators.required]),
+                campaignId: this.fb.control('', [Validators.required]),
+                businessName: this.fb.control(''),
+                firstName: this.fb.control(''),
+                lastName: this.fb.control(''),
+                splitCustomerName: this.fb.control(''),
+                ssn: this.fb.control(''),
+                dob: this.fb.control(''),
+                street: this.fb.control('', [Validators.required]),
+                street2: this.fb.control(''),
+                city: this.fb.control('', [Validators.required]),
+                state: this.fb.control('', [Validators.required]),
+                zip: this.fb.control('', [Validators.required]),
+                phone: this.fb.control(''),
+                email: this.fb.control(''),
+                podAccount: this.fb.control(''),
+                saleDate: this.fb.control('', [Validators.required]),
+                matchAgentBySalesCode: this.fb.control('', [Validators.required]),
+                salesCode: this.fb.control(''),
+                agentName: this.fb.control(''),
+                utilityName: this.fb.control(''),
             }),
             userId: this.fb.control(this.user.id),
         });
