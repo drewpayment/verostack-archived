@@ -73,7 +73,7 @@
       >Save</button>
     </mat-card-actions>
   </mat-card> -->
-  <mat-card class="mat-elevation-z8">
+  <mat-card>
     <mat-card-header>
       <mat-card-title>
         <h4>Sale Status Configuration</h4>
@@ -108,6 +108,20 @@
         </ng-container>
 
       </table>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>
+        <h4>Mobile App Settings</h4>
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <mat-checkbox [formControl]="useExistingContacts" (change)="changeUseExistingContacts($event);">
+        Do not solicit Existing Contacts - By enabling this feature, users of the companion mobile app will 
+        be detered from contacting existing or past customers of your products and services. 
+      </mat-checkbox>
     </mat-card-content>
   </mat-card>
 </div>

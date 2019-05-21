@@ -129,4 +129,14 @@ export class ClientService {
     return this.http.post<SaleStatus>(url, dto);
   }
 
+  getClientOptions():Observable<IClientOption> {
+    const url = `${this.url}api/clients/0/client-options`;
+    return this.http.get<IClientOption>(url);
+  }
+
+  updateUseExistingContacts(dto:IClientOption):Observable<IClientOption> {
+    const url = `${this.url}api/clients/${dto.clientId}/client-options/use-existing-contacts`;
+    return this.http.post<IClientOption>(url, dto);
+  }
+
 }
