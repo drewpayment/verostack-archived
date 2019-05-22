@@ -37,6 +37,10 @@ return [
 
     'firebase' => [
         'project_id' => env('FIREBASE_PROJECT_NAME')
+    ],
+
+    'google' => [
+        'api_key' => env('GOOGLE_API_KEY')
     ]
 
 ];

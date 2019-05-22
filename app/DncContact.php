@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Scopes\ClientScope;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -17,6 +18,17 @@ class DncContact extends Model
         'dnc_contact_id', 'client_id', 'first_name', 'last_name', 'description', 'address', 'address_cont', 
         'city', 'state', 'zip', 'note', 'lat', 'long'
     ];
+
+    /**
+     * Filters all queries of this model by the user's selected client to ensure that they 
+     * do not have cross-client interactions.
+     *
+     * @return void
+     */
+    protected static function boot() {
+        parent::boot();
+        static::addGlobalScope(new ClientScope);
+    }
 
     /**
      * Filter by dnc_contact_id.

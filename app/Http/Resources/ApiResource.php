@@ -253,7 +253,7 @@ class ApiResource {
 	 * Build user session info by firebase login.
 	 *
 	 * @param string $email
-	 * @return void
+	 * @return App\User
 	 */
 	public static function getUserInfoByFirebase($email)
 	{

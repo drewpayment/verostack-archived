@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Scopes\ClientScope;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -88,6 +89,17 @@ class Contact extends Model
         'fax_country',
         'fax'
     ];
+
+    /**
+     * Filters all queries of this model by the user's selected client to ensure that they 
+     * do not have cross-client interactions.
+     *
+     * @return void
+     */
+    protected static function boot() {
+        parent::boot();
+        static::addGlobalScope(new ClientScope);
+    }
 
     public function sales()
     {
