@@ -6,9 +6,9 @@ use App\Client;
 use App\Campaign;
 use App\Http\Helpers;
 use App\ClientOptions;
+use Illuminate\Http\Request;
 use App\Http\Resources\ApiResource;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Request;
 
 class ClientController extends Controller
 {

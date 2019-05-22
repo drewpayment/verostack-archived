@@ -53,7 +53,7 @@ Route::group(['prefix' => 'clients', 'middleware' => 'auth:api'], function() {
 
 	Route::post('{clientId}/client-options', 'ClientController@updateClientOptions');
 
-	Route::post('{clientId}/client-options/use-existing-contacts', 'ClientController@updateClientOptions');
+	Route::post('{clientId}/client-options/use-existing-contacts', 'ClientController@updateUseExistingContacts');
 
 //	Route::get('{clientId}/campaigns', 'ClientController@getCampaignsByClient');
 

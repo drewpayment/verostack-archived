@@ -73,55 +73,76 @@
       >Save</button>
     </mat-card-actions>
   </mat-card> -->
-  <mat-card>
-    <mat-card-header>
-      <mat-card-title>
-        <h4>Sale Status Configuration</h4>
-      </mat-card-title>
-      <mat-card-subtitle>
-        The following is your organization's sale statuses. These should be updated to be used on your invoices based on the campaigns
-        you work with.
-      </mat-card-subtitle>
-    </mat-card-header>
-
-    <mat-card-content class="status-table">
-      <button type="button" mat-raised-button (click)="showAddSaleStatusDialog()" color="primary" class="ml-4 mr-2">
-        <mat-icon>add</mat-icon> Add
-      </button>
-      <mat-checkbox [(ngModel)]="showAllStatuses" (change)="filterStatuses()" [disabled]="!hasInactiveStatuses" class="mx-2 mt-1">Show All</mat-checkbox>
-      <table mat-table [dataSource]="saleStatuses$">
-        <tr mat-header-row *matHeaderRowDef="displayColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayColumns"></tr>
-
-        <ng-container matColumnDef="name">
-          <th mat-header-cell *matHeaderCellDef>Name</th>
-          <td mat-cell *matCellDef="let item">
-            {{item.name}}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="isActive">
-          <th mat-header-cell *matHeaderCellDef>Active</th>
-          <td mat-cell *matCellDef="let item">
-            <mat-checkbox [(ngModel)]="item.isActive" (change)="updateActiveStatus(item)">Active</mat-checkbox>
-          </td>
-        </ng-container>
-
-      </table>
-    </mat-card-content>
-  </mat-card>
-
-  <mat-card>
-    <mat-card-header>
-      <mat-card-title>
-        <h4>Mobile App Settings</h4>
-      </mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-      <mat-checkbox [formControl]="useExistingContacts" (change)="changeUseExistingContacts($event);">
-        Do not solicit Existing Contacts - By enabling this feature, users of the companion mobile app will 
-        be detered from contacting existing or past customers of your products and services. 
-      </mat-checkbox>
-    </mat-card-content>
-  </mat-card>
+  <div class="row">
+    <div class="col-md-7">
+      <mat-card class="border-top-primary">
+        <mat-card-header>
+          <mat-card-title>
+            <h4>Sale Status Configuration</h4>
+          </mat-card-title>
+          <mat-card-subtitle>
+            <p>
+              The following is your organization's sale statuses. These should be updated to be used on your invoices based on the campaigns
+              you work with.
+            </p>
+            <div>
+              <button type="button" mat-raised-button (click)="showAddSaleStatusDialog()" color="primary" class="ml-4 mr-2">
+                <mat-icon>add</mat-icon> Add
+              </button>
+              <mat-checkbox [(ngModel)]="showAllStatuses" (change)="filterStatuses()" [disabled]="!hasInactiveStatuses" class="mx-2 mt-1">Show All</mat-checkbox>
+            </div>
+          </mat-card-subtitle>
+        </mat-card-header>
+    
+        <mat-card-content>
+          <mat-table [dataSource]="saleStatuses$">
+            <mat-header-row *matHeaderRowDef="displayColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayColumns"></mat-row>
+    
+            <ng-container matColumnDef="name">
+              <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
+              <mat-cell *matCellDef="let item">
+                {{item.name}}
+              </mat-cell>
+            </ng-container>
+    
+            <ng-container matColumnDef="isActive">
+              <mat-header-cell *matHeaderCellDef>Active</mat-header-cell>
+              <mat-cell *matCellDef="let item">
+                <mat-checkbox [(ngModel)]="item.isActive" (change)="updateActiveStatus(item)">Active</mat-checkbox>
+              </mat-cell>
+            </ng-container>
+    
+          </mat-table>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="col-md-5">
+      <mat-card class="border-top-primary">
+        <mat-card-header>
+          <mat-card-title>
+            <h4>Mobile App Settings</h4>
+          </mat-card-title>
+          <mat-card-subtitle>
+            <p>
+              Settings that control mobile app users' experience and permissions.
+            </p>
+          </mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="row mt-2">
+            <div class="col-md-12">
+              <mat-checkbox [formControl]="useExistingContacts" (change)="changeUseExistingContacts($event);">
+                Do not solicit Existing Contacts
+              </mat-checkbox>
+              <p>
+                By enabling this feature, users of the companion mobile app will 
+                be detered from contacting existing or past customers of your products and services. 
+              </p>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
 </div>
