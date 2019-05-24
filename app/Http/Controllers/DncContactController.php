@@ -9,7 +9,6 @@ use App\Http\Resources\ApiResource;
 use function GuzzleHttp\json_decode;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Services\DncContactService;
-use Google\Auth\HttpHandler\Guzzle6HttpHandler;
 
 class DncContactController extends Controller
 {
@@ -36,12 +35,13 @@ class DncContactController extends Controller
             $auth = app()->firebase->getAuth();
             $fbUser = $auth->getUser($uid);
             $user = ApiResource::getUserInfoByFirebase($fbUser->email);
+            $clientId = $user->sessionUser->session_client;
 
-            $contactsResult = $this->service->getExistingContacts($user->sessionUser->selectedClient);
+            $contactsResult = $this->service->getExistingContacts($clientId);
 
             if ($contactsResult->hasData()) {
                 $existingContacts = collect(null);
-                $temp = $contactsResult->getData();
+                $temp = collect($contactsResult->getData());
 
                 foreach($temp as $c) 
                 {
@@ -110,20 +110,23 @@ class DncContactController extends Controller
     protected function getGeolocation($contact)
     {
         $result = new ApiResource();
-        $street = str_replace(' ', '+', $contact->street);
-        $city = str_replace(' ', '+', $contact->city);
-        $state = $contact->state;
+        $street = str_replace(' ', '+', $contact['street']);
+        $city = str_replace(' ', '+', $contact['city']);
+        $state = $contact['state'];
         $apiKey = config('services.google.api_key');
         $url = 'https://maps.googleapis.com/maps/api/geocode/json?address='
             . $street . ',+' . $city . ',+' . $state . '&key=' . $apiKey;
 
-        $http = new GuzzleHttp\Client();
-
+        $http = new Client();
         $response = $http->request('GET', $url);
-        if ($response->statusCode > 299 || $response->statusCode < 200) {
+        if ($response->getStatusCode() > 299 || $response->getStatusCode() < 200) {
             // error handling?
+            return $result->setToFail(400);
         } 
 
+        //TODO: Need try/catch or some sort of error handling... Google returns "over daily limit" so 
+        // something isn't setup totally right, but the object that came back was unexpected and we need a way to 
+        // check the status when the API returns an object... 
         $parsed = json_decode($response->getBody());
 
         $geo = $parsed['results'][0]['geometry']['location'];

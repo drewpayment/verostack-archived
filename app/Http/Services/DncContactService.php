@@ -85,7 +85,8 @@ class DncContactService
 
 		$this->clientService->getClientOptions($clientId)->mergeInto($result);
 
-		if (!$result->getData()->useExistingContacts) {
+		$options = $result->getData();
+		if (is_null($options) || !$options['useExistingContacts']) {
 			return $result;
 		}
 
