@@ -129,7 +129,8 @@ class DncContactController extends Controller
         // check the status when the API returns an object... 
         $parsed = json_decode($response->getBody());
 
-        $geo = $parsed['results'][0]['geometry']['location'];
+        $geo = $parsed->results->geometry->location;
+        // $geo = $parsed['results'][0]['geometry']['location'];
         $result->setData($geo);
         return $result;
     }
