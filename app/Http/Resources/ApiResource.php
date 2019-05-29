@@ -263,4 +263,12 @@ class ApiResource {
 		return $user;
 	}
 
+	public static function getUserSessionByFirebase($email)
+	{
+		$user = User::byEmail($email)->first();
+		Auth::login($user);
+		$user = $this->helper->generateUserSession($user->username);
+		return $user;
+	}
+
 }
