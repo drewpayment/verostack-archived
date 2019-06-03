@@ -32,9 +32,10 @@ class DncContactController extends Controller
         $existingContactsResult = new ApiResource();
 
         if ($uid != null) {
-            $auth = app()->firebase->getAuth();
-            $fbUser = $auth->getUser($uid);
-            $user = ApiResource::getUserInfoByFirebase($fbUser->email);
+            return $result->setToFail()->throwApiException()->getResponse();
+        } else {
+            $user = Auth::user();
+            $user->load('sessionUser');
             $clientId = $user->sessionUser->session_client;
 
             $contactsResult = $this->service->getExistingContacts($clientId);
@@ -56,14 +57,14 @@ class DncContactController extends Controller
                     }
 
                     $transformed = new DncContact([
-                        'client_id' => $c->client_id,
-                        'first_name' => $c->first_name,
-                        'last_name' => $c->last_name,
-                        'address' => $c->street,
-                        'address_cont' => $c->street2,
-                        'city' => $c->city,
-                        'state' => $c->state,
-                        'zip' => $c->zip,
+                        'client_id' => $c['clientId'],
+                        'first_name' => $c['firstName'],
+                        'last_name' => $c['lastName'],
+                        'address' => $c['street'],
+                        'address_cont' => $c['street2'],
+                        'city' => $c['city'],
+                        'state' => $c['state'],
+                        'zip' => $c['zip'],
                         'lat' => $lat,
                         'long' => $lng
                     ]);
@@ -73,9 +74,6 @@ class DncContactController extends Controller
 
                 $existingContactsResult->setData($existingContacts);
             }
-        } else {
-            $user = Auth::user();
-            $user->load('sessionUser');
         }
 
         $clientId = $user->sessionUser->session_client;
@@ -129,9 +127,12 @@ class DncContactController extends Controller
         // check the status when the API returns an object... 
         $parsed = json_decode($response->getBody());
 
-        $geo = $parsed->results[0]->geometry->location;
-        // $geo = $parsed['results'][0]['geometry']['location'];
-        $result->setData($geo);
+        if (count($parsed->results) > 0) {
+            $geo = $parsed->results[0]->geometry->location;
+            // $geo = $parsed['results'][0]['geometry']['location'];
+            $result->setData($geo);
+        }
+        
         return $result;
     }
 
