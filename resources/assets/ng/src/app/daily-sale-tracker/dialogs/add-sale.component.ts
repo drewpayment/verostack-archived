@@ -1,5 +1,5 @@
-import {Component, OnInit, Inject, ViewChild, SimpleChanges, AfterViewInit, ElementRef, ComponentRef, ChangeDetectorRef} from '@angular/core';
-import {MatDialogRef, MAT_DIALOG_DATA, MatTooltip, MatAutocomplete, MatButtonToggleChange} from '@angular/material';
+import {Component, OnInit, Inject, ViewChild, AfterViewInit, ChangeDetectorRef} from '@angular/core';
+import {MatDialogRef, MAT_DIALOG_DATA, MatAutocomplete, MatButtonToggleChange} from '@angular/material';
 import {FormBuilder, FormGroup, Validators, FormArray, FormControl, ValidatorFn, AbstractControl} from '@angular/forms';
 import {SaleStatus, IAgent, ICampaign, DailySale, User, Remark, PaidStatusType, Utility, ContactType} from '@app/models';
 
@@ -28,6 +28,9 @@ interface ViewRemark extends Remark {
     wordWrap?: boolean;
 }
 
+/**
+ * This is the dialog used to create a sale as an admin from the daily-sale tracker
+ */
 @Component({
     selector: 'vs-add-daily-sale',
     templateUrl: './add-sale.component.html',
@@ -45,20 +48,20 @@ export class AddSaleDialogComponent implements OnInit, AfterViewInit {
     existingSale:DailySale;
     remarks:ViewRemark[] = [];
     newRemarks:Remark[];
-    campaigns:ICampaign[]= [];
+    campaigns:ICampaign[] = [];
     user:User;
-    hideTooltip: boolean = false;
-    showAddRemarkInput: boolean = false;
+    hideTooltip = false;
+    showAddRemarkInput = false;
     newRemarkInputValue: FormControl;
     submitted: boolean;
     remarkControl: FormGroup;
     isExistingSale: boolean;
-    showEditContactForm:boolean = false;
+    showEditContactForm = false;
     contacts:Contact[];
     contacts$:Observable<Contact[]>;
-    showNewContactFields:boolean = false;
-    showSetContactUI:boolean = false;
-    showBusinessNameField:boolean = false;
+    showNewContactFields = false;
+    showSetContactUI = false;
+    showBusinessNameField = false;
 
     /** internal use only, keeps track of all available utilities */
     private _utilities:Utility[];
@@ -215,7 +218,7 @@ export class AddSaleDialogComponent implements OnInit, AfterViewInit {
          * Check to see if the user selected and existing contact or if they used the "new contact"
          * form to create a new contact and then revalidate the sale form.
          */
-        if(this.form.get('existingContact').value.contactId != null && this.form.get('existingContact').value.contactId > 0) {
+        if (this.form.get('existingContact').value.contactId != null && this.form.get('existingContact').value.contactId > 0) {
             delete this.form.controls['contact'];
         } else {
             delete this.form.controls['existingContact'];
@@ -230,7 +233,7 @@ export class AddSaleDialogComponent implements OnInit, AfterViewInit {
 
     validateContactInput(event:any) {
         const input = event.target.value.toLowerCase();
-        let exists:boolean = false;
+        let exists = false;
         const filtered = this.contacts.filter(c => {
             if(c.firstName.toLowerCase().indexOf(input) === 0 || c.lastName.toLowerCase().indexOf(input) === 0) {
                 exists = (!exists) ? true : exists;
@@ -243,24 +246,32 @@ export class AddSaleDialogComponent implements OnInit, AfterViewInit {
 
     validateAgentInput(event) {
         const input = event.target.value.trim().toLowerCase();
-        let exists:boolean = false;
+        let exists = false;
         this.agents.forEach(a => {
-            if(a.firstName.includes(input))
+            if (a.firstName.includes(input))
                 return exists = true;
-            if(a.lastName.includes(input))
+            if (a.lastName.includes(input))
                 return exists = true;
         });
-        if(!exists) this.form.get('agent').setErrors({ nonExistent: true });
+        if (!exists) this.form.get('agent').setErrors({ nonExistent: true });
     }
 
     showNewContactForm():void {
-        this.resetContactForm('contact');
+        if (this.form.get('contact').dirty || this.form.get('contact').touched) {
+            this.resetContactForm('contact');
+            this.form.patchValue({
+                contact: {
+                    contactType: 1
+                }
+            }, { emitEvent: false });
+        }
+        
         this.showNewContactFields = !this.showNewContactFields;
     }
 
     setNewContact():void {
         this.setControlsTouched(this.form.get('contact') as FormGroup);
-        if(this.form.get('contact').invalid) return;
+        if (this.form.get('contact').invalid) return;
 
         this.showNewContactFields = false;
         this.showSetContactUI = true;
@@ -372,12 +383,12 @@ export class AddSaleDialogComponent implements OnInit, AfterViewInit {
     }
 
     handleContactTypeChange(event:MatButtonToggleChange):void {
-        if(event.value == ContactType.business) {
-            this.form.get('contact.contactType').setValue(2, { emitEvent: false })
+        if (event.value == ContactType.business) {
+            this.form.get('contact.contactType').setValue(2, { emitEvent: false });
             this.form.get('contact.businessName').setValidators([Validators.required]);
             this.showBusinessNameField = true;
         } else {
-            this.form.get('contact.contactType').setValue(1, { emitEvent: false })
+            this.form.get('contact.contactType').setValue(1, { emitEvent: false });
             this.form.get('contact.businessName').setValidators(null);
             this.showBusinessNameField = false;
         }
@@ -393,10 +404,12 @@ export class AddSaleDialogComponent implements OnInit, AfterViewInit {
     }
 
     private createForm(): void {
-        const contactType = this.existingSale != null && this.existingSale.contact != null 
-            && this.existingSale.contact.contactType != null
+        let contactType:any = this.existingSale && this.existingSale.contact
+            && this.existingSale.contact.contactType
                 ? this.existingSale.contact.contactType.toString()
                 : ContactType.residential.toString();
+
+        contactType = contactType || ContactType.residential;
 
         this.form = this.fb.group({
             saleDate: this.fb.control(this.existingSale.saleDate || this.today, [Validators.required]),

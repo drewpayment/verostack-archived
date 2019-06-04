@@ -41,7 +41,7 @@
                             <mat-form-field class="w-100">
                                 <input type="text" matInput
                                     placeholder="Amount per Unit"        
-                                    (ngModelChange)="updateOverrideAmount($event, i)"                          
+                                    [value]="f.get(['overrides', i, 'amount']).value | currency"                      
                                     formControlName="amount"
                                     required />
                                 <mat-error *ngIf="f.get(['overrides', i, 'amount']).hasError('required')">
@@ -90,7 +90,7 @@
                             <mat-form-field class="w-100">
                                 <input type="text" matInput
                                     placeholder="Amount"
-                                    (ngModelChange)="updateExpenseAmount($event, i)"
+                                    [value]="f.get(['expenses', i, 'amount']).value | currency"
                                     formControlName="amount"
                                     required
                                 />

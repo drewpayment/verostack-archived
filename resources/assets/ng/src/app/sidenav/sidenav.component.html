@@ -48,13 +48,17 @@
             <mat-icon>pie_chart</mat-icon>
             <span>Analyze</span>
         </a> -->
+        <a mat-list-item routerLink="imports" routerLinkActive="mat-router-link-active">
+            <mat-icon>cloud_upload</mat-icon>
+            <span>Imports</span>
+        </a>
         <a mat-list-item routerLink="daily-tracker" routerLinkActive="mat-router-link-active">
             <mat-icon>ballot</mat-icon>
             <span>Sales</span>
         </a>
         <a mat-list-item routerLink="client-information" routerLinkActive="mat-router-link-active">
             <mat-icon>business</mat-icon>
-            <span>Organization</span>
+            <span>Company</span>
         </a>
         <mat-accordion mat-list-item class="navigation-accordion">
             <mat-expansion-panel [expanded]="expandPayrollLinks" (opened)="expandPayrollLinks=!expandPayrollLinks;"

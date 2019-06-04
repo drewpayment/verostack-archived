@@ -30,6 +30,7 @@ include('core/payroll-details.php');
 include('core/utility.php');
 include('core/session-user.php');
 include('core/dnc-contacts.php');
+include('core/import-models.php');
 
 //Route::middleware('auth:api')->get('/user', function (Request $request) {
 //    return $request->user();
@@ -51,6 +52,8 @@ Route::group(['prefix' => 'clients', 'middleware' => 'auth:api'], function() {
 	Route::get('{clientId}/client-options', 'ClientController@getClientOptions');
 
 	Route::post('{clientId}/client-options', 'ClientController@updateClientOptions');
+
+	Route::post('{clientId}/client-options/use-existing-contacts', 'ClientController@updateUseExistingContacts');
 
 //	Route::get('{clientId}/campaigns', 'ClientController@getCampaignsByClient');
 

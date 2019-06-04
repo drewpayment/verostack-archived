@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { User, IClient, IClientOption, SaleStatus } from '../models/index';
-import { Validators, NgForm, FormGroup, FormBuilder } from '@angular/forms';
+import { Validators, NgForm, FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { MessageService } from '../message.service';
 import { ClientService } from './client.service';
 import { BehaviorSubject } from 'rxjs';
 import * as _ from 'lodash';
 import { UserService } from '../user-features/user.service';
 import { SessionService } from '@app/session.service';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatCheckboxChange } from '@angular/material';
 import { AddSaleStatusDialog } from '@app/client-information/dialogs/add-sale-status.component';
 
 @Component({
@@ -25,11 +25,13 @@ export class ClientInformationComponent implements OnInit {
     saleStatusForm: FormGroup;
     saleStatuses$: BehaviorSubject<SaleStatus[]> = new BehaviorSubject([]);
 
-    tooltipPosition: string = 'after';
+    tooltipPosition = 'after';
 
     allStatuses: SaleStatus[];
     showAllStatuses: boolean;
     hasInactiveStatuses: boolean;
+    options:IClientOption;
+    useExistingContacts = new FormControl();
 
     states: string[] = [
         'AL',
@@ -101,6 +103,11 @@ export class ClientInformationComponent implements OnInit {
             this.user = user;
             this.client = this.user.sessionUser.client;
             this.clients = this.user.clients;
+
+            this.clientService.getClientOptions().subscribe(options => {
+                this.options = options;
+                this.useExistingContacts.setValue(this.options.useExistingContacts);
+            });
 
             this.clientService.getSaleStatuses(this.client.clientId).subscribe(statuses => {
                 this.allStatuses = statuses;
@@ -200,6 +207,17 @@ export class ClientInformationComponent implements OnInit {
                 this.evaluateShowAllStatus();
             });
         });
+    }
+
+    changeUseExistingContacts(event:MatCheckboxChange) {
+        this.useExistingContacts.setValue(event.checked);
+        this.options.useExistingContacts = this.useExistingContacts.value;
+
+        this.clientService.updateUseExistingContacts(this.options)
+            .subscribe(op => {
+                this.options = op;
+                this.msg.addMessage('Updated mobile app settings.', 'dismiss', 2500);
+            });
     }
 
     private evaluateShowAllStatus(): void {

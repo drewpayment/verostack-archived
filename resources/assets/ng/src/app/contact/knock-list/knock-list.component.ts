@@ -10,6 +10,7 @@ import { AddDncContactDialogComponent } from './add-dnc-contact-dialog/add-dnc-c
 import { KnockListService } from './knock-list.service';
 import { MessageService } from '@app/message.service';
 import { ConfirmDeleteSheetComponent } from './confirm-delete-sheet/confirm-delete-sheet.component';
+import { ContactService } from '../contact.service';
 
 @Component({
     selector: 'vs-knock-list',
@@ -31,7 +32,6 @@ export class KnockListComponent implements OnInit, OnDestroy {
 
     private siteTitle:string;
     user:User;
-    contacts = new BehaviorSubject<DncContact[]>(null);
     displayColumns = ['checked', 'name', 'address', 'notes'];
     dataSource:MatTableDataSource<DncContact>;
     
@@ -44,12 +44,14 @@ export class KnockListComponent implements OnInit, OnDestroy {
         private dialog:MatDialog, 
         private service:KnockListService,
         private message:MessageService,
-        private sheet:MatBottomSheet
+        private sheet:MatBottomSheet,
+        private contactService:ContactService
     ) { }
 
     ngOnInit() {
-        this.contacts.next(this.route.snapshot.data['contacts'].sort(this.sortContacts));
-        this.dataSource = new MatTableDataSource<DncContact>(this.contacts.getValue());
+        this.contactService._restrictedContacts$.subscribe(contacts => {
+            this.dataSource = new MatTableDataSource<DncContact>(contacts);
+        });
 
         this.session.getUserItem().subscribe(user => {
             this.user = user;
@@ -97,9 +99,9 @@ export class KnockListComponent implements OnInit, OnDestroy {
                 .subscribe(dnc => {
                     this.session.hideLoader();
 
-                    const updatedList = this.contacts.getValue();
+                    const updatedList = this.contactService._restrictedContacts$.getValue();
                     updatedList.push(dnc);
-                    this.contacts.next(updatedList.sort(this.sortContacts));
+                    this.contactService._restrictedContacts$.next(updatedList.sort(this.sortContacts));
                     this.message.addMessage('Saved new DNK Contact!', 'dismiss', 2500);
                 });
         });
@@ -119,7 +121,7 @@ export class KnockListComponent implements OnInit, OnDestroy {
                 const deleteIds = pendingDelete.map(pd => pd.dncContactId);
                 this.service.deleteDncContacts(deleteIds)
                     .subscribe(result => {
-                        const contacts = this.contacts.getValue();
+                        const contacts = this.contactService._restrictedContacts$.getValue();
                         for (let i = 0; i < contacts.length; i ++) {
                             for (let j = 0; j < deleteIds.length; j++) {
                                 if (contacts[i].dncContactId === deleteIds[j]) {
@@ -128,7 +130,7 @@ export class KnockListComponent implements OnInit, OnDestroy {
                             } 
                         }
 
-                        this.contacts.next(contacts);
+                        this.contactService._restrictedContacts$.next(contacts);
                         this.message.addMessage(
                             `Deleted ${deleteIds.length} ${deleteIds.length > 1 ? 'contacts' : 'contact'}`, 
                             'dismiss', 2500);

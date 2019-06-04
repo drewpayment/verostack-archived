@@ -1,9 +1,7 @@
-import {Component, OnInit, Output} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import * as _ from 'lodash';
-import * as moment from 'moment';
-import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
+import {MatDialog, MatSlideToggleChange} from '@angular/material';
 import {NewCampaignDialogComponent} from '@app/campaigns/new-campaign-dialog/new-campaign-dialog.component';
-import {EventEmitter} from 'events';
 import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import {User, ICampaign} from '@app/models';
 import {SessionService} from '@app/session.service';
@@ -13,6 +11,8 @@ import {UserRole} from '@app/models/role.model';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { CampaignFilters, CompOperator } from '@app/models/campaign-filters.model';
 import { CampaignFilterDialogComponent } from '@app/campaigns/campaign-filter-dialog/campaign-filter-dialog.component';
+import { FormControl } from '@angular/forms';
+import { distinctUntilChanged, debounceTime, startWith } from 'rxjs/operators';
 
 interface DataStore {
     campaigns: ICampaign[];
@@ -25,21 +25,21 @@ interface DataStore {
 })
 export class CampaignsComponent implements OnInit {
     private readonly defaultFilter:CampaignFilters = {
-        activeStatus: 'all',
+        activeStatus: 'active',
         compOperator: CompOperator.Equals,
         compensation: null,
         location: { name: 'Michigan', abbreviation: 'MI' }
-    }   
+    };
     filter:CampaignFilters;
     filterActive:boolean;
-    numFilters:number = 0;
+    numFilters = 0;
     store:DataStore = {} as DataStore;
     activeTab: number;
     tableData: ICampaign[];
 
     activeTableColumns = ['name', 'campaignId', 'active', 'createdAt', 'updatedAt'];
     activeTableSource: ICampaign[] = [];
-    campaigns: Subject<ICampaign[]> = new Subject<ICampaign[]>();
+    campaigns = new BehaviorSubject<ICampaign[]>(null);
 
     inactiveTableSource: ICampaign[] = [];
 
@@ -47,6 +47,7 @@ export class CampaignsComponent implements OnInit {
     floatIsOpen: Observable<boolean>;
 
     user: User;
+    searchText = new FormControl('');
 
     constructor(
         private dialog: MatDialog,
@@ -75,24 +76,32 @@ export class CampaignsComponent implements OnInit {
                 .getCampaigns(this.user.sessionUser.sessionClient, false)
                 .then((campaigns: ICampaign[]) => {
                     this.store.campaigns = campaigns;
-                    this.campaigns.next(campaigns);
                     this.session.hideLoader();
 
                     // TODO: remove after restructuring
                     this.tableData = campaigns;
                     this.sortCampaignsByStatus();
-                    
+                    this.updateCampaignsByFilter();
                 })
                 .catch(this.msg.showWebApiError);
         });
 
         this.floatIsOpen = this.floatBtnIsOpen$.asObservable();
+
+        this.searchText.valueChanges.pipe(
+            distinctUntilChanged(),
+            debounceTime(500),
+        ).subscribe(val => {
+            const dataset = this.processFilters();
+            const result = dataset.filter(c => c.name.toLowerCase().includes(val.trim().toLowerCase()));
+            this.campaigns.next(result);
+        });
     }
 
     switchActiveStatus(item: ICampaign, index:number): void {
         this.session.showLoader();
         index = _.findIndex(this.store.campaigns, { campaignId:item.campaignId });
-        let pendingCampaign = this.store.campaigns[index];
+        const pendingCampaign = this.store.campaigns[index];
 
         pendingCampaign.active = !pendingCampaign.active;
 
@@ -108,7 +117,7 @@ export class CampaignsComponent implements OnInit {
     addCampaign(): void {
         this.floatBtnIsOpen$.next(true);
         // show dialog with form...
-        let ref = this.dialog.open(NewCampaignDialogComponent, {
+        const ref = this.dialog.open(NewCampaignDialogComponent, {
             width: '650px',
             data: {
                 user: this.user
@@ -127,7 +136,7 @@ export class CampaignsComponent implements OnInit {
     }
 
     editCampaign(item: ICampaign): void {
-        let ref = this.dialog.open(NewCampaignDialogComponent, {
+        const ref = this.dialog.open(NewCampaignDialogComponent, {
             width: '650px',
             data: {
                 user: this.user,
@@ -158,69 +167,24 @@ export class CampaignsComponent implements OnInit {
         })
         .afterClosed()
         .subscribe(result => {
-            if(result == null) return;
+            if (result == null) return;
             this.filter = result;
             this.updateCampaignsByFilter();
         });
     }
 
+    changeViewHandler(event:MatSlideToggleChange) {
+        const isChecked = event.checked;
+        const newFilterValue = isChecked ? 'all' : 'active';
+        this.filter.activeStatus = newFilterValue;
+        this.updateCampaignsByFilter();        
+    }
+
     updateCampaignsByFilter():void {
         let result:ICampaign[];
-        this.numFilters = 0;
+        result = this.processFilters();
 
-        if(this.filter.activeStatus === 'all') {
-            result = this.store.campaigns;
-            this.numFilters++;
-        } else {
-
-            if(this.filter.activeStatus === 'active') {
-                result = _.filter(this.store.campaigns, (c:ICampaign) => {
-                    return c.active;
-                });
-                this.numFilters++;
-            } 
-            
-            if (this.filter.activeStatus === 'inactive') {
-                result = _.filter(this.store.campaigns, (c:ICampaign) => {
-                    return !c.active;
-                });
-                this.numFilters++;
-            }
-
-        }
-
-        if(this.filter.compensation > 0) {
-            if(this.filter.compOperator == CompOperator.Equals) {
-                result = _.filter(result, (c:ICampaign) => {
-                    return c.compensation === this.filter.compensation;
-                });
-            } else if(this.filter.compOperator == CompOperator.GreaterThan) {
-                result = _.filter(result, (c:ICampaign) => {
-                    return c.compensation > this.filter.compensation;
-                });
-            } else if(this.filter.compOperator == CompOperator.GreaterThanEqualTo) {
-                result = _.filter(result, (c:ICampaign) => {
-                    return c.compensation >= this.filter.compensation;
-                });
-            } else if(this.filter.compOperator == CompOperator.LessThan) {
-                result = _.filter(result, (c:ICampaign) => {
-                    return c.compensation < this.filter.compensation;
-                });
-            } else if(this.filter.compOperator == CompOperator.LessThanEqualTo) {
-                result = _.filter(result, (c:ICampaign) => {
-                    return c.compensation <= this.filter.compensation;
-                });
-            }
-            this.numFilters++;
-        }
-
-        // if(this.filter.location != null) {
-            // add this... 
-            // result = _.filter(result, (c:ICampaign) => {
-            //     return c.
-            // });
-        // }
-        if(result != null) this.campaigns.next(result);
+        if (result != null) this.campaigns.next(result);
         this.filterActive = true;
     }
 
@@ -237,12 +201,60 @@ export class CampaignsComponent implements OnInit {
 
     // PRIVATE METHODS
 
+    private processFilters():ICampaign[] {
+        let result:ICampaign[];
+        this.numFilters = 0;
+
+        if (this.filter.activeStatus === 'all') {
+            result = this.store.campaigns;
+            this.numFilters++;
+
+        } else if (this.filter.activeStatus === 'active') {
+            result = _.filter(this.store.campaigns, (c:ICampaign) => {
+                return c.active;
+            });
+            this.numFilters++;
+
+        } else if (this.filter.activeStatus === 'inactive') {
+            result = _.filter(this.store.campaigns, (c:ICampaign) => {
+                return !c.active;
+            });
+            this.numFilters++;
+        }
+
+        if (this.filter.compensation > 0) {
+            if (this.filter.compOperator == CompOperator.Equals) {
+                result = _.filter(result, (c:ICampaign) => {
+                    return c.compensation === this.filter.compensation;
+                });
+            } else if (this.filter.compOperator == CompOperator.GreaterThan) {
+                result = _.filter(result, (c:ICampaign) => {
+                    return c.compensation > this.filter.compensation;
+                });
+            } else if (this.filter.compOperator == CompOperator.GreaterThanEqualTo) {
+                result = _.filter(result, (c:ICampaign) => {
+                    return c.compensation >= this.filter.compensation;
+                });
+            } else if (this.filter.compOperator == CompOperator.LessThan) {
+                result = _.filter(result, (c:ICampaign) => {
+                    return c.compensation < this.filter.compensation;
+                });
+            } else if (this.filter.compOperator == CompOperator.LessThanEqualTo) {
+                result = _.filter(result, (c:ICampaign) => {
+                    return c.compensation <= this.filter.compensation;
+                });
+            }
+            this.numFilters++;
+        }
+        return result;
+    }
+
     private sortCampaignsByStatus(): void {
         this.activeTableSource = [];
         this.inactiveTableSource = [];
 
         for (let i = 0; i < this.tableData.length; i++) {
-            let item = this.tableData[i];
+            const item = this.tableData[i];
             if (item.active) {
                 this.activeTableSource.push(item);
             } else {
@@ -263,8 +275,4 @@ export class CampaignsComponent implements OnInit {
     }
 }
 
-const TABLE_DATA: ICampaign[] = [
-    {campaignId: 1, clientId: 0, name: 'Consumers', active: true, createdAt: new Date(), updatedAt: new Date()},
-    {campaignId: 2, clientId: 0, name: 'DTE', active: true, createdAt: new Date(), updatedAt: new Date()},
-    {campaignId: 3, clientId: 0, name: 'Spark', active: false, createdAt: new Date(), updatedAt: new Date()}
-];
+

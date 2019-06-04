@@ -253,13 +253,21 @@ class ApiResource {
 	 * Build user session info by firebase login.
 	 *
 	 * @param string $email
-	 * @return void
+	 * @return App\User
 	 */
 	public static function getUserInfoByFirebase($email)
 	{
 		$user = User::byEmail($email)->first();
 		Auth::login($user);
 		$user->load('sessionUser');
+		return $user;
+	}
+
+	public static function getUserSessionByFirebase($email)
+	{
+		$user = User::byEmail($email)->first();
+		Auth::login($user);
+		$user = $this->helper->generateUserSession($user->username);
 		return $user;
 	}
 

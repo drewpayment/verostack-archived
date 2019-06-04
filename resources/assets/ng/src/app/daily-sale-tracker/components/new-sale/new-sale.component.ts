@@ -1,18 +1,18 @@
 import {Component, OnInit} from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormArray, AbstractControl, ValidatorFn } from '@angular/forms';
-import { User, IAgent, DailySale, ICampaign, Utility, Remark, SaleStatus } from '@app/models';
-import { Contact } from '@app/models/contact.model';
-import { SessionService } from '@app/session.service';
-import { ContactService } from '@app/contact/contact.service';
-import { AgentService } from '@app/agent/agent.service';
-import { CampaignService } from '@app/campaigns/campaign.service';
+import { User, IAgent, DailySale, ICampaign, Utility, Remark, SaleStatus } from '../../../models';
+import { SessionService } from '../../../session.service';
+import { ContactService } from '../../../contact/contact.service';
+import { AgentService } from '../../../agent/agent.service';
+import { CampaignService } from '../../../campaigns/campaign.service';
 import { Observable, Subject, from, of, BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { States, IState } from '@app/shared/models/state.model';
-import { ClientService } from '@app/client-information/client.service';
-import { DailySaleTrackerService } from '@app/daily-sale-tracker/daily-sale-tracker.service';
-import { MessageService } from '@app/message.service';
+import { States, IState } from '../../../shared/models/state.model';
+import { ClientService } from '../../../client-information/client.service';
+import { DailySaleTrackerService } from '../../../daily-sale-tracker/daily-sale-tracker.service';
+import { MessageService } from '../../../message.service';
 import { Router } from '@angular/router';
+import { Contact } from '../../../models/contact.model';
 
 @Component({
     selector: 'vs-new-sale',
@@ -24,10 +24,10 @@ export class NewSaleComponent implements OnInit {
     user:User;
     form:FormGroup = this.createForm();
     formRemarks:Remark[];
-    formSubmitted:boolean = false;
-    showNewContactFields:boolean = false;
-    showSetContactUI:boolean = false;
-    showNewRemarkField:boolean = false;
+    formSubmitted = false;
+    showNewContactFields = false;
+    showSetContactUI = false;
+    showNewRemarkField = false;
     private _contacts:Contact[];
     contacts:Observable<Contact[]>;
     private _agents:IAgent[];
@@ -42,7 +42,7 @@ export class NewSaleComponent implements OnInit {
     utilities:BehaviorSubject<Utility[]> = new BehaviorSubject<Utility[]>([]);
 
     states:IState[] = States.$get();
-    returnUrl:string = '';
+    returnUrl = '';
 
     constructor(
         private fb:FormBuilder, 
@@ -101,16 +101,16 @@ export class NewSaleComponent implements OnInit {
     }
 
     private setControlsTouched(group:FormGroup) {
-        for(var c in group.controls) {
+        for (const c in group.controls) {
             group.controls[c].markAsTouched();
-            if(this.hasProperty(group.controls[c], 'controls')) {
+            if (this.hasProperty(group.controls[c], 'controls')) {
                 this.setControlsTouched(group.controls[c]['controls']);
             }
         }
     }
 
     private hasProperty(obj, prop):boolean {
-        var proto = obj.__proto__ || obj.constructor.prototype;
+        const proto = obj.__proto__ || obj.constructor.prototype;
         return (prop in obj) &&
             (!(prop in proto) || proto[prop] !== obj[prop]);
     }
@@ -200,7 +200,7 @@ export class NewSaleComponent implements OnInit {
 
         this.setControlsTouched(this.form);
         this.form.updateValueAndValidity();
-        if(this.form.invalid) return;
+        if (this.form.invalid) return;
 
         const model = this.prepareModel();
 
@@ -221,7 +221,7 @@ export class NewSaleComponent implements OnInit {
 
     validateContactInput(event:any) {
         const input = event.target.value;
-        let exists:boolean = false;
+        let exists = false;
         this._contacts.forEach(c => {
             if(c.firstName.includes(input))
                 return exists = true;

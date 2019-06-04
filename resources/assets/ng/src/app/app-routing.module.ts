@@ -30,6 +30,7 @@ const routes: Routes = [
     { path: 'daily-tracker', component: DailySaleTrackerComponent, canActivate: [AuthGuard] },
     { path: 'new-sale-contact', component: NewSaleComponent, canActivate: [AuthGuard] },
     { path: 'contacts', loadChildren: './contact/contact.module#ContactModule' },
+    { path: 'imports', loadChildren: './imports/imports.module#ImportsModule' },
     { path: '**', redirectTo: 'home' }
 ]
 

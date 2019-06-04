@@ -30,7 +30,27 @@ class ClientOptions extends Model
 
     protected $primaryKey = 'options_id';
 
-    protected $fillable = ['options_id', 'client_id', 'has_onboarding'];
+    protected $fillable = ['options_id', 'client_id', 'has_onboarding', 'use_existing_contacts'];
+
+    public function setUseExistingContactsAttribute($value) 
+    {
+        $this->attributes['use_existing_contacts'] = $value == true ? 1 : 0;
+    }
+
+    public function getUseExistingContactsAttribute($value)
+    {
+        return $value == 1;
+    }
+
+    public function setHasOnboardingAttribute($value) 
+    {
+        $this->attributes['has_onboarding'] = $value == true ? 1 : 0;
+    }
+
+    public function getHasOnboardingAttribute($value)
+    {
+        return $value == 1;
+    }
 
     /**
      * One-to-one relationship to client.

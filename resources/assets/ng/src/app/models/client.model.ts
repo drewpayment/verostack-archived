@@ -18,8 +18,9 @@ export interface IClient {
 }
 
 export interface IClientOption {
-  optionsId: number,
-  clientId: number,
-  hasOnboarding: boolean
+  optionsId:number,
+  clientId:number,
+  hasOnboarding:boolean,
+  useExistingContacts:boolean,
 }
 

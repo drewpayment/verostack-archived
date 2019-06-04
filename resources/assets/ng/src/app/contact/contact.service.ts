@@ -1,13 +1,14 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import { Contact } from '@app/models/contact.model';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { SessionService } from '@app/session.service';
 import { AuthService } from '@app/auth.service';
 import { catchError, tap } from 'rxjs/operators';
 import { LaravelErrorResponse } from '@app/models/validator-error.model';
 import { MessageService } from '@app/message.service';
 import * as _ from 'lodash';
+import { DncContact } from '@app/models';
 
 @Injectable({
     providedIn: 'root'
@@ -15,6 +16,10 @@ import * as _ from 'lodash';
 export class ContactService {
     private api:string;
     _contacts:Contact[];
+
+    private restrictedContacts:DncContact[];
+    _restrictedContacts$ = new BehaviorSubject<DncContact[]>(null);
+
     constructor(
         private http: HttpClient,
         private auth:AuthService,
@@ -52,15 +57,24 @@ export class ContactService {
             );
     }
 
+    setRestrictedContacts(contacts:DncContact[]) {
+        this.restrictedContacts = contacts;
+        this._restrictedContacts$.next(contacts);
+    }
+
+    getAllRestrictedContacts():DncContact[] {
+        return this.restrictedContacts;
+    }
+
     private handleError<T>(resp:LaravelErrorResponse, caught:Observable<T>):Observable<T> {
         const keys = Object.keys(resp.error.errors);
-        let errorMsg:string = 'Errors: ';
+        let errorMsg = 'Errors: ';
 
         keys.forEach(key => {
             const propErrors:string[] = resp.error.errors[key];
             if (!_.isArray(propErrors)) return; /** if this isn't an array, it means we don't have any errors and need to bail */
             propErrors.forEach((pe:string, i:number) => {
-                errorMsg += `(${i+1}) ${pe}`;
+                errorMsg += `(${i + 1}) ${pe}`;
             });
         });
         this.msg.addMessage(errorMsg);

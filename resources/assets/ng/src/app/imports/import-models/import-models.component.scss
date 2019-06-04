@@ -1,0 +1,33 @@
+@import '../../../scss/colors';
+
+mat-header-row {
+	background-color: $primary-filter;
+
+	mat-header-cell {
+		vertical-align: middle;
+		font-size: 1.1rem;
+		color: $off-white;
+		text-transform: uppercase;
+		letter-spacing: 0.1rem;
+		font-weight: 400;
+
+		::ng-deep .mat-checkbox .mat-checkbox-frame {
+			border-color: $white;
+		}
+	}
+}
+
+mat-header-cell, mat-cell {
+	
+	&.check-column {
+		flex: 0 0 70px;
+	}
+}
+
+mat-checkbox {
+	height: 1rem !important;
+}
+
+.mat-column-detailView {
+	max-width: 65px;
+}

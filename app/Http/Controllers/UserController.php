@@ -33,6 +33,8 @@ class UserController extends Controller
         $this->roleService = $role_service;
     }
 
+	#region API
+
 	/**
 	 * Route: /api/users/{username}/session
 	 * Get logged on user session.
@@ -166,12 +168,6 @@ class UserController extends Controller
 	public function saveUserDetailByUserId(Request $r, $userId, $userDetailId = null)
     {
     	$result = new ApiResource();
-
-//    	$result->checkAccessByUser($userId)
-//		    ->mergeInto($result);
-//
-//    	if($result->hasError)
-//    		return $result->throwApiException()->getResponse();
 
     	$detail = $userDetailId != null
 		    ? UserDetail::id($userDetailId)->first()
@@ -495,6 +491,25 @@ class UserController extends Controller
         return $result->setData(true)
             ->throwApiException()
             ->getResponse();
-    }
+	}
+	
+	#endregion
+
+	#region APIV2 
+
+	public function getUserInfo(Request $request)
+	{
+		$result = new ApiResource();
+		$uid = $request->fbid;
+		$auth = app()->firebase->getAuth();
+		$firebaseUser = $auth->getUser($uid);
+
+		$user = ApiResource::getUserSessionByFirebase($firebaseUser->email);
+		return $result->setData($user)
+			->throwApiException()
+			->getResponse();
+	}
+
+	#endregion
 
 }

@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Client;
+use App\Campaign;
 use App\Http\Helpers;
 use App\ClientOptions;
-use App\Campaign;
-use App\Client;
+use Illuminate\Http\Request;
+use App\Http\Resources\ApiResource;
+use Illuminate\Support\Facades\Auth;
 
 class ClientController extends Controller
 {
@@ -18,9 +21,34 @@ class ClientController extends Controller
 
 	public function getClientOptions($clientId)
 	{
+		$result = new ApiResource();
+		$user = Auth::user();
+		$user->load('sessionUser');
+		$clientId = $user->sessionUser->session_client;
+
 		$options = ClientOptions::clientId($clientId)->first();
-		$options = $this->helper->normalizeLaravelObject($options->toArray());
-		return response()->json($options);
+		
+		$result->setData($options);
+
+		return $result->throwApiException()->getResponse();
+	}
+
+	public function updateUseExistingContacts(Request $request)
+	{
+		$result = new ApiResource();
+		
+		$op = ClientOptions::clientId($request->clientId)->first();
+		$op->use_existing_contacts = $request->useExistingContacts;
+
+		$saved = $op->save();
+
+		if (!$saved) {
+			return $result->setToFail()->throwApiException()->getResponse();
+		}
+
+		$result->setData($op);
+
+		return $result->throwApiException()->getResponse();
 	}
     
     public function updateClientOptions()

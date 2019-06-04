@@ -5,9 +5,16 @@ namespace App\Http\Services;
 use App\DncContact;
 use Illuminate\Support\Facades\DB;
 use App\Http\Resources\ApiResource;
+use App\Contact;
 
 class DncContactService 
 {
+	protected $clientService;
+
+	public function __construct(ClientService $_clientService)
+	{
+		$this->clientService = $_clientService;
+	}
 
 	/**
 	 * Undocumented function
@@ -62,6 +69,31 @@ class DncContactService
             $result->setToFail();
 		}
 		
+		return $result;
+	}
+
+	/**
+	 * Checks if the user's selected client has enabled the mobile feature to use existing contacts
+	 * from the normal contact db as dnc contacts. 
+	 *
+	 * @param int $clientId
+	 * @return ApiResource
+	 */
+	public function getExistingContacts($clientId)
+	{
+		$result = new ApiResource();
+
+		$this->clientService->getClientOptions($clientId)->mergeInto($result);
+
+		$options = $result->getData();
+		if (is_null($options) || !$options['useExistingContacts']) {
+			return $result;
+		}
+
+		$contacts = Contact::all();
+
+		$result->setData($contacts);
+
 		return $result;
 	}
 

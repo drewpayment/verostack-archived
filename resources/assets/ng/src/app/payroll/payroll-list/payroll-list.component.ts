@@ -160,7 +160,7 @@ export class PayrollListComponent implements OnInit {
         this.service.removeAutoReleaseSettings(this.user.sessionUser.sessionClient, item.payrollId)
             .subscribe(result => {
                 this._payrolls.forEach((p, i, a) => {
-                    if(p.payrollId != result.payrollId) return;
+                    if (p.payrollId != result.payrollId) return;
                     a[i] = result;
                 });
                 this.setPayrolls(this._payrolls);
@@ -249,7 +249,7 @@ export class PayrollListComponent implements OnInit {
         this.isAllSelected() ?
             this.selection.clear() :
             this._payrolls.forEach(p => {
-                if(p.isReleased || p.payCycle.isClosed) return;
+                if (p.isReleased || p.payCycle.isClosed) return;
                 this.selection.select(p);
             });
     }
@@ -274,25 +274,27 @@ export class PayrollListComponent implements OnInit {
         .subscribe((result:PayrollDetails) => {
             if (result == null) return;
 
+            console.dir(result);
+
             /** I believe this is removing the $ from the string? */
-            if (isNaN((<any>result.taxes).charAt(0)))
-                result.taxes = (<any>result.taxes).slice(0, 1);
-            if (isNaN((<any>result.grossTotal).charAt(0)))
-                result.grossTotal = (<any>result.grossTotal).slice(0, 1);
-            if (isNaN((<any>result.netTotal).charAt(0)))
-                result.netTotal = (<any>result.netTotal).slice(0, 1);
+            // if (isNaN((<any>result.taxes).charAt(0)))
+            //     result.taxes = (<any>result.taxes).slice(0, 1);
+            // if (isNaN((<any>result.grossTotal).charAt(0)))
+            //     result.grossTotal = (<any>result.grossTotal).slice(0, 1);
+            // if (isNaN((<any>result.netTotal).charAt(0)))
+            //     result.netTotal = (<any>result.netTotal).slice(0, 1);
 
-            result.overrides.forEach((o, i, a) => {
-                if (isNaN((<any>o.amount).charAt(0)))
-                    a[i].amount = (<any>o.amount).slice(1);
-            });
+            // result.overrides.forEach((o, i, a) => {
+            //     if (isNaN((<any>o.amount).charAt(0)))
+            //         a[i].amount = (<any>o.amount).slice(1);
+            // });
 
-            result.expenses.forEach((e, i, a) => {
-                if (isNaN((<any>e.amount).charAt(0)))
-                    a[i].amount = (<any>e.amount).slice(1);
+            // result.expenses.forEach((e, i, a) => {
+            //     if (isNaN((<any>e.amount).charAt(0)))
+            //         a[i].amount = (<any>e.amount).slice(1);
 
-                a[i].expenseId = e.expenseId > 0 ? e.expenseId : null;
-            });
+            //     a[i].expenseId = e.expenseId > 0 ? e.expenseId : null;
+            // });
             
             this.service.savePayrollDetails(this.user.sessionUser.sessionClient, result)
                 .subscribe(res => {

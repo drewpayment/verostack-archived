@@ -87,6 +87,12 @@ class Helpers
 		return $str;
 	}
 
+	/**
+	 * Generates user session. 
+	 *
+	 * @param string $username
+	 * @return App\User
+	 */
 	public function generateUserSession($username)
     {
         $user = User::with(['clients', 'detail', 'role', 'sessionUser'])
