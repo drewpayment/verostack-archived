@@ -81,7 +81,8 @@ export class KnockListComponent implements OnInit, OnDestroy {
     }
 
     isAllSelected() {
-        return this.selection.selected.length === this.dataSource.data.length;
+        return this.selection.selected != null && this.dataSource.data != null 
+            && this.selection.selected.length === this.dataSource.data.length;
     }
 
     addDncContact() {

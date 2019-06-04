@@ -5,7 +5,7 @@
 
 <p class="pl-3">
     The following contacts and locations are listed as registered with the supplier, FTC or other regulatory body
-    and cannot be visited. 
+    and cannot be visited. (Only manually added contacts can be removed.)
 </p>
 
 <!-- action bar -->
@@ -27,7 +27,8 @@
                 [aria-label]="checkboxLabel()"></mat-checkbox>
         </mat-header-cell>
         <mat-cell *matCellDef="let item" class="check-column">
-            <mat-checkbox (click)="$event.stopPropagation();"
+            <mat-checkbox *ngIf="item.dncContactId != null"
+                (click)="$event.stopPropagation();"
                 (change)="$event ? selection.toggle(item) : null"
                 [checked]="selection.isSelected(item)"
                 [aria-label]="checkboxLabel(item)"></mat-checkbox>
