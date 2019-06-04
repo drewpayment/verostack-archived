@@ -666,6 +666,8 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
+@angular/material/card
+
 chartjs-color-string
 MIT
 Copyright (c) 2011 Heather Arthur <fayearthur@gmail.com>
@@ -817,8 +819,6 @@ MIT
 @angular/material/autocomplete
 
 @angular/material/button-toggle
-
-@angular/material/card
 
 @angular/material/chips
 
