@@ -130,7 +130,7 @@ class DncContactController extends Controller
         if (count($parsed->results) > 0) {
             $geo = $parsed->results[0]->geometry->location;
             // $geo = $parsed['results'][0]['geometry']['location'];
-            $result->setData($geo);
+            $result->setData($geo, false);
         }
         
         return $result;

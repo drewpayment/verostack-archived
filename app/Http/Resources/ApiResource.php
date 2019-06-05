@@ -64,15 +64,19 @@ class ApiResource {
 	 *
 	 * @return $this
 	 */
-	public function setData($obj)
+	public function setData($obj, $isColl = true)
 	{
-		$this->data = $obj == null
-			? $obj
-            : is_object($obj)
-                // removed 'array_filter' because it removes empty arrays from return object
-                // ? $this->helper->normalizeLaravelObject(array_filter($obj->toArray()))
-                ? $this->helper->normalizeLaravelObject($obj->toArray())
-				: $obj;
+		if ($isColl) {
+			$this->data = $obj == null
+				? $obj
+				: is_object($obj)
+					// removed 'array_filter' because it removes empty arrays from return object
+					// ? $this->helper->normalizeLaravelObject(array_filter($obj->toArray()))
+					? $this->helper->normalizeLaravelObject($obj->toArray())
+					: $obj;
+		} else {
+			$this->data = $obj;
+		}
 
 		return $this->hasData() ? $this->setToSuccess() : $this->setToFail();
 	}
