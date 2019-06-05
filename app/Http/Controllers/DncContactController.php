@@ -102,12 +102,19 @@ class DncContactController extends Controller
      *     "lng" : -122.0842499
      * }
      *
-     * @param App\Contact $contact
+     * @param $contact
      * @return ApiResource
      */
     protected function getGeolocation($contact)
     {
         $result = new ApiResource();
+
+        if (!array_key_exists('street', $contact)
+            || !array_key_exists('city', $contact)
+            || !array_key_exists('state', $contact)) {
+                return $result->setToFail();
+            }
+
         $street = str_replace(' ', '+', $contact['street']);
         $city = str_replace(' ', '+', $contact['city']);
         $state = $contact['state'];
