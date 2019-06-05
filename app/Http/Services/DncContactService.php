@@ -87,7 +87,7 @@ class DncContactService
 
 		$options = $result->getData();
 		if (is_null($options) || !$options['useExistingContacts']) {
-			return $result;
+			return $result->setToFail();
 		}
 
 		$contacts = Contact::all();

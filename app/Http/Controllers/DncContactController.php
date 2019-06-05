@@ -40,7 +40,7 @@ class DncContactController extends Controller
 
             $contactsResult = $this->service->getExistingContacts($clientId);
 
-            if ($contactsResult->hasData()) {
+            if ($contactsResult->hasData() && !$contactsResult->hasError) {
                 $existingContacts = collect(null);
                 $temp = collect($contactsResult->getData());
 
@@ -108,14 +108,6 @@ class DncContactController extends Controller
     protected function getGeolocation($contact)
     {
         $result = new ApiResource();
-
-        dd($contact);
-
-        if (!array_key_exists('street', $contact)
-            || !array_key_exists('city', $contact)
-            || !array_key_exists('state', $contact)) {
-                return $result->setToFail();
-            }
 
         $street = str_replace(' ', '+', $contact['street']);
         $city = str_replace(' ', '+', $contact['city']);
