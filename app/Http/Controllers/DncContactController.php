@@ -109,6 +109,8 @@ class DncContactController extends Controller
     {
         $result = new ApiResource();
 
+        var_dump($contact);
+
         if (!array_key_exists('street', $contact)
             || !array_key_exists('city', $contact)
             || !array_key_exists('state', $contact)) {
