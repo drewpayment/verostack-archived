@@ -117,7 +117,7 @@ class DncContactService
 		return $result;
 	}
 
-	protected function getGeolocation($street, $city, $state) 
+	public function getGeolocation($street, $city, $state) 
 	{
 		$result = new ApiResource();
 

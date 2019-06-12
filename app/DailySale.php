@@ -102,7 +102,23 @@ class DailySale extends Model
 	    'last_touch_date'
     ];
 
-    protected $dates = ['created_at', 'updated_at', 'deleted_at'];
+	protected $dates = ['created_at', 'updated_at', 'deleted_at'];
+	
+	/**
+	 * Boolean column mutators.
+	 *
+	 * @param int $value
+	 * @return void
+	 */
+	public function getHasGeo($value)
+    {
+        return $value == 1;
+    }
+
+    public function setHasGeo($value)
+    {
+        $this->attributes['has_geo'] = $value == true ? 1 : 0;
+    }
 
 	/**
 	 * Creates one-to-one relationship with agent.
@@ -273,6 +289,17 @@ class DailySale extends Model
             return $query->whereIn('paid_status', $status);
             
         return $query->where('paid_status', $status);
-    }
+	}
+	
+	/**
+	 * Filters to return only records that haven't been ran through the geocoding service.
+	 *
+	 * @param \Illuminate\Database\Eloquent\Builder $query
+	 * @return \Illuminate\Database\Eloquent\Builder
+	 */
+	public function scopeByNonGeocodedSales($query)
+	{
+		return $query->where('has_geo', 0);
+	}
 
 }
