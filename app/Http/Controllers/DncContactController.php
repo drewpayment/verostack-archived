@@ -52,8 +52,14 @@ class DncContactController extends Controller
                         $lat = '';
                         $lng = '';
                     } else {
-                        $lat = $geo->getData()['lat'];
-                        $lng = $geo->getData()['lng'];
+                        $g = $geo->getData();
+                        if (array_key_exists('lat', $g) && array_key_exists('long', $g)) {
+                            $lat = $g['lat'];
+                            $lng = $g['long'];
+                        } else {
+                            $lat = '';
+                            $lng = '';
+                        }
                     }
 
                     $transformed = new DncContact([
