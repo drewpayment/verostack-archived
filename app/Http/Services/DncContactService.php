@@ -7,6 +7,7 @@ use App\DncContact;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\DB;
 use App\Http\Resources\ApiResource;
+use Illuminate\Console\Command;
 
 class DncContactService 
 {
@@ -117,6 +118,14 @@ class DncContactService
 		return $result;
 	}
 
+	/**
+	 * Get Google Maps API geolocation data with GuzzleHttp.
+	 *
+	 * @param string $street
+	 * @param string $city
+	 * @param string $state
+	 * @return App\Http\Resources\ApiResource
+	 */
 	public function getGeolocation($street, $city, $state) 
 	{
 		$result = new ApiResource();
@@ -131,8 +140,9 @@ class DncContactService
         $http = new Client();
         $response = $http->request('GET', $url);
         if ($response->getStatusCode() > 299 || $response->getStatusCode() < 200) {
-            // error handling?
-            return $result->setToFail(400);
+			// error handling?
+			$result->setData($response->getBody());
+            return $result;
         } 
 
         //TODO: Need try/catch or some sort of error handling... Google returns "over daily limit" so 

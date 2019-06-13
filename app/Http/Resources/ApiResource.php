@@ -220,7 +220,7 @@ class ApiResource {
 	/**
 	 * Gets response information from resource
 	 *
-	 * @return mixed
+	 * @return \Illuminate\Http\JsonResponse
 	 */
 	public function getResponse()
 	{
