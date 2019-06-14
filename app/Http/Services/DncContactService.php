@@ -148,13 +148,13 @@ class DncContactService
         //TODO: Need try/catch or some sort of error handling... Google returns "over daily limit" so 
         // something isn't setup totally right, but the object that came back was unexpected and we need a way to 
         // check the status when the API returns an object... 
-        $parsed = json_decode($response->getBody());
+		$parsed = json_decode($response->getBody());
 
         if (count($parsed->results) > 0) {
             $geo = $parsed->results[0]->geometry->location;
             // $geo = $parsed['results'][0]['geometry']['location'];
             $result->setData($geo, false);
-        }
+        } 
         
         return $result;
 	}

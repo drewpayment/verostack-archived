@@ -14,13 +14,19 @@ class ClientScope implements Scope {
 	public function __construct()
 	{
 		$user = Auth::user();
-		$user->load('sessionUser');
-		$this->clientId = $user->sessionUser->session_client;
+		if ($user != null) 
+		{
+			$user->load('sessionUser');
+			$this->clientId = $user->sessionUser->session_client;
+		}
 	}
 
 	public function apply(Builder $builder, Model $model) 
 	{
-		$builder->where('client_id', $this->clientId);
+		if (Auth::user() != null) 
+		{
+			$builder->where('client_id', $this->clientId);
+		} 
 	}
 
 }
