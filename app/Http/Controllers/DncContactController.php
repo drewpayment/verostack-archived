@@ -31,57 +31,59 @@ class DncContactController extends Controller
         $uid = $request->fbid;
         $existingContactsResult = new ApiResource();
 
-        if ($uid != null) {
-            return $result->setToFail()->throwApiException()->getResponse();
-        } else {
-            $user = Auth::user();
-            $user->load('sessionUser');
-            $clientId = $user->sessionUser->session_client;
+        // if ($uid != null) {
+        //     return $result->setToFail()->throwApiException()->getResponse();
+        // } else {
+        //     $user = Auth::user();
+        //     $user->load('sessionUser');
+        //     $clientId = $user->sessionUser->session_client;
 
-            $contactsResult = $this->service->getExistingContacts($clientId);
+        //     $contactsResult = $this->service->getExistingContacts($clientId);
 
-            if ($contactsResult->hasData() && !$contactsResult->hasError) {
-                $existingContacts = collect(null);
-                $temp = collect($contactsResult->getData());
+        //     if ($contactsResult->hasData() && !$contactsResult->hasError) {
+        //         $existingContacts = collect(null);
+        //         $temp = collect($contactsResult->getData());
 
-                foreach($temp as $c) 
-                {
-                    $geo = $this->getGeolocation($c);
+        //         foreach($temp as $c) 
+        //         {
+        //             $geo = $this->getGeolocation($c);
 
-                    if ($geo->hasError) {
-                        $lat = '';
-                        $lng = '';
-                    } else {
-                        $g = $geo->getData();
-                        if (array_key_exists('lat', $g) && array_key_exists('long', $g)) {
-                            $lat = $g['lat'];
-                            $lng = $g['long'];
-                        } else {
-                            $lat = '';
-                            $lng = '';
-                        }
-                    }
+        //             if ($geo->hasError) {
+        //                 $lat = '';
+        //                 $lng = '';
+        //             } else {
+        //                 $g = $geo->getData();
+        //                 if (array_key_exists('lat', $g) && array_key_exists('long', $g)) {
+        //                     $lat = $g['lat'];
+        //                     $lng = $g['long'];
+        //                 } else {
+        //                     $lat = '';
+        //                     $lng = '';
+        //                 }
+        //             }
 
-                    $transformed = new DncContact([
-                        'client_id' => $c['clientId'],
-                        'first_name' => $c['firstName'],
-                        'last_name' => $c['lastName'],
-                        'address' => $c['street'],
-                        'address_cont' => $c['street2'],
-                        'city' => $c['city'],
-                        'state' => $c['state'],
-                        'zip' => $c['zip'],
-                        'lat' => $lat,
-                        'long' => $lng
-                    ]);
+        //             $transformed = new DncContact([
+        //                 'client_id' => $c['clientId'],
+        //                 'first_name' => $c['firstName'],
+        //                 'last_name' => $c['lastName'],
+        //                 'address' => $c['street'],
+        //                 'address_cont' => $c['street2'],
+        //                 'city' => $c['city'],
+        //                 'state' => $c['state'],
+        //                 'zip' => $c['zip'],
+        //                 'lat' => $lat,
+        //                 'long' => $lng
+        //             ]);
 
-                    $existingContacts->push($transformed);
-                }
+        //             $existingContacts->push($transformed);
+        //         }
 
-                $existingContactsResult->setData($existingContacts);
-            }
-        }
+        //         $existingContactsResult->setData($existingContacts);
+        //     }
+        // }
 
+        $user = Auth::user();
+        $user->load('sessionUser');
         $clientId = $user->sessionUser->session_client;
         $conResults = new ApiResource(DncContact::byClient($clientId)->get());
 
