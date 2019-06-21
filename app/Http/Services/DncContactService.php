@@ -39,6 +39,7 @@ class DncContactService
 			if (!$geoResult->hasError && $geoResult->hasData()) {
 				$geo = $geoResult->getData();
 
+				// TODO: NEED TO HOTFIX ASAP ON PRODUCTION... DOESN'T PARSE THE GEO OBJECT CORRECTLY... 
 				Telescope::recordDump(new IncomingEntry([ 'dump' => var_dump($geo) ]));
 
 				$lat = $geo['lat'];
