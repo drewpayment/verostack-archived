@@ -35,8 +35,8 @@ class DncContactService
 
 			if (!$geoResult->hasError) {
 				$geo = $geoResult->getData();
-				$lat = $geo['lat'];
-				$long = $geo['long'];
+				$lat = is_array($geo) ? $geo['lat'] : $geo->lat;
+				$long = is_array($geo) ? $geo['long'] : $geo->long;
 			} else {
 				return $result->setToFail();
 			}
