@@ -39,7 +39,7 @@ class DncContactService
 			if (!$geoResult->hasError) {
 				$geo = $geoResult->getData();
 
-				Telescope::recordLog(IncomingEntry([
+				Telescope::recordLog(new IncomingEntry([
 					'geo' => json_encode($geo)
 				]));
 
