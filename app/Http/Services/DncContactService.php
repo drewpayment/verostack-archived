@@ -39,7 +39,9 @@ class DncContactService
 			if (!$geoResult->hasError && $geoResult->hasData()) {
 				$geo = $geoResult->getData();
 
-				Telescope::recordLog(new IncomingEntry((array)$geo));
+				if ($geo == null) {
+					return $result->setToFail();
+				}
 
 				$lat = $geo['lat'];
 				$long = $geo['long'];
