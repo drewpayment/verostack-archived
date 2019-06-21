@@ -36,7 +36,7 @@ class DncContactService
 		if (!array_key_exists($model['lat'], $model) || !array_key_exists($model['long'], $model)) {
 			$geoResult = $this->getGeolocation($model->street, $model->city, $model->state);
 
-			if (!$geoResult->hasError) {
+			if (!$geoResult->hasError && $geoResult->hasData()) {
 				$geo = $geoResult->getData();
 
 				Telescope::recordLog(new IncomingEntry((array)$geo));
