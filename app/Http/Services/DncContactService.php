@@ -158,7 +158,12 @@ class DncContactService
 		$parsed = json_decode($response->getBody());
 
         if (count($parsed->results) > 0) {
-            $geo = $parsed->results[0]->geometry->location;
+			$geo = $parsed->results[0]->geometry->location;
+			
+			$geo = [
+				'lat' => $parsed->results[0]->geometry->location->lat,
+				'long' => $parsed->results[0]->geometry->location->long,
+			];
             // $geo = $parsed['results'][0]['geometry']['location'];
             $result->setData($geo, false);
         } 
