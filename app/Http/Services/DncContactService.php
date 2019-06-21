@@ -157,6 +157,10 @@ class DncContactService
         // check the status when the API returns an object... 
 		$parsed = json_decode($response->getBody());
 
+		Telescope::recordLog(new IncomingEntry([
+			'geo' => $parsed
+		]));
+
         if (count($parsed->results) > 0) {
 			$geo = $parsed->results[0]->geometry->location;
 			
