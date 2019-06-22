@@ -39,11 +39,8 @@ class DncContactService
 			if (!$geoResult->hasError && $geoResult->hasData()) {
 				$geo = $geoResult->getData();
 
-				// TODO: NEED TO HOTFIX ASAP ON PRODUCTION... DOESN'T PARSE THE GEO OBJECT CORRECTLY... 
-				Telescope::recordDump(new IncomingEntry([ 'dump' => var_dump($geo) ]));
-
-				$lat = $geo['lat'];
-				$long = $geo['long'];
+				$lat = $geo->lat;
+				$long = $geo->lng;
 			} else {
 				return $result->setToFail();
 			}
@@ -152,23 +149,10 @@ class DncContactService
             return $result;
         } 
 
-        //TODO: Need try/catch or some sort of error handling... Google returns "over daily limit" so 
-        // something isn't setup totally right, but the object that came back was unexpected and we need a way to 
-        // check the status when the API returns an object... 
 		$parsed = json_decode($response->getBody());
-
-		Telescope::recordLog(new IncomingEntry([
-			'geo' => $parsed
-		]));
 
         if (count($parsed->results) > 0) {
 			$geo = $parsed->results[0]->geometry->location;
-			
-			$geo = [
-				'lat' => $parsed->results[0]->geometry->location->lat,
-				'long' => $parsed->results[0]->geometry->location->long,
-			];
-            // $geo = $parsed['results'][0]['geometry']['location'];
             $result->setData($geo, false);
         } 
         
