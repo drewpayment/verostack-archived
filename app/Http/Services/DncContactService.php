@@ -31,22 +31,22 @@ class DncContactService
 	{
 		$result = new ApiResource();
 		$lat = '';
-		$long = '';
+		$lng = '';
+		$geo = null;
 
 		if (!array_key_exists($model['lat'], $model) || !array_key_exists($model['long'], $model)) {
-			$geoResult = $this->getGeolocation($model->street, $model->city, $model->state);
+			$geoResult = $this->getGeolocation($model->address, $model->city, $model->state);
 
 			if (!$geoResult->hasError && $geoResult->hasData()) {
 				$geo = $geoResult->getData();
-
-				$lat = $geo->lat;
-				$long = $geo->lng;
+				$lat = $geo->results[0]->geometry->location->lat;
+				$lng = $geo->results[0]->geometry->location->lng;
 			} else {
 				return $result->setToFail();
 			}
 		} else {
 			$lat = $model->lat;
-			$long = $model->long;
+			$lng = $model->long;
 		}
 
 		$c = new DncContact([
@@ -62,7 +62,8 @@ class DncContactService
 			'zip' => $model->zip,
 			'note' => $model->note,
 			'lat' => $lat,
-			'long' => $long
+			'long' => $lng,
+			'geocode' => json_encode($geo)
 		]);
 
 		$saved = $c->save();
@@ -152,8 +153,7 @@ class DncContactService
 		$parsed = json_decode($response->getBody());
 
         if (count($parsed->results) > 0) {
-			$geo = $parsed->results[0]->geometry->location;
-            $result->setData($geo, false);
+            $result->setData($parsed, false);
         } 
         
         return $result;
