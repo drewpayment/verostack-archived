@@ -31,57 +31,6 @@ class DncContactController extends Controller
         $uid = $request->fbid;
         $existingContactsResult = new ApiResource();
 
-        // if ($uid != null) {
-        //     return $result->setToFail()->throwApiException()->getResponse();
-        // } else {
-        //     $user = Auth::user();
-        //     $user->load('sessionUser');
-        //     $clientId = $user->sessionUser->session_client;
-
-        //     $contactsResult = $this->service->getExistingContacts($clientId);
-
-        //     if ($contactsResult->hasData() && !$contactsResult->hasError) {
-        //         $existingContacts = collect(null);
-        //         $temp = collect($contactsResult->getData());
-
-        //         foreach($temp as $c) 
-        //         {
-        //             $geo = $this->getGeolocation($c);
-
-        //             if ($geo->hasError) {
-        //                 $lat = '';
-        //                 $lng = '';
-        //             } else {
-        //                 $g = $geo->getData();
-        //                 if (array_key_exists('lat', $g) && array_key_exists('long', $g)) {
-        //                     $lat = $g['lat'];
-        //                     $lng = $g['long'];
-        //                 } else {
-        //                     $lat = '';
-        //                     $lng = '';
-        //                 }
-        //             }
-
-        //             $transformed = new DncContact([
-        //                 'client_id' => $c['clientId'],
-        //                 'first_name' => $c['firstName'],
-        //                 'last_name' => $c['lastName'],
-        //                 'address' => $c['street'],
-        //                 'address_cont' => $c['street2'],
-        //                 'city' => $c['city'],
-        //                 'state' => $c['state'],
-        //                 'zip' => $c['zip'],
-        //                 'lat' => $lat,
-        //                 'long' => $lng
-        //             ]);
-
-        //             $existingContacts->push($transformed);
-        //         }
-
-        //         $existingContactsResult->setData($existingContacts);
-        //     }
-        // }
-
         $user = Auth::user();
         $user->load('sessionUser');
         $clientId = $user->sessionUser->session_client;
@@ -162,6 +111,43 @@ class DncContactController extends Controller
         if ($result->hasError) return $result->throwApiException()->getResponse();
 
         $this->service->saveNewDncContact($request)->mergeInto($result);
+
+        return $result->throwApiException()->getResponse();
+    }
+
+    /**
+     * ~/api/dnc-contacts/{dncContactId}
+     * POST
+     *
+     * @param Request $request
+     * @param [type] $dncContactId
+     * @return void
+     */
+    public function updateDncContact(Request $request, $dncContactId)
+    {
+        $result = new ApiResource();
+        $user = ApiResource::getUserInfo();
+
+        $result->checkAccessByClient($user->sessionUser->session_client)->mergeInto($result);
+
+        if ($result->hasError)
+            return $result->throwApiException()->getResponse();
+
+        $dto = new DncContact([
+            'dnc_contact_id' => $dncContactId,
+            'client_id' => $user->clientId,
+            'first_name' => $request->firstName,
+            'last_name' => $request->lastName,
+            'description' => $request->description,
+            'address' => $request->address,
+            'address_cont' => $request->addressCont,
+            'city' => $request->city,
+            'state' => $request->state,
+            'zip' => $request->zip,
+            'note' => $request->note
+        ]);
+
+        $this->service->updateDncContact($dto)->mergeInto($result);
 
         return $result->throwApiException()->getResponse();
     }

@@ -6,6 +6,8 @@ Route::middleware(['auth:api'])->group(function() {
 
 	Route::post('dnc-contacts', 'DncContactController@saveNewDncContact');
 
+	Route::post('dnc-contacts/{dncContactId}', 'DncContactController@updateDncContact');
+
 	Route::delete('dnc-contacts', 'DncContactController@deleteDncContacts');
 
 });

@@ -21,6 +21,40 @@ class DncContactService
 		$this->clientService = $_clientService;
 	}
 
+	public function updateDncContact($dto) 
+	{
+		$result = new ApiResource();
+
+		$model = DncContact::byDncContactId($dto->dnc_contact_id)->first();
+
+		if ($model->first_name != $dto->first_name)
+			$model->first_name = $dto->first_name;
+		if ($model->last_name != $dto->last_name)
+			$model->last_name = $dto->last_name;
+		if ($model->description != $dto->description)
+			$model->description = $dto->description;
+		if ($model->address != $dto->address)
+			$model->address = $dto->address;
+		if ($model->address_cont != $dto->address_cont)
+			$model->address_cont = $dto->address_cont;
+		if ($model->city != $dto->city)
+			$model->city = $dto->city;
+		if ($model->state != $dto->state)
+			$model->state = $dto->state;
+		if ($model->zip != $dto->zip)
+			$model->zip = $dto->zip;
+		if ($model->note != $dto->note)
+			$model->note = $dto->note;
+
+		$saved = $model->save();
+
+		if (!$saved) {
+			return $result->setToFail();
+		}
+
+		return $result->setToData($model);
+	}
+
 	/**
 	 * Undocumented function
 	 *
