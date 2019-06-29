@@ -64,4 +64,15 @@ class DncContact extends Model
     public function scopeByClient($query, $clientId) {
         return $query->where('client_id', $clientId);
     }
+
+    /**
+     * Filter DncContacts by Zip Code.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param int $zip
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeByZip($query, $zip) {
+        return $query->where('zip', $zip);
+    }
 }

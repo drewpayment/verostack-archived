@@ -30,11 +30,12 @@ class DncContactController extends Controller
         $result = new ApiResource();
         $uid = $request->fbid;
         $existingContactsResult = new ApiResource();
+        $zipCode = $request->query('zip');
 
         $user = Auth::user();
         $user->load('sessionUser');
         $clientId = $user->sessionUser->session_client;
-        $conResults = new ApiResource(DncContact::byClient($clientId)->get());
+        $conResults = new ApiResource(DncContact::byClient($clientId)->byZip($zipCode)->get());
 
         // TODO: NEED TO REMOVE DUPLICATE ADDRESSES
         if ($existingContactsResult->hasData()) {
