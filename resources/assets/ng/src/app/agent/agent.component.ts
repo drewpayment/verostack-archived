@@ -18,6 +18,7 @@ import { MessageService } from '@app/message.service';
 import { AgentRulesDialogComponent } from '@app/agent/agent-rules-dialog/agent-rules-dialog.component';
 import { CurrencyPipe } from '@angular/common';
 import { coerceNumberProperty } from '@app/utils';
+import { UserRole } from '@app/models/role.model';
 
 interface DataStore {
     users:User[],
@@ -340,11 +341,26 @@ export class AgentComponent implements OnInit, AfterViewChecked, OnDestroy {
         // this.savePairingUpdate(form, user);
     }
 
+    /**
+     * Fetches agents... assuming that all agents must have an user account. Also, that user account 
+     * has a role and the user/agent cannot have a UserRole of System Admin. Effectively, we want to ensure that 
+     * we are hiding all system admins from the agents page as these users should not be sale agents anyways. 
+     */
     private refreshAgents():void {
         this.service.getUserAgentsByClient(this.user.sessionUser.sessionClient)
             .pipe(map(this.setMoments))
             .subscribe(users => {
-                _.remove(users, u => u.agent == null);
+                users = users.filter((u, i, a) => {
+                    // if agent entity is null or this is user is a system admin, remove from the list
+                    if (u.agent == null || u.role.role > UserRole.companyAdmin) return;
+
+                    // check if the logged in user is allowed to see company admins..
+                    // only other company admins should be able to see them... 
+                    if (u.role.role === UserRole.companyAdmin && this.user.role.role != UserRole.companyAdmin) return; 
+
+                    return u.agent != null;
+                });
+                // _.remove(users, u => u.agent == null);
 
                 users.forEach((u:User, i:number) => {
                     if (u.detail == null) 

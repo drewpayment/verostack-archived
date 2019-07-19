@@ -12,7 +12,7 @@ class DncContact extends Model
 
     protected $table = 'dnc_contacts';
 
-    protected $primary_key = 'dnc_contact_id';
+    protected $primaryKey = 'dnc_contact_id';
 
     protected $fillable = [
         'dnc_contact_id', 'client_id', 'first_name', 'last_name', 'description', 'address', 'address_cont', 

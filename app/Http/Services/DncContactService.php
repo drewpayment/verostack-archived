@@ -25,7 +25,7 @@ class DncContactService
 	{
 		$result = new ApiResource();
 
-		$model = DncContact::byDncContactId($dto->dnc_contact_id)->first();
+		$model = DncContact::find($dto->dnc_contact_id);
 
 		if ($model->first_name != $dto->first_name)
 			$model->first_name = $dto->first_name;
@@ -52,7 +52,7 @@ class DncContactService
 			return $result->setToFail();
 		}
 
-		return $result->setToData($model);
+		return $result->setData($model);
 	}
 
 	/**
