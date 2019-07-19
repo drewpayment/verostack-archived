@@ -3,6 +3,7 @@
 namespace App\Http\Services;
 
 use App\PayCycle;
+use Carbon\Carbon;
 use App\Http\Helpers;
 use App\PayrollDetail;
 use Illuminate\Http\Request;
@@ -66,25 +67,30 @@ class PayrollDetailsService
 
         $details = PayrollDetail::with(['payroll.payCycle', 'agent', 'overrides.agent', 'expenses', 'payroll'])
             ->whereHas('payroll', function($q) use ($request, $clientId, $filterByDates) {
+                if ($filterByDates) {
+                    $start = Carbon::parse($request->startDate)->startOfDay()->toDateTimeString();
+                    $end = Carbon::parse($request->endDate)->endOfDay()->toDateTimeString();
+                    $q->whereBetween('release_date', [$start, $end]);
+                }
+
                 $q->where([
                     ['client_id', $clientId],
                     ['is_released', 1]
                 ]);
-                
-                //TODO: this is broken right now, it isn't filtering by the dates passed in... always returns empty set
-                if ($filterByDates) {
-                    $q->whereBetween('release_date', [$request->startDate, $request->endDate]);
-                }
             })
             ->select('payroll_details.*', 
                 DB::raw('
                     (SELECT p.release_date 
                     FROM payrolls p
-                    WHERE p.client_id = ?
+                    WHERE p.client_id = '.$clientId.'
                     AND p.payroll_id = payroll_details.payroll_id) AS release_date
                 ')
             )
-            ->addBinding($clientId)
+            /**
+             * TODO: THIS BINDING IS REPLACING START DATE FOR SOME REASON AND END DATE IS GETTING USED AS CLIENT ID... 
+             * WORKAROUND IS TO INTERPOLATE CLIENT ID STRING VALUE IN DB:RAW ALTHOUGH THAT IS POTENTIALLY UNSAFE. 
+             */
+            // ->addBinding($clientId) 
             ->latest('release_date', 'desc')
             ->paginate($request->resultsPerPage, ['*'], 'page', $request->page);
 

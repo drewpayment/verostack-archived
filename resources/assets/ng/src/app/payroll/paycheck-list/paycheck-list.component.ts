@@ -3,16 +3,16 @@ import { IAgent, PayrollDetails, User, Paginator, ICampaign } from '@app/models'
 import { PaycheckService } from './paycheck.service';
 import { SessionService } from '@app/session.service';
 import { FormControl } from '@angular/forms';
-import { MatPaginator, PageEvent, MatSort, MatTable, MatTableDataSource, SortDirection, MatChipInputEvent } from '@angular/material';
-import { BehaviorSubject, forkJoin, Observable, combineLatest } from 'rxjs';
+import { MatPaginator, MatTable, SortDirection, MatChipInputEvent } from '@angular/material';
+import { BehaviorSubject, combineLatest } from 'rxjs';
 import { Moment } from '@app/shared';
 import { CampaignService } from '@app/campaigns/campaign.service';
 import { PaycheckDetailService } from '../paycheck-detail/paycheck-detail.service';
 import { coerceNumberProperty } from '@app/utils';
 import * as moment from 'moment';
-import { debounceTime, distinctUntilChanged, map, take } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, tap } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
-import { trigger, state, style, animate, keyframes, transition, sequence, query, animateChild, group } from '@angular/animations';
+import { trigger, state, style, animate, transition, sequence, query, animateChild } from '@angular/animations';
 
 
 @Component({
@@ -53,26 +53,19 @@ import { trigger, state, style, animate, keyframes, transition, sequence, query,
 })
 export class PaycheckListComponent implements OnInit {
     user:User;
-    agents:IAgent[];
     campaigns$ = new BehaviorSubject<ICampaign[]>(null);
     paginator:Paginator<PayrollDetails>;
     private _paychecks:PayrollDetails[];
     paychecks$ = new BehaviorSubject<PayrollDetails[]>(null);
-    searchAgentsCtrl:FormControl;
     @ViewChild('paging') paging:MatPaginator;
-    @ViewChild(MatTable) table:MatTable<PayrollDetails>;
     startDate:Moment|Date|string;
     endDate:Moment|Date|string;
-    hasSetSort:boolean = false;
-
     searchInput = new FormControl('');
     inputs:string[] = [];
 
-    startDateCtrl = new FormControl('');
-    endDateCtrl = new FormControl('');
-    pageLoadApiCallHappened:boolean = false;
-
-    showChangeDateControls:boolean = false;
+    startDateCtrl = new FormControl(moment());
+    endDateCtrl = new FormControl(moment());
+    pageLoadApiCallHappened = false;
 
 
     constructor(
@@ -81,8 +74,7 @@ export class PaycheckListComponent implements OnInit {
         private service:PaycheckService,
         private campaignService:CampaignService,
         private paycheckDetailService:PaycheckDetailService
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
         this.searchInput.valueChanges
@@ -91,17 +83,32 @@ export class PaycheckListComponent implements OnInit {
                 distinctUntilChanged()
             ).subscribe(val => this.filterTable(val));
 
+        this.startDateCtrl.valueChanges
+            .pipe(tap((value:Moment) => {
+                this.service.startDate = value;
+            }))
+            .subscribe(() => this.getPaychecks());
+
+        this.endDateCtrl.valueChanges
+            .pipe(tap((value:Moment) => {
+                this.service.endDate = value;
+            }))
+            .subscribe(() => this.getPaychecks());
+
         combineLatest(
             this.route.queryParams,
             this.session.getUserItem()
         ).subscribe(([params, user]) => {
             if (this.pageLoadApiCallHappened) return;
-            this.startDate = params['startDate'] || null;
-            this.endDate = params['endDate'] || null;
-            this.user = user;
 
-            this.startDateCtrl.setValue(this.startDate, { emitEvent: false });
-            this.endDateCtrl.setValue(this.endDate, { emitEvent: false });
+            // if the URL has a date param in it, use that (for headless printable stuff), fallback to ng-memory or set to null
+            this.startDate = params['startDate'] || this.service.startDate || null;
+            this.endDate = params['endDate'] || this.service.endDate || null;
+
+            if (this.startDate) this.startDateCtrl.setValue(this.startDate, {emitEvent: false});
+            if (this.endDate) this.endDateCtrl.setValue(this.endDate, { emitEvent: false });
+
+            this.user = user;
 
             this.campaignService.getCachedCampaigns(user.sessionUser.sessionClient)
                 .subscribe(campaigns => {
@@ -116,26 +123,6 @@ export class PaycheckListComponent implements OnInit {
     sortTable(sort:{ active:'agentName'|'releaseDate'|'campaign'|'amount', direction:SortDirection }) {
         const result = this.sortPaychecksBy(sort.active, sort.direction);
         this.paychecks$.next(result);
-    }
-
-    filterTableByDates():void {
-        if (this.startDateCtrl.value)
-            this.startDate = this.startDateCtrl.value;
-        if (this.endDateCtrl.value)
-            this.endDate = this.endDateCtrl.value;
-
-        if (this.startDateCtrl.invalid) return;
-        if (this.endDateCtrl.invalid) return;
-
-        this.getPaychecks();
-    }
-
-    clearDates() {
-        this.startDateCtrl.reset();
-        this.endDateCtrl.reset();
-
-        this.getPaychecks();
-        this.showChangeDateControls = !this.showChangeDateControls;
     }
 
     filterTable(filterValue:string):void {
@@ -252,10 +239,8 @@ export class PaycheckListComponent implements OnInit {
     ):void {
         page++; // we need to increment the value of "page" because matpaginator uses 0-based indexing and laravel pagination starts at 1
 
-        if (this.startDateCtrl.value && this.endDateCtrl.value) {
-            startDate = moment(this.startDateCtrl.value).format('YYYY-MM-DD');
-            endDate = moment(this.endDateCtrl.value).format('YYYY-MM-DD');
-        }
+        if (!startDate) startDate = this.startDateCtrl.value;
+        if (!endDate) endDate = this.endDateCtrl.value;
 
         this.service.getPaychecks(this.user.sessionUser.sessionClient, page, pageSize, startDate, endDate)
             .subscribe(paginator => {

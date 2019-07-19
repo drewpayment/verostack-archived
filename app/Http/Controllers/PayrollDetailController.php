@@ -31,6 +31,17 @@ class PayrollDetailController extends Controller
         $this->helper = $_helpers;
     }
 
+    /**
+     * QueryString Parameters get passed: 
+     * page - (Page # in Pagination)
+     * resultsPerPage - (# of results per paginated result)
+     * startDate - (start date filter)
+     * endDate - (end date filter)
+     *
+     * @param Request $request
+     * @param int $clientId
+     * @return JsonResponse
+     */
     public function getPaychecks(Request $request, $clientId)
     {
         $result = new ApiResource();
@@ -50,8 +61,8 @@ class PayrollDetailController extends Controller
     /**
      * This is the API endpoint that handles executing the node script and creating the PDF stub.
      *
-     * @param [type] $clientId
-     * @return void
+     * @param int $clientId
+     * @return JsonResponse
      */
     public function runHeadlessDetailScript($clientId, $payrollDetailsId)
     {

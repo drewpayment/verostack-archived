@@ -4,15 +4,14 @@ import { BehaviorSubject } from 'rxjs';
 import { MessageService } from '@app/message.service';
 import { PayrollService } from '../payroll.service';
 import { SessionService } from '@app/session.service';
-import { MatDialog, MatTable, MatTableDataSource, MatDatepicker, MatDatepickerInputEvent, MatCheckboxChange } from '@angular/material';
+import { MatDialog, MatTable, MatTableDataSource, MatDatepickerInputEvent, MatCheckboxChange } from '@angular/material';
 import { PayrollFilterDialogComponent } from '../payroll-filter-dialog/payroll-filter-dialog.component';
-import { Moment, MomentInclusivity } from '@app/shared/moment-extensions';
+import { Moment } from '@app/shared/moment-extensions';
 import * as moment from 'moment';
 import { CampaignService } from '@app/campaigns/campaign.service';
 import { trigger, state, style, transition, animate, sequence, query } from '@angular/animations';
 import { SelectionModel } from '@angular/cdk/collections';
 import { OverrideExpenseDialogComponent } from '../override-expense-dialog/override-expense-dialog.component';
-import { ScheduleAutoReleaseDialogComponent } from '../schedule-auto-release-dialog/schedule-auto-release-dialog.component';
 import { ConfirmAutoreleaseDateDialogComponent } from '../confirm-autorelease-date-dialog/confirm-autorelease-date-dialog.component';
 import { ConfirmReleaseDialogComponent } from '../confirm-release-dialog/confirm-release-dialog.component';
 import * as _ from 'lodash';
@@ -156,7 +155,7 @@ export class PayrollListComponent implements OnInit {
      * @param event 
      * @param item 
      */
-    removeAutoRelease(event:MatCheckboxChange, item:Payroll) {
+    removeAutoRelease(item:Payroll) {
         this.service.removeAutoReleaseSettings(this.user.sessionUser.sessionClient, item.payrollId)
             .subscribe(result => {
                 this._payrolls.forEach((p, i, a) => {
@@ -201,7 +200,9 @@ export class PayrollListComponent implements OnInit {
     }
 
     getCampaignDescById(id:number):string {
-        return this.campaigns.find(c => c.campaignId == id).name;
+        const campaign = this.campaigns.find(c => c.campaignId == id);
+        if (campaign == null) return '';
+        return campaign.name;
     }
 
     removeFilter(filterType:PayrollFilterType) {
@@ -379,7 +380,7 @@ export class PayrollListComponent implements OnInit {
         let result:Payroll[];
         switch (type) {
             case PayrollFilterType.agent:
-                result = payrolls.map((p, i, a) => {
+                result = payrolls.map((p) => {
                     const hasDetails = p.details.find(d => d.agentId == this.filters.agentId) != null;
                     if (hasDetails) {
                         p.details = p.details.filter(d => d.agentId == this.filters.agentId);

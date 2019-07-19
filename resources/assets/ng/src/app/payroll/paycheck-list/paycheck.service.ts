@@ -11,9 +11,22 @@ import * as moment from 'moment';
 })
 export class PaycheckService {
 
-    api:string = environment.apiUrl + 'api';
+    api: string = environment.apiUrl + 'api';
 
-    constructor(private http:HttpClient) {}
+    private _startDate: Moment;
+    get startDate() { return this._startDate; }
+    set startDate(value:Moment) {
+        if (value == null) return;
+        this._startDate = moment(value);
+    }
+    private _endDate: Moment;
+    get endDate() { return this._endDate; }
+    set endDate(value: Moment) {
+        if (value == null) return;
+        this._endDate = moment(value);
+    }
+
+    constructor(private http: HttpClient) {}
 
     getPaychecks(
         clientId:number, 
