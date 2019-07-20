@@ -118,23 +118,23 @@ export class AddAgentDialogComponent implements OnInit {
             isManager: this.agentForm.value.isManager
         };
 
-        let role = this.roleType.value;
+        const role = this.roleType.value;
 
         this.userService
             .saveNewUserAgentEntity(this.userEntity, this.agentEntity, this.detailEntity, this.user.sessionUser.sessionClient, role)
             .pipe(
                 catchError((resp:LaravelErrorResponse, caught:Observable<boolean>) => {
-                    let keys = Object.keys(resp.error.errors);
-                    let errorDisplaymsg:string = 'Errors: ';
+                    const keys = Object.keys(resp.error.errors);
+                    let errorDisplaymsg = 'Errors: ';
 
                     keys.forEach(key => {
-                        let propErrors:string[] = resp.error.errors[key];
-                        if(!_.isArray(propErrors)) return;
+                        const propErrors:string[] = resp.error.errors[key];
+                        if (!_.isArray(propErrors)) return;
                         propErrors.forEach((pe:string, i:number) => {
                             errorDisplaymsg += `(${i + 1}) ${pe}`;
                         });
 
-                        if(key == 'email') 
+                        if (key == 'email') 
                             this.userForm.controls.email.setErrors({ notUnique: true });
                     });
 
@@ -230,10 +230,6 @@ export class AddAgentDialogComponent implements OnInit {
         });
     }
 
-    test(): void {
-        // console.dir(this.detailForm);
-    }
-
     validateVerifyAccount(): void {
         if (this.detailForm.value.bankAccount > 0 && this.detailForm.controls.bankAccount.valid)
             this.detailForm.controls.verifyAccount.setValidators(Validators.required);
@@ -266,25 +262,25 @@ export class AddAgentDialogComponent implements OnInit {
     }
 
     checkUsernameAvailability():void {
-        let usernameInput = _.find(this.inputs.toArray(), (input:MatInput) => {
+        const usernameInput = _.find(this.inputs.toArray(), (input:MatInput) => {
             return input.ngControl.name === 'username';
         }) as MatInput;
 
         const username:string = usernameInput.value;
         this.attemptedUsername = username;
-        if(username.length < 1) return;
+        if (username.length < 1) return;
 
-        if(this.userForm.controls.username.errors != null && this.userForm.controls.username.errors.unavailable) {
+        if (this.userForm.controls.username.errors != null && this.userForm.controls.username.errors.unavailable) {
             this.userForm.patchValue({ username: username });
         } else {
             this.service.checkUsernameAvailability(username)
                 .subscribe(available => {
                     this.usernameTaken = !available;
 
-                    if(!available) {
+                    if (!available) {
                         this.userForm.get('username').setErrors({ unavailable: true });
 
-                        let lastSection = this.userForm.value.firstName.substr(0, 2).toLowerCase();
+                        const lastSection = this.userForm.value.firstName.substr(0, 2).toLowerCase();
                         this.suggestedUsername = this.userForm.value.lastName.substr(0, 5).toLowerCase() + lastSection;
 
                         usernameInput.focus();
@@ -307,8 +303,8 @@ export class AddAgentDialogComponent implements OnInit {
         this.agentForm = this.fb.group({
             // firstName: this.fb.control(this.userEntity.firstName, [Validators.required]),
             // lastName: this.fb.control(this.userEntity.lastName, [Validators.required]),
-            managerId: this.fb.control('', [Validators.required]),
-            isManager: this.fb.control('', [])
+            managerId: this.fb.control(''),
+            isManager: this.fb.control('')
         });
     }
 

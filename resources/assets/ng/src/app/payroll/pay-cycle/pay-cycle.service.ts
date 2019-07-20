@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, ReplaySubject } from 'rxjs';
 import { PayCycle } from '@app/models/pay-cycle.model';
 import { environment } from '@env/environment';
 import { DailySale } from '@app/models';

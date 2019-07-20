@@ -28,6 +28,7 @@ import { PaycheckDetailComponent } from './paycheck-detail/paycheck-detail.compo
 import { PaycheckDetailService } from './paycheck-detail/paycheck-detail.service';
 import { PaycheckDetailGuard } from './paycheck-detail.guard';
 import { AgentPayrollViewComponent } from './agent-payroll-view/agent-payroll-view.component';
+import { PayCycleTutorialDialogComponent } from './pay-cycle/components/pay-cycle-tutorial-dialog/pay-cycle-tutorial-dialog.component';
 
 const routes:Route[] = [{ 
     path: 'admin/pay', 
@@ -78,6 +79,7 @@ const routes:Route[] = [{
     ],
     declarations: [
         PayCycleDialogComponent,
+        PayCycleTutorialDialogComponent,
         PayrollDialogComponent,
         PayrollListComponent,
         PayrollFilterDialogComponent,
@@ -111,6 +113,7 @@ const routes:Route[] = [{
     ],
     entryComponents: [
         PayCycleDialogComponent,
+        PayCycleTutorialDialogComponent,
         PayrollDialogComponent,
         ConfirmUnpaidSelectionDialogComponent,
         PayrollFilterDialogComponent,
