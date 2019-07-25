@@ -209,13 +209,17 @@ export class AgentComponent implements OnInit, AfterViewChecked, OnDestroy {
             this.users$.next(this.store.users as UserView[]);
             this.showInactive = true;
         } else {
-            const filtered:UserView[] = this.store.users.filter(u => {
-                return u.agent.isActive == true;
-            }) as UserView[];
-            this.users$.next(filtered);
+            this.hideInactiveAgents();
             this.showInactive = false;
         }
 
+    }
+
+    private hideInactiveAgents() {
+        const filtered:UserView[] = this.store.users.filter(u => {
+            return u.agent.isActive == true;
+        }) as UserView[];
+        this.users$.next(filtered);
     }
 
     private resetPairingFormGroup(form:FormGroup, pairing:ISalesPairing):void {
@@ -356,7 +360,7 @@ export class AgentComponent implements OnInit, AfterViewChecked, OnDestroy {
 
                     // check if the logged in user is allowed to see company admins..
                     // only other company admins should be able to see them... 
-                    if (u.role.role === UserRole.companyAdmin && this.user.role.role != UserRole.companyAdmin) return; 
+                    if (u.role.role === UserRole.companyAdmin && this.user.role.role < UserRole.companyAdmin) return; 
 
                     return u.agent != null;
                 });
@@ -385,7 +389,8 @@ export class AgentComponent implements OnInit, AfterViewChecked, OnDestroy {
                 });
 
                 this.store.users = _.orderBy(users, ['lastName', 'firstName'], ['asc', 'asc']);
-                this.users$.next(this.store.users as UserView[]);
+                this.hideInactiveAgents();
+                // this.users$.next(this.store.users as UserView[]);
                 this.setManagers(this.store.users);
                 this.session.hideLoader();
             });

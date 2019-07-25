@@ -123,6 +123,9 @@ export class EditAgentDialogComponent implements OnInit {
 
     /** Creates a form that has separate form groups for the user entity, user_detail entity and the agent entity. */
     private createForm():void {
+        const managerId = this.userAgent.agent.managerId != null 
+            ? this.userAgent.agent.managerId
+            : -1;
         this.form = this.fb.group({
             user: this.fb.group({
                 firstName: this.fb.control(this.userAgent.firstName, [Validators.required]),
@@ -144,7 +147,7 @@ export class EditAgentDialogComponent implements OnInit {
                 account: this.fb.control(this.userAgent.detail.bankAccount)
             }),
             agent: this.fb.group({
-                manager: this.fb.control(this.userAgent.agent.managerId, [Validators.required]),
+                manager: this.fb.control(managerId),
                 isManager: this.fb.control(this.userAgent.agent.isManager),
                 active: this.fb.control(this.userAgent.agent.isActive)
             })

@@ -32,7 +32,7 @@ export class SessionService {
     navigateQueue: string[] = [];
     loggedInService: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
     private userLoggedIn: boolean;
-    userItem = new BehaviorSubject<User>(null);
+    userItem = new ReplaySubject<User>(1);
 
     private tokenItem$: Subject<IToken> = new ReplaySubject<IToken>(1);
     tokenItem: Observable<IToken>;
@@ -67,12 +67,12 @@ export class SessionService {
             this.currentUrl = e.url;
         });
 
-        this.userItem.pipe(map(u => u.selectedClient = this._selectedClient));
+        // this.userItem.pipe(map(u => u.selectedClient = this._selectedClient));
     }
 
-    private _selectedClient():number {
-        return this.userItem.getValue().sessionUser.sessionClient;
-    }
+    // private _selectedClient():number {
+    //     return this.userItem.getValue().sessionUser.sessionClient;
+    // }
 
     setNavigationTitle(value:string) {
         if (typeof value !== 'string' || value == null) return;
@@ -118,7 +118,7 @@ export class SessionService {
         this.router.navigate(['login']);
     }
 
-    getUserItem():BehaviorSubject<User> {
+    getUserItem():Observable<User> {
         return this.userItem;
     }
 

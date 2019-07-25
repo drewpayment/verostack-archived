@@ -14,7 +14,7 @@
                             <mat-icon>sort_by_alpha</mat-icon>
                             <mat-icon>{{sortAscending ? 'arrow_drop_up' : 'arrow_drop_down'}}</mat-icon>
                         </button>
-                        <mat-slide-toggle (change)="toggleAgents($event)" [checked]="true">
+                        <mat-slide-toggle (change)="toggleAgents($event)" [checked]="false">
                             {{ showInactive ? 'Hide Inactive' : 'Show Inactive' }}
                         </mat-slide-toggle>
                     </div>
