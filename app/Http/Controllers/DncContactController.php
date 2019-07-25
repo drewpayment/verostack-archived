@@ -28,7 +28,6 @@ class DncContactController extends Controller
     public function getDncContacts(Request $request)
     {
         $result = new ApiResource();
-        $uid = $request->fbid;
         $existingContactsResult = new ApiResource();
         $zipCode = $request->query('zip');
 

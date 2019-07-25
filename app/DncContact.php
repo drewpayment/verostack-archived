@@ -75,4 +75,40 @@ class DncContact extends Model
     public function scopeByZip($query, $zip) {
         return $query->where('zip', $zip);
     }
+
+    /**
+     * Used to try to find existing contacts before saving new. 
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string $firstName
+     * @param string $lastName
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeByName($query, $firstName, $lastName) {
+        return $query->where([
+            ['first_name', 'like', $firstName],
+            ['last_name', 'like', $lastName]
+        ]);
+    }
+
+    /**
+     * Used to try to find existing contacts before saving new contacts. 
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string $address
+     * @param string $city
+     * @param string $state
+     * @param int $zip
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeByNameAndAddress($query, $firstName, $lastName, $address, $city, $state, $zip) {
+        return $query->where([
+            ['first_name', 'like', $firstName],
+            ['last_name', 'like', $lastName],
+            ['address', 'like', $address],
+            ['city', 'like', $city],
+            ['state', 'like', $state],
+            ['zip', '=', $zip]
+        ]);
+    }
 }

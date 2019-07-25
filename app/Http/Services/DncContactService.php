@@ -66,7 +66,15 @@ class DncContactService
 		$result = new ApiResource();
 		$lat = '';
 		$lng = '';
-		$geo = null;
+        $geo = null;
+        
+        $existing = DncContact::byNameAndAddress($model->firstName, $model->lastName, $model->address, 
+            $model->city, $model->state, $model->zip)->get();
+
+        if ($existing->isNotEmpty()) {
+            return $result->setData($existing->first())
+                ->setToFail();
+        }
 
 		if (!array_key_exists($model['lat'], $model) || !array_key_exists($model['long'], $model)) {
 			$geoResult = $this->getGeolocation($model->address, $model->city, $model->state);
