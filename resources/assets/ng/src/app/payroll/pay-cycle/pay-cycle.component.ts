@@ -1,22 +1,22 @@
-import {Component, OnInit} from '@angular/core';
-import { User, ICampaign, DailySale, PayrollDetails, Payroll } from '@app/models';
+import {Component, OnInit, AfterViewInit, OnDestroy} from '@angular/core';
+import { User, ICampaign, PayrollDetails, Payroll } from '@app/models';
 import { SessionService } from '@app/session.service';
 import { MatDialog } from '@angular/material';
 import { CampaignService } from '@app/campaigns/campaign.service';
-import { FormBuilder } from '@angular/forms';
 import { MessageService } from '@app/message.service';
 import { PayCycle } from '@app/models/pay-cycle.model';
 import { Router } from '@angular/router';
-import { BehaviorSubject, forkJoin } from 'rxjs';
+import { BehaviorSubject, forkJoin, Subscription } from 'rxjs';
 import { PayCycleDialogComponent } from './components/pay-cycle-dialog/pay-cycle-dialog.component';
 import { Moment } from 'moment';
 import * as moment from 'moment';
-import { map } from 'rxjs/operators';
+import { map, share, shareReplay } from 'rxjs/operators';
 import { PayrollService } from '@app/payroll/payroll.service';
 import { PayCycleService } from './pay-cycle.service';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { AgentService } from '@app/agent/agent.service';
 import { ISalesPairing } from '@app/models/sales-pairings.model';
+import { PayCycleTutorialDialogComponent } from './components/pay-cycle-tutorial-dialog/pay-cycle-tutorial-dialog.component';
 
 enum DropListType {
     Todo,
@@ -29,7 +29,7 @@ enum DropListType {
     templateUrl: './pay-cycle.component.html',
     styleUrls: ['./pay-cycle.component.scss']
 })
-export class PayCycleComponent implements OnInit {
+export class PayCycleComponent implements OnInit, AfterViewInit, OnDestroy {
 
     today:Moment = moment();
     user:User;
@@ -44,6 +44,8 @@ export class PayCycleComponent implements OnInit {
 
     salesPairings:ISalesPairing[];
 
+    private pageLoadSubscription:Subscription;
+
     constructor(
         private session:SessionService,
         private agentService:AgentService,
@@ -57,23 +59,34 @@ export class PayCycleComponent implements OnInit {
 
     ngOnInit() {
         this.session.showLoader();
-        this.session.getUserItem().subscribe(u => {
-            if (u == null) return;
-            this.user = u;
+    }
 
-            forkJoin(
-                this.campaignService.getCampaignsByClient(this.user.sessionUser.sessionClient),
-                this.payCycleService.getPayCycles(this.user.sessionUser.sessionClient),
-                this.agentService.getSalesPairingsByClient(this.user.sessionUser.sessionClient)
-            ).subscribe(([campaigns, cycles, pairings]) => {
-                this.campaigns = campaigns;
-                this._cycles = cycles;
-                this.salesPairings = pairings;
+    ngAfterViewInit() {
+        this.session.getUserItem()
+            .pipe(share())
+            .subscribe(u => {
+                if (u == null) return;
+                this.user = u;
+                const clientId = this.user.sessionUser.sessionClient;
 
-                this._filterCycles();
-                this.session.hideLoader();
+                this.pageLoadSubscription = forkJoin(
+                    this.campaignService.getCampaignsByClient(clientId).pipe(share()),
+                    this.payCycleService.getPayCycles(clientId).pipe(share()),
+                    this.agentService.getSalesPairingsByClient(clientId).pipe(share())
+                )
+                .subscribe(([campaigns, cycles, pairings]) => {
+                    this.campaigns = campaigns;
+                    this._cycles = cycles;
+                    this.salesPairings = pairings;
+
+                    this._filterCycles();
+                    this.session.hideLoader();
+                });
             });
-        });
+    }
+
+    ngOnDestroy() {
+        this.pageLoadSubscription.unsubscribe();
     }
 
     drop(event:CdkDragDrop<PayCycle[]>, type:DropListType) {
@@ -126,6 +139,16 @@ export class PayCycleComponent implements OnInit {
             .sort((a, b) => <any>new Date(<any>b.startDate) - <any>new Date(<any>a.startDate));
         this.closedCycles = this._cycles.filter(c => c.isClosed)
             .sort((a, b) => <any>new Date(<any>b.startDate) - <any>new Date(<any>a.startDate));
+
+        if (!this.todoCycles.length && !this.lockedCycles.length && !this.closedCycles.length) {
+            this.dialog.open(PayCycleTutorialDialogComponent, {
+                width: '50vw'
+            })
+            .afterClosed()
+            .subscribe((result) => {
+
+            });
+        }
     }
 
     getHumanReadableDuration(cycle:PayCycle):string {

@@ -138,14 +138,11 @@
                 <div class="row py-4">
                     <div class="col-md-6">
                         <mat-form-field>
-                            <mat-select placeholder="Manager" formControlName="manager" required>
+                            <mat-select placeholder="Manager" formControlName="manager">
                                 <mat-option *ngFor="let manager of managers" [value]="manager.id">
                                     {{manager.firstName}} {{manager.lastName}}
                                 </mat-option>
                             </mat-select>
-                            <mat-error *ngIf="form.get('agent').get('manager').hasError('required')">
-                                Please select a manager.
-                            </mat-error>
                         </mat-form-field>
                     </div>
                     <div class="col-md-6">
