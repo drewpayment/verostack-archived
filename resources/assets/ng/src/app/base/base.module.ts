@@ -23,7 +23,6 @@ import { PortalModule } from '@angular/cdk/portal';
     MaterialModule
   ],
   declarations: [
-    LoginComponent,
     ChartJsContent,
     DashboardComponent,
     ClientSelectorComponent,

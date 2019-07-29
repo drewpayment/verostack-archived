@@ -14,11 +14,13 @@ import { PublicHomeComponent } from '@app/public-home/public-home.component';
 import { CampaignDetailComponent } from '@app/campaigns/components/campaign-detail/campaign-detail.component';
 import { UtilityDetailComponent } from './campaigns/components/utility-detail/utility-detail.component';
 import { NewSaleComponent } from './daily-sale-tracker/components/new-sale/new-sale.component';
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 
 const routes: Routes = [
-    { path: '', redirectTo: 'home', pathMatch: 'full' },
+    // { path: '', redirectTo: 'home', pathMatch: 'full' },
     { path: 'home', component: PublicHomeComponent },
     { path: 'login', component: LoginComponent },
+    { path: 'forgot-password', component: ForgotPasswordComponent },
     { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
     { path: 'my-information', component: MyInformationComponent, canActivate: [AuthGuard] },
     { path: 'client-information', component: ClientInformationComponent, canActivate: [AuthGuard] },

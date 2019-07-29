@@ -1311,6 +1311,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _app_campaigns_components_campaign_detail_campaign_detail_component__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @app/campaigns/components/campaign-detail/campaign-detail.component */ "./src/app/campaigns/components/campaign-detail/campaign-detail.component.ts");
 /* harmony import */ var _campaigns_components_utility_detail_utility_detail_component__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./campaigns/components/utility-detail/utility-detail.component */ "./src/app/campaigns/components/utility-detail/utility-detail.component.ts");
 /* harmony import */ var _daily_sale_tracker_components_new_sale_new_sale_component__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./daily-sale-tracker/components/new-sale/new-sale.component */ "./src/app/daily-sale-tracker/components/new-sale/new-sale.component.ts");
+/* harmony import */ var _forgot_password_forgot_password_component__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./forgot-password/forgot-password.component */ "./src/app/forgot-password/forgot-password.component.ts");
+
 
 
 
@@ -1327,9 +1329,10 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var routes = [
-    { path: '', redirectTo: 'home', pathMatch: 'full' },
+    // { path: '', redirectTo: 'home', pathMatch: 'full' },
     { path: 'home', component: _app_public_home_public_home_component__WEBPACK_IMPORTED_MODULE_11__["PublicHomeComponent"] },
     { path: 'login', component: _login_login_component__WEBPACK_IMPORTED_MODULE_3__["LoginComponent"] },
+    { path: 'forgot-password', component: _forgot_password_forgot_password_component__WEBPACK_IMPORTED_MODULE_15__["ForgotPasswordComponent"] },
     { path: 'dashboard', component: _dashboard_dashboard_component__WEBPACK_IMPORTED_MODULE_4__["DashboardComponent"], canActivate: [_auth_guard__WEBPACK_IMPORTED_MODULE_7__["AuthGuard"]] },
     { path: 'my-information', component: _my_information_my_information_component__WEBPACK_IMPORTED_MODULE_5__["MyInformationComponent"], canActivate: [_auth_guard__WEBPACK_IMPORTED_MODULE_7__["AuthGuard"]] },
     { path: 'client-information', component: _client_information_client_information_component__WEBPACK_IMPORTED_MODULE_6__["ClientInformationComponent"], canActivate: [_auth_guard__WEBPACK_IMPORTED_MODULE_7__["AuthGuard"]] },
@@ -1537,6 +1540,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _payroll_payroll_module__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ./payroll/payroll.module */ "./src/app/payroll/payroll.module.ts");
 /* harmony import */ var _env_environment__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! @env/environment */ "./src/environments/environment.ts");
 /* harmony import */ var _base_base_module__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ./base/base.module */ "./src/app/base/base.module.ts");
+/* harmony import */ var _forgot_password_forgot_password_component__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ./forgot-password/forgot-password.component */ "./src/app/forgot-password/forgot-password.component.ts");
+/* harmony import */ var _login_login_component__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ./login/login.component */ "./src/app/login/login.component.ts");
+
+
 
 
 
@@ -1597,6 +1604,7 @@ var AppModule = /** @class */ (function () {
             ],
             declarations: [
                 _app_component__WEBPACK_IMPORTED_MODULE_5__["AppComponent"],
+                _login_login_component__WEBPACK_IMPORTED_MODULE_25__["LoginComponent"],
                 _sidenav_sidenav_component__WEBPACK_IMPORTED_MODULE_6__["SidenavComponent"],
                 _header_header_component__WEBPACK_IMPORTED_MODULE_9__["HeaderComponent"],
                 _agent_agent_component__WEBPACK_IMPORTED_MODULE_12__["AgentComponent"],
@@ -1604,6 +1612,7 @@ var AppModule = /** @class */ (function () {
                 _public_home_public_home_component__WEBPACK_IMPORTED_MODULE_17__["PublicHomeComponent"],
                 _agent_agent_rules_dialog_agent_rules_dialog_component__WEBPACK_IMPORTED_MODULE_18__["AgentRulesDialogComponent"],
                 _daily_sale_tracker_components_new_sale_new_sale_component__WEBPACK_IMPORTED_MODULE_19__["NewSaleComponent"],
+                _forgot_password_forgot_password_component__WEBPACK_IMPORTED_MODULE_24__["ForgotPasswordComponent"],
             ],
             entryComponents: [
                 _agent_edit_agent_dialog_edit_agent_dialog_component__WEBPACK_IMPORTED_MODULE_15__["EditAgentDialogComponent"],
@@ -1825,13 +1834,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _client_selector_client_selector_component__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../client-selector/client-selector.component */ "./src/app/client-selector/client-selector.component.ts");
 /* harmony import */ var _dashboard_dashboard_component__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../dashboard/dashboard.component */ "./src/app/dashboard/dashboard.component.ts");
 /* harmony import */ var _dashboard_chart_js_content__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../dashboard/chart-js-content */ "./src/app/dashboard/chart-js-content.ts");
-/* harmony import */ var _login_login_component__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../login/login.component */ "./src/app/login/login.component.ts");
-/* harmony import */ var _angular_platform_browser__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @angular/platform-browser */ "./node_modules/@angular/platform-browser/fesm5/platform-browser.js");
-/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
-/* harmony import */ var _app_material_material_module__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @app/material/material.module */ "./src/app/material/material.module.ts");
-/* harmony import */ var _app_dashboard_dialogs_add_sale_dialog_component__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @app/dashboard/dialogs/add-sale-dialog.component */ "./src/app/dashboard/dialogs/add-sale-dialog.component.ts");
-/* harmony import */ var _angular_cdk_portal__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! @angular/cdk/portal */ "./node_modules/@angular/cdk/esm5/portal.es5.js");
-
+/* harmony import */ var _angular_platform_browser__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @angular/platform-browser */ "./node_modules/@angular/platform-browser/fesm5/platform-browser.js");
+/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
+/* harmony import */ var _app_material_material_module__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @app/material/material.module */ "./src/app/material/material.module.ts");
+/* harmony import */ var _app_dashboard_dialogs_add_sale_dialog_component__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @app/dashboard/dialogs/add-sale-dialog.component */ "./src/app/dashboard/dialogs/add-sale-dialog.component.ts");
+/* harmony import */ var _angular_cdk_portal__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @angular/cdk/portal */ "./node_modules/@angular/cdk/esm5/portal.es5.js");
 
 
 
@@ -1853,24 +1860,23 @@ var BaseModule = /** @class */ (function () {
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["NgModule"])({
             imports: [
                 _angular_common__WEBPACK_IMPORTED_MODULE_2__["CommonModule"],
-                _angular_platform_browser__WEBPACK_IMPORTED_MODULE_10__["BrowserModule"],
-                _angular_forms__WEBPACK_IMPORTED_MODULE_11__["FormsModule"],
-                _angular_forms__WEBPACK_IMPORTED_MODULE_11__["ReactiveFormsModule"],
-                _angular_cdk_portal__WEBPACK_IMPORTED_MODULE_14__["PortalModule"],
-                _app_material_material_module__WEBPACK_IMPORTED_MODULE_12__["MaterialModule"]
+                _angular_platform_browser__WEBPACK_IMPORTED_MODULE_9__["BrowserModule"],
+                _angular_forms__WEBPACK_IMPORTED_MODULE_10__["FormsModule"],
+                _angular_forms__WEBPACK_IMPORTED_MODULE_10__["ReactiveFormsModule"],
+                _angular_cdk_portal__WEBPACK_IMPORTED_MODULE_13__["PortalModule"],
+                _app_material_material_module__WEBPACK_IMPORTED_MODULE_11__["MaterialModule"]
             ],
             declarations: [
-                _login_login_component__WEBPACK_IMPORTED_MODULE_9__["LoginComponent"],
                 _dashboard_chart_js_content__WEBPACK_IMPORTED_MODULE_8__["ChartJsContent"],
                 _dashboard_dashboard_component__WEBPACK_IMPORTED_MODULE_7__["DashboardComponent"],
                 _client_selector_client_selector_component__WEBPACK_IMPORTED_MODULE_6__["ClientSelectorComponent"],
                 _client_information_client_information_component__WEBPACK_IMPORTED_MODULE_5__["ClientInformationComponent"],
                 _select_mapper_select_mapper_component__WEBPACK_IMPORTED_MODULE_4__["SelectMapperComponent"],
                 _loading_spinner_loading_spinner_component__WEBPACK_IMPORTED_MODULE_3__["LoadingSpinnerComponent"],
-                _app_dashboard_dialogs_add_sale_dialog_component__WEBPACK_IMPORTED_MODULE_13__["AgentAddSaleDialogComponent"]
+                _app_dashboard_dialogs_add_sale_dialog_component__WEBPACK_IMPORTED_MODULE_12__["AgentAddSaleDialogComponent"]
             ],
             entryComponents: [
-                _app_dashboard_dialogs_add_sale_dialog_component__WEBPACK_IMPORTED_MODULE_13__["AgentAddSaleDialogComponent"],
+                _app_dashboard_dialogs_add_sale_dialog_component__WEBPACK_IMPORTED_MODULE_12__["AgentAddSaleDialogComponent"],
                 _client_selector_client_selector_component__WEBPACK_IMPORTED_MODULE_6__["ClientSelectorComponent"]
             ],
             exports: [
@@ -7058,6 +7064,68 @@ var FloatBtnService = /** @class */ (function () {
 
 /***/ }),
 
+/***/ "./src/app/forgot-password/forgot-password.component.html":
+/*!****************************************************************!*\
+  !*** ./src/app/forgot-password/forgot-password.component.html ***!
+  \****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "\n<div class=\"container\">\n    <div class=\"row d-flex justify-content-center align-content-center pt-5\">\n        <div class=\"col-md-8 flex-fill\">\n            <mat-card>\n                <mat-card-content>\n                    <div class=\"row p-5\">\n                        <div class=\"col-md-7 d-flex justify-content-center align-content-center\">\n                            <div class=\"border-radius-circular\">\n                                <img src=\"dist/assets/images/forgot_password.svg\" class=\"img\" />\n                            </div>\n                        </div>\n                        <div class=\"col-md-5\">\n                            <div class=\"row\">\n                                <div class=\"col-md-12\">\n                                    <h1 class=\"forgot display-4\">Forgot Password?</h1>\n                                </div>\n                            </div>\n                            <div class=\"row\">\n                                <div class=\"col-md-12\">\n                                    <p>\n                                        Enter the email address associated with your account.\n                                    </p>\n                                </div>\n                            </div>\n                            <div class=\"row\">\n                                <div class=\"col-md-12\">\n                                    <mat-form-field floatLabel=\"true\" hideRequiredMarker=\"true\" class=\"wp-100\">\n                                        <input matInput name=\"email\" type=\"text\" [formControl]=\"email\" placeholder=\"Email Address\" required />\n                                        <mat-error *ngIf=\"email.invalid\">\n                                            Please enter an email address\n                                        </mat-error>\n                                    </mat-form-field>\n                                </div>\n                            </div>\n                            <div class=\"row pt-2\">\n                                <div class=\"col-md-12\">\n                                    <button type=\"button\" mat-raised-button color=\"primary\" (click)=\"nextStep()\">\n                                        Next\n                                    </button>\n                                </div>\n                            </div>\n                        </div>\n                    </div>\n                </mat-card-content>\n            </mat-card>\n        </div>\n    </div>\n</div>"
+
+/***/ }),
+
+/***/ "./src/app/forgot-password/forgot-password.component.scss":
+/*!****************************************************************!*\
+  !*** ./src/app/forgot-password/forgot-password.component.scss ***!
+  \****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = ".border-radius-circular {\n  background-color: #fafafa;\n  min-height: 300px;\n  min-width: 300px;\n  border-radius: 50%;\n  display: inline-block; }\n\n.img {\n  height: 325px;\n  width: 325px; }\n\n.forgot {\n  font-family: 'Raleway', sans-serif; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy9kcmV3cGF5bWVudC9kZXYvYWN0aXZlL3Zlcm9zdGFjay9yZXNvdXJjZXMvYXNzZXRzL25nL3NyYy9hcHAvZm9yZ290LXBhc3N3b3JkL2ZvcmdvdC1wYXNzd29yZC5jb21wb25lbnQuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFDQTtFQUNJLDBCQUF5QjtFQUN6QixrQkFBaUI7RUFDakIsaUJBQWdCO0VBQ2hCLG1CQUFrQjtFQUNsQixzQkFBcUIsRUFDeEI7O0FBRUQ7RUFDSSxjQUFhO0VBQ2IsYUFBWSxFQUNmOztBQUVEO0VBQ0ksbUNBQWtDLEVBQ3JDIiwiZmlsZSI6InNyYy9hcHAvZm9yZ290LXBhc3N3b3JkL2ZvcmdvdC1wYXNzd29yZC5jb21wb25lbnQuc2NzcyIsInNvdXJjZXNDb250ZW50IjpbIlxuLmJvcmRlci1yYWRpdXMtY2lyY3VsYXIge1xuICAgIGJhY2tncm91bmQtY29sb3I6ICNmYWZhZmE7XG4gICAgbWluLWhlaWdodDogMzAwcHg7XG4gICAgbWluLXdpZHRoOiAzMDBweDtcbiAgICBib3JkZXItcmFkaXVzOiA1MCU7XG4gICAgZGlzcGxheTogaW5saW5lLWJsb2NrO1xufVxuXG4uaW1nIHtcbiAgICBoZWlnaHQ6IDMyNXB4O1xuICAgIHdpZHRoOiAzMjVweDtcbn1cblxuLmZvcmdvdCB7XG4gICAgZm9udC1mYW1pbHk6ICdSYWxld2F5Jywgc2Fucy1zZXJpZjtcbn0iXX0= */"
+
+/***/ }),
+
+/***/ "./src/app/forgot-password/forgot-password.component.ts":
+/*!**************************************************************!*\
+  !*** ./src/app/forgot-password/forgot-password.component.ts ***!
+  \**************************************************************/
+/*! exports provided: ForgotPasswordComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ForgotPasswordComponent", function() { return ForgotPasswordComponent; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
+
+
+
+var ForgotPasswordComponent = /** @class */ (function () {
+    function ForgotPasswordComponent() {
+        this.email = new _angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormControl"]('', [_angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].required, _angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].email]);
+    }
+    ForgotPasswordComponent.prototype.ngOnInit = function () {
+    };
+    ForgotPasswordComponent.prototype.nextStep = function () {
+        console.log('Next step...');
+    };
+    ForgotPasswordComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
+            selector: 'vs-forgot-password',
+            template: __webpack_require__(/*! ./forgot-password.component.html */ "./src/app/forgot-password/forgot-password.component.html"),
+            styles: [__webpack_require__(/*! ./forgot-password.component.scss */ "./src/app/forgot-password/forgot-password.component.scss")]
+        }),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [])
+    ], ForgotPasswordComponent);
+    return ForgotPasswordComponent;
+}());
+
+
+
+/***/ }),
+
 /***/ "./src/app/header/header.component.css":
 /*!*********************************************!*\
   !*** ./src/app/header/header.component.css ***!
@@ -7321,7 +7389,7 @@ var LoadingSpinnerService = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n<div class=\"row justify-content-center\">\n  <div class=\"col-sm-4\" [ngClass]=\"{'text-center': pageLoading}\">\n    <div class=\"card\">\n      <img class=\"card-img-top\" src=\"dist/assets/images/login.png\" alt=\"Login image\">\n      <div class=\"card-body\">\n        <form #f=\"ngForm\" (ngSubmit)=\"onSubmit(f)\" novalidate class=\"login-container\">\n          <mat-form-field floatLabel=\"true\" hintLabel=\"We'll never share your login credentials.\">\n            <input matInput name=\"username\" \n                ngModel\n                #username=\"ngModel\" \n                placeholder=\"username\" \n                required \n                [disabled]=lockLoginInputs />\n            <mat-error *ngIf=\"username.invalid && (username.touched || formSubmitted)\">{{getErrorMessage()}}</mat-error>\n          </mat-form-field>\n          <mat-form-field floatLabel=\"password\">\n            <input matInput name=\"password\" \n                ngModel\n                #password=\"ngModel\"\n                placeholder=\"password\" \n                required \n                type=\"password\" \n                [disabled]=lockLoginInputs />\n            <mat-error *ngIf=\"password.invalid && (password.touched || formSubmitted)\">{{getErrorMessage()}}</mat-error>\n          </mat-form-field>\n          <button mat-button [disabled]=lockLoginInputs>Login</button>\n        </form>\n        <mat-progress-bar *ngIf=\"lockLoginInputs\" mode=\"indeterminate\"></mat-progress-bar>\n      </div>\n    </div>\n  </div>\n</div>\n"
+module.exports = "<div class=\"row justify-content-center pt-5\">\n    <div class=\"col-md-4\" [ngClass]=\"{'text-center': pageLoading}\">\n        <div class=\"card\">\n            <!-- <img class=\"card-img-top\" src=\"dist/assets/images/login.png\" alt=\"Login image\"> -->\n            <img class=\"card-img-top\" src=\"dist/assets/images/authentication.svg\" alt=\"Login image\" />\n            <div class=\"card-body\">\n                <form #f=\"ngForm\" (ngSubmit)=\"onSubmit(f)\" novalidate class=\"login-container\">\n                    <mat-form-field floatLabel=\"true\" hintLabel=\"We'll never share your login credentials.\">\n                        <input matInput name=\"username\" ngModel #username=\"ngModel\" placeholder=\"username\" required\n                            [disabled]=lockLoginInputs />\n                        <mat-error *ngIf=\"username.invalid && (username.touched || formSubmitted)\">{{getErrorMessage()}}\n                        </mat-error>\n                    </mat-form-field>\n                    <mat-form-field floatLabel=\"password\">\n                        <input matInput name=\"password\" ngModel #password=\"ngModel\" placeholder=\"password\" required\n                            type=\"password\" [disabled]=lockLoginInputs />\n                        <mat-error *ngIf=\"password.invalid && (password.touched || formSubmitted)\">{{getErrorMessage()}}\n                        </mat-error>\n                    </mat-form-field>\n                    <button mat-flat-button color=\"primary\" [disabled]=lockLoginInputs>Login</button>\n                    <div class=\"pt-3 d-flex justify-content-center\">\n                        <a [routerLink]=\"['..', 'forgot-password']\" class=\"text-decoration-none font-sm text-muted\">Trouble signing in?</a>\n                    </div>\n                </form>\n                <mat-progress-bar *ngIf=\"lockLoginInputs\" mode=\"indeterminate\"></mat-progress-bar>\n            </div>\n        </div>\n    </div>\n</div>"
 
 /***/ }),
 
@@ -7332,7 +7400,7 @@ module.exports = "\n<div class=\"row justify-content-center\">\n  <div class=\"c
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ".card-img-top {\n  margin: auto;\n  width: 50%;\n  padding: 10px 5px 0 5px; }\n\n.login-container {\n  display: flex;\n  flex-direction: column; }\n\n.login-container > * {\n  width: 100%; }\n\n.card {\n  margin: 1.25rem; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy9kcmV3cGF5bWVudC9kZXYvYWN0aXZlL3Zlcm9zdGFjay9yZXNvdXJjZXMvYXNzZXRzL25nL3NyYy9hcHAvbG9naW4vbG9naW4uY29tcG9uZW50LnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQ0E7RUFDRSxhQUFZO0VBQ1osV0FBVTtFQUNWLHdCQUF1QixFQUN4Qjs7QUFFRDtFQUNFLGNBQWE7RUFDYix1QkFBc0IsRUFDdkI7O0FBRUQ7RUFDRSxZQUFXLEVBQ1o7O0FBRUQ7RUFDRSxnQkFBZSxFQUNoQiIsImZpbGUiOiJzcmMvYXBwL2xvZ2luL2xvZ2luLmNvbXBvbmVudC5zY3NzIiwic291cmNlc0NvbnRlbnQiOlsiXG4uY2FyZC1pbWctdG9wIHtcbiAgbWFyZ2luOiBhdXRvO1xuICB3aWR0aDogNTAlO1xuICBwYWRkaW5nOiAxMHB4IDVweCAwIDVweDtcbn1cblxuLmxvZ2luLWNvbnRhaW5lciB7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGZsZXgtZGlyZWN0aW9uOiBjb2x1bW47XG59XG5cbi5sb2dpbi1jb250YWluZXIgPiAqIHtcbiAgd2lkdGg6IDEwMCU7XG59XG5cbi5jYXJkIHtcbiAgbWFyZ2luOiAxLjI1cmVtO1xufVxuIl19 */"
+module.exports = ".card-img-top {\n  min-height: 300px;\n  margin: auto;\n  width: 90%;\n  padding: 10px 5px 0 5px; }\n\n.login-container {\n  display: flex;\n  flex-direction: column; }\n\n.login-container > * {\n  width: 100%; }\n\n.card {\n  margin: 1.25rem; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy9kcmV3cGF5bWVudC9kZXYvYWN0aXZlL3Zlcm9zdGFjay9yZXNvdXJjZXMvYXNzZXRzL25nL3NyYy9hcHAvbG9naW4vbG9naW4uY29tcG9uZW50LnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQ0E7RUFDSSxrQkFBaUI7RUFDbkIsYUFBWTtFQUNaLFdBQVU7RUFDVix3QkFBdUIsRUFDeEI7O0FBRUQ7RUFDRSxjQUFhO0VBQ2IsdUJBQXNCLEVBQ3ZCOztBQUVEO0VBQ0UsWUFBVyxFQUNaOztBQUVEO0VBQ0UsZ0JBQWUsRUFDaEIiLCJmaWxlIjoic3JjL2FwcC9sb2dpbi9sb2dpbi5jb21wb25lbnQuc2NzcyIsInNvdXJjZXNDb250ZW50IjpbIlxuLmNhcmQtaW1nLXRvcCB7XG4gICAgbWluLWhlaWdodDogMzAwcHg7XG4gIG1hcmdpbjogYXV0bztcbiAgd2lkdGg6IDkwJTtcbiAgcGFkZGluZzogMTBweCA1cHggMCA1cHg7XG59XG5cbi5sb2dpbi1jb250YWluZXIge1xuICBkaXNwbGF5OiBmbGV4O1xuICBmbGV4LWRpcmVjdGlvbjogY29sdW1uO1xufVxuXG4ubG9naW4tY29udGFpbmVyID4gKiB7XG4gIHdpZHRoOiAxMDAlO1xufVxuXG4uY2FyZCB7XG4gIG1hcmdpbjogMS4yNXJlbTtcbn1cbiJdfQ== */"
 
 /***/ }),
 
