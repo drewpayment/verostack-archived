@@ -15,6 +15,7 @@
 
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Farro|Raleway&display=swap" rel="stylesheet">
     <link href="https://cdn.materialdesignicons.com/3.0.39/css/materialdesignicons.min.css" rel="stylesheet">
     <script>
         // https://github.com/angular/angular-cli/issues/9920
@@ -51,5 +52,5 @@
 
 
     <small class="text-muted font-weight-light text-center legal-footer">Payment Group, Inc. &#xa9;2018</small>
-<script type="text/javascript" src="dist/runtime.1296bab98979b951b987.js"></script><script type="text/javascript" src="dist/polyfills.30b5c0daca886afc0d4e.js"></script><script type="text/javascript" src="dist/vend.lib.917d066848c5f8907f85.js"></script><script type="text/javascript" src="dist/main.b44a83c83103db66c9d0.js"></script></body>
+<script type="text/javascript" src="dist/runtime.1296bab98979b951b987.js"></script><script type="text/javascript" src="dist/polyfills.30b5c0daca886afc0d4e.js"></script><script type="text/javascript" src="dist/vend.lib.917d066848c5f8907f85.js"></script><script type="text/javascript" src="dist/main.49198a6936759c43f50b.js"></script></body>
 </html>

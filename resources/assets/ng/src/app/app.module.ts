@@ -22,6 +22,8 @@ import { PayrollModule } from './payroll/payroll.module';
 import { environment } from '@env/environment';
 import { SharedModule } from './shared';
 import { BaseModule } from './base/base.module';
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
+import { LoginComponent } from './login/login.component';
 
 @NgModule({
     imports: [
@@ -44,6 +46,7 @@ import { BaseModule } from './base/base.module';
     ],
     declarations: [
         AppComponent,
+        LoginComponent,
         SidenavComponent,
         HeaderComponent,
         AgentComponent,
@@ -51,6 +54,7 @@ import { BaseModule } from './base/base.module';
         PublicHomeComponent,
         AgentRulesDialogComponent,
         NewSaleComponent,
+        ForgotPasswordComponent,
 
     ],
     entryComponents: [
