@@ -28,22 +28,22 @@ class DncContactController extends Controller
     public function getDncContacts(Request $request)
     {
         $result = new ApiResource();
-        $existingContactsResult = new ApiResource();
         $zipCode = $request->query('zip');
 
         $user = Auth::user();
         $user->load('sessionUser');
         $clientId = $user->sessionUser->session_client;
-        $conResults = new ApiResource(DncContact::byClient($clientId)->byZip($zipCode)->get());
+        // $contacts = new ApiResource(DncContact::byClient($clientId)->byZip($zipCode)->get());
 
-        // TODO: NEED TO REMOVE DUPLICATE ADDRESSES
-        if ($existingContactsResult->hasData()) {
-            $contacts = array_merge($conResults->getData(), $existingContactsResult->getData());
+        $query = DncContact::byClient($clientId);
+
+        if ($zipCode == null && (strpos($request->userAgent(), 'dart') == false)) {
+            $result->setData($query->get());
         } else {
-            $contacts = $conResults->getData();
+            $result->setData($query->byZip($zipCode)->get());
         }
 
-        return $result->setData($contacts)
+        return $result
             ->throwApiException()
             ->getResponse();
     }
