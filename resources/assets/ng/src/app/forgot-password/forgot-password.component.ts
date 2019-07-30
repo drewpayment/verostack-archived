@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
+import { ForgotPasswordService } from './forgot-password.service';
 
 @Component({
     selector: 'vs-forgot-password',
@@ -10,13 +11,16 @@ export class ForgotPasswordComponent implements OnInit {
 
     email = new FormControl('', [Validators.required, Validators.email]);
 
-    constructor() { }
+    constructor(private service:ForgotPasswordService) { }
 
     ngOnInit() {
     }
 
     nextStep() {
-        console.log('Next step...');
+        this.service.sendPasswordResetLink(this.email.value)
+            .subscribe((result) => {
+                console.dir(result);
+            });
     }
 
 }

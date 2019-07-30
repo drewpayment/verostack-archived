@@ -24,6 +24,7 @@ import { SharedModule } from './shared';
 import { BaseModule } from './base/base.module';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { LoginComponent } from './login/login.component';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
 
 @NgModule({
     imports: [
@@ -55,7 +56,7 @@ import { LoginComponent } from './login/login.component';
         AgentRulesDialogComponent,
         NewSaleComponent,
         ForgotPasswordComponent,
-
+        ResetPasswordComponent,
     ],
     entryComponents: [
         EditAgentDialogComponent,

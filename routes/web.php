@@ -14,12 +14,20 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
+use Illuminate\Http\Request;
 
 Route::get('/', function () {
     // return View::make('../public/dist/index.php');
 	return view('index');
 });
 
+Route::get('/password/reset/{id}', function(Request $request, $resetId) {
+    $headers = $request->headers->all();
+    return redirect()->to('/#/reset-password/'.$resetId, 302, $headers);
+});
+
 // Auth::routes();
 
 // Route::get('/home', 'HomeController@index')->name('home');
+
+// Auth::routes();
