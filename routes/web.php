@@ -21,7 +21,14 @@ Route::get('/', function () {
 	return view('index');
 });
 
-Route::get('/password/reset/{id}', function(Request $request, $resetId) {
+// Route::group(['prefix' => 'password.reset'], function () {
+//     Route::get('{id}', function(Request $request, $resetId) {
+//         $headers = $request->headers->all();
+//         return redirect()->to('/#/reset-password/'.$resetId, 302, $headers);
+//     });
+// });
+
+Route::get('password/reset/{id}', function(Request $request, $resetId) {
     $headers = $request->headers->all();
     return redirect()->to('/#/reset-password/'.$resetId, 302, $headers);
 });

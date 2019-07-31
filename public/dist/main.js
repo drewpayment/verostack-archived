@@ -11902,7 +11902,7 @@ var PublicHomeComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<p>\n  reset-password works!\n</p>\n"
+module.exports = "\n<div class=\"container\">\n    <!-- <div class=\"row d-flex justify-content-center\">\n        <div class=\"col-md-5 p-4\"> -->\n            <div class=\"row d-flex justify-content-center\">\n                <div class=\"col-md-5\">\n                    <mat-card>\n                        <h1 mat-card-title>\n                            Reset Password\n                        </h1>\n                        <img mat-card-image src=\"dist/assets/images/my_password.svg\" class=\"p-4\" />\n                        <mat-card-content>\n                            <mat-form-field class=\"wp-100\" hideRequiredMarker=\"true\">\n                                <input matInput type=\"text\" [formControl]=\"email\" placeholder=\"Email\" required />\n                                <mat-error *ngIf=\"email.hasError\">\n                                    Please enter a valid email address.\n                                </mat-error>\n                            </mat-form-field>\n                \n                            <mat-form-field class=\"wp-100\" hideRequiredMarker=\"true\">\n                                <input matInput type=\"password\" [formControl]=\"password\" placeholder=\"Password\" required />\n                                <mat-error *ngIf=\"password.hasError\">\n                                    Please enter a password.\n                                </mat-error>\n                            </mat-form-field>\n                \n                            <mat-form-field class=\"wp-100\" hideRequiredMarker=\"true\">\n                                <input matInput type=\"password\" [formControl]=\"passwordConfirmation\" \n                                    placeholder=\"Confirm Password\" required [pattern]=\"password.value\" />\n                                <mat-error *ngIf=\"passwordConfirmation.hasError\">\n                                    {{ getPasswordConfirmationErrorMessages() }}\n                                </mat-error>\n                            </mat-form-field>\n                        </mat-card-content>\n                        <mat-card-actions>\n                            <button type=\"button\" mat-raised-button class=\"wp-100\" color=\"primary\" (click)=\"submitResetForm()\">\n                                <mat-icon>save</mat-icon> Save\n                            </button>\n                        </mat-card-actions>\n                    </mat-card>\n                </div>\n            </div>\n        <!-- </div>\n    </div> -->\n</div>"
 
 /***/ }),
 
@@ -11930,16 +11930,52 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
+/* harmony import */ var _reset_password_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./reset-password.service */ "./src/app/reset-password/reset-password.service.ts");
+
+
 
 
 
 var ResetPasswordComponent = /** @class */ (function () {
-    function ResetPasswordComponent(route) {
+    function ResetPasswordComponent(route, service, router) {
         this.route = route;
+        this.service = service;
+        this.router = router;
+        this.submitted = false;
+        this.email = new _angular_forms__WEBPACK_IMPORTED_MODULE_3__["FormControl"]('', [_angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required, _angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].email]);
+        this.password = new _angular_forms__WEBPACK_IMPORTED_MODULE_3__["FormControl"]('', [_angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required]);
+        this.passwordConfirmation = new _angular_forms__WEBPACK_IMPORTED_MODULE_3__["FormControl"]('', [_angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required]);
     }
     ResetPasswordComponent.prototype.ngOnInit = function () {
         // reset id is saved as snapshot to what was requested from email to avoid tampering
-        var resetId = this.route.snapshot.params['resetId'];
+        this.resetId = this.route.snapshot.params['resetId'];
+    };
+    ResetPasswordComponent.prototype.submitResetForm = function () {
+        var _this = this;
+        var request = {
+            email: this.email.value,
+            password: this.password.value,
+            password_confirmation: this.passwordConfirmation.value,
+            token: this.resetId
+        };
+        this.service.resetPassword(request).subscribe(function () {
+            _this.router.navigate(['login']);
+        }, function (err) { return _this.router.navigate(['login']); });
+    };
+    ResetPasswordComponent.prototype.getPasswordConfirmationErrorMessages = function () {
+        if (this.passwordConfirmation.getError('required')) {
+            return 'Please confirm your password.';
+        }
+        if (this.passwordConfirmation.getError('pattern')) {
+            return 'Oops, looks like your passwords don\'t match.';
+        }
+    };
+    ResetPasswordComponent.prototype.validatePasswordsMatch = function (c) {
+        var matches = c.parent != null && c.parent.get('password').value.trim() == c.value.trim();
+        return matches ? null : {
+            passwordsMatch: true
+        };
     };
     ResetPasswordComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
@@ -11947,9 +11983,49 @@ var ResetPasswordComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./reset-password.component.html */ "./src/app/reset-password/reset-password.component.html"),
             styles: [__webpack_require__(/*! ./reset-password.component.scss */ "./src/app/reset-password/reset-password.component.scss")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_router__WEBPACK_IMPORTED_MODULE_2__["ActivatedRoute"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_router__WEBPACK_IMPORTED_MODULE_2__["ActivatedRoute"], _reset_password_service__WEBPACK_IMPORTED_MODULE_4__["ResetPasswordService"], _angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"]])
     ], ResetPasswordComponent);
     return ResetPasswordComponent;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/reset-password/reset-password.service.ts":
+/*!**********************************************************!*\
+  !*** ./src/app/reset-password/reset-password.service.ts ***!
+  \**********************************************************/
+/*! exports provided: ResetPasswordService */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ResetPasswordService", function() { return ResetPasswordService; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
+/* harmony import */ var _env_environment__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @env/environment */ "./src/environments/environment.ts");
+
+
+
+
+var ResetPasswordService = /** @class */ (function () {
+    function ResetPasswordService(http) {
+        this.http = http;
+        this.api = _env_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].apiUrl + "api";
+    }
+    ResetPasswordService.prototype.resetPassword = function (request) {
+        var url = this.api + "/save-password-reset";
+        return this.http.post(url, request);
+    };
+    ResetPasswordService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
+            providedIn: 'root'
+        }),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"]])
+    ], ResetPasswordService);
+    return ResetPasswordService;
 }());
 
 
