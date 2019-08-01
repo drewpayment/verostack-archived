@@ -11,12 +11,15 @@ export class ForgotPasswordComponent implements OnInit {
 
     email = new FormControl('', [Validators.required, Validators.email]);
 
+    formSent = false;
+
     constructor(private service:ForgotPasswordService) { }
 
     ngOnInit() {
     }
 
     nextStep() {
+        this.formSent = true;
         this.service.sendPasswordResetLink(this.email.value)
             .subscribe((result) => {
                 console.dir(result);

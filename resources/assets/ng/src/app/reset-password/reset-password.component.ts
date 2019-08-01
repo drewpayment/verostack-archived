@@ -10,7 +10,6 @@ import { ResetPasswordService } from './reset-password.service';
 })
 export class ResetPasswordComponent implements OnInit {
 
-    submitted = false;
     resetId:string;
     email = new FormControl('', [Validators.required, Validators.email]);
     password = new FormControl('', [Validators.required]);
@@ -32,7 +31,11 @@ export class ResetPasswordComponent implements OnInit {
         };
 
         this.service.resetPassword(request).subscribe(() => {
-           this.router.navigate(['login']);
+           
+            setTimeout(() => {
+                this.router.navigate(['login']);
+            }, 1500);
+
         }, (err) => this.router.navigate(['login']));
     }
 

@@ -113,6 +113,6 @@ Route::middleware(['auth:api'])->group(function() {
 
 });
 
-Route::get('reset-password', 'Auth\ForgotPasswordController@sendResetLinkEmail');
+Route::get('reset-password', 'Auth\ForgotPasswordController@sendApiResetLinkEmail');
 
 Route::post('save-password-reset', 'Auth\ResetPasswordController@reset');
