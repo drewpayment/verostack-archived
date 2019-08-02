@@ -3,7 +3,7 @@
 
 /**
  * A helper file for Laravel 5, to provide autocomplete information to your IDE
- * Generated for Laravel 5.7.28 on 2019-04-28 09:09:04.
+ * Generated for Laravel 5.7.28 on 2019-07-31 22:51:16.
  *
  * This file should not be included in your code, only analyzed by your IDE!
  *
@@ -7322,41 +7322,36 @@ namespace Illuminate\Support\Facades {
     class Password {
         
         /**
-         * Attempt to get the broker from the local cache.
+         * 
          *
-         * @param string|null $name
-         * @return \Illuminate\Contracts\Auth\PasswordBroker 
          * @static 
          */ 
         public static function broker($name = null)
         {
-                        /** @var \Illuminate\Auth\Passwords\PasswordBrokerManager $instance */
+                        /** @var \App\Http\Brokers\ApiPasswordBrokerManager $instance */
                         return $instance->broker($name);
         }
         
         /**
-         * Get the default password broker name.
+         * 
          *
-         * @return string 
          * @static 
          */ 
         public static function getDefaultDriver()
         {
-                        /** @var \Illuminate\Auth\Passwords\PasswordBrokerManager $instance */
+                        /** @var \App\Http\Brokers\ApiPasswordBrokerManager $instance */
                         return $instance->getDefaultDriver();
         }
         
         /**
-         * Set the default password broker name.
+         * 
          *
-         * @param string $name
-         * @return void 
          * @static 
          */ 
         public static function setDefaultDriver($name)
         {
-                        /** @var \Illuminate\Auth\Passwords\PasswordBrokerManager $instance */
-                        $instance->setDefaultDriver($name);
+                        /** @var \App\Http\Brokers\ApiPasswordBrokerManager $instance */
+                        return $instance->setDefaultDriver($name);
         }
          
     }

@@ -246,7 +246,7 @@ export class SessionService {
                 this.localStorage.getItem<ILocalStorage<User>>('user')
             ).subscribe(([storageToken, storageUser]) => {
                 if (storageToken == null || storageUser == null) {
-                    this._logoutUser();
+                    //this._logoutUser(); this is always routing user to login page on page load even if they aren't a signed in user... 
                     observer.next(null);
                     observer.complete();
                     return;
@@ -260,7 +260,7 @@ export class SessionService {
                 };
     
                 if (token.expires <= Date.now()) {
-                    this._logoutUser();
+                    // this._logoutUser(); this is always routing user to login page on page load even if they aren't a signed in user... 
                     observer.next(null);
                     observer.complete();
                 } else {

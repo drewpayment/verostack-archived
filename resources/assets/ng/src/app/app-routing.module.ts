@@ -15,12 +15,15 @@ import { CampaignDetailComponent } from '@app/campaigns/components/campaign-deta
 import { UtilityDetailComponent } from './campaigns/components/utility-detail/utility-detail.component';
 import { NewSaleComponent } from './daily-sale-tracker/components/new-sale/new-sale.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
+import { environment } from '@env/environment';
 
 const routes: Routes = [
-    // { path: '', redirectTo: 'home', pathMatch: 'full' },
+    { path: '', redirectTo: 'home', pathMatch: 'full' },
     { path: 'home', component: PublicHomeComponent },
     { path: 'login', component: LoginComponent },
     { path: 'forgot-password', component: ForgotPasswordComponent },
+    { path: 'reset-password/:resetId', component: ResetPasswordComponent },
     { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
     { path: 'my-information', component: MyInformationComponent, canActivate: [AuthGuard] },
     { path: 'client-information', component: ClientInformationComponent, canActivate: [AuthGuard] },

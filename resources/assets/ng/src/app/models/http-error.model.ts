@@ -21,3 +21,11 @@ export interface HttpErrorResponse {
   statusText: string,
   url: string
 }
+
+export interface PasswordResetError {
+    errors: {
+        username: string[],
+        password: string[]
+    },
+    message: string
+}
