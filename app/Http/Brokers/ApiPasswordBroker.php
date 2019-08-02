@@ -35,7 +35,7 @@ class ApiPasswordBroker implements PasswordBrokerContract {
      * Send a password reset link to a user.
      *
      * @param  array  $credentials
-     * @return string
+     * @return bool
      */
     public function sendResetLink(array $credentials) 
     {

@@ -6,15 +6,15 @@ use Closure;
 
 interface ApiPasswordBroker
 {
-    const RESET_LINK_SENT = 'passwords.sent';
+    const RESET_LINK_SENT = true;
 
-    const PASSWORD_RESET = 'passwords.reset';
+    const PASSWORD_RESET = true;
 
-    const INVALID_USER = 'passwords.user';
+    const INVALID_USER = 'invalid_user';
 
-    const INVALID_PASSWORD = 'passwords.password';
+    const INVALID_PASSWORD = 'invalid_password';
 
-    const INVALID_TOKEN = 'passwords.token';
+    const INVALID_TOKEN = 'invalid_token';
 
     public function sendResetLink(array $credentials);
 

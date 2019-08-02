@@ -33,7 +33,7 @@ Route::get('password/reset/{id}', function(Request $request, $resetId) {
     return redirect()->to('/#/reset-password/'.$resetId, 302, $headers);
 });
 
-// Auth::routes();
+Auth::routes();
 
 // Route::get('/home', 'HomeController@index')->name('home');
 

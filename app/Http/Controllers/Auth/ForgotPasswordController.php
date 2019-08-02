@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Resources\ApiResource;
 use App\Http\Controllers\Controller;
 use App\Traits\SendsPasswordResetEmails;
+use Illuminate\Support\Facades\Password;
 
 class ForgotPasswordController extends Controller
 {
@@ -46,12 +47,15 @@ class ForgotPasswordController extends Controller
         // We will send the password reset link to this user. Once we have attempted
         // to send the link, we will examine the response then see the message we
         // need to show to the user. Finally, we'll send out a proper response.
+        // this isn't working... 
         $response = $this->broker()->sendResetLink(
             $request->only('email')
         );
 
         return $response == Password::RESET_LINK_SENT
-            ? $result->setToSuccess()->throwApiException()->getResponse()
+            ? $result->setData([
+                'succeeded' => true
+            ])->throwApiException()->getResponse()
             : $result->setToFail()->throwApiException()->getResponse();
     }
 }
