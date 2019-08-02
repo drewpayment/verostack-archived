@@ -112,3 +112,7 @@ Route::middleware(['auth:api'])->group(function() {
     Route::get('role-types', 'RoleTypeController@getRoleTypes');
 
 });
+
+Route::get('reset-password', 'Auth\ForgotPasswordController@sendApiResetLinkEmail');
+
+Route::post('save-password-reset', 'Auth\ResetPasswordController@reset');
