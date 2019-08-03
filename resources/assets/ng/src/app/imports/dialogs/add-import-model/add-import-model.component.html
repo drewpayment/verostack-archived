@@ -6,11 +6,26 @@
   </button>
 </div>
 <mat-dialog-content class="pb-2">
-  <div class="mb-2">
-    FORM GOES HERE.
-  </div>
+  <form [formGroup]="form" class="mb-2">
+    <mat-form-field>
+        <input type="text" matInput formControlName="shortDesc" placeholder="Name" required />
+        <mat-error *ngIf="form.get('shortDesc').hasError">
+            Please enter a name.
+        </mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+        <textarea matAutosize="true" formControlName="fullDesc" placeholder="Description"></textarea>
+    </mat-form-field>
+
+    <mat-divider></mat-divider>
+
+    <ng-container formGroupName="map">
+        
+    </ng-container>
+  </form>
 </mat-dialog-content>
-<mat-dialog-actions class="d-flex justify-content-between">
+<mat-dialog-actions class="d-flex justify-content-end">
   <button type="button" mat-button (click)="onNoClick()">
     <mat-icon>clear</mat-icon>
     Cancel

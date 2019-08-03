@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Utility;
+use App\Campaign;
 use Illuminate\Http\Request;
 use App\Http\Resources\ApiResource;
 use Illuminate\Support\Facades\Auth;
-use App\Utility;
 use App\Http\Services\UtilityService;
 
 class UtilityController extends Controller
@@ -15,6 +16,19 @@ class UtilityController extends Controller
     public function __construct(UtilityService $_service)
     {
         $this->service = $_service;
+    }
+
+    public function getUtilitiesByClient($clientId)
+    {
+        $result = new ApiResource();
+
+        $result->checkAccessByClient($clientId, Auth::user()->id)
+            ->mergeInto($result);
+
+        if ($result->hasError)
+            return $result->throwApiException()->getResponse();
+
+        $campaigns = Campaign::with('utilities')->byClientId($clientId)
     }
     
     public function getUtility($clientId, $utilityId)
