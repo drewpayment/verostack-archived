@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { MatCheckboxChange, MatDialog } from '@angular/material';
 import { ImportModel, User } from '@app/models';
@@ -10,7 +10,7 @@ import { AddImportModelComponent } from '../dialogs/add-import-model/add-import-
     templateUrl: './import-models.component.html',
     styleUrls: ['./import-models.component.scss']
 })
-export class ImportModelsComponent implements OnInit {
+export class ImportModelsComponent implements OnInit, AfterViewInit {
 
     user:User;
     dataSource:ImportModel[];
@@ -24,13 +24,18 @@ export class ImportModelsComponent implements OnInit {
         });
     }
 
+    ngAfterViewInit() {
+        // this.service.fetchCampaigns();
+        // this.service.fetchUtilities();
+    }
+
     addImportModel() {
         this.isFabOpen$.next(true);
         this.dialog.open(AddImportModelComponent, {
             data: {
                 user: this.user,
             },
-            width: '60vw',
+            width: '40vw',
             autoFocus: false,
         })
         .afterClosed()

@@ -7,7 +7,7 @@
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n<div mat-dialog-title class=\"d-flex justify-content-between\">\n  <h4>Import Model</h4>\n  <button type=\"button\" mat-icon-button (click)=\"onNoClick()\">\n    <mat-icon>clear</mat-icon>\n  </button>\n</div>\n<mat-dialog-content class=\"pb-2\">\n  <form [formGroup]=\"form\" class=\"mb-2\">\n    <mat-form-field>\n        <input type=\"text\" matInput formControlName=\"shortDesc\" placeholder=\"Name\" required />\n        <mat-error *ngIf=\"form.get('shortDesc').hasError\">\n            Please enter a name.\n        </mat-error>\n    </mat-form-field>\n\n    <mat-form-field>\n        <textarea matAutosize=\"true\" formControlName=\"fullDesc\" placeholder=\"Description\"></textarea>\n    </mat-form-field>\n\n    <mat-divider></mat-divider>\n\n    <ng-container formGroupName=\"map\">\n        \n    </ng-container>\n  </form>\n</mat-dialog-content>\n<mat-dialog-actions class=\"d-flex justify-content-end\">\n  <button type=\"button\" mat-button (click)=\"onNoClick()\">\n    <mat-icon>clear</mat-icon>\n    Cancel\n  </button>\n  <button type=\"button\" mat-button (click)=\"saveImportModel()\" color=\"primary\">\n    <mat-icon>save</mat-icon>\n    Save\n  </button>\n</mat-dialog-actions>"
+module.exports = "<div mat-dialog-title class=\"d-flex justify-content-between\">\n    <h4>Import Model</h4>\n    <button type=\"button\" mat-icon-button (click)=\"onNoClick()\">\n        <mat-icon>clear</mat-icon>\n    </button>\n</div>\n<mat-dialog-content class=\"pb-2\">\n    <form [formGroup]=\"form\" class=\"mb-2\">\n        <div>\n            <mat-form-field>\n                <input type=\"text\" matInput formControlName=\"shortDesc\" placeholder=\"Model Name\" required />\n                <mat-error *ngIf=\"form.get('shortDesc').hasError\">\n                    Please enter a model name.\n                </mat-error>\n            </mat-form-field>\n        </div>\n\n        <div>\n            <mat-form-field class=\"wp-100\">\n                <textarea matNativeControl matAutosize=\"true\" formControlName=\"fullDesc\"\n                    placeholder=\"Description\"></textarea>\n            </mat-form-field>\n        </div>\n\n        <p class=\"text-black-50\">\n            Please add all columns from your report. The column header needs to match exactly to the column headers \n            on your XSL file. \n        </p>\n\n        <p class=\"text-black-50 small\">\n            Column Header - must match exactly with the report column header. <br />\n            Description - used for your reference when working with the Import Model.\n        </p>\n        \n        <mat-divider class=\"pb-4\"></mat-divider>\n\n        <ng-container formArrayName=\"map\">\n            <div *ngFor=\"let f of map.controls; let i = index;\">\n                <ng-container [formGroupName]=\"i\">\n                    <div class=\"row\">\n                        <div class=\"col-md-6\">\n                            <mat-form-field class=\"pr-1 wp-100\" [hideRequiredMarker]=\"true\">\n                                <input type=\"text\" matInput formControlName=\"key\" placeholder=\"Description\" required />\n                                <mat-error *ngIf=\"map.get([i, 'key']).hasError\">\n                                    Description is required.\n                                </mat-error>\n                            </mat-form-field>\n                        </div>\n\n                        <div class=\"col-md-6\">\n                            <mat-form-field class=\"pl-1 wp-100\" [hideRequiredMarker]=\"true\">\n                                <input type=\"text\" matInput formControlName=\"value\" placeholder=\"Column Header\" required />\n                                <mat-error *ngIf=\"map.get([i, 'value']).hasError\">\n                                    Column Header is required.\n                                </mat-error>\n                            </mat-form-field>\n                        </div>\n                    </div>\n                    \n                </ng-container>\n            </div>\n        </ng-container>\n\n        <div class=\"mt-2\">\n            <button type=\"button\" mat-button color=\"primary\" (click)=\"addMapRow()\">\n                <mat-icon>add</mat-icon> Add Column\n            </button>\n        </div>\n\n    </form>\n</mat-dialog-content>\n<mat-dialog-actions class=\"d-flex justify-content-end\">\n    <button type=\"button\" mat-button (click)=\"onNoClick()\">\n        <mat-icon>clear</mat-icon>\n        Cancel\n    </button>\n    <button type=\"button\" mat-button (click)=\"saveImportModel()\" color=\"primary\">\n        <mat-icon>save</mat-icon>\n        Save\n    </button>\n</mat-dialog-actions>"
 
 /***/ }),
 
@@ -37,60 +37,79 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/material */ "./node_modules/@angular/material/esm5/material.es5.js");
 /* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
 /* harmony import */ var _app_session_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @app/session.service */ "./src/app/session.service.ts");
+/* harmony import */ var _app_imports_imports_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @app/imports/imports.service */ "./src/app/imports/imports.service.ts");
+
 
 
 
 
 
 var AddImportModelComponent = /** @class */ (function () {
-    function AddImportModelComponent(ref, data, session, fb) {
-        var _this = this;
+    function AddImportModelComponent(ref, data, session, fb, service) {
         this.ref = ref;
         this.data = data;
         this.session = session;
         this.fb = fb;
+        this.service = service;
+        this.form = this.createForm();
         this.user = this.data.user;
-        if (!this.user) {
-            this.session.getUserItem().subscribe(function (u) { return _this.user = u; });
-        }
     }
+    Object.defineProperty(AddImportModelComponent.prototype, "map", {
+        get: function () {
+            return this.form.get('map');
+        },
+        enumerable: true,
+        configurable: true
+    });
     AddImportModelComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        if (!this.user)
+            this.session.getUserItem().subscribe(function (u) { return _this.user = u; });
+        // this.utilSubscription = this.service.utilities.subscribe(utilities => this.utilities = utilities);
+        // this.campaignSub = this.service.campaigns.subscribe(campaigns => this.campaigns = campaigns);
+    };
+    AddImportModelComponent.prototype.ngOnDestroy = function () {
+        this.campaignSub.unsubscribe();
     };
     AddImportModelComponent.prototype.onNoClick = function () {
         this.ref.close();
     };
-    AddImportModelComponent.prototype.saveImportModel = function () {
-        console.log('SAVE THIS DANG MODEL!');
+    AddImportModelComponent.prototype.getUtilities = function () {
+        var _this = this;
+        return this.utilities.filter(function (u) { return u.campaignId == _this.form.get('map.campaignId').value; });
     };
-    // TODO: this needs to be continued
+    AddImportModelComponent.prototype.saveImportModel = function () {
+        if (this.form.invalid)
+            return;
+        var model = this.prepareModel();
+        console.dir(model);
+    };
+    AddImportModelComponent.prototype.addMapRow = function () {
+        this.map.push(this.fb.group({
+            key: this.fb.control('', [_angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required]),
+            value: this.fb.control('', [_angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required]),
+        }));
+    };
+    AddImportModelComponent.prototype.prepareModel = function () {
+        return {
+            importModelId: null,
+            userId: this.user.id,
+            clientId: this.user.selectedClient.clientId,
+            shortDesc: this.form.value.shortDesc,
+            fullDesc: this.form.value.fullDesc,
+            map: this.form.value.map,
+        };
+    };
     AddImportModelComponent.prototype.createForm = function () {
-        this.form = this.fb.group({
+        return this.fb.group({
             shortDesc: this.fb.control('', [_angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required]),
             fullDesc: this.fb.control(''),
-            map: this.fb.group({
-                utilityId: this.fb.control('', [_angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required]),
-                campaignId: this.fb.control('', [_angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required]),
-                businessName: this.fb.control(''),
-                firstName: this.fb.control(''),
-                lastName: this.fb.control(''),
-                splitCustomerName: this.fb.control(''),
-                ssn: this.fb.control(''),
-                dob: this.fb.control(''),
-                street: this.fb.control('', [_angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required]),
-                street2: this.fb.control(''),
-                city: this.fb.control('', [_angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required]),
-                state: this.fb.control('', [_angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required]),
-                zip: this.fb.control('', [_angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required]),
-                phone: this.fb.control(''),
-                email: this.fb.control(''),
-                podAccount: this.fb.control(''),
-                saleDate: this.fb.control('', [_angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required]),
-                matchAgentBySalesCode: this.fb.control('', [_angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required]),
-                salesCode: this.fb.control(''),
-                agentName: this.fb.control(''),
-                utilityName: this.fb.control(''),
-            }),
-            userId: this.fb.control(this.user.id),
+            map: this.fb.array([
+                this.fb.group({
+                    key: this.fb.control('', [_angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required]),
+                    value: this.fb.control('', [_angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required])
+                }),
+            ]),
         });
     };
     AddImportModelComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
@@ -101,7 +120,8 @@ var AddImportModelComponent = /** @class */ (function () {
         }),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__param"](1, Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Inject"])(_angular_material__WEBPACK_IMPORTED_MODULE_2__["MAT_DIALOG_DATA"])),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_material__WEBPACK_IMPORTED_MODULE_2__["MatDialogRef"], Object, _app_session_service__WEBPACK_IMPORTED_MODULE_4__["SessionService"],
-            _angular_forms__WEBPACK_IMPORTED_MODULE_3__["FormBuilder"]])
+            _angular_forms__WEBPACK_IMPORTED_MODULE_3__["FormBuilder"],
+            _app_imports_imports_service__WEBPACK_IMPORTED_MODULE_5__["ImportsService"]])
     ], AddImportModelComponent);
     return AddImportModelComponent;
 }());
@@ -166,6 +186,10 @@ var ImportModelsComponent = /** @class */ (function () {
             _this.dataSource = models;
         });
     };
+    ImportModelsComponent.prototype.ngAfterViewInit = function () {
+        // this.service.fetchCampaigns();
+        // this.service.fetchUtilities();
+    };
     ImportModelsComponent.prototype.addImportModel = function () {
         var _this = this;
         this.isFabOpen$.next(true);
@@ -173,7 +197,7 @@ var ImportModelsComponent = /** @class */ (function () {
             data: {
                 user: this.user,
             },
-            width: '60vw',
+            width: '40vw',
             autoFocus: false,
         })
             .afterClosed()
@@ -283,26 +307,60 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
 /* harmony import */ var _env_environment__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @env/environment */ "./src/environments/environment.ts");
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
+/* harmony import */ var _app_session_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @app/session.service */ "./src/app/session.service.ts");
+/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+
+
+
 
 
 
 
 
 var ImportsService = /** @class */ (function () {
-    function ImportsService(http) {
+    function ImportsService(http, session, router) {
         this.http = http;
+        this.session = session;
+        this.router = router;
         this.api = _env_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].apiUrl + 'api';
-        this.utilities = new rxjs__WEBPACK_IMPORTED_MODULE_4__["BehaviorSubject"](null);
     }
     ImportsService.prototype.getImportModels = function () {
+        var _this = this;
         var url = this.api + "/import-models";
-        return this.http.get(url);
+        return this.http.get(url)
+            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_6__["catchError"])(function (err) {
+            if (err.status == 401) {
+                _this.session.logout();
+            }
+            return Object(rxjs__WEBPACK_IMPORTED_MODULE_4__["of"])(null);
+        }));
+    };
+    ImportsService.prototype.saveImportModel = function (model) {
+        var url = this.api + "/save-import-model";
+        return this.http.post(url, model);
+    };
+    ImportsService.prototype.fetchCampaigns = function () {
+        var _this = this;
+        this.session.getUserItem().subscribe(function (user) {
+            var clientId = user.selectedClient.clientId;
+            var url = _this.api + "/campaigns/clients/" + clientId + "/active/true";
+            _this.campaigns = _this.http.get(url).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_6__["shareReplay"])(1));
+        });
+    };
+    ImportsService.prototype.fetchUtilities = function () {
+        var _this = this;
+        this.session.getUserItem().subscribe(function (user) {
+            var clientId = user.selectedClient.clientId;
+            var url = _this.api + "/clients/" + clientId + "/utilities";
+            _this.utilities = _this.http.get(url).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_6__["shareReplay"])(1));
+        });
     };
     ImportsService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
             providedIn: 'root'
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"], _app_session_service__WEBPACK_IMPORTED_MODULE_5__["SessionService"], _angular_router__WEBPACK_IMPORTED_MODULE_7__["Router"]])
     ], ImportsService);
     return ImportsService;
 }());

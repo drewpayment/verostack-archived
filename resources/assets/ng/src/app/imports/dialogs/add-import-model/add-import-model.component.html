@@ -1,37 +1,81 @@
-
 <div mat-dialog-title class="d-flex justify-content-between">
-  <h4>Import Model</h4>
-  <button type="button" mat-icon-button (click)="onNoClick()">
-    <mat-icon>clear</mat-icon>
-  </button>
+    <h4>Import Model</h4>
+    <button type="button" mat-icon-button (click)="onNoClick()">
+        <mat-icon>clear</mat-icon>
+    </button>
 </div>
 <mat-dialog-content class="pb-2">
-  <form [formGroup]="form" class="mb-2">
-    <mat-form-field>
-        <input type="text" matInput formControlName="shortDesc" placeholder="Name" required />
-        <mat-error *ngIf="form.get('shortDesc').hasError">
-            Please enter a name.
-        </mat-error>
-    </mat-form-field>
+    <form [formGroup]="form" class="mb-2">
+        <div>
+            <mat-form-field>
+                <input type="text" matInput formControlName="shortDesc" placeholder="Model Name" required />
+                <mat-error *ngIf="form.get('shortDesc').hasError">
+                    Please enter a model name.
+                </mat-error>
+            </mat-form-field>
+        </div>
 
-    <mat-form-field>
-        <textarea matAutosize="true" formControlName="fullDesc" placeholder="Description"></textarea>
-    </mat-form-field>
+        <div>
+            <mat-form-field class="wp-100">
+                <textarea matNativeControl matAutosize="true" formControlName="fullDesc"
+                    placeholder="Description"></textarea>
+            </mat-form-field>
+        </div>
 
-    <mat-divider></mat-divider>
+        <p class="text-black-50">
+            Please add all columns from your report. The column header needs to match exactly to the column headers 
+            on your XSL file. 
+        </p>
 
-    <ng-container formGroupName="map">
+        <p class="text-black-50 small">
+            Column Header - must match exactly with the report column header. <br />
+            Description - used for your reference when working with the Import Model.
+        </p>
         
-    </ng-container>
-  </form>
+        <mat-divider class="pb-4"></mat-divider>
+
+        <ng-container formArrayName="map">
+            <div *ngFor="let f of map.controls; let i = index;">
+                <ng-container [formGroupName]="i">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <mat-form-field class="pr-1 wp-100" [hideRequiredMarker]="true">
+                                <input type="text" matInput formControlName="key" placeholder="Description" required />
+                                <mat-error *ngIf="map.get([i, 'key']).hasError">
+                                    Description is required.
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="col-md-6">
+                            <mat-form-field class="pl-1 wp-100" [hideRequiredMarker]="true">
+                                <input type="text" matInput formControlName="value" placeholder="Column Header" required />
+                                <mat-error *ngIf="map.get([i, 'value']).hasError">
+                                    Column Header is required.
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    
+                </ng-container>
+            </div>
+        </ng-container>
+
+        <div class="mt-2">
+            <button type="button" mat-button color="primary" (click)="addMapRow()">
+                <mat-icon>add</mat-icon> Add Column
+            </button>
+        </div>
+
+    </form>
 </mat-dialog-content>
 <mat-dialog-actions class="d-flex justify-content-end">
-  <button type="button" mat-button (click)="onNoClick()">
-    <mat-icon>clear</mat-icon>
-    Cancel
-  </button>
-  <button type="button" mat-button (click)="saveImportModel()" color="primary">
-    <mat-icon>save</mat-icon>
-    Save
-  </button>
+    <button type="button" mat-button (click)="onNoClick()">
+        <mat-icon>clear</mat-icon>
+        Cancel
+    </button>
+    <button type="button" mat-button (click)="saveImportModel()" color="primary">
+        <mat-icon>save</mat-icon>
+        Save
+    </button>
 </mat-dialog-actions>

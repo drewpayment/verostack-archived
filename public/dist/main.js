@@ -1678,9 +1678,8 @@ var AuthGuard = /** @class */ (function () {
         var _this = this;
         var url = state.url;
         return rxjs__WEBPACK_IMPORTED_MODULE_4__["Observable"].create(function (observer) { return _this.session.isUserAuthenticated()
-            .toPromise()
-            .then(function (store) {
-            if (store != null && store.expires > moment__WEBPACK_IMPORTED_MODULE_7__().valueOf()) {
+            .subscribe(function (store) {
+            if (store && store.expires > moment__WEBPACK_IMPORTED_MODULE_7__().valueOf()) {
                 observer.next(true);
                 observer.complete();
             }
@@ -12201,7 +12200,7 @@ var SessionService = /** @class */ (function () {
         this.clearStorage();
         this.isLoginSubject.next(false);
         this._hasToken.next(false);
-        this.router.navigate(['login']);
+        this.router.navigateByUrl('login');
     };
     SessionService.prototype.getUserItem = function () {
         return this.userItem;
@@ -12399,6 +12398,9 @@ var SessionService = /** @class */ (function () {
      *
      */
     SessionService.prototype.getTokenRequest = function (request) {
+        if (!this.dataStore || !this.dataStore.token) {
+            return request;
+        }
         return request.clone({
             setHeaders: {
                 Authorization: 'Bearer ' + this.dataStore.token.access_token

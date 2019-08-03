@@ -18,17 +18,22 @@ class UtilityController extends Controller
         $this->service = $_service;
     }
 
-    public function getUtilitiesByClient($clientId)
+    public function getUtilitiesByClient()
     {
         $result = new ApiResource();
+        $user = Auth::user();
+        $user->load('sessionUser');
+        $clientId = $user->sessionUser->session_client;
 
-        $result->checkAccessByClient($clientId, Auth::user()->id)
+        $result->checkAccessByClient($clientId, $user->id)
             ->mergeInto($result);
 
         if ($result->hasError)
             return $result->throwApiException()->getResponse();
 
-        $campaigns = Campaign::with('utilities')->byClientId($clientId)
+        $result->setData(Utility::byClient($clientId)->get());
+
+        return $result->throwApiException()->getResponse();
     }
     
     public function getUtility($clientId, $utilityId)

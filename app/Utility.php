@@ -85,6 +85,20 @@ class Utility extends Model
         return $query->where('campaign_id', $campaignId);
     }
 
+    /**
+     * Undocumented function
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param [type] $clientId
+     * @return void
+     */
+    public function scopeByClient($query, $clientId)
+    {
+        return $query->whereHas('campaign', function ($query) use ($clientId) {
+            $query->where('client_id', $clientId);
+        });
+    }
+
     public function scopeByActiveStatus($query, $isActive)
     {
         return $query->where('is_active', $isActive);

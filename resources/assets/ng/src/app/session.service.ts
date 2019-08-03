@@ -114,8 +114,7 @@ export class SessionService {
         this.clearStorage();
         this.isLoginSubject.next(false);
         this._hasToken.next(false);
-
-        this.router.navigate(['login']);
+        this.router.navigateByUrl('login');
     }
 
     getUserItem():Observable<User> {
@@ -330,6 +329,10 @@ export class SessionService {
      *
      */
     getTokenRequest(request: HttpRequest<any>): HttpRequest<any> {
+        if (!this.dataStore || !this.dataStore.token) {
+            return request;
+        }
+
         return request.clone({
             setHeaders: {
                 Authorization: 'Bearer ' + this.dataStore.token.access_token

@@ -1,8 +1,11 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { User } from '@app/models';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { User, Utility, ICampaign, ImportModel } from '@app/models';
+import { FormGroup, FormBuilder, Validators, FormControl, FormArray } from '@angular/forms';
 import { SessionService } from '@app/session.service';
+import { ImportsService } from '@app/imports/imports.service';
+import { Subscription, Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 interface DialogData {
     user:User,
@@ -13,64 +16,83 @@ interface DialogData {
     templateUrl: './add-import-model.component.html',
     styleUrls: ['./add-import-model.component.scss']
 })
-export class AddImportModelComponent implements OnInit {
+export class AddImportModelComponent implements OnInit, OnDestroy {
 
-    user:User;
-    form:FormGroup;
+    user: User;
+    utilities: Utility[];
+    campaigns: ICampaign[];
+    form = this.createForm();
+
+    get map() {
+        return this.form.get('map') as FormArray;
+    }
+
+    /** SUBSCRIPTIONS */
+    campaignSub: Subscription;
 
     constructor(
         public ref: MatDialogRef<AddImportModelComponent>,
-        @Inject(MAT_DIALOG_DATA) public data:DialogData,
-        private session:SessionService,
-        private fb:FormBuilder
+        @Inject(MAT_DIALOG_DATA) public data: DialogData,
+        private session: SessionService,
+        private fb: FormBuilder,
+        private service: ImportsService
     ) { 
         this.user = this.data.user;
-
-        if (!this.user) {
-            this.session.getUserItem().subscribe(u => this.user = u);
-        }
     }
 
     ngOnInit() {
+        if (!this.user) this.session.getUserItem().subscribe(u => this.user = u);
+        // this.utilSubscription = this.service.utilities.subscribe(utilities => this.utilities = utilities);
+        // this.campaignSub = this.service.campaigns.subscribe(campaigns => this.campaigns = campaigns);
+    }
+
+    ngOnDestroy() {
+        this.campaignSub.unsubscribe();
     }
 
     onNoClick() {
         this.ref.close();
     }
 
-    saveImportModel() {
-        console.log('SAVE THIS DANG MODEL!');
+    getUtilities():Utility[] {
+        return this.utilities.filter(u => u.campaignId == this.form.get('map.campaignId').value);
     }
 
-    // TODO: this needs to be continued
-    private createForm() {
-        this.form = this.fb.group({
+    saveImportModel() {
+        if (this.form.invalid) return;
+        const model = this.prepareModel();
+
+        console.dir(model);
+    }
+
+    addMapRow() {
+        this.map.push(this.fb.group({
+            key: this.fb.control('', [Validators.required]),
+            value: this.fb.control('', [Validators.required]),
+        }));
+    }
+
+    prepareModel(): ImportModel {
+        return {
+            importModelId: null,
+            userId: this.user.id,
+            clientId: this.user.selectedClient.clientId,
+            shortDesc: this.form.value.shortDesc,
+            fullDesc: this.form.value.fullDesc,
+            map: this.form.value.map,
+        } as ImportModel;
+    }
+
+    private createForm(): FormGroup {
+        return this.fb.group({
             shortDesc: this.fb.control('', [Validators.required]),
             fullDesc: this.fb.control(''),
-            map: this.fb.group({
-                utilityId: this.fb.control('', [Validators.required]),
-                campaignId: this.fb.control('', [Validators.required]),
-                businessName: this.fb.control(''),
-                firstName: this.fb.control(''),
-                lastName: this.fb.control(''),
-                splitCustomerName: this.fb.control(''),
-                ssn: this.fb.control(''),
-                dob: this.fb.control(''),
-                street: this.fb.control('', [Validators.required]),
-                street2: this.fb.control(''),
-                city: this.fb.control('', [Validators.required]),
-                state: this.fb.control('', [Validators.required]),
-                zip: this.fb.control('', [Validators.required]),
-                phone: this.fb.control(''),
-                email: this.fb.control(''),
-                podAccount: this.fb.control(''),
-                saleDate: this.fb.control('', [Validators.required]),
-                matchAgentBySalesCode: this.fb.control('', [Validators.required]),
-                salesCode: this.fb.control(''),
-                agentName: this.fb.control(''),
-                utilityName: this.fb.control(''),
-            }),
-            userId: this.fb.control(this.user.id),
+            map: this.fb.array([
+                this.fb.group({
+                    key: this.fb.control('', [Validators.required]),
+                    value: this.fb.control('', [Validators.required])
+                }),
+            ]),
         });
     }
 

@@ -27,9 +27,8 @@ export class AuthGuard implements CanActivate {
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot):Observable<boolean> | boolean {
     const url:string = state.url;
     return Observable.create((observer:Observer<boolean>) => this.session.isUserAuthenticated()
-      .toPromise()
-      .then((store:ILocalStorage<User>) => {
-        if (store != null && store.expires > moment().valueOf()) {
+      .subscribe((store:ILocalStorage<User>) => {
+        if (store && store.expires > moment().valueOf()) {
           observer.next(true);
           observer.complete();
         } else {
