@@ -9,6 +9,7 @@ import { ImportModelsComponent } from './import-models/import-models.component';
 import { AuthGuard } from '@app/auth.guard';
 import { AddImportModelComponent } from './dialogs/add-import-model/add-import-model.component';
 import { EditImportModelComponent } from './dialogs/edit-import-model/edit-import-model.component';
+import { SpreadsheetModule } from '@app/spreadsheet/spreadsheet.module';
 
 const routes: Route[] = [
     { path: '', redirectTo: 'models', pathMatch: 'full' },
@@ -19,7 +20,7 @@ const routes: Route[] = [
     declarations: [
         ImportModelsComponent,
         AddImportModelComponent,
-        EditImportModelComponent
+        EditImportModelComponent,
     ],
     imports: [
         CommonModule,
@@ -28,6 +29,7 @@ const routes: Route[] = [
         FabFloatBtnModule,
         FormsModule,
         ReactiveFormsModule,
+        SpreadsheetModule,
 
         RouterModule.forChild(routes)
     ],

@@ -1,11 +1,10 @@
-import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
+import { Component, OnInit, Inject, ElementRef, ViewChildren, QueryList, AfterViewInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { User, Utility, ICampaign, ImportModel } from '@app/models';
-import { FormGroup, FormBuilder, Validators, FormControl, FormArray } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
 import { SessionService } from '@app/session.service';
 import { ImportsService } from '@app/imports/imports.service';
-import { Subscription, Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { startWith, delay } from 'rxjs/operators';
 
 interface DialogData {
     user:User,
@@ -13,10 +12,10 @@ interface DialogData {
 
 @Component({
     selector: 'vs-add-import-model',
-    templateUrl: './add-import-model.component.html',
+    templateUrl: '../edit-import-model/edit-import-model.component.html',
     styleUrls: ['./add-import-model.component.scss']
 })
-export class AddImportModelComponent implements OnInit {
+export class AddImportModelComponent implements OnInit, AfterViewInit {
 
     user: User;
     utilities: Utility[];
@@ -27,12 +26,16 @@ export class AddImportModelComponent implements OnInit {
         return this.form.get('map') as FormArray;
     }
 
+    @ViewChildren('keyInputs') keys: QueryList<ElementRef>;
+
+    tabAdded = false;
+
     constructor(
         public ref: MatDialogRef<AddImportModelComponent>,
         @Inject(MAT_DIALOG_DATA) public data: DialogData,
         private session: SessionService,
         private fb: FormBuilder,
-        private service: ImportsService
+        private service: ImportsService,
     ) { 
         this.user = this.data.user;
     }
@@ -43,6 +46,21 @@ export class AddImportModelComponent implements OnInit {
         // this.campaignSub = this.service.campaigns.subscribe(campaigns => this.campaigns = campaigns);
 
         this.user = this.session.lastUser;
+    }
+
+    ngAfterViewInit() {
+        this.keys.changes
+            .pipe(
+                startWith([]),
+                delay(0),
+            )
+            .subscribe((rows: QueryList<ElementRef>) => {
+                if (rows.length && !this.tabAdded) {
+                    rows.last.nativeElement.focus();
+                } else {
+                    this.tabAdded = false;
+                }
+            });
     }
 
     onNoClick() {
@@ -59,7 +77,7 @@ export class AddImportModelComponent implements OnInit {
         this.ref.close(model);
     }
 
-    addMapRow() {
+    addMapRow(changeFocus = true) {
         this.map.push(this.fb.group({
             key: this.fb.control('', [Validators.required]),
             value: this.fb.control('', [Validators.required]),
@@ -75,6 +93,13 @@ export class AddImportModelComponent implements OnInit {
             fullDesc: this.form.value.fullDesc,
             map: this.form.value.map,
         } as ImportModel;
+    }
+
+    tabAdd(event: KeyboardEvent, index: number) {
+        if (event.keyCode == 9 && index == (this.map.length - 1)) {
+            this.tabAdded = true;
+            this.addMapRow(false);
+        }
     }
 
     private createForm(): FormGroup {

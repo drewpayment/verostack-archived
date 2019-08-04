@@ -1,9 +1,10 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, AfterViewInit, QueryList, ElementRef, ViewChildren } from '@angular/core';
 import { ImportModel, User } from '@app/models';
 import { FormGroup, Validators, FormBuilder, FormArray } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { SessionService } from '@app/session.service';
 import { ImportsService } from '@app/imports/imports.service';
+import { startWith, delay } from 'rxjs/operators';
 
 interface DialogData {
     importModel: ImportModel
@@ -14,7 +15,7 @@ interface DialogData {
     templateUrl: './edit-import-model.component.html',
     styleUrls: ['./edit-import-model.component.scss']
 })
-export class EditImportModelComponent implements OnInit {
+export class EditImportModelComponent implements OnInit, AfterViewInit {
 
     form = this.createForm();
     user: User;
@@ -23,6 +24,10 @@ export class EditImportModelComponent implements OnInit {
     get map() {
         return this.form.get('map') as FormArray;
     }
+
+    @ViewChildren('keyInputs') keys: QueryList<ElementRef>;
+
+    tabAdded = false;
 
     constructor(
         private fb: FormBuilder,
@@ -56,6 +61,21 @@ export class EditImportModelComponent implements OnInit {
         }
     }
 
+    ngAfterViewInit() {
+        this.keys.changes
+            .pipe(
+                startWith([]),
+                delay(0),
+            )
+            .subscribe((rows: QueryList<ElementRef>) => {
+                if (rows.length && !this.tabAdded) {
+                    rows.last.nativeElement.focus();
+                } else {
+                    this.tabAdded = false;
+                }
+            });
+    }
+
     onNoClick = () => this.ref.close();
 
     addMapRow() {
@@ -71,9 +91,8 @@ export class EditImportModelComponent implements OnInit {
     }
 
     tabAdd(event: KeyboardEvent, index: number) {
-        console.log(`Code: ${event.keyCode}\nField Index: ${index}\nMap Length: ${this.map.length}`);
-
         if (event.keyCode == 9 && index == (this.map.length - 1)) {
+            this.tabAdded = true;
             this.addMapRow();
         }
     }

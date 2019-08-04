@@ -34,13 +34,13 @@
         
         <mat-divider class="pb-4"></mat-divider>
 
-        <ng-container formArrayName="map">
+        <div style="overflow: scroll; max-height: 25vw;" formArrayName="map">
             <div *ngFor="let f of map.controls; let i = index;">
                 <ng-container [formGroupName]="i">
                     <div class="row">
                         <div class="col-md-6">
                             <mat-form-field class="pr-1 wp-100" [hideRequiredMarker]="true">
-                                <input type="text" matInput formControlName="key" placeholder="Description" required />
+                                <input #keyInputs type="text" matInput formControlName="key" placeholder="Description" required />
                                 <mat-error *ngIf="map.get([i, 'key']).hasError">
                                     Description is required.
                                 </mat-error>
@@ -59,7 +59,7 @@
                     
                 </ng-container>
             </div>
-        </ng-container>
+        </div>
 
         <div class="mt-2">
             <button type="button" mat-button color="primary" (click)="addMapRow()">
