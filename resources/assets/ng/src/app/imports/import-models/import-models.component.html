@@ -17,11 +17,11 @@
 
   <div class="row">
     <div class="col-md-12">
-      <mat-table [dataSource]="dataSource">
+      <mat-table [dataSource]="importModels">
         <ng-container matColumnDef="detailView">
           <mat-header-cell *matHeaderCellDef>&nbsp;</mat-header-cell>
           <mat-cell *matCellDef="let item">
-            <button type="button" mat-icon-button class="text-muted">
+            <button type="button" mat-icon-button class="text-muted" (click)="editImportModel(item)">
               <mat-icon>remove_red_eye</mat-icon>
             </button>
           </mat-cell>

@@ -1546,6 +1546,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _forgot_password_forgot_password_component__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ./forgot-password/forgot-password.component */ "./src/app/forgot-password/forgot-password.component.ts");
 /* harmony import */ var _login_login_component__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ./login/login.component */ "./src/app/login/login.component.ts");
 /* harmony import */ var _reset_password_reset_password_component__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! ./reset-password/reset-password.component */ "./src/app/reset-password/reset-password.component.ts");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
+/* harmony import */ var _http_error_interceptor__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! ./http/error-interceptor */ "./src/app/http/error-interceptor.ts");
+
+
 
 
 
@@ -1624,7 +1628,13 @@ var AppModule = /** @class */ (function () {
                 _agent_edit_agent_dialog_edit_agent_dialog_component__WEBPACK_IMPORTED_MODULE_15__["EditAgentDialogComponent"],
                 _agent_agent_rules_dialog_agent_rules_dialog_component__WEBPACK_IMPORTED_MODULE_18__["AgentRulesDialogComponent"]
             ],
-            providers: [],
+            providers: [
+                {
+                    provide: _angular_common_http__WEBPACK_IMPORTED_MODULE_27__["HTTP_INTERCEPTORS"],
+                    useClass: _http_error_interceptor__WEBPACK_IMPORTED_MODULE_28__["ErrorInterceptor"],
+                    multi: true,
+                }
+            ],
             bootstrap: [_app_component__WEBPACK_IMPORTED_MODULE_5__["AppComponent"]]
         }),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [])
@@ -7335,6 +7345,61 @@ var HeaderComponent = /** @class */ (function () {
 
 /***/ }),
 
+/***/ "./src/app/http/error-interceptor.ts":
+/*!*******************************************!*\
+  !*** ./src/app/http/error-interceptor.ts ***!
+  \*******************************************/
+/*! exports provided: ErrorInterceptor */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ErrorInterceptor", function() { return ErrorInterceptor; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
+/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
+/* harmony import */ var _app_session_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @app/session.service */ "./src/app/session.service.ts");
+
+
+
+
+
+var ErrorInterceptor = /** @class */ (function () {
+    function ErrorInterceptor(session) {
+        this.session = session;
+    }
+    ErrorInterceptor.prototype.intercept = function (request, next) {
+        var _this = this;
+        return next.handle(request)
+            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["retry"])(1), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["catchError"])(function (error) {
+            var errorMessage = '';
+            if (error.error instanceof ErrorEvent) {
+                errorMessage = "Error: " + error.error.message;
+            }
+            else {
+                errorMessage = "Error Code: " + error.status + "\nMessage: " + error.message;
+            }
+            window.alert(errorMessage);
+            // This means the user is no longer authenticated with the API and we should 
+            // log them out, revoke any tokens and send them to the login page. 
+            if (error.status == 401) {
+                _this.session.logout();
+            }
+            return Object(rxjs__WEBPACK_IMPORTED_MODULE_2__["throwError"])(error);
+        }));
+    };
+    ErrorInterceptor = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])(),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_app_session_service__WEBPACK_IMPORTED_MODULE_4__["SessionService"]])
+    ], ErrorInterceptor);
+    return ErrorInterceptor;
+}());
+
+
+
+/***/ }),
+
 /***/ "./src/app/loading-spinner/loading-spinner.component.html":
 /*!****************************************************************!*\
   !*** ./src/app/loading-spinner/loading-spinner.component.html ***!
@@ -12139,7 +12204,7 @@ var SessionService = /** @class */ (function () {
         };
         this.navigateQueue = [];
         this.loggedInService = new rxjs__WEBPACK_IMPORTED_MODULE_2__["BehaviorSubject"](false);
-        this.userItem = new rxjs__WEBPACK_IMPORTED_MODULE_2__["ReplaySubject"](1);
+        this.userItem = new rxjs__WEBPACK_IMPORTED_MODULE_2__["BehaviorSubject"](null);
         this.tokenItem$ = new rxjs__WEBPACK_IMPORTED_MODULE_2__["ReplaySubject"](1);
         this.loading$ = new rxjs__WEBPACK_IMPORTED_MODULE_2__["BehaviorSubject"](false);
         this._hasToken = new rxjs__WEBPACK_IMPORTED_MODULE_2__["BehaviorSubject"](false);
@@ -12160,9 +12225,22 @@ var SessionService = /** @class */ (function () {
         });
         // this.userItem.pipe(map(u => u.selectedClient = this._selectedClient));
     }
-    // private _selectedClient():number {
-    //     return this.userItem.getValue().sessionUser.sessionClient;
-    // }
+    Object.defineProperty(SessionService.prototype, "lastUser", {
+        // private _selectedClient():number {
+        //     return this.userItem.getValue().sessionUser.sessionClient;
+        // }
+        get: function () {
+            var u = this.userItem.value;
+            if (u.selectedClient == null) {
+                u.selectedClient = u.sessionUser.client != null
+                    ? u.sessionUser.client
+                    : u.clients.find(function (c) { return c.clientId == u.sessionUser.sessionClient; });
+            }
+            return u;
+        },
+        enumerable: true,
+        configurable: true
+    });
     SessionService.prototype.setNavigationTitle = function (value) {
         if (typeof value !== 'string' || value == null)
             return;

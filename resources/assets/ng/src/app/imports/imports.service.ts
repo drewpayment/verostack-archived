@@ -19,21 +19,19 @@ export class ImportsService {
 
     constructor(private http: HttpClient, private session: SessionService, private router: Router) { }
 
+    /**
+     * Get all ImportModels.
+     */
     getImportModels():Observable<ImportModel[]> {
         const url = `${this.api}/import-models`;
-        return this.http.get<ImportModel[]>(url)
-            .pipe(
-                catchError((err: HttpErrorResponse) => {
-                    if (err.status == 401) {
-                        this.session.logout();
-                    }
-                    return of(null);
-                }),
-            );
+        return this.http.get<ImportModel[]>(url);
     }
 
+    /**
+     * Used to save new OR update existing ImportModels.
+     */
     saveImportModel(model: ImportModel):Observable<ImportModel> {
-        const url = `${this.api}/save-import-model`;
+        const url = `${this.api}/import-models`;
         return this.http.post<ImportModel>(url, model);
     }
 

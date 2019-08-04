@@ -49,7 +49,7 @@
 
                         <div class="col-md-6">
                             <mat-form-field class="pl-1 wp-100" [hideRequiredMarker]="true">
-                                <input type="text" matInput formControlName="value" placeholder="Column Header" required />
+                                <input type="text" matInput formControlName="value" placeholder="Column Header" (keydown)="tabAdd($event, i)" required />
                                 <mat-error *ngIf="map.get([i, 'value']).hasError">
                                     Column Header is required.
                                 </mat-error>

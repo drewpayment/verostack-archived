@@ -8,6 +8,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ImportModelsComponent } from './import-models/import-models.component';
 import { AuthGuard } from '@app/auth.guard';
 import { AddImportModelComponent } from './dialogs/add-import-model/add-import-model.component';
+import { EditImportModelComponent } from './dialogs/edit-import-model/edit-import-model.component';
 
 const routes: Route[] = [
     { path: '', redirectTo: 'models', pathMatch: 'full' },
@@ -17,7 +18,8 @@ const routes: Route[] = [
 @NgModule({
     declarations: [
         ImportModelsComponent,
-        AddImportModelComponent
+        AddImportModelComponent,
+        EditImportModelComponent
     ],
     imports: [
         CommonModule,
@@ -30,7 +32,8 @@ const routes: Route[] = [
         RouterModule.forChild(routes)
     ],
     entryComponents: [
-        AddImportModelComponent
+        AddImportModelComponent,
+        EditImportModelComponent
     ]
 })
 export class ImportsModule { }

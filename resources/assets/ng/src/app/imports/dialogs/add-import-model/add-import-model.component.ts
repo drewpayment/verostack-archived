@@ -16,7 +16,7 @@ interface DialogData {
     templateUrl: './add-import-model.component.html',
     styleUrls: ['./add-import-model.component.scss']
 })
-export class AddImportModelComponent implements OnInit, OnDestroy {
+export class AddImportModelComponent implements OnInit {
 
     user: User;
     utilities: Utility[];
@@ -26,9 +26,6 @@ export class AddImportModelComponent implements OnInit, OnDestroy {
     get map() {
         return this.form.get('map') as FormArray;
     }
-
-    /** SUBSCRIPTIONS */
-    campaignSub: Subscription;
 
     constructor(
         public ref: MatDialogRef<AddImportModelComponent>,
@@ -41,13 +38,11 @@ export class AddImportModelComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        if (!this.user) this.session.getUserItem().subscribe(u => this.user = u);
+        // if (!this.user) this.session.getUserItem().subscribe(u => this.user = u);/
         // this.utilSubscription = this.service.utilities.subscribe(utilities => this.utilities = utilities);
         // this.campaignSub = this.service.campaigns.subscribe(campaigns => this.campaigns = campaigns);
-    }
 
-    ngOnDestroy() {
-        this.campaignSub.unsubscribe();
+        this.user = this.session.lastUser;
     }
 
     onNoClick() {
@@ -61,8 +56,7 @@ export class AddImportModelComponent implements OnInit, OnDestroy {
     saveImportModel() {
         if (this.form.invalid) return;
         const model = this.prepareModel();
-
-        console.dir(model);
+        this.ref.close(model);
     }
 
     addMapRow() {
