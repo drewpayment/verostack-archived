@@ -8016,11 +8016,73 @@ var ContactType;
 
 /***/ }),
 
+/***/ "./src/app/models/import-model.model.ts":
+/*!**********************************************!*\
+  !*** ./src/app/models/import-model.model.ts ***!
+  \**********************************************/
+/*! exports provided: DailySaleMapType, DailySaleFields */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DailySaleMapType", function() { return DailySaleMapType; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DailySaleFields", function() { return DailySaleFields; });
+var DailySaleMapType;
+(function (DailySaleMapType) {
+    DailySaleMapType[DailySaleMapType["salesAgentId"] = 0] = "salesAgentId";
+    DailySaleMapType[DailySaleMapType["salesAgentName"] = 1] = "salesAgentName";
+    DailySaleMapType[DailySaleMapType["podAccount"] = 2] = "podAccount";
+    DailySaleMapType[DailySaleMapType["utilityName"] = 3] = "utilityName";
+    DailySaleMapType[DailySaleMapType["saleDate"] = 4] = "saleDate";
+    DailySaleMapType[DailySaleMapType["contactFullName"] = 5] = "contactFullName";
+    DailySaleMapType[DailySaleMapType["contactFirstName"] = 6] = "contactFirstName";
+    DailySaleMapType[DailySaleMapType["contactMiddleName"] = 7] = "contactMiddleName";
+    DailySaleMapType[DailySaleMapType["contactLastName"] = 8] = "contactLastName";
+    DailySaleMapType[DailySaleMapType["contactBusinessName"] = 9] = "contactBusinessName";
+    DailySaleMapType[DailySaleMapType["contactPrefix"] = 10] = "contactPrefix";
+    DailySaleMapType[DailySaleMapType["contactSuffix"] = 11] = "contactSuffix";
+    DailySaleMapType[DailySaleMapType["contactSsn"] = 12] = "contactSsn";
+    DailySaleMapType[DailySaleMapType["contactDob"] = 13] = "contactDob";
+    DailySaleMapType[DailySaleMapType["contactStreet"] = 14] = "contactStreet";
+    DailySaleMapType[DailySaleMapType["contactStreet2"] = 15] = "contactStreet2";
+    DailySaleMapType[DailySaleMapType["contactCity"] = 16] = "contactCity";
+    DailySaleMapType[DailySaleMapType["contactState"] = 17] = "contactState";
+    DailySaleMapType[DailySaleMapType["contactZip"] = 18] = "contactZip";
+    DailySaleMapType[DailySaleMapType["contactPhone"] = 19] = "contactPhone";
+    DailySaleMapType[DailySaleMapType["contactEmail"] = 20] = "contactEmail";
+})(DailySaleMapType || (DailySaleMapType = {}));
+var DailySaleFields = [
+    'Sales Agent ID',
+    'Sales Agent Name',
+    'Account No',
+    'Utility Name',
+    'Sale Date',
+    'Customer Full Name',
+    'Customer First Name',
+    'Customer Middle Name',
+    'Customer Last Name',
+    'Business Name',
+    'Customer Prefix',
+    'Customer Suffix',
+    'Customer SSN',
+    'Date of Birth',
+    'Address',
+    'Apt/Unit/#',
+    'City',
+    'State',
+    'Zip',
+    'Phone',
+    'Email'
+];
+
+
+/***/ }),
+
 /***/ "./src/app/models/index.ts":
 /*!*********************************!*\
   !*** ./src/app/models/index.ts ***!
   \*********************************/
-/*! exports provided: AgentSale, PaidStatusType, PayrollFilterType, UserType, ContactType */
+/*! exports provided: AgentSale, PaidStatusType, PayrollFilterType, UserType, ContactType, DailySaleMapType, DailySaleFields */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -8039,6 +8101,12 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony import */ var _enums_contact_type_enum__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./enums/contact-type.enum */ "./src/app/models/enums/contact-type.enum.ts");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ContactType", function() { return _enums_contact_type_enum__WEBPACK_IMPORTED_MODULE_4__["ContactType"]; });
+
+/* harmony import */ var _import_model_model__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./import-model.model */ "./src/app/models/import-model.model.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DailySaleMapType", function() { return _import_model_model__WEBPACK_IMPORTED_MODULE_5__["DailySaleMapType"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DailySaleFields", function() { return _import_model_model__WEBPACK_IMPORTED_MODULE_5__["DailySaleFields"]; });
+
 
 
 

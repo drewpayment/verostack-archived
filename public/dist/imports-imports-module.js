@@ -13931,142 +13931,53 @@ exports.XlsxProxy = XlsxProxy;
 
 /***/ }),
 
-/***/ "./src/app/imports/dialogs/add-import-model/add-import-model.component.scss":
-/*!**********************************************************************************!*\
-  !*** ./src/app/imports/dialogs/add-import-model/add-import-model.component.scss ***!
-  \**********************************************************************************/
+/***/ "./src/app/imports/bottom-sheets/confirm-agent-code.component.html":
+/*!*************************************************************************!*\
+  !*** ./src/app/imports/bottom-sheets/confirm-agent-code.component.html ***!
+  \*************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzcmMvYXBwL2ltcG9ydHMvZGlhbG9ncy9hZGQtaW1wb3J0LW1vZGVsL2FkZC1pbXBvcnQtbW9kZWwuY29tcG9uZW50LnNjc3MifQ== */"
+module.exports = "\n<h5>\n    Please confirm how we should try to match sales to your agents.\n</h5>\n<mat-action-list>\n    <button mat-list-item (click)=\"useCode();\">\n        <span mat-line>Use Sales Code</span>\n        <span mat-line class=\"text-black-50\">Better matching probability</span>\n    </button>\n\n    <button mat-list-item (click)=\"confirmNoCode();\">\n        <span mat-line>Use Agent Name</span>\n        <span mat-line class=\"text-black-50\">I don't have their sales codes entered into the system</span>\n    </button>\n</mat-action-list>"
 
 /***/ }),
 
-/***/ "./src/app/imports/dialogs/add-import-model/add-import-model.component.ts":
-/*!********************************************************************************!*\
-  !*** ./src/app/imports/dialogs/add-import-model/add-import-model.component.ts ***!
-  \********************************************************************************/
-/*! exports provided: AddImportModelComponent */
+/***/ "./src/app/imports/bottom-sheets/confirm-agent-code.component.ts":
+/*!***********************************************************************!*\
+  !*** ./src/app/imports/bottom-sheets/confirm-agent-code.component.ts ***!
+  \***********************************************************************/
+/*! exports provided: ConfirmAgentBottomSheetComponent */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AddImportModelComponent", function() { return AddImportModelComponent; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ConfirmAgentBottomSheetComponent", function() { return ConfirmAgentBottomSheetComponent; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/material */ "./node_modules/@angular/material/esm5/material.es5.js");
-/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
-/* harmony import */ var _app_session_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @app/session.service */ "./src/app/session.service.ts");
-/* harmony import */ var _app_imports_imports_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @app/imports/imports.service */ "./src/app/imports/imports.service.ts");
-/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
 
 
 
-
-
-
-
-var AddImportModelComponent = /** @class */ (function () {
-    function AddImportModelComponent(ref, data, session, fb, service) {
-        this.ref = ref;
-        this.data = data;
-        this.session = session;
-        this.fb = fb;
-        this.service = service;
-        this.form = this.createForm();
-        this.tabAdded = false;
-        this.user = this.data.user;
+var ConfirmAgentBottomSheetComponent = /** @class */ (function () {
+    function ConfirmAgentBottomSheetComponent(_bottomSheetRef) {
+        this._bottomSheetRef = _bottomSheetRef;
     }
-    Object.defineProperty(AddImportModelComponent.prototype, "map", {
-        get: function () {
-            return this.form.get('map');
-        },
-        enumerable: true,
-        configurable: true
-    });
-    AddImportModelComponent.prototype.ngOnInit = function () {
-        // if (!this.user) this.session.getUserItem().subscribe(u => this.user = u);/
-        // this.utilSubscription = this.service.utilities.subscribe(utilities => this.utilities = utilities);
-        // this.campaignSub = this.service.campaigns.subscribe(campaigns => this.campaigns = campaigns);
-        this.user = this.session.lastUser;
+    ConfirmAgentBottomSheetComponent.prototype.ngOnInit = function () { };
+    ConfirmAgentBottomSheetComponent.prototype.useCode = function () {
+        console.log('USE CODE!');
+        this._bottomSheetRef.dismiss(true);
     };
-    AddImportModelComponent.prototype.ngAfterViewInit = function () {
-        var _this = this;
-        this.keys.changes
-            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_6__["startWith"])([]), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_6__["delay"])(0))
-            .subscribe(function (rows) {
-            if (rows.length && !_this.tabAdded) {
-                rows.last.nativeElement.focus();
-            }
-            else {
-                _this.tabAdded = false;
-            }
-        });
+    ConfirmAgentBottomSheetComponent.prototype.confirmNoCode = function () {
+        this._bottomSheetRef.dismiss();
     };
-    AddImportModelComponent.prototype.onNoClick = function () {
-        this.ref.close();
-    };
-    AddImportModelComponent.prototype.getUtilities = function () {
-        var _this = this;
-        return this.utilities.filter(function (u) { return u.campaignId == _this.form.get('map.campaignId').value; });
-    };
-    AddImportModelComponent.prototype.saveImportModel = function () {
-        if (this.form.invalid)
-            return;
-        var model = this.prepareModel();
-        this.ref.close(model);
-    };
-    AddImportModelComponent.prototype.addMapRow = function (changeFocus) {
-        if (changeFocus === void 0) { changeFocus = true; }
-        this.map.push(this.fb.group({
-            key: this.fb.control('', [_angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required]),
-            value: this.fb.control('', [_angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required]),
-        }));
-    };
-    AddImportModelComponent.prototype.prepareModel = function () {
-        return {
-            importModelId: null,
-            userId: this.user.id,
-            clientId: this.user.selectedClient.clientId,
-            shortDesc: this.form.value.shortDesc,
-            fullDesc: this.form.value.fullDesc,
-            map: this.form.value.map,
-        };
-    };
-    AddImportModelComponent.prototype.tabAdd = function (event, index) {
-        if (event.keyCode == 9 && index == (this.map.length - 1)) {
-            this.tabAdded = true;
-            this.addMapRow(false);
-        }
-    };
-    AddImportModelComponent.prototype.createForm = function () {
-        return this.fb.group({
-            shortDesc: this.fb.control('', [_angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required]),
-            fullDesc: this.fb.control(''),
-            map: this.fb.array([
-                this.fb.group({
-                    key: this.fb.control('', [_angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required]),
-                    value: this.fb.control('', [_angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required])
-                }),
-            ]),
-        });
-    };
-    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewChildren"])('keyInputs'),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", _angular_core__WEBPACK_IMPORTED_MODULE_1__["QueryList"])
-    ], AddImportModelComponent.prototype, "keys", void 0);
-    AddImportModelComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    ConfirmAgentBottomSheetComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
-            selector: 'vs-add-import-model',
-            template: __webpack_require__(/*! ../edit-import-model/edit-import-model.component.html */ "./src/app/imports/dialogs/edit-import-model/edit-import-model.component.html"),
-            styles: [__webpack_require__(/*! ./add-import-model.component.scss */ "./src/app/imports/dialogs/add-import-model/add-import-model.component.scss")]
+            template: __webpack_require__(/*! ./confirm-agent-code.component.html */ "./src/app/imports/bottom-sheets/confirm-agent-code.component.html"),
+            selector: 'vs-confirm-agent-bs'
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__param"](1, Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Inject"])(_angular_material__WEBPACK_IMPORTED_MODULE_2__["MAT_DIALOG_DATA"])),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_material__WEBPACK_IMPORTED_MODULE_2__["MatDialogRef"], Object, _app_session_service__WEBPACK_IMPORTED_MODULE_4__["SessionService"],
-            _angular_forms__WEBPACK_IMPORTED_MODULE_3__["FormBuilder"],
-            _app_imports_imports_service__WEBPACK_IMPORTED_MODULE_5__["ImportsService"]])
-    ], AddImportModelComponent);
-    return AddImportModelComponent;
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_material__WEBPACK_IMPORTED_MODULE_2__["MatBottomSheetRef"]])
+    ], ConfirmAgentBottomSheetComponent);
+    return ConfirmAgentBottomSheetComponent;
 }());
 
 
@@ -14080,7 +13991,7 @@ var AddImportModelComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div mat-dialog-title class=\"d-flex justify-content-between\">\n    <h4>Import Model</h4>\n    <button type=\"button\" mat-icon-button (click)=\"onNoClick()\">\n        <mat-icon>clear</mat-icon>\n    </button>\n</div>\n<mat-dialog-content class=\"pb-2\">\n    <form [formGroup]=\"form\" class=\"mb-2\">\n        <div>\n            <mat-form-field>\n                <input type=\"text\" matInput formControlName=\"shortDesc\" placeholder=\"Model Name\" required />\n                <mat-error *ngIf=\"form.get('shortDesc').hasError\">\n                    Please enter a model name.\n                </mat-error>\n            </mat-form-field>\n        </div>\n\n        <div>\n            <mat-form-field class=\"wp-100\">\n                <textarea matNativeControl matAutosize=\"true\" formControlName=\"fullDesc\" placeholder=\"Description\">\n                </textarea>\n            </mat-form-field>\n        </div>\n\n        <p class=\"text-black-50\">\n            Please add all columns from your report. The column header needs to match exactly to the column headers \n            on your XSL file. \n        </p>\n\n        <p class=\"text-black-50 small\">\n            Column Header - must match exactly with the report column header. <br />\n            Description - used for your reference when working with the Import Model.\n        </p>\n        \n        <mat-divider class=\"pb-4\"></mat-divider>\n\n        <div style=\"overflow: scroll; max-height: 25vw;\" formArrayName=\"map\">\n            <div *ngFor=\"let f of map.controls; let i = index;\">\n                <ng-container [formGroupName]=\"i\">\n                    <div class=\"row\">\n                        <div class=\"col-md-6\">\n                            <mat-form-field class=\"pr-1 wp-100\" [hideRequiredMarker]=\"true\">\n                                <input #keyInputs type=\"text\" matInput formControlName=\"key\" placeholder=\"Description\" required />\n                                <mat-error *ngIf=\"map.get([i, 'key']).hasError\">\n                                    Description is required.\n                                </mat-error>\n                            </mat-form-field>\n                        </div>\n\n                        <div class=\"col-md-6\">\n                            <mat-form-field class=\"pl-1 wp-100\" [hideRequiredMarker]=\"true\">\n                                <input type=\"text\" matInput formControlName=\"value\" placeholder=\"Column Header\" (keydown)=\"tabAdd($event, i)\" required />\n                                <mat-error *ngIf=\"map.get([i, 'value']).hasError\">\n                                    Column Header is required.\n                                </mat-error>\n                            </mat-form-field>\n                        </div>\n                    </div>\n                    \n                </ng-container>\n            </div>\n        </div>\n\n        <div class=\"mt-2\">\n            <button type=\"button\" mat-button color=\"primary\" (click)=\"addMapRow()\">\n                <mat-icon>add</mat-icon> Add Column\n            </button>\n        </div>\n\n    </form>\n</mat-dialog-content>\n<mat-dialog-actions class=\"d-flex justify-content-end\">\n    <button type=\"button\" mat-button (click)=\"onNoClick()\">\n        <mat-icon>clear</mat-icon>\n        Cancel\n    </button>\n    <button type=\"button\" mat-button (click)=\"saveImportModel()\" color=\"primary\">\n        <mat-icon>save</mat-icon>\n        Save\n    </button>\n</mat-dialog-actions>"
+module.exports = "<div mat-dialog-title class=\"d-flex justify-content-between\">\n    <h4>Import Model</h4>\n    <button type=\"button\" mat-icon-button (click)=\"onNoClick()\">\n        <mat-icon>clear</mat-icon>\n    </button>\n</div>\n<mat-dialog-content class=\"pb-2\">\n    <form [formGroup]=\"form\" class=\"mb-2\">\n        <div>\n            <mat-form-field [hideRequiredMarker]=\"true\">\n                <input type=\"text\" matInput formControlName=\"shortDesc\" placeholder=\"Model Name\" required />\n                <mat-error *ngIf=\"form.get('shortDesc').hasError\">\n                    Please enter a model name.\n                </mat-error>\n            </mat-form-field>\n        </div>\n\n        <div>\n            <mat-form-field class=\"wp-100\">\n                <textarea matNativeControl matAutosize=\"true\" formControlName=\"fullDesc\" placeholder=\"Description\">\n                </textarea>\n            </mat-form-field>\n        </div>\n\n        <!-- <p class=\"text-black-50 small\">\n            Select the Campaign that this import will be associated with. It is <span class=\"font-weight-bold\">very important</span> \n            that you make sure your utilities associated with the campaign reflect all utilities in the report that you're importing. \n        </p> -->\n\n        <div style=\"height: 100px !important;\">\n            <mat-form-field class=\"wp-100\" [hideRequiredMarker]=\"true\">\n                <mat-select formControlName=\"campaignId\" placeholder=\"Campaign\" required>\n                    <mat-option *ngFor=\"let c of (campaigns|async); let i = index;\" [value]=\"c.campaignId\">\n                        {{ c.name }}\n                    </mat-option>\n                </mat-select>\n                <mat-error *ngIf=\"form.get('campaignId').hasError\">\n                    Please select a campaign.\n                </mat-error>\n                <mat-hint>\n                    Select the Campaign that this import will be associated with. It is <span class=\"font-weight-bold\">very important</span> \n                    that you make sure your utilities associated with the campaign reflect all utilities in the report that you're importing.\n                </mat-hint>\n            </mat-form-field>\n        </div>\n\n        <div>\n            <mat-checkbox [value]=\"splitCustomerName\" class=\"text-black-50\">Report uses one field for Customer Name</mat-checkbox>\n        </div>\n\n        <div>\n            <mat-checkbox [value]=\"matchAgentBySalesCode\" class=\"text-black-50\">Match agents on report by Sales Code</mat-checkbox>\n        </div>\n\n        <div>\n            <p class=\"text-black-50\">\n                Please add all columns from your report. The column header needs to match exactly to the column headers \n                on your XSL file. \n            </p>\n    \n            <p class=\"text-black-50 small\">\n                Column Header - must match exactly with the report column header. <br />\n                Description - used for your reference when working with the Import Model.\n            </p>\n\n            <p class=\"text-black-50 small\">\n                Please make sure that your sales statuses on your import match your \n                <a [routerLink]=\"['..', 'client-information']\" (click)=\"onNoClick()\">Sale Status Configuration</a> statuses. If they do not, \n                we will be unable to properly set the \"Paid Status\" for your sales and they will default to \"Unpaid\".\n            </p>\n        </div>\n        \n        <mat-divider class=\"pb-4\"></mat-divider>\n\n        <div style=\"overflow: scroll; max-height: 25vw;\" formArrayName=\"map\">\n            <div *ngFor=\"let f of map.controls; let i = index;\">\n                <ng-container [formGroupName]=\"i\">\n                    <div class=\"row\">\n                        <div class=\"col-md-4\">\n                            <mat-form-field class=\"pr-1 wp-100\" [hideRequiredMarker]=\"true\">\n                                <input #keyInputs type=\"text\" matInput formControlName=\"key\" placeholder=\"Description\" required />\n                                <mat-error *ngIf=\"map.get([i, 'key']).hasError\">\n                                    Description is required.\n                                </mat-error>\n                            </mat-form-field>\n                        </div>\n\n                        <div class=\"col-md-4\">\n                            <mat-form-field class=\"px-1 wp-100\" [hideRequiredMarker]=\"true\">\n                                <input type=\"text\" matInput formControlName=\"value\" placeholder=\"Column Header\" required />\n                                <mat-error *ngIf=\"map.get([i, 'value']).hasError\">\n                                    Column Header is required.\n                                </mat-error>\n                            </mat-form-field>\n                        </div>\n\n                        <div class=\"col-md-4\">\n                            <mat-form-field class=\"pl-1 wp-100\">\n                                <mat-select formControlName=\"fieldType\" placeholder=\"Field Type\" \n                                    (selectionChange)=\"fieldTypeChanged($event, map.get([i, 'fieldType']))\" (keydown)=\"tabAdd($event, i)\">\n                                    <mat-option *ngFor=\"let f of fieldDescriptions; let j = index;\" [value]=\"j\">\n                                        {{ fieldDescriptions[j] }}\n                                    </mat-option>\n                                </mat-select>\n                                <mat-hint>\n                                    Tell us what your fields are.\n                                </mat-hint>\n                            </mat-form-field>\n                        </div>\n                    </div>\n                    \n                </ng-container>\n            </div>\n        </div>\n\n        <div class=\"mt-2\">\n            <button type=\"button\" mat-button color=\"primary\" (click)=\"addMapRow()\">\n                <mat-icon>add</mat-icon> Add Column\n            </button>\n        </div>\n\n    </form>\n</mat-dialog-content>\n<mat-dialog-actions class=\"d-flex justify-content-end\">\n    <button type=\"button\" mat-button (click)=\"onNoClick()\">\n        <mat-icon>clear</mat-icon>\n        Cancel\n    </button>\n    <button type=\"button\" mat-button (click)=\"saveImportModel()\" color=\"primary\">\n        <mat-icon>save</mat-icon>\n        Save\n    </button>\n</mat-dialog-actions>"
 
 /***/ }),
 
@@ -14107,11 +14018,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EditImportModelComponent", function() { return EditImportModelComponent; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
-/* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/material */ "./node_modules/@angular/material/esm5/material.es5.js");
-/* harmony import */ var _app_session_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @app/session.service */ "./src/app/session.service.ts");
-/* harmony import */ var _app_imports_imports_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @app/imports/imports.service */ "./src/app/imports/imports.service.ts");
-/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
+/* harmony import */ var _app_models__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @app/models */ "./src/app/models/index.ts");
+/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
+/* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/material */ "./node_modules/@angular/material/esm5/material.es5.js");
+/* harmony import */ var _app_session_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @app/session.service */ "./src/app/session.service.ts");
+/* harmony import */ var _app_imports_imports_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @app/imports/imports.service */ "./src/app/imports/imports.service.ts");
+/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
+/* harmony import */ var _app_imports_bottom_sheets_confirm_agent_code_component__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @app/imports/bottom-sheets/confirm-agent-code.component */ "./src/app/imports/bottom-sheets/confirm-agent-code.component.ts");
+
+
+
 
 
 
@@ -14120,16 +14037,22 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var EditImportModelComponent = /** @class */ (function () {
-    function EditImportModelComponent(fb, ref, data, session, service) {
+    function EditImportModelComponent(fb, ref, data, session, service, bs) {
         var _this = this;
         this.fb = fb;
         this.ref = ref;
         this.data = data;
         this.session = session;
         this.service = service;
+        this.bs = bs;
         this.form = this.createForm();
         this.tabAdded = false;
+        this.fieldTypes = Object.keys(_app_models__WEBPACK_IMPORTED_MODULE_2__["DailySaleMapType"]);
+        this.fieldDescriptions = _app_models__WEBPACK_IMPORTED_MODULE_2__["DailySaleFields"];
+        this.splitCustomerName = false;
+        this.matchAgentBySalesCode = false;
         this.onNoClick = function () { return _this.ref.close(); };
+        this.closeAndSaveModel = function () { return _this.ref.close(_this.prepareModel()); };
         this.model = this.data.importModel;
     }
     Object.defineProperty(EditImportModelComponent.prototype, "map", {
@@ -14142,7 +14065,10 @@ var EditImportModelComponent = /** @class */ (function () {
     EditImportModelComponent.prototype.ngOnInit = function () {
         var _this = this;
         this.user = this.session.lastUser;
+        this.campaigns = this.service.campaigns;
         if (this.model) {
+            this.matchAgentBySalesCode = this.model.matchByAgentCode;
+            this.splitCustomerName = this.model.splitCustomerName;
             var map = JSON.parse(this.model.map);
             this.form.patchValue({
                 shortDesc: this.model.shortDesc,
@@ -14157,11 +14083,14 @@ var EditImportModelComponent = /** @class */ (function () {
                 });
             }
         }
+        else {
+            this.addMapRow();
+        }
     };
     EditImportModelComponent.prototype.ngAfterViewInit = function () {
         var _this = this;
         this.keys.changes
-            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_6__["startWith"])([]), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_6__["delay"])(0))
+            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_7__["startWith"])([]), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_7__["delay"])(0))
             .subscribe(function (rows) {
             if (rows.length && !_this.tabAdded) {
                 rows.last.nativeElement.focus();
@@ -14173,14 +14102,61 @@ var EditImportModelComponent = /** @class */ (function () {
     };
     EditImportModelComponent.prototype.addMapRow = function () {
         this.map.push(this.fb.group({
-            key: this.fb.control('', [_angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].required]),
-            value: this.fb.control('', [_angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].required]),
+            key: this.fb.control('', [_angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required]),
+            value: this.fb.control('', [_angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required]),
+            fieldType: this.fb.control('')
         }));
     };
     EditImportModelComponent.prototype.saveImportModel = function () {
+        var _this = this;
         if (this.form.invalid)
             return;
-        this.ref.close(this.prepareModel());
+        Object(rxjs__WEBPACK_IMPORTED_MODULE_8__["forkJoin"])(this.checkMatchByCode(), this.checkForMissingSalesFields()).subscribe(function (results) {
+            var missingFields = results[1];
+            // TODO: need to handle missing fields communication
+        });
+        if (!this.matchAgentBySalesCode) {
+            this.bs.open(_app_imports_bottom_sheets_confirm_agent_code_component__WEBPACK_IMPORTED_MODULE_9__["ConfirmAgentBottomSheetComponent"])
+                .afterDismissed()
+                .subscribe(function (result) {
+                if (!result) {
+                    _this.closeAndSaveModel();
+                }
+                else {
+                    _this.matchAgentBySalesCode = true;
+                    _this.closeAndSaveModel();
+                }
+            });
+        }
+        else {
+            this.closeAndSaveModel();
+        }
+    };
+    EditImportModelComponent.prototype.checkMatchByCode = function () {
+        var _this = this;
+        return rxjs__WEBPACK_IMPORTED_MODULE_8__["Observable"].create(function (ob) {
+            if (!_this.matchAgentBySalesCode) {
+                _this.bs.open(_app_imports_bottom_sheets_confirm_agent_code_component__WEBPACK_IMPORTED_MODULE_9__["ConfirmAgentBottomSheetComponent"])
+                    .afterDismissed()
+                    .subscribe(function (result) {
+                    if (!result) {
+                        ob.complete();
+                    }
+                    else {
+                        _this.matchAgentBySalesCode = true;
+                        ob.complete();
+                    }
+                });
+            }
+            else {
+                ob.complete();
+            }
+        });
+    };
+    EditImportModelComponent.prototype.checkForMissingSalesFields = function () {
+        return rxjs__WEBPACK_IMPORTED_MODULE_8__["Observable"].create(function (ob) {
+            /** TODO: NEED TO RETURN A LIST OF THE FIELDS USER DIDN'T FINISH */
+        });
     };
     EditImportModelComponent.prototype.tabAdd = function (event, index) {
         if (event.keyCode == 9 && index == (this.map.length - 1)) {
@@ -14188,23 +14164,28 @@ var EditImportModelComponent = /** @class */ (function () {
             this.addMapRow();
         }
     };
+    EditImportModelComponent.prototype.fieldTypeChanged = function (event, fieldType) {
+        console.dir([event, fieldType]);
+    };
     EditImportModelComponent.prototype.prepareModel = function () {
-        var map = this.form.value.map;
-        if (map.key == null || map.value == null)
-            map.pop();
+        var importModelId = this.model ? this.model.importModelId : null;
         return {
-            importModelId: this.model.importModelId,
+            importModelId: importModelId,
             userId: this.user.id,
             clientId: this.user.selectedClient.clientId,
+            campaignId: this.form.value.campaign,
             shortDesc: this.form.value.shortDesc,
             fullDesc: this.form.value.fullDesc,
-            map: map,
+            map: this.map.value,
+            matchByAgentCode: this.matchAgentBySalesCode,
+            splitCustomerName: this.splitCustomerName,
         };
     };
     EditImportModelComponent.prototype.createForm = function () {
         return this.fb.group({
-            shortDesc: this.fb.control('', [_angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].required]),
+            shortDesc: this.fb.control('', [_angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required]),
             fullDesc: this.fb.control(''),
+            campaignId: this.fb.control('', [_angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required]),
             map: this.fb.array([]),
         });
     };
@@ -14218,10 +14199,11 @@ var EditImportModelComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./edit-import-model.component.html */ "./src/app/imports/dialogs/edit-import-model/edit-import-model.component.html"),
             styles: [__webpack_require__(/*! ./edit-import-model.component.scss */ "./src/app/imports/dialogs/edit-import-model/edit-import-model.component.scss")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__param"](2, Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Inject"])(_angular_material__WEBPACK_IMPORTED_MODULE_3__["MAT_DIALOG_DATA"])),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormBuilder"],
-            _angular_material__WEBPACK_IMPORTED_MODULE_3__["MatDialogRef"], Object, _app_session_service__WEBPACK_IMPORTED_MODULE_4__["SessionService"],
-            _app_imports_imports_service__WEBPACK_IMPORTED_MODULE_5__["ImportsService"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__param"](2, Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Inject"])(_angular_material__WEBPACK_IMPORTED_MODULE_4__["MAT_DIALOG_DATA"])),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_forms__WEBPACK_IMPORTED_MODULE_3__["FormBuilder"],
+            _angular_material__WEBPACK_IMPORTED_MODULE_4__["MatDialogRef"], Object, _app_session_service__WEBPACK_IMPORTED_MODULE_5__["SessionService"],
+            _app_imports_imports_service__WEBPACK_IMPORTED_MODULE_6__["ImportsService"],
+            _angular_material__WEBPACK_IMPORTED_MODULE_4__["MatBottomSheet"]])
     ], EditImportModelComponent);
     return EditImportModelComponent;
 }());
@@ -14237,7 +14219,7 @@ var EditImportModelComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n<div class=\"container\">\n  <div class=\"row\">\n    <div class=\"col-md-12\">\n        <mat-card class=\"page-header-accent\">\n          <mat-card-header>\n            <h3>Import Models</h3>\n          </mat-card-header>\n          <mat-card-content>\n            Create an Import Model to map the fields from a sales reporting spreadsheet or CSV to a sale in the commission system. \n            In order to do so, add fields and type the exact column header description and then select from the paired dropdown to \n            match it to the corresponding sale field in the commission system. \n          </mat-card-content>\n        </mat-card>\n    </div>\n  </div>\n\n  <div class=\"row\">\n    <div class=\"col-md-12\">\n      <mat-table [dataSource]=\"importModels\">\n        <ng-container matColumnDef=\"detailView\">\n          <mat-header-cell *matHeaderCellDef>&nbsp;</mat-header-cell>\n          <mat-cell *matCellDef=\"let item\">\n            <button type=\"button\" mat-icon-button class=\"text-muted\" (click)=\"editImportModel(item)\">\n              <mat-icon>remove_red_eye</mat-icon>\n            </button>\n          </mat-cell>\n        </ng-container>\n\n        <ng-container matColumnDef=\"isActive\">\n          <mat-header-cell *matHeaderCellDef class=\"d-flex justify-content-center\">Active</mat-header-cell>\n          <mat-cell *matCellDef=\"let item\" class=\"d-flex justify-content-center\">\n            <mat-checkbox [checked]=\"item.deletedAt == null\" (change)=\"changeActiveStatus($event)\"></mat-checkbox>\n          </mat-cell>\n        </ng-container>\n\n        <ng-container matColumnDef=\"shortDesc\">\n          <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>\n          <mat-cell *matCellDef=\"let item\">{{item.shortDesc}}</mat-cell>\n        </ng-container>\n\n        <ng-container matColumnDef=\"modifiedBy\">\n          <mat-header-cell *matHeaderCellDef>Owner</mat-header-cell>\n          <mat-cell *matCellDef=\"let item\">{{item.userId}}</mat-cell>\n        </ng-container>\n\n        <ng-container matColumnDef=\"createdAt\">\n          <mat-header-cell *matHeaderCellDef>Created</mat-header-cell>\n          <mat-cell *matCellDef=\"let item\">{{item.createdAt | date:'shortDate'}}</mat-cell>\n        </ng-container>\n\n        <ng-container matColumnDef=\"updatedAt\">\n          <mat-header-cell *matHeaderCellDef>Modified Last</mat-header-cell>\n          <mat-cell *matCellDef=\"let item\">{{item.updatedAt | date:'shortDate'}}</mat-cell>\n        </ng-container>\n\n        <mat-header-row *matHeaderRowDef=\"['detailView', 'isActive', 'shortDesc', 'modifiedBy', 'createdAt', 'updatedAt']\"></mat-header-row>\n        <mat-row *matRowDef=\"let row; columns: ['detailView', 'isActive', 'shortDesc', 'modifiedBy', 'createdAt', 'updatedAt'];\"></mat-row>\n      </mat-table>\n    </div>\n  </div>\n</div>\n\n<div class=\"d-flex justify-content-center\">\n    <vs-spreadsheet menu=\"true\" [editLine]=\"false\"></vs-spreadsheet>\n</div>\n\n<vs-float-button\n  mat-icon=\"add\"\n  color=\"accent\"\n  (callback)=\"addImportModel()\"\n  [isOpen]=\"isFabOpen$\"\n></vs-float-button>"
+module.exports = "<div class=\"container\">\n    <div class=\"row\">\n        <div class=\"col-md-12\">\n            <mat-card class=\"page-header-accent\">\n                <h3 mat-card-title>Import Models</h3>\n                <mat-card-content>\n                    Create an Import Model to map the fields from a sales reporting spreadsheet or CSV to a sale in the\n                    commission system.\n                    In order to do so, add fields and type the exact column header description and then select from the\n                    paired dropdown to\n                    match it to the corresponding sale field in the commission system.\n                </mat-card-content>\n            </mat-card>\n        </div>\n    </div>\n\n    <div class=\"row\">\n        <div class=\"col-md-12\">\n            <mat-table [dataSource]=\"importModels\">\n                <ng-container matColumnDef=\"detailView\">\n                    <mat-header-cell *matHeaderCellDef>&nbsp;</mat-header-cell>\n                    <mat-cell *matCellDef=\"let item\">\n                        <button type=\"button\" mat-icon-button class=\"text-muted\" (click)=\"editImportModel(item)\">\n                            <mat-icon>remove_red_eye</mat-icon>\n                        </button>\n                    </mat-cell>\n                </ng-container>\n\n                <ng-container matColumnDef=\"isActive\">\n                    <mat-header-cell *matHeaderCellDef class=\"d-flex justify-content-center\">Active</mat-header-cell>\n                    <mat-cell *matCellDef=\"let item\" class=\"d-flex justify-content-center\">\n                        <mat-checkbox [checked]=\"item.deletedAt == null\" (change)=\"changeActiveStatus($event)\">\n                        </mat-checkbox>\n                    </mat-cell>\n                </ng-container>\n\n                <ng-container matColumnDef=\"shortDesc\">\n                    <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>\n                    <mat-cell *matCellDef=\"let item\">{{item.shortDesc}}</mat-cell>\n                </ng-container>\n\n                <ng-container matColumnDef=\"modifiedBy\">\n                    <mat-header-cell *matHeaderCellDef>Owner</mat-header-cell>\n                    <mat-cell *matCellDef=\"let item\">{{item.userId}}</mat-cell>\n                </ng-container>\n\n                <ng-container matColumnDef=\"createdAt\">\n                    <mat-header-cell *matHeaderCellDef>Created</mat-header-cell>\n                    <mat-cell *matCellDef=\"let item\">{{item.createdAt | date:'shortDate'}}</mat-cell>\n                </ng-container>\n\n                <ng-container matColumnDef=\"updatedAt\">\n                    <mat-header-cell *matHeaderCellDef>Modified Last</mat-header-cell>\n                    <mat-cell *matCellDef=\"let item\">{{item.updatedAt | date:'shortDate'}}</mat-cell>\n                </ng-container>\n\n                <mat-header-row\n                    *matHeaderRowDef=\"['detailView', 'isActive', 'shortDesc', 'modifiedBy', 'createdAt', 'updatedAt']\">\n                </mat-header-row>\n                <mat-row\n                    *matRowDef=\"let row; columns: ['detailView', 'isActive', 'shortDesc', 'modifiedBy', 'createdAt', 'updatedAt'];\">\n                </mat-row>\n            </mat-table>\n        </div>\n    </div>\n</div>\n\n<vs-float-button mat-icon=\"add\" color=\"accent\" (callback)=\"addImportModel()\" [isOpen]=\"isFabOpen$\"></vs-float-button>"
 
 /***/ }),
 
@@ -14267,10 +14249,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
 /* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/material */ "./node_modules/@angular/material/esm5/material.es5.js");
 /* harmony import */ var _imports_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../imports.service */ "./src/app/imports/imports.service.ts");
-/* harmony import */ var _dialogs_add_import_model_add_import_model_component__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../dialogs/add-import-model/add-import-model.component */ "./src/app/imports/dialogs/add-import-model/add-import-model.component.ts");
-/* harmony import */ var _app_session_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @app/session.service */ "./src/app/session.service.ts");
-/* harmony import */ var _dialogs_edit_import_model_edit_import_model_component__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../dialogs/edit-import-model/edit-import-model.component */ "./src/app/imports/dialogs/edit-import-model/edit-import-model.component.ts");
-
+/* harmony import */ var _app_session_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @app/session.service */ "./src/app/session.service.ts");
+/* harmony import */ var _dialogs_edit_import_model_edit_import_model_component__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../dialogs/edit-import-model/edit-import-model.component */ "./src/app/imports/dialogs/edit-import-model/edit-import-model.component.ts");
 
 
 
@@ -14291,15 +14271,16 @@ var ImportModelsComponent = /** @class */ (function () {
         this.service.getImportModels().subscribe(function (models) {
             _this.importModels.next(models);
         });
+        this.service.fetchCampaigns();
     };
     ImportModelsComponent.prototype.addImportModel = function () {
         var _this = this;
         this.isFabOpen$.next(true);
-        this.dialog.open(_dialogs_add_import_model_add_import_model_component__WEBPACK_IMPORTED_MODULE_5__["AddImportModelComponent"], {
+        this.dialog.open(_dialogs_edit_import_model_edit_import_model_component__WEBPACK_IMPORTED_MODULE_6__["EditImportModelComponent"], {
             data: {
-                user: this.user,
+            // user: this.user,
             },
-            width: '40vw',
+            width: '60vw',
             autoFocus: false,
         })
             .afterClosed()
@@ -14319,7 +14300,7 @@ var ImportModelsComponent = /** @class */ (function () {
     ImportModelsComponent.prototype.editImportModel = function (model) {
         var _this = this;
         this.isFabOpen$.next(true);
-        this.dialog.open(_dialogs_edit_import_model_edit_import_model_component__WEBPACK_IMPORTED_MODULE_7__["EditImportModelComponent"], {
+        this.dialog.open(_dialogs_edit_import_model_edit_import_model_component__WEBPACK_IMPORTED_MODULE_6__["EditImportModelComponent"], {
             data: {
                 importModel: model,
             },
@@ -14353,7 +14334,7 @@ var ImportModelsComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./import-models.component.html */ "./src/app/imports/import-models/import-models.component.html"),
             styles: [__webpack_require__(/*! ./import-models.component.scss */ "./src/app/imports/import-models/import-models.component.scss")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_imports_service__WEBPACK_IMPORTED_MODULE_4__["ImportsService"], _angular_material__WEBPACK_IMPORTED_MODULE_3__["MatDialog"], _app_session_service__WEBPACK_IMPORTED_MODULE_6__["SessionService"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_imports_service__WEBPACK_IMPORTED_MODULE_4__["ImportsService"], _angular_material__WEBPACK_IMPORTED_MODULE_3__["MatDialog"], _app_session_service__WEBPACK_IMPORTED_MODULE_5__["SessionService"]])
     ], ImportModelsComponent);
     return ImportModelsComponent;
 }());
@@ -14382,9 +14363,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
 /* harmony import */ var _import_models_import_models_component__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./import-models/import-models.component */ "./src/app/imports/import-models/import-models.component.ts");
 /* harmony import */ var _app_auth_guard__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @app/auth.guard */ "./src/app/auth.guard.ts");
-/* harmony import */ var _dialogs_add_import_model_add_import_model_component__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./dialogs/add-import-model/add-import-model.component */ "./src/app/imports/dialogs/add-import-model/add-import-model.component.ts");
-/* harmony import */ var _dialogs_edit_import_model_edit_import_model_component__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./dialogs/edit-import-model/edit-import-model.component */ "./src/app/imports/dialogs/edit-import-model/edit-import-model.component.ts");
-/* harmony import */ var _app_spreadsheet_spreadsheet_module__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @app/spreadsheet/spreadsheet.module */ "./src/app/spreadsheet/spreadsheet.module.ts");
+/* harmony import */ var _dialogs_edit_import_model_edit_import_model_component__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./dialogs/edit-import-model/edit-import-model.component */ "./src/app/imports/dialogs/edit-import-model/edit-import-model.component.ts");
+/* harmony import */ var _app_spreadsheet_spreadsheet_module__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @app/spreadsheet/spreadsheet.module */ "./src/app/spreadsheet/spreadsheet.module.ts");
+/* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @angular/material */ "./node_modules/@angular/material/esm5/material.es5.js");
+/* harmony import */ var _bottom_sheets_confirm_agent_code_component__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./bottom-sheets/confirm-agent-code.component */ "./src/app/imports/bottom-sheets/confirm-agent-code.component.ts");
+
 
 
 
@@ -14409,8 +14392,8 @@ var ImportsModule = /** @class */ (function () {
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["NgModule"])({
             declarations: [
                 _import_models_import_models_component__WEBPACK_IMPORTED_MODULE_8__["ImportModelsComponent"],
-                _dialogs_add_import_model_add_import_model_component__WEBPACK_IMPORTED_MODULE_10__["AddImportModelComponent"],
-                _dialogs_edit_import_model_edit_import_model_component__WEBPACK_IMPORTED_MODULE_11__["EditImportModelComponent"],
+                _dialogs_edit_import_model_edit_import_model_component__WEBPACK_IMPORTED_MODULE_10__["EditImportModelComponent"],
+                _bottom_sheets_confirm_agent_code_component__WEBPACK_IMPORTED_MODULE_13__["ConfirmAgentBottomSheetComponent"],
             ],
             imports: [
                 _angular_common__WEBPACK_IMPORTED_MODULE_2__["CommonModule"],
@@ -14419,12 +14402,15 @@ var ImportsModule = /** @class */ (function () {
                 _app_fab_float_btn_fab_float_btn_module__WEBPACK_IMPORTED_MODULE_6__["FabFloatBtnModule"],
                 _angular_forms__WEBPACK_IMPORTED_MODULE_7__["FormsModule"],
                 _angular_forms__WEBPACK_IMPORTED_MODULE_7__["ReactiveFormsModule"],
-                _app_spreadsheet_spreadsheet_module__WEBPACK_IMPORTED_MODULE_12__["SpreadsheetModule"],
+                _app_spreadsheet_spreadsheet_module__WEBPACK_IMPORTED_MODULE_11__["SpreadsheetModule"],
                 _angular_router__WEBPACK_IMPORTED_MODULE_3__["RouterModule"].forChild(routes)
             ],
             entryComponents: [
-                _dialogs_add_import_model_add_import_model_component__WEBPACK_IMPORTED_MODULE_10__["AddImportModelComponent"],
-                _dialogs_edit_import_model_edit_import_model_component__WEBPACK_IMPORTED_MODULE_11__["EditImportModelComponent"]
+                _dialogs_edit_import_model_edit_import_model_component__WEBPACK_IMPORTED_MODULE_10__["EditImportModelComponent"],
+                _bottom_sheets_confirm_agent_code_component__WEBPACK_IMPORTED_MODULE_13__["ConfirmAgentBottomSheetComponent"]
+            ],
+            providers: [
+                { provide: _angular_material__WEBPACK_IMPORTED_MODULE_12__["MAT_BOTTOM_SHEET_DEFAULT_OPTIONS"], useValue: { hasBackdrop: false } }
             ]
         })
     ], ImportsModule);

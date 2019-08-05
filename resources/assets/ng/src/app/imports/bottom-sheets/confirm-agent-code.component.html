@@ -1,0 +1,15 @@
+
+<h5>
+    Please confirm how we should try to match sales to your agents.
+</h5>
+<mat-action-list>
+    <button mat-list-item (click)="useCode();">
+        <span mat-line>Use Sales Code</span>
+        <span mat-line class="text-black-50">Better matching probability</span>
+    </button>
+
+    <button mat-list-item (click)="confirmNoCode();">
+        <span mat-line>Use Agent Name</span>
+        <span mat-line class="text-black-50">I don't have their sales codes entered into the system</span>
+    </button>
+</mat-action-list>

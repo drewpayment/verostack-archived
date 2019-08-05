@@ -3,7 +3,6 @@ import { BehaviorSubject } from 'rxjs';
 import { MatCheckboxChange, MatDialog } from '@angular/material';
 import { ImportModel, User } from '@app/models';
 import { ImportsService } from '../imports.service';
-import { AddImportModelComponent } from '../dialogs/add-import-model/add-import-model.component';
 import { SessionService } from '@app/session.service';
 import { EditImportModelComponent } from '../dialogs/edit-import-model/edit-import-model.component';
 
@@ -24,15 +23,17 @@ export class ImportModelsComponent implements OnInit {
         this.service.getImportModels().subscribe(models => {
             this.importModels.next(models);
         });
+
+        this.service.fetchCampaigns();
     }
 
     addImportModel() {
         this.isFabOpen$.next(true);
-        this.dialog.open(AddImportModelComponent, {
+        this.dialog.open(EditImportModelComponent, {
             data: {
-                user: this.user,
+                // user: this.user,
             },
-            width: '40vw',
+            width: '60vw',
             autoFocus: false,
         })
         .afterClosed()
