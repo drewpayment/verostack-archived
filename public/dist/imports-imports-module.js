@@ -14280,7 +14280,7 @@ var ImportModelsComponent = /** @class */ (function () {
             data: {
             // user: this.user,
             },
-            width: '60vw',
+            width: '50vw',
             autoFocus: false,
         })
             .afterClosed()
@@ -14304,7 +14304,7 @@ var ImportModelsComponent = /** @class */ (function () {
             data: {
                 importModel: model,
             },
-            width: '40vw',
+            width: '50vw',
             autoFocus: false,
         })
             .afterClosed()
@@ -14435,9 +14435,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
 /* harmony import */ var _env_environment__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @env/environment */ "./src/environments/environment.ts");
-/* harmony import */ var _app_session_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @app/session.service */ "./src/app/session.service.ts");
-/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
-/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
+/* harmony import */ var _app_session_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @app/session.service */ "./src/app/session.service.ts");
+/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+
 
 
 
@@ -14447,10 +14449,17 @@ __webpack_require__.r(__webpack_exports__);
 
 var ImportsService = /** @class */ (function () {
     function ImportsService(http, session, router) {
+        var _this = this;
         this.http = http;
         this.session = session;
         this.router = router;
         this.api = _env_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].apiUrl + 'api';
+        this.user = new rxjs__WEBPACK_IMPORTED_MODULE_4__["BehaviorSubject"](null);
+        this.session.getUserItem().subscribe(function (user) {
+            if (!user)
+                return;
+            _this.user.next(user);
+        });
     }
     /**
      * Get all ImportModels.
@@ -14468,25 +14477,31 @@ var ImportsService = /** @class */ (function () {
     };
     ImportsService.prototype.fetchCampaigns = function () {
         var _this = this;
-        this.session.getUserItem().subscribe(function (user) {
-            var clientId = user.selectedClient.clientId;
+        var sub = this.user.subscribe(function (user) {
+            var clientId = user.selectedClient != null
+                ? user.selectedClient.clientId
+                : user.sessionUser.sessionClient;
             var url = _this.api + "/campaigns/clients/" + clientId + "/active/true";
-            _this.campaigns = _this.http.get(url).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["shareReplay"])(1));
+            _this.campaigns = _this.http.get(url).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_6__["shareReplay"])(1));
+            sub.unsubscribe();
         });
     };
     ImportsService.prototype.fetchUtilities = function () {
         var _this = this;
-        this.session.getUserItem().subscribe(function (user) {
-            var clientId = user.selectedClient.clientId;
+        var sub = this.user.subscribe(function (user) {
+            var clientId = user.selectedClient != null
+                ? user.selectedClient.clientId
+                : user.sessionUser.sessionClient;
             var url = _this.api + "/clients/" + clientId + "/utilities";
-            _this.utilities = _this.http.get(url).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["shareReplay"])(1));
+            _this.utilities = _this.http.get(url).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_6__["shareReplay"])(1));
+            sub.unsubscribe();
         });
     };
     ImportsService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
             providedIn: 'root'
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"], _app_session_service__WEBPACK_IMPORTED_MODULE_4__["SessionService"], _angular_router__WEBPACK_IMPORTED_MODULE_6__["Router"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"], _app_session_service__WEBPACK_IMPORTED_MODULE_5__["SessionService"], _angular_router__WEBPACK_IMPORTED_MODULE_7__["Router"]])
     ], ImportsService);
     return ImportsService;
 }());

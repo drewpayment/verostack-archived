@@ -33,7 +33,7 @@ export class ImportModelsComponent implements OnInit {
             data: {
                 // user: this.user,
             },
-            width: '60vw',
+            width: '50vw',
             autoFocus: false,
         })
         .afterClosed()
@@ -58,7 +58,7 @@ export class ImportModelsComponent implements OnInit {
             data: {
                 importModel: model,
             },
-            width: '40vw',
+            width: '50vw',
             autoFocus: false,
         })
         .afterClosed()

@@ -5,6 +5,7 @@ import {SidenavService} from '@app/sidenav/sidenav.service';
 import { Location } from '@angular/common';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
+import { UserRole } from '@app/models/role.model';
 
 @Component({
     selector: 'side-nav',
@@ -53,5 +54,11 @@ export class SidenavComponent implements OnInit {
 
     toggleSidenav(): void {
         this.navService.toggle();
+    }
+
+    get hasMyWorkMenuItem(): boolean {
+        return this.user && this.user.agent && this.user.role && this.user.role.role < UserRole.companyAdmin
+            && this.user.role.role != UserRole.manager && this.user.role.role != UserRole.regionalManager
+            && this.user.agent.isActive;
     }
 }

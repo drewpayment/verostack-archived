@@ -100,7 +100,7 @@ export class DashboardComponent implements OnInit, AfterContentInit {
             this.store.user = u;
             this.user = of(u);
 
-            if (u.role.role >= this.roleType.companyAdmin) {
+            if (u.role && u.role.role >= this.roleType.companyAdmin) {
                 this.agentsService.getAgentsByClient(u.sessionUser.sessionClient)
                     .subscribe((users:User[]) => {
                         this.store.users = users;

@@ -3666,13 +3666,19 @@ var ClientSelectorComponent = /** @class */ (function () {
         this.location = location;
         this.router = router;
         this.clientControl = new _angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormControl"]('', [_angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].required]);
+        this.subscriptions = [];
         this.compareFn = this.compareByValue;
     }
     ClientSelectorComponent.prototype.ngOnInit = function () {
         var _this = this;
-        this.userService.user.subscribe(function (next) {
+        this.subscriptions.push(this.userService.user.subscribe(function (next) {
             _this.user = next;
             _this.clientControl.setValue(_this.user.sessionUser.sessionClient, { emitEvent: false });
+        }));
+    };
+    ClientSelectorComponent.prototype.ngOnDestroy = function () {
+        this.subscriptions.forEach(function (s, i, a) {
+            s.unsubscribe();
         });
     };
     ClientSelectorComponent.prototype.cancel = function () {
@@ -4844,6 +4850,7 @@ var DailySaleTrackerComponent = /** @class */ (function () {
         this.showNotes = false;
         this.searchAgentsCtrl = new _angular_forms__WEBPACK_IMPORTED_MODULE_15__["FormControl"]('');
         this.agentInputs = [];
+        this.subs = [];
         /** why are we doing this? why not just use an observable w/async pipe to dataSource$? */
         this.dataSource$.subscribe(function (next) {
             if (next == null)
@@ -4881,7 +4888,7 @@ var DailySaleTrackerComponent = /** @class */ (function () {
     DailySaleTrackerComponent.prototype.ngOnInit = function () {
         var _this = this;
         this.createForm();
-        this.session.getUserItem().subscribe(function (u) {
+        this.subs.push(this.session.getUserItem().subscribe(function (u) {
             _this.userInfo = u;
             Object(rxjs__WEBPACK_IMPORTED_MODULE_7__["forkJoin"])(_this.clientService.getSaleStatuses(_this.userInfo.sessionUser.sessionClient), _this.campaignService.getCampaigns(_this.userInfo.sessionUser.sessionClient)).subscribe(function (_a) {
                 var saleStatuses = _a[0], campaigns = _a[1];
@@ -4907,7 +4914,7 @@ var DailySaleTrackerComponent = /** @class */ (function () {
                 }
                 _this.refreshDailySales(_this.startDate, _this.endDate);
             });
-        });
+        }));
         this.agentService
             .getAgents(true)
             .then(function (agents) {
@@ -4915,6 +4922,11 @@ var DailySaleTrackerComponent = /** @class */ (function () {
             _this.filteredAgents = Object(rxjs__WEBPACK_IMPORTED_MODULE_7__["of"])(_this.agents);
         })
             .catch(this.msg.showWebApiError);
+    };
+    DailySaleTrackerComponent.prototype.ngOnDestroy = function () {
+        this.subs.forEach(function (s) {
+            s.unsubscribe();
+        });
     };
     DailySaleTrackerComponent.prototype.ngAfterViewInit = function () {
         this.form.valueChanges.subscribe(function (value) {
@@ -6132,7 +6144,7 @@ var DashboardComponent = /** @class */ (function () {
         this.session.getUserItem().subscribe(function (u) {
             _this.store.user = u;
             _this.user = Object(rxjs__WEBPACK_IMPORTED_MODULE_4__["of"])(u);
-            if (u.role.role >= _this.roleType.companyAdmin) {
+            if (u.role && u.role.role >= _this.roleType.companyAdmin) {
                 _this.agentsService.getAgentsByClient(u.sessionUser.sessionClient)
                     .subscribe(function (users) {
                     _this.store.users = users;
@@ -7285,7 +7297,10 @@ var HeaderComponent = /** @class */ (function () {
             if (user == null)
                 return;
             _this.user = user;
-            _this.session.setNavigationTitle(_this.user.sessionUser.client.name);
+            var client = _this.user.sessionUser.client;
+            if (client && client.name) {
+                _this.session.setNavigationTitle(client.name);
+            }
             _this.menuTitle = _this.session.navigationTitle$;
             _this.showClientSelector = _this.user.clients.length > 1 && _this.user.role.role > _app_models__WEBPACK_IMPORTED_MODULE_11__["UserType"].HumanResources;
             _this.isAdmin = _this.user.role.role > _app_models__WEBPACK_IMPORTED_MODULE_11__["UserType"].HumanResources;
@@ -13001,7 +13016,7 @@ var SharedModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<mat-toolbar color=\"primary\" *ngIf=\"user != null\">\n    <mat-toolbar-row>\n        <i class=\"material-icons md-48 mt-3\">account_circle</i>\n        <span class=\"fill-remaining-space\"></span>\n        <button mat-button (click)=\"toggleSidenav()\" class=\"sidenav-close\">\n            <i class=\"material-icons\">close</i>\n        </button>\n    </mat-toolbar-row>\n    <mat-toolbar-row class=\"d-flex flex-column align-items-start mb-2 mt-3\">\n        {{user.firstName}} {{user.lastName}}\n        <small>{{user.email}}</small>\n    </mat-toolbar-row>\n</mat-toolbar>\n\n<mat-nav-list *ngIf=\"user != null\" #navList>\n    <!-- all users -->\n    <a mat-list-item routerLink=\"my-information\" routerLinkActive=\"mat-router-link-active\">\n        <mat-icon>info_outline</mat-icon>\n        <span>My Information</span>\n    </a>\n    <a mat-list-item [routerLink]=\"['users', 'payroll', 'list']\" *ngIf=\"user?.role?.role < roleType.companyAdmin\">\n        <mat-icon>attach_money</mat-icon>\n        <span>My Earnings</span>\n    </a>\n    <a mat-list-item \n        routerLink=\"daily-tracker\" \n        routerLinkActive=\"mat-router-link-active\"\n        *ngIf=\"user?.role?.role < roleType.companyAdmin && user?.role?.isSalesAdmin && user?.role?.role != roleType.manager && user?.role?.role != roleType.regManager\"\n    >\n        <mat-icon>ballot</mat-icon>\n        <span>Daily Tracker</span>\n    </a>\n\n    <!-- agents only -->\n    <ng-container *ngIf=\"user?.role?.role < roleType.companyAdmin && user?.role?.role != roleType.manager && user?.role?.role != roleType.regManager\">\n        <a mat-list-item routerLink=\"dashboard\" routerLinkActive=\"mat-router-link-active\">\n            <mat-icon>pie_chart</mat-icon>\n            <span>My Work</span>\n        </a>\n    </ng-container>\n\n    <!-- do we have hr level links? -->\n\n    <!-- COMPANY ADMIN || SYSTEM ADMIN ONLY -->\n    <ng-container *ngIf=\"user?.role?.role >= roleType.companyAdmin\">\n        <!-- THIS WHOLE COMPONENT NEEDS TO BE REWORKED AFTER SO MANY SCHEMA CHANGES\n        <a mat-list-item routerLink=\"dashboard\" routerLinkActive=\"mat-router-link-active\">\n            <mat-icon>pie_chart</mat-icon>\n            <span>Analyze</span>\n        </a> -->\n        <a mat-list-item routerLink=\"imports\" routerLinkActive=\"mat-router-link-active\">\n            <mat-icon>cloud_upload</mat-icon>\n            <span>Imports</span>\n        </a>\n        <a mat-list-item routerLink=\"daily-tracker\" routerLinkActive=\"mat-router-link-active\">\n            <mat-icon>ballot</mat-icon>\n            <span>Sales</span>\n        </a>\n        <a mat-list-item routerLink=\"client-information\" routerLinkActive=\"mat-router-link-active\">\n            <mat-icon>business</mat-icon>\n            <span>Company</span>\n        </a>\n        <mat-accordion mat-list-item class=\"navigation-accordion\">\n            <mat-expansion-panel [expanded]=\"expandPayrollLinks\" (opened)=\"expandPayrollLinks=!expandPayrollLinks;\"\n                (closed)=\"expandPayrollLinks=!expandPayrollLinks;\">\n                <mat-expansion-panel-header [class.expanded-menu-item]=\"expandPayrollLinks\">\n                    <mat-panel-title>\n                        <mat-icon>account_balance</mat-icon>\n                        <span>Payroll</span>\n                    </mat-panel-title>\n                </mat-expansion-panel-header>\n\n                <mat-nav-list>\n                    <a mat-list-item routerLink=\"admin/pay/pay-cycles\" routerLinkActive=\"mat-router-link-active\">\n                        <mat-icon>assignment</mat-icon>\n                        <span>Pay Runs</span>\n                    </a>\n                    <a mat-list-item routerLink=\"admin/pay/manage\" routerLinkActive=\"mat-router-link-active\">\n                        <mat-icon>date_range</mat-icon>\n                        <span>Release Pay</span>\n                    </a>\n                    <a mat-list-item [routerLink]=\"['admin', 'pay', 'paycheck-list']\" routerLinkActive=\"mat-router-link-active\">\n                        <mat-icon>local_atm</mat-icon>\n                        <span>View Paychecks</span>\n                    </a>\n                </mat-nav-list>\n            </mat-expansion-panel>\n        </mat-accordion>\n        \n        <mat-accordion mat-list-item class=\"navigation-accordion\">\n            <mat-expansion-panel [expanded]=\"expandPeopleLinks\" (opened)=\"expandPeopleLinks=!expandPeopleLinks;\" \n                (closed)=\"expandPeopleLinks=!expandPeopleLinks;\">\n                <mat-expansion-panel-header [class.expanded-menu-item]=\"expandPeopleLinks\">\n                    <mat-panel-title>\n                        <mat-icon>{{ expandPeopleLinks ? 'people_outline' : 'group_add' }}</mat-icon>\n                        <span>People</span>\n                    </mat-panel-title>\n                </mat-expansion-panel-header>\n\n                <mat-nav-list>\n                    <a mat-list-item routerLink=\"agents\" routerLinkActive=\"mat-router-link-active\">\n                        <mat-icon>person</mat-icon>\n                        <span>Agents</span>\n                    </a>\n\n                    <a mat-list-item [routerLink]=\"['/contacts']\" routerLinkActive=\"mat-router-link-active\">\n                        <mat-icon>contacts</mat-icon>\n                        <span>Contacts</span>\n                    </a>\n                </mat-nav-list>\n            </mat-expansion-panel>\n        </mat-accordion>\n        \n        <a mat-list-item routerLink=\"campaigns\" routerLinkActive=\"mat-router-link-active\">\n            <mat-icon>assignment</mat-icon>\n            <span>Campaigns</span>\n        </a>\n        \n        <!-- end of admin links -->\n    </ng-container>\n\n    <ng-container *ngIf=\"user?.role?.role == roleType.manager || user?.role?.role == roleType.regManager\">\n        <mat-accordion mat-list-item class=\"navigation-accordion\">\n            <mat-expansion-panel [expanded]=\"expandPeopleLinks\" (opened)=\"expandPeopleLinks=!expandPeopleLinks;\" \n                (closed)=\"expandPeopleLinks=!expandPeopleLinks;\">\n                <mat-expansion-panel-header [class.expanded-menu-item]=\"expandPeopleLinks\">\n                    <mat-panel-title>\n                        <mat-icon>{{ expandPeopleLinks ? 'people_outline' : 'group_add' }}</mat-icon>\n                        <span>People</span>\n                    </mat-panel-title>\n                </mat-expansion-panel-header>\n\n                <mat-nav-list>\n                    <a mat-list-item routerLink=\"agents\" routerLinkActive=\"mat-router-link-active\">\n                        <mat-icon>person</mat-icon>\n                        <span>Agents</span>\n                    </a>\n\n                    <a mat-list-item [routerLink]=\"['/contacts']\" routerLinkActive=\"mat-router-link-active\">\n                        <mat-icon>contacts</mat-icon>\n                        <span>Contacts</span>\n                    </a>\n                </mat-nav-list>\n            </mat-expansion-panel>\n        </mat-accordion>\n    </ng-container>\n\n    \n</mat-nav-list>"
+module.exports = "<mat-toolbar color=\"primary\" *ngIf=\"user != null\">\n    <mat-toolbar-row>\n        <i class=\"material-icons md-48 mt-3\">account_circle</i>\n        <span class=\"fill-remaining-space\"></span>\n        <button mat-button (click)=\"toggleSidenav()\" class=\"sidenav-close\">\n            <i class=\"material-icons\">close</i>\n        </button>\n    </mat-toolbar-row>\n    <mat-toolbar-row class=\"d-flex flex-column align-items-start mb-2 mt-3\">\n        {{user.firstName}} {{user.lastName}}\n        <small>{{user.email}}</small>\n    </mat-toolbar-row>\n</mat-toolbar>\n\n<mat-nav-list *ngIf=\"user != null\" #navList>\n    <!-- all users -->\n    <a mat-list-item routerLink=\"my-information\" routerLinkActive=\"mat-router-link-active\">\n        <mat-icon>info_outline</mat-icon>\n        <span>My Information</span>\n    </a>\n    <a mat-list-item [routerLink]=\"['users', 'payroll', 'list']\" *ngIf=\"user?.role?.role < roleType.companyAdmin\">\n        <mat-icon>attach_money</mat-icon>\n        <span>My Earnings</span>\n    </a>\n    <a mat-list-item \n        routerLink=\"daily-tracker\" \n        routerLinkActive=\"mat-router-link-active\"\n        *ngIf=\"user?.role?.role < roleType.companyAdmin && user?.role?.isSalesAdmin && user?.role?.role != roleType.manager && user?.role?.role != roleType.regManager\"\n    >\n        <mat-icon>ballot</mat-icon>\n        <span>Daily Tracker</span>\n    </a>\n\n    <!-- agents only -->\n    <ng-container *ngIf=\"hasMyWorkMenuItem\">\n        <a mat-list-item routerLink=\"dashboard\" routerLinkActive=\"mat-router-link-active\">\n            <mat-icon>pie_chart</mat-icon>\n            <span>My Work</span>\n        </a>\n    </ng-container>\n\n    <!-- do we have hr level links? -->\n\n    <!-- COMPANY ADMIN || SYSTEM ADMIN ONLY -->\n    <ng-container *ngIf=\"user?.role?.role >= roleType.companyAdmin\">\n        <!-- THIS WHOLE COMPONENT NEEDS TO BE REWORKED AFTER SO MANY SCHEMA CHANGES\n        <a mat-list-item routerLink=\"dashboard\" routerLinkActive=\"mat-router-link-active\">\n            <mat-icon>pie_chart</mat-icon>\n            <span>Analyze</span>\n        </a> -->\n        <a mat-list-item routerLink=\"imports\" routerLinkActive=\"mat-router-link-active\">\n            <mat-icon>cloud_upload</mat-icon>\n            <span>Imports</span>\n        </a>\n        <a mat-list-item routerLink=\"daily-tracker\" routerLinkActive=\"mat-router-link-active\">\n            <mat-icon>ballot</mat-icon>\n            <span>Sales</span>\n        </a>\n        <a mat-list-item routerLink=\"client-information\" routerLinkActive=\"mat-router-link-active\">\n            <mat-icon>business</mat-icon>\n            <span>Company</span>\n        </a>\n        <mat-accordion mat-list-item class=\"navigation-accordion\">\n            <mat-expansion-panel [expanded]=\"expandPayrollLinks\" (opened)=\"expandPayrollLinks=!expandPayrollLinks;\"\n                (closed)=\"expandPayrollLinks=!expandPayrollLinks;\">\n                <mat-expansion-panel-header [class.expanded-menu-item]=\"expandPayrollLinks\">\n                    <mat-panel-title>\n                        <mat-icon>account_balance</mat-icon>\n                        <span>Payroll</span>\n                    </mat-panel-title>\n                </mat-expansion-panel-header>\n\n                <mat-nav-list>\n                    <a mat-list-item routerLink=\"admin/pay/pay-cycles\" routerLinkActive=\"mat-router-link-active\">\n                        <mat-icon>assignment</mat-icon>\n                        <span>Pay Runs</span>\n                    </a>\n                    <a mat-list-item routerLink=\"admin/pay/manage\" routerLinkActive=\"mat-router-link-active\">\n                        <mat-icon>date_range</mat-icon>\n                        <span>Release Pay</span>\n                    </a>\n                    <a mat-list-item [routerLink]=\"['admin', 'pay', 'paycheck-list']\" routerLinkActive=\"mat-router-link-active\">\n                        <mat-icon>local_atm</mat-icon>\n                        <span>View Paychecks</span>\n                    </a>\n                </mat-nav-list>\n            </mat-expansion-panel>\n        </mat-accordion>\n        \n        <mat-accordion mat-list-item class=\"navigation-accordion\">\n            <mat-expansion-panel [expanded]=\"expandPeopleLinks\" (opened)=\"expandPeopleLinks=!expandPeopleLinks;\" \n                (closed)=\"expandPeopleLinks=!expandPeopleLinks;\">\n                <mat-expansion-panel-header [class.expanded-menu-item]=\"expandPeopleLinks\">\n                    <mat-panel-title>\n                        <mat-icon>{{ expandPeopleLinks ? 'people_outline' : 'group_add' }}</mat-icon>\n                        <span>People</span>\n                    </mat-panel-title>\n                </mat-expansion-panel-header>\n\n                <mat-nav-list>\n                    <a mat-list-item routerLink=\"agents\" routerLinkActive=\"mat-router-link-active\">\n                        <mat-icon>person</mat-icon>\n                        <span>Agents</span>\n                    </a>\n\n                    <a mat-list-item [routerLink]=\"['/contacts']\" routerLinkActive=\"mat-router-link-active\">\n                        <mat-icon>contacts</mat-icon>\n                        <span>Contacts</span>\n                    </a>\n                </mat-nav-list>\n            </mat-expansion-panel>\n        </mat-accordion>\n        \n        <a mat-list-item routerLink=\"campaigns\" routerLinkActive=\"mat-router-link-active\">\n            <mat-icon>assignment</mat-icon>\n            <span>Campaigns</span>\n        </a>\n        \n        <!-- end of admin links -->\n    </ng-container>\n\n    <ng-container *ngIf=\"user?.role?.role == roleType.manager || user?.role?.role == roleType.regManager\">\n        <mat-accordion mat-list-item class=\"navigation-accordion\">\n            <mat-expansion-panel [expanded]=\"expandPeopleLinks\" (opened)=\"expandPeopleLinks=!expandPeopleLinks;\" \n                (closed)=\"expandPeopleLinks=!expandPeopleLinks;\">\n                <mat-expansion-panel-header [class.expanded-menu-item]=\"expandPeopleLinks\">\n                    <mat-panel-title>\n                        <mat-icon>{{ expandPeopleLinks ? 'people_outline' : 'group_add' }}</mat-icon>\n                        <span>People</span>\n                    </mat-panel-title>\n                </mat-expansion-panel-header>\n\n                <mat-nav-list>\n                    <a mat-list-item routerLink=\"agents\" routerLinkActive=\"mat-router-link-active\">\n                        <mat-icon>person</mat-icon>\n                        <span>Agents</span>\n                    </a>\n\n                    <a mat-list-item [routerLink]=\"['/contacts']\" routerLinkActive=\"mat-router-link-active\">\n                        <mat-icon>contacts</mat-icon>\n                        <span>Contacts</span>\n                    </a>\n                </mat-nav-list>\n            </mat-expansion-panel>\n        </mat-accordion>\n    </ng-container>\n\n    \n</mat-nav-list>"
 
 /***/ }),
 
@@ -13033,6 +13048,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/fesm5/common.js");
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
 /* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
+/* harmony import */ var _app_models_role_model__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @app/models/role.model */ "./src/app/models/role.model.ts");
+
 
 
 
@@ -13074,6 +13091,15 @@ var SidenavComponent = /** @class */ (function () {
     SidenavComponent.prototype.toggleSidenav = function () {
         this.navService.toggle();
     };
+    Object.defineProperty(SidenavComponent.prototype, "hasMyWorkMenuItem", {
+        get: function () {
+            return this.user && this.user.agent && this.user.role && this.user.role.role < _app_models_role_model__WEBPACK_IMPORTED_MODULE_7__["UserRole"].companyAdmin
+                && this.user.role.role != _app_models_role_model__WEBPACK_IMPORTED_MODULE_7__["UserRole"].manager && this.user.role.role != _app_models_role_model__WEBPACK_IMPORTED_MODULE_7__["UserRole"].regionalManager
+                && this.user.agent.isActive;
+        },
+        enumerable: true,
+        configurable: true
+    });
     SidenavComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
             selector: 'side-nav',

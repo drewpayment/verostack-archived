@@ -65,8 +65,12 @@ export class HeaderComponent implements OnInit, AfterViewInit {
         this.session.getUserItem().subscribe(user => {
             if (user == null) return;
             this.user = user;
+            const client = this.user.sessionUser.client;
 
-            this.session.setNavigationTitle(this.user.sessionUser.client.name);
+            if (client && client.name) {
+                this.session.setNavigationTitle(client.name);
+            }
+            
             this.menuTitle = this.session.navigationTitle$;
 
             this.showClientSelector = this.user.clients.length > 1 && this.user.role.role > UserType.HumanResources;
