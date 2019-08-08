@@ -32,7 +32,7 @@
     </a>
 
     <!-- agents only -->
-    <ng-container *ngIf="user?.role?.role < roleType.companyAdmin && user?.role?.role != roleType.manager && user?.role?.role != roleType.regManager">
+    <ng-container *ngIf="hasMyWorkMenuItem">
         <a mat-list-item routerLink="dashboard" routerLinkActive="mat-router-link-active">
             <mat-icon>pie_chart</mat-icon>
             <span>My Work</span>

@@ -21,5 +21,5 @@ export interface User {
     udpatedAt?:any,
     agent?:IAgent,
 
-    selectedClient?:() => number
+    selectedClient?: IClient,
 }

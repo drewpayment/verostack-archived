@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\User;
 use App\Scopes\ClientScope;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
@@ -16,7 +17,7 @@ class ImportModel extends Model
 
     protected $primaryKey = 'import_model_id';
 
-    protected $fillable = ['import_model_id', 'client_id', 'short_desc', 'full_desc', 'map', 'user_id', 
+    protected $fillable = ['import_model_id', 'client_id', 'shortDesc', 'fullDesc', 'map', 'user_id', 
         'created_at', 'updated_at', 'deleted_at'];
 
     protected $dates = ['created_at', 'updated_at', 'deleted_at'];
@@ -31,6 +32,11 @@ class ImportModel extends Model
         parent::boot();
 
         static::addGlobalScope(new ClientScope);
+    }
+
+    public function user()
+    {
+        return $this->hasOne(User::class, 'id');
     }
 
     /**

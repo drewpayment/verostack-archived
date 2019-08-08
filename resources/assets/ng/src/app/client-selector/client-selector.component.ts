@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import {
   MatDialogRef,
@@ -6,7 +6,7 @@ import {
 } from '@angular/material';
 import { AuthService } from '../auth.service';
 import { User, IClient } from '../models/index';
-import { Observable ,  BehaviorSubject } from 'rxjs';
+import { Observable ,  BehaviorSubject, Subscription } from 'rxjs';
 import { UserService } from '../user-features/user.service';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
@@ -16,9 +16,11 @@ import { Router } from '@angular/router';
   templateUrl: './client-selector.component.html',
   styleUrls: ['./client-selector.component.css']
 })
-export class ClientSelectorComponent implements OnInit {
+export class ClientSelectorComponent implements OnInit, OnDestroy {
   user: User;
   clientControl: FormControl = new FormControl('', [Validators.required]);
+
+  subscriptions: Subscription[] = [];
 
   constructor(
     public dialogRef: MatDialogRef<ClientSelectorComponent>,
@@ -30,11 +32,17 @@ export class ClientSelectorComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.userService.user.subscribe((next: User) => {
+    this.subscriptions.push(this.userService.user.subscribe((next: User) => {
       this.user = next;
 
       this.clientControl.setValue(this.user.sessionUser.sessionClient, { emitEvent: false });
-    });
+    }));
+  }
+
+  ngOnDestroy() {
+      this.subscriptions.forEach((s, i, a) => {
+          s.unsubscribe();
+      });
   }
 
   cancel(): void {

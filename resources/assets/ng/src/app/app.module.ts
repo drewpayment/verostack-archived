@@ -25,6 +25,8 @@ import { BaseModule } from './base/base.module';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { LoginComponent } from './login/login.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { ErrorInterceptor } from './http/error-interceptor';
 
 @NgModule({
     imports: [
@@ -62,7 +64,13 @@ import { ResetPasswordComponent } from './reset-password/reset-password.componen
         EditAgentDialogComponent,
         AgentRulesDialogComponent
     ],
-    providers: [],
+    providers: [
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: ErrorInterceptor,
+            multi: true,
+        }
+    ],
     bootstrap: [AppComponent]
 })
 export class AppModule {
