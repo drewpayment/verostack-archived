@@ -1,11 +1,11 @@
-import {Component, OnInit, AfterViewInit, NgZone} from '@angular/core';
+import {Component, OnInit, AfterViewInit, NgZone, OnDestroy} from '@angular/core';
 import {DailySale, IAgent, SaleStatus, User, ICampaign, Remark, PaidStatusType} from '@app/models';
 
 import * as moment from 'moment';
 import * as _ from 'lodash';
 import {AgentsService} from '@app/core/agents/agents.service';
 import {MessageService} from '@app/message.service';
-import {Observable, of, BehaviorSubject, zip, forkJoin} from 'rxjs';
+import {Observable, of, BehaviorSubject, zip, forkJoin, Subscription} from 'rxjs';
 import {DataSource} from '@angular/cdk/table';
 import {ClientService} from '@app/client-information/client.service';
 import {UserService} from '@app/user-features/user.service';
@@ -51,7 +51,7 @@ interface PaidStatus {
     ],
     providers: [FloatBtnService]
 })
-export class DailySaleTrackerComponent implements OnInit, AfterViewInit {
+export class DailySaleTrackerComponent implements OnInit, AfterViewInit, OnDestroy {
     paidStatusOptions: PaidStatus[] = [
         {id: 0, name: 'Unpaid'},
         {id: 1, name: 'Paid'},
@@ -93,6 +93,8 @@ export class DailySaleTrackerComponent implements OnInit, AfterViewInit {
     searchAgentsCtrl = new FormControl('');
     filteredAgents:Observable<IAgent[]>;
     agentInputs:string[] = [];
+
+    subs: Subscription[] = [];
 
     constructor(
         private agentService: AgentsService,
@@ -153,7 +155,7 @@ export class DailySaleTrackerComponent implements OnInit, AfterViewInit {
     ngOnInit() {
         this.createForm();
         
-        this.session.getUserItem().subscribe(u => {
+        this.subs.push(this.session.getUserItem().subscribe(u => {
             this.userInfo = u;
 
             forkJoin(
@@ -184,7 +186,7 @@ export class DailySaleTrackerComponent implements OnInit, AfterViewInit {
 
                 this.refreshDailySales(this.startDate, this.endDate);
             });
-        });
+        }));
 
         this.agentService
             .getAgents(true)
@@ -193,6 +195,12 @@ export class DailySaleTrackerComponent implements OnInit, AfterViewInit {
                 this.filteredAgents = of(this.agents);
             })
             .catch(this.msg.showWebApiError);
+    }
+
+    ngOnDestroy() {
+        this.subs.forEach(s => {
+            s.unsubscribe();
+        });
     }
 
     ngAfterViewInit() {

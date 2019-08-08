@@ -32,7 +32,7 @@ export class SessionService {
     navigateQueue: string[] = [];
     loggedInService: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
     private userLoggedIn: boolean;
-    userItem = new ReplaySubject<User>(1);
+    userItem = new BehaviorSubject<User>(null);
 
     private tokenItem$: Subject<IToken> = new ReplaySubject<IToken>(1);
     tokenItem: Observable<IToken>;
@@ -74,6 +74,16 @@ export class SessionService {
     //     return this.userItem.getValue().sessionUser.sessionClient;
     // }
 
+    get lastUser(): User {
+        const u = this.userItem.value;
+        if (u.selectedClient == null) {
+            u.selectedClient = u.sessionUser.client != null 
+                ? u.sessionUser.client
+                : u.clients.find(c => c.clientId == u.sessionUser.sessionClient);
+        }
+        return u;
+    }
+
     setNavigationTitle(value:string) {
         if (typeof value !== 'string' || value == null) return;
         this._navigationTitle = value;
@@ -114,8 +124,7 @@ export class SessionService {
         this.clearStorage();
         this.isLoginSubject.next(false);
         this._hasToken.next(false);
-
-        this.router.navigate(['login']);
+        this.router.navigateByUrl('login');
     }
 
     getUserItem():Observable<User> {
@@ -330,6 +339,10 @@ export class SessionService {
      *
      */
     getTokenRequest(request: HttpRequest<any>): HttpRequest<any> {
+        if (!this.dataStore || !this.dataStore.token) {
+            return request;
+        }
+
         return request.clone({
             setHeaders: {
                 Authorization: 'Bearer ' + this.dataStore.token.access_token

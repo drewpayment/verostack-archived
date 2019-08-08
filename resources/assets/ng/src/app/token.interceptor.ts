@@ -33,8 +33,8 @@ export class TokenInterceptor implements HttpInterceptor {
     this.session.navigateQueue.push(request.url);
 
     // if the url is nothing our WebAPI, we are not going to append HTTP headers
-    let url = this.apiUrl.substring(7, 11);
-    if(request.url.indexOf(url) == -1 || !this.userLoggedIn) {
+    const url = this.apiUrl.substring(7, 11);
+    if (request.url.indexOf(url) == -1 || !this.userLoggedIn) {
       return next.handle(request);
     } else {
       return next.handle(this.session.getTokenRequest(request));

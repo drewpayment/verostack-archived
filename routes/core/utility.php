@@ -9,4 +9,6 @@ Route::middleware(['auth:api'])->group(function() {
 
     Route::post('clients/{clientId}/utilities', 'UtilityController@saveNewUtility');
 
+    Route::get('clients/{clientId}/utilities', 'UtilityController@getUtilitiesByClient');
+
 });

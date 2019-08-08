@@ -46,7 +46,7 @@ class CampaignController extends Controller
 			return $result->setToFail()->getResponse();
 
 		return $result
-			->setData(Campaign::with(['utilities', 'utilities.user'])->active($activeOnly)->byClientId($clientId)->get())
+			->setData(Campaign::has('utilities')->with(['utilities', 'utilities.user'])->active($activeOnly)->byClientId($clientId)->get())
 			->throwApiException()
 			->getResponse();
 	}

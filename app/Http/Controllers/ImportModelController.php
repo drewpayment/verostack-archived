@@ -24,4 +24,22 @@ class ImportModelController extends Controller
 
         return $result->throwApiException()->getResponse();
     }
+
+    public function saveImportModel(Request $request)
+    {
+        $result = new ApiResource();
+
+        $user = auth()->user();
+        $user->load('sessionUser');
+
+        // if ($result->hasError) return $result->throwApiException()->getResponse();
+
+        if ($request->importModelId != null && $request->importModelId > 0) {
+            $this->service->saveExistingImportModel($request)->mergeInto($result);
+        } else {
+            $this->service->saveNewImportModel($request)->mergeInto($result);
+        }
+
+        return $result->throwApiException()->getResponse();
+    }
 }

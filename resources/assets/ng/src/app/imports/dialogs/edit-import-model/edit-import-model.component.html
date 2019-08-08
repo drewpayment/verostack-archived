@@ -1,0 +1,133 @@
+<div mat-dialog-title class="d-flex justify-content-between">
+    <h4>Import Model</h4>
+    <button type="button" mat-icon-button (click)="onNoClick()">
+        <mat-icon>clear</mat-icon>
+    </button>
+</div>
+<mat-dialog-content class="pb-2">
+    <form [formGroup]="form" class="mb-2">
+        <div>
+            <mat-form-field [hideRequiredMarker]="true">
+                <input type="text" matInput formControlName="shortDesc" placeholder="Model Name" required />
+                <mat-error *ngIf="form.get('shortDesc').hasError">
+                    Please enter a model name.
+                </mat-error>
+            </mat-form-field>
+        </div>
+
+        <div>
+            <mat-form-field class="wp-100">
+                <textarea matNativeControl matAutosize="true" formControlName="fullDesc" placeholder="Description">
+                </textarea>
+            </mat-form-field>
+        </div>
+
+        <!-- <p class="text-black-50 small">
+            Select the Campaign that this import will be associated with. It is <span class="font-weight-bold">very important</span> 
+            that you make sure your utilities associated with the campaign reflect all utilities in the report that you're importing. 
+        </p> -->
+
+        <div style="height: 100px !important;">
+            <mat-form-field class="wp-100" [hideRequiredMarker]="true">
+                <mat-select formControlName="campaignId" placeholder="Campaign" required>
+                    <mat-option *ngFor="let c of (campaigns|async); let i = index;" [value]="c.campaignId">
+                        {{ c.name }}
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="form.get('campaignId').hasError">
+                    Please select a campaign.
+                </mat-error>
+                <mat-hint>
+                    Select the Campaign that this import will be associated with. It is <span class="font-weight-bold">very important</span> 
+                    that you make sure your utilities associated with the campaign reflect all utilities in the report that you're importing.
+                </mat-hint>
+            </mat-form-field>
+        </div>
+
+        <div>
+            <mat-checkbox [value]="splitCustomerName" class="text-black-50">Report uses one field for Customer Name</mat-checkbox>
+        </div>
+
+        <div>
+            <mat-checkbox [value]="matchAgentBySalesCode" class="text-black-50">Match agents on report by Sales Code</mat-checkbox>
+        </div>
+
+        <div>
+            <p class="text-black-50">
+                Please add all columns from your report. The column header needs to match exactly to the column headers 
+                on your XSL file. 
+            </p>
+    
+            <p class="text-black-50 small">
+                Column Header - must match exactly with the report column header. <br />
+                Description - used for your reference when working with the Import Model.
+            </p>
+
+            <p class="text-black-50 small">
+                Please make sure that your sales statuses on your import match your 
+                <a [routerLink]="['..', 'client-information']" (click)="onNoClick()">Sale Status Configuration</a> statuses. If they do not, 
+                we will be unable to properly set the "Paid Status" for your sales and they will default to "Unpaid".
+            </p>
+        </div>
+        
+        <mat-divider class="pb-4"></mat-divider>
+
+        <div style="overflow: scroll; max-height: 25vw;" formArrayName="map">
+            <div *ngFor="let f of map.controls; let i = index;">
+                <ng-container [formGroupName]="i">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <mat-form-field class="pr-1 wp-100" [hideRequiredMarker]="true">
+                                <input #keyInputs type="text" matInput formControlName="key" placeholder="Description" required />
+                                <mat-error *ngIf="map.get([i, 'key']).hasError">
+                                    Description is required.
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="col-md-4">
+                            <mat-form-field class="px-1 wp-100" [hideRequiredMarker]="true">
+                                <input type="text" matInput formControlName="value" placeholder="Column Header" required />
+                                <mat-error *ngIf="map.get([i, 'value']).hasError">
+                                    Column Header is required.
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="col-md-4">
+                            <mat-form-field class="pl-1 wp-100">
+                                <mat-select formControlName="fieldType" placeholder="Field Type" 
+                                    (selectionChange)="fieldTypeChanged($event, map.get([i, 'fieldType']))" (keydown)="tabAdd($event, i)">
+                                    <mat-option *ngFor="let f of fieldDescriptions; let j = index;" [value]="j">
+                                        {{ fieldDescriptions[j] }}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-hint>
+                                    Tell us what your fields are.
+                                </mat-hint>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    
+                </ng-container>
+            </div>
+        </div>
+
+        <div class="mt-2">
+            <button type="button" mat-button color="primary" (click)="addMapRow()">
+                <mat-icon>add</mat-icon> Add Column
+            </button>
+        </div>
+
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions class="d-flex justify-content-end">
+    <button type="button" mat-button (click)="onNoClick()">
+        <mat-icon>clear</mat-icon>
+        Cancel
+    </button>
+    <button type="button" mat-button (click)="saveImportModel()" color="primary">
+        <mat-icon>save</mat-icon>
+        Save
+    </button>
+</mat-dialog-actions>
