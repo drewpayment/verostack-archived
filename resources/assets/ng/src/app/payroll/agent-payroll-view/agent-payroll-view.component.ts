@@ -22,6 +22,7 @@ export class AgentPayrollViewComponent implements OnInit {
     user:User;
     paychecks = new BehaviorSubject<PayrollDetails[]>(null);
     paginator:Paginator<PayrollDetails>;
+    hasPaychecks = false;
 
     constructor(
         private breakpoint:BreakpointObserver,
@@ -38,6 +39,8 @@ export class AgentPayrollViewComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.paychecks.subscribe(value => this.hasPaychecks = value != null && value.length > 0);
+
         this.session.getUserItem().subscribe(u => {
             if (u == null) return;
             this.user = u;
