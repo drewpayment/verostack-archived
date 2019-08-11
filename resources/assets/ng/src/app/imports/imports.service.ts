@@ -49,7 +49,7 @@ export class ImportsService {
                 : user.sessionUser.sessionClient;
             const url = `${this.api}/campaigns/clients/${clientId}/active/true`;
             this.campaigns = this.http.get<ICampaign[]>(url).pipe(shareReplay(1));
-            sub.unsubscribe();
+            if (sub) sub.unsubscribe();
         });
     }
 
@@ -60,7 +60,7 @@ export class ImportsService {
                 : user.sessionUser.sessionClient;
             const url = `${this.api}/clients/${clientId}/utilities`;
             this.utilities = this.http.get<Utility[]>(url).pipe(shareReplay(1));
-            sub.unsubscribe();
+            if (sub) sub.unsubscribe();
         });
     }
 }

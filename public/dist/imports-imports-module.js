@@ -14367,6 +14367,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _app_spreadsheet_spreadsheet_module__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @app/spreadsheet/spreadsheet.module */ "./src/app/spreadsheet/spreadsheet.module.ts");
 /* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @angular/material */ "./node_modules/@angular/material/esm5/material.es5.js");
 /* harmony import */ var _bottom_sheets_confirm_agent_code_component__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./bottom-sheets/confirm-agent-code.component */ "./src/app/imports/bottom-sheets/confirm-agent-code.component.ts");
+/* harmony import */ var _process_process_component__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./process/process.component */ "./src/app/imports/process/process.component.ts");
+
 
 
 
@@ -14383,6 +14385,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var routes = [
     { path: '', redirectTo: 'models', pathMatch: 'full' },
+    { path: 'process', component: _process_process_component__WEBPACK_IMPORTED_MODULE_14__["ProcessComponent"], canActivate: [_app_auth_guard__WEBPACK_IMPORTED_MODULE_9__["AuthGuard"]] },
     { path: 'models', component: _import_models_import_models_component__WEBPACK_IMPORTED_MODULE_8__["ImportModelsComponent"], canActivate: [_app_auth_guard__WEBPACK_IMPORTED_MODULE_9__["AuthGuard"]] },
 ];
 var ImportsModule = /** @class */ (function () {
@@ -14394,6 +14397,7 @@ var ImportsModule = /** @class */ (function () {
                 _import_models_import_models_component__WEBPACK_IMPORTED_MODULE_8__["ImportModelsComponent"],
                 _dialogs_edit_import_model_edit_import_model_component__WEBPACK_IMPORTED_MODULE_10__["EditImportModelComponent"],
                 _bottom_sheets_confirm_agent_code_component__WEBPACK_IMPORTED_MODULE_13__["ConfirmAgentBottomSheetComponent"],
+                _process_process_component__WEBPACK_IMPORTED_MODULE_14__["ProcessComponent"],
             ],
             imports: [
                 _angular_common__WEBPACK_IMPORTED_MODULE_2__["CommonModule"],
@@ -14483,7 +14487,8 @@ var ImportsService = /** @class */ (function () {
                 : user.sessionUser.sessionClient;
             var url = _this.api + "/campaigns/clients/" + clientId + "/active/true";
             _this.campaigns = _this.http.get(url).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_6__["shareReplay"])(1));
-            sub.unsubscribe();
+            if (sub)
+                sub.unsubscribe();
         });
     };
     ImportsService.prototype.fetchUtilities = function () {
@@ -14494,7 +14499,8 @@ var ImportsService = /** @class */ (function () {
                 : user.sessionUser.sessionClient;
             var url = _this.api + "/clients/" + clientId + "/utilities";
             _this.utilities = _this.http.get(url).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_6__["shareReplay"])(1));
-            sub.unsubscribe();
+            if (sub)
+                sub.unsubscribe();
         });
     };
     ImportsService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
@@ -14504,6 +14510,72 @@ var ImportsService = /** @class */ (function () {
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"], _app_session_service__WEBPACK_IMPORTED_MODULE_5__["SessionService"], _angular_router__WEBPACK_IMPORTED_MODULE_7__["Router"]])
     ], ImportsService);
     return ImportsService;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/imports/process/process.component.html":
+/*!********************************************************!*\
+  !*** ./src/app/imports/process/process.component.html ***!
+  \********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "\n<div class=\"container\">\n    <div class=\"row\">\n        <div class=\"col-md-12\">\n            <mat-card class=\"page-header-accent\">\n                <h2 mat-card-title>Import Reports</h2>\n                <mat-card-content>\n                    <div class=\"shadow-none p-3 bg-light rounded\">\n                        <h5>Requirements</h5>\n                        <ul>\n                            <li>\n                                Your CSV file should contain columns that match \n                                the <span class=\"font-weight-bold\">Import Model</span> you select.\n                            </li>\n                            <li>\n                                The order of the columns must match exactly the to your Import Model. If they \n                                do not, please reorder the columns on your report.\n                            </li>\n                            <li>\n                                Confirm correct import in the review field after you've imported the file and make any \n                                last-minute modifications that you might notice.\n                            </li>\n                        </ul>\n                    </div>\n                    <div class=\"shadow-none p-3 mb-5 rounded\">\n                        <h5>Upload CSV file</h5>\n                        <div class=\"p-1\">\n                            <button type=\"button\" mat-stroked-button color=\"primary\" (click)=\"uploadFile()\">Upload File</button>\n                        </div>\n                        <div class=\"p-1\">\n                            <button type=\"button\" mat-raised-button color=\"primary\" (click)=\"importReport()\">Import Report</button>\n                        </div>\n                    </div>\n                </mat-card-content>\n            </mat-card>\n        </div>\n    </div>\n</div>"
+
+/***/ }),
+
+/***/ "./src/app/imports/process/process.component.scss":
+/*!********************************************************!*\
+  !*** ./src/app/imports/process/process.component.scss ***!
+  \********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzcmMvYXBwL2ltcG9ydHMvcHJvY2Vzcy9wcm9jZXNzLmNvbXBvbmVudC5zY3NzIn0= */"
+
+/***/ }),
+
+/***/ "./src/app/imports/process/process.component.ts":
+/*!******************************************************!*\
+  !*** ./src/app/imports/process/process.component.ts ***!
+  \******************************************************/
+/*! exports provided: ProcessComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ProcessComponent", function() { return ProcessComponent; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+
+
+var ProcessComponent = /** @class */ (function () {
+    function ProcessComponent() {
+        this.hasFile = false;
+    }
+    ProcessComponent.prototype.ngOnInit = function () {
+    };
+    ProcessComponent.prototype.uploadFile = function () {
+        console.log('UPLOAD FILE');
+        this.hasFile = true;
+    };
+    ProcessComponent.prototype.importReport = function () {
+        if (this.hasFile) {
+            console.log('We\'ve got a file! Let\'s upload it!');
+        }
+    };
+    ProcessComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
+            selector: 'vs-process',
+            template: __webpack_require__(/*! ./process.component.html */ "./src/app/imports/process/process.component.html"),
+            styles: [__webpack_require__(/*! ./process.component.scss */ "./src/app/imports/process/process.component.scss")]
+        }),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [])
+    ], ProcessComponent);
+    return ProcessComponent;
 }());
 
 

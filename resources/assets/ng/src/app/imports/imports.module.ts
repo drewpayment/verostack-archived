@@ -11,9 +11,11 @@ import { EditImportModelComponent } from './dialogs/edit-import-model/edit-impor
 import { SpreadsheetModule } from '@app/spreadsheet/spreadsheet.module';
 import { MAT_BOTTOM_SHEET_DEFAULT_OPTIONS } from '@angular/material';
 import { ConfirmAgentBottomSheetComponent } from './bottom-sheets/confirm-agent-code.component';
+import { ProcessComponent } from './process/process.component';
 
 const routes: Route[] = [
     { path: '', redirectTo: 'models', pathMatch: 'full' },
+    { path: 'process', component: ProcessComponent, canActivate: [AuthGuard] },
     { path: 'models', component: ImportModelsComponent, canActivate: [AuthGuard] },
 ];
 
@@ -22,6 +24,7 @@ const routes: Route[] = [
         ImportModelsComponent,
         EditImportModelComponent,
         ConfirmAgentBottomSheetComponent,
+        ProcessComponent,
     ],
     imports: [
         CommonModule,

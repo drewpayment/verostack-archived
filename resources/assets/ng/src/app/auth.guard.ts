@@ -18,7 +18,7 @@ export class AuthGuard implements CanActivate {
   private authenticated: boolean;
 
   constructor(
-    private authService: AuthService,
+    private auth: AuthService,
     private router: Router,
     private userService: UserService,
     private session:SessionService
@@ -30,13 +30,11 @@ export class AuthGuard implements CanActivate {
       .subscribe((store:ILocalStorage<User>) => {
         if (store && store.expires > moment().valueOf()) {
           observer.next(true);
-          observer.complete();
         } else {
-          this.session.navigateQueue.push(url);
-          this.router.navigateByUrl('login');
+          this.auth.logout();
           observer.next(false);
-          observer.complete();
         }
+        observer.complete();
       }));
   }
 

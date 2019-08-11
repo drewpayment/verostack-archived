@@ -1,0 +1,38 @@
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <mat-card class="page-header-accent">
+                <h2 mat-card-title>Import Reports</h2>
+                <mat-card-content>
+                    <div class="shadow-none p-3 bg-light rounded">
+                        <h5>Requirements</h5>
+                        <ul>
+                            <li>
+                                Your CSV file should contain columns that match 
+                                the <span class="font-weight-bold">Import Model</span> you select.
+                            </li>
+                            <li>
+                                The order of the columns must match exactly the to your Import Model. If they 
+                                do not, please reorder the columns on your report.
+                            </li>
+                            <li>
+                                Confirm correct import in the review field after you've imported the file and make any 
+                                last-minute modifications that you might notice.
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="shadow-none p-3 mb-5 rounded">
+                        <h5>Upload CSV file</h5>
+                        <div class="p-1">
+                            <button type="button" mat-stroked-button color="primary" (click)="uploadFile()">Upload File</button>
+                        </div>
+                        <div class="p-1">
+                            <button type="button" mat-raised-button color="primary" (click)="importReport()">Import Report</button>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+    </div>
+</div>
