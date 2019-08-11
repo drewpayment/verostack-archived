@@ -76,7 +76,7 @@ class DncContactService
                 ->setToFail();
         }
 
-		if (!array_key_exists($model['lat'], $model) || !array_key_exists($model['long'], $model)) {
+		if (!isset($model->lat) || !isset($model->long)) {
 			$geoResult = $this->getGeolocation($model->address, $model->city, $model->state);
 
 			if (!$geoResult->hasError && $geoResult->hasData()) {
