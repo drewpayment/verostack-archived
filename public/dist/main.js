@@ -13751,11 +13751,36 @@ var showFieldAnimation = [
 
 /***/ }),
 
+/***/ "./src/app/utils/boolean-property.ts":
+/*!*******************************************!*\
+  !*** ./src/app/utils/boolean-property.ts ***!
+  \*******************************************/
+/*! exports provided: coerceBooleanProperty */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "coerceBooleanProperty", function() { return coerceBooleanProperty; });
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+/** Coerces a data-bound value (typically a string) to a boolean. */
+function coerceBooleanProperty(value) {
+    return value != null && "" + value !== 'false';
+}
+
+
+/***/ }),
+
 /***/ "./src/app/utils/index.ts":
 /*!********************************!*\
   !*** ./src/app/utils/index.ts ***!
   \********************************/
-/*! exports provided: coerceNumberProperty, _isNumberValue, showFieldAnimation */
+/*! exports provided: coerceNumberProperty, _isNumberValue, showFieldAnimation, coerceBooleanProperty */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -13767,6 +13792,10 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony import */ var _animations__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./animations */ "./src/app/utils/animations.ts");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "showFieldAnimation", function() { return _animations__WEBPACK_IMPORTED_MODULE_1__["showFieldAnimation"]; });
+
+/* harmony import */ var _boolean_property__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./boolean-property */ "./src/app/utils/boolean-property.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "coerceBooleanProperty", function() { return _boolean_property__WEBPACK_IMPORTED_MODULE_2__["coerceBooleanProperty"]; });
+
 
 
 

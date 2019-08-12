@@ -14212,6 +14212,68 @@ var EditImportModelComponent = /** @class */ (function () {
 
 /***/ }),
 
+/***/ "./src/app/imports/import-model-selection/import-model-selection.component.html":
+/*!**************************************************************************************!*\
+  !*** ./src/app/imports/import-model-selection/import-model-selection.component.html ***!
+  \**************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<div class=\"shadow-none p-3 pb-0 rounded\" *ngIf=\"(models|async)?.length <= 4; else showDropdown;\">\n    <p>Choose Import Model:</p>\n    <mat-radio-group aria-label=\"Select an import model\" class=\"select-import-model\">\n        <mat-radio-button *ngFor=\"let m of (models|async); let i = index;\" [value]=\"m.importModelId\">\n            {{m.shortDesc}}\n        </mat-radio-button>\n    </mat-radio-group>\n</div>\n\n<ng-template #showDropdown>\n    <div class=\"shadow-none p-3 pb-0 rounded\">\n        <p>Choose Import Model:</p>\n        <mat-form-field>\n            <mat-label>Import Model</mat-label>\n            <mat-select>\n                <mat-option *ngFor=\"let m of (models|async); let i = index;\" [value]=\"m.importModelId\">\n                    {{m.shortDesc}}\n                </mat-option>\n            </mat-select>\n        </mat-form-field>\n    </div>\n</ng-template>"
+
+/***/ }),
+
+/***/ "./src/app/imports/import-model-selection/import-model-selection.component.scss":
+/*!**************************************************************************************!*\
+  !*** ./src/app/imports/import-model-selection/import-model-selection.component.scss ***!
+  \**************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = ".select-import-model {\n  display: flex;\n  flex-direction: column;\n  margin: 15px; }\n  .select-import-model mat-radio-button {\n    margin: 5px; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy9kcmV3cGF5bWVudC9kZXYvYWN0aXZlL3Zlcm9zdGFjay9yZXNvdXJjZXMvYXNzZXRzL25nL3NyYy9hcHAvaW1wb3J0cy9pbXBvcnQtbW9kZWwtc2VsZWN0aW9uL2ltcG9ydC1tb2RlbC1zZWxlY3Rpb24uY29tcG9uZW50LnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7RUFDSSxjQUFhO0VBQ2IsdUJBQXNCO0VBQ3RCLGFBQVksRUFLZjtFQVJEO0lBTVEsWUFBVyxFQUNkIiwiZmlsZSI6InNyYy9hcHAvaW1wb3J0cy9pbXBvcnQtbW9kZWwtc2VsZWN0aW9uL2ltcG9ydC1tb2RlbC1zZWxlY3Rpb24uY29tcG9uZW50LnNjc3MiLCJzb3VyY2VzQ29udGVudCI6WyIuc2VsZWN0LWltcG9ydC1tb2RlbCB7XG4gICAgZGlzcGxheTogZmxleDtcbiAgICBmbGV4LWRpcmVjdGlvbjogY29sdW1uO1xuICAgIG1hcmdpbjogMTVweDtcblxuICAgIG1hdC1yYWRpby1idXR0b24ge1xuICAgICAgICBtYXJnaW46IDVweDtcbiAgICB9XG59Il19 */"
+
+/***/ }),
+
+/***/ "./src/app/imports/import-model-selection/import-model-selection.component.ts":
+/*!************************************************************************************!*\
+  !*** ./src/app/imports/import-model-selection/import-model-selection.component.ts ***!
+  \************************************************************************************/
+/*! exports provided: ImportModelSelectionComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ImportModelSelectionComponent", function() { return ImportModelSelectionComponent; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _imports_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../imports.service */ "./src/app/imports/imports.service.ts");
+
+
+
+var ImportModelSelectionComponent = /** @class */ (function () {
+    function ImportModelSelectionComponent(service) {
+        this.service = service;
+    }
+    ImportModelSelectionComponent.prototype.ngOnInit = function () {
+        this.models = this.service.getImportModels();
+    };
+    ImportModelSelectionComponent.prototype.ngOnDestroy = function () {
+    };
+    ImportModelSelectionComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
+            selector: 'vs-import-model-selection',
+            template: __webpack_require__(/*! ./import-model-selection.component.html */ "./src/app/imports/import-model-selection/import-model-selection.component.html"),
+            styles: [__webpack_require__(/*! ./import-model-selection.component.scss */ "./src/app/imports/import-model-selection/import-model-selection.component.scss")]
+        }),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_imports_service__WEBPACK_IMPORTED_MODULE_2__["ImportsService"]])
+    ], ImportModelSelectionComponent);
+    return ImportModelSelectionComponent;
+}());
+
+
+
+/***/ }),
+
 /***/ "./src/app/imports/import-models/import-models.component.html":
 /*!********************************************************************!*\
   !*** ./src/app/imports/import-models/import-models.component.html ***!
@@ -14368,6 +14430,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @angular/material */ "./node_modules/@angular/material/esm5/material.es5.js");
 /* harmony import */ var _bottom_sheets_confirm_agent_code_component__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./bottom-sheets/confirm-agent-code.component */ "./src/app/imports/bottom-sheets/confirm-agent-code.component.ts");
 /* harmony import */ var _process_process_component__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./process/process.component */ "./src/app/imports/process/process.component.ts");
+/* harmony import */ var _past_imports_past_imports_component__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./past-imports/past-imports.component */ "./src/app/imports/past-imports/past-imports.component.ts");
+/* harmony import */ var _import_model_selection_import_model_selection_component__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./import-model-selection/import-model-selection.component */ "./src/app/imports/import-model-selection/import-model-selection.component.ts");
+/* harmony import */ var ng2_file_upload__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ng2-file-upload */ "./node_modules/ng2-file-upload/index.js");
+/* harmony import */ var ng2_file_upload__WEBPACK_IMPORTED_MODULE_17___default = /*#__PURE__*/__webpack_require__.n(ng2_file_upload__WEBPACK_IMPORTED_MODULE_17__);
+/* harmony import */ var _widgets_campaigns_selection_campaigns_selection_component__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./widgets/campaigns-selection/campaigns-selection.component */ "./src/app/imports/widgets/campaigns-selection/campaigns-selection.component.ts");
+
+
+
+
 
 
 
@@ -14398,6 +14469,9 @@ var ImportsModule = /** @class */ (function () {
                 _dialogs_edit_import_model_edit_import_model_component__WEBPACK_IMPORTED_MODULE_10__["EditImportModelComponent"],
                 _bottom_sheets_confirm_agent_code_component__WEBPACK_IMPORTED_MODULE_13__["ConfirmAgentBottomSheetComponent"],
                 _process_process_component__WEBPACK_IMPORTED_MODULE_14__["ProcessComponent"],
+                _past_imports_past_imports_component__WEBPACK_IMPORTED_MODULE_15__["PastImportsComponent"],
+                _import_model_selection_import_model_selection_component__WEBPACK_IMPORTED_MODULE_16__["ImportModelSelectionComponent"],
+                _widgets_campaigns_selection_campaigns_selection_component__WEBPACK_IMPORTED_MODULE_18__["CampaignsSelectionComponent"],
             ],
             imports: [
                 _angular_common__WEBPACK_IMPORTED_MODULE_2__["CommonModule"],
@@ -14407,6 +14481,7 @@ var ImportsModule = /** @class */ (function () {
                 _angular_forms__WEBPACK_IMPORTED_MODULE_7__["FormsModule"],
                 _angular_forms__WEBPACK_IMPORTED_MODULE_7__["ReactiveFormsModule"],
                 _app_spreadsheet_spreadsheet_module__WEBPACK_IMPORTED_MODULE_11__["SpreadsheetModule"],
+                ng2_file_upload__WEBPACK_IMPORTED_MODULE_17__["FileUploadModule"],
                 _angular_router__WEBPACK_IMPORTED_MODULE_3__["RouterModule"].forChild(routes)
             ],
             entryComponents: [
@@ -14516,6 +14591,62 @@ var ImportsService = /** @class */ (function () {
 
 /***/ }),
 
+/***/ "./src/app/imports/past-imports/past-imports.component.html":
+/*!******************************************************************!*\
+  !*** ./src/app/imports/past-imports/past-imports.component.html ***!
+  \******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "\n<div class=\"shadow-none p-3 mb-2 bg-light rounded\">\n    <p class=\"display-4\">Past Imports</p>\n</div>"
+
+/***/ }),
+
+/***/ "./src/app/imports/past-imports/past-imports.component.scss":
+/*!******************************************************************!*\
+  !*** ./src/app/imports/past-imports/past-imports.component.scss ***!
+  \******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzcmMvYXBwL2ltcG9ydHMvcGFzdC1pbXBvcnRzL3Bhc3QtaW1wb3J0cy5jb21wb25lbnQuc2NzcyJ9 */"
+
+/***/ }),
+
+/***/ "./src/app/imports/past-imports/past-imports.component.ts":
+/*!****************************************************************!*\
+  !*** ./src/app/imports/past-imports/past-imports.component.ts ***!
+  \****************************************************************/
+/*! exports provided: PastImportsComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PastImportsComponent", function() { return PastImportsComponent; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+
+
+var PastImportsComponent = /** @class */ (function () {
+    function PastImportsComponent() {
+    }
+    PastImportsComponent.prototype.ngOnInit = function () {
+    };
+    PastImportsComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
+            selector: 'vs-past-imports',
+            template: __webpack_require__(/*! ./past-imports.component.html */ "./src/app/imports/past-imports/past-imports.component.html"),
+            styles: [__webpack_require__(/*! ./past-imports.component.scss */ "./src/app/imports/past-imports/past-imports.component.scss")]
+        }),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [])
+    ], PastImportsComponent);
+    return PastImportsComponent;
+}());
+
+
+
+/***/ }),
+
 /***/ "./src/app/imports/process/process.component.html":
 /*!********************************************************!*\
   !*** ./src/app/imports/process/process.component.html ***!
@@ -14523,7 +14654,7 @@ var ImportsService = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n<div class=\"container\">\n    <div class=\"row\">\n        <div class=\"col-md-12\">\n            <mat-card class=\"page-header-accent\">\n                <h2 mat-card-title>Import Reports</h2>\n                <mat-card-content>\n                    <div class=\"shadow-none p-3 bg-light rounded\">\n                        <h5>Requirements</h5>\n                        <ul>\n                            <li>\n                                Your CSV file should contain columns that match \n                                the <span class=\"font-weight-bold\">Import Model</span> you select.\n                            </li>\n                            <li>\n                                The order of the columns must match exactly the to your Import Model. If they \n                                do not, please reorder the columns on your report.\n                            </li>\n                            <li>\n                                Confirm correct import in the review field after you've imported the file and make any \n                                last-minute modifications that you might notice.\n                            </li>\n                        </ul>\n                    </div>\n                    <div class=\"shadow-none p-3 mb-5 rounded\">\n                        <h5>Upload CSV file</h5>\n                        <div class=\"p-1\">\n                            <button type=\"button\" mat-stroked-button color=\"primary\" (click)=\"uploadFile()\">Upload File</button>\n                        </div>\n                        <div class=\"p-1\">\n                            <button type=\"button\" mat-raised-button color=\"primary\" (click)=\"importReport()\">Import Report</button>\n                        </div>\n                    </div>\n                </mat-card-content>\n            </mat-card>\n        </div>\n    </div>\n</div>"
+module.exports = "\n<div class=\"container\">\n    <div class=\"row\">\n        <div class=\"col-md-12\">\n            <mat-card class=\"page-header-accent\">\n                <h2 mat-card-title>Import Reports</h2>\n                <mat-card-content>\n                    <div class=\"shadow-none p-3 bg-light rounded\">\n                        <h5>Requirements</h5>\n                        <ul>\n                            <li>\n                                Your CSV file should contain columns that match \n                                the <span class=\"font-weight-bold\">Import Model</span> you select.\n                            </li>\n                            <li>\n                                The order of the columns must match exactly the to your Import Model. If they \n                                do not, please reorder the columns on your report.\n                            </li>\n                            <li>\n                                Confirm correct import in the review field after you've imported the file and make any \n                                last-minute modifications that you might notice.\n                            </li>\n                        </ul>\n                    </div>\n\n                    <div class=\"row\">\n                        <div class=\"col-md-2\">\n                            <vs-import-model-selection></vs-import-model-selection>\n\n                            <div class=\"shadow-none p-3 pt-0 mb-2 rounded\">\n                                <p>Upload CSV file</p>\n                                <div class=\"p-1\">\n                                    <input #fuRef class=\"d-none\" mat-stroked-button color=\"primary\" *ngIf=\"fu\" type=\"file\" ng2FileSelect [uploader]=\"fu\" />\n                                    <button type=\"button\" mat-stroked-button color=\"primary\" (click)=\"uploadFile()\">Upload File</button>\n                                </div>\n                                <div class=\"p-1\">\n                                    <button type=\"button\" mat-raised-button color=\"primary\" (click)=\"importReport()\">Import Report</button>\n                                </div>\n                            </div>\n                        </div>\n                        <div class=\"col-md-10\" [class.d-flex]=\"!hasFile\" [class.justify-content-center]=\"!hasFile\">\n                            <div *ngIf=\"hasFile; else noPreview\">\n                                <span>PREVIEW GOES HERE...</span>\n                            </div>\n                            <ng-template #noPreview>\n                                <div class=\"shadow-none p-3 mb-2 rounded\">\n                                    <div class=\"row d-flex justify-content-center\">\n                                        <div class=\"col-md-4\">\n                                            <img src=\"dist/assets/images/add_file.svg\" class=\"img-fluid clickable m-5\" \n                                                (click)=\"uploadFile()\" />\n                                            <p class=\"text-muted\">\n                                                Import preview will appear here.\n                                            </p>\n                                        </div>\n                                    </div>\n                                </div>\n                            </ng-template>\n                        </div>\n                    </div>\n\n                    <mat-accordion>\n                        <mat-expansion-panel>\n                            <mat-expansion-panel-header>\n                                <mat-panel-title>\n                                    Past Uploads\n                                </mat-panel-title>\n                            </mat-expansion-panel-header>\n\n                            <vs-past-imports></vs-past-imports>\n                        </mat-expansion-panel>\n                    </mat-accordion>\n                </mat-card-content>\n            </mat-card>\n        </div>\n    </div>\n</div>"
 
 /***/ }),
 
@@ -14550,6 +14681,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ProcessComponent", function() { return ProcessComponent; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var ng2_file_upload__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ng2-file-upload */ "./node_modules/ng2-file-upload/index.js");
+/* harmony import */ var ng2_file_upload__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(ng2_file_upload__WEBPACK_IMPORTED_MODULE_2__);
+
 
 
 var ProcessComponent = /** @class */ (function () {
@@ -14557,16 +14691,27 @@ var ProcessComponent = /** @class */ (function () {
         this.hasFile = false;
     }
     ProcessComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        var options = {
+            url: '',
+            allowedFileType: ['csv', 'xsl', 'xslx'],
+        };
+        this.fu = new ng2_file_upload__WEBPACK_IMPORTED_MODULE_2__["FileUploader"](options);
+        this.fu.onAfterAddingFile = function (item) { return _this.hasFile = true; };
     };
     ProcessComponent.prototype.uploadFile = function () {
         console.log('UPLOAD FILE');
-        this.hasFile = true;
+        this.uploader.nativeElement.click();
     };
     ProcessComponent.prototype.importReport = function () {
         if (this.hasFile) {
             console.log('We\'ve got a file! Let\'s upload it!');
         }
     };
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewChild"])('fuRef'),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", _angular_core__WEBPACK_IMPORTED_MODULE_1__["ElementRef"])
+    ], ProcessComponent.prototype, "uploader", void 0);
     ProcessComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
             selector: 'vs-process',
@@ -14578,6 +14723,347 @@ var ProcessComponent = /** @class */ (function () {
     return ProcessComponent;
 }());
 
+
+
+/***/ }),
+
+/***/ "./src/app/imports/widgets/campaigns-selection/campaigns-selection.component.html":
+/*!****************************************************************************************!*\
+  !*** ./src/app/imports/widgets/campaigns-selection/campaigns-selection.component.html ***!
+  \****************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<div style=\"height: 100px !important;\">\n    <mat-form-field class=\"wp-100\" [hideRequiredMarker]=\"true\">\n        <mat-select [formControlName]=\"campaignId\" placeholder=\"Campaign\" [required]=\"required\">\n            <mat-option *ngFor=\"let c of (campaigns|async); let i = index;\" [value]=\"c.campaignId\">\n                {{ c.name }}\n            </mat-option>\n        </mat-select>\n        <mat-error *ngIf=\"form && form.get('campaignId').hasError\">\n            Please select a campaign.\n        </mat-error>\n        <mat-hint>\n            Select the Campaign that this import will be associated with. It is <span class=\"font-weight-bold\">very important</span> \n            that you make sure your utilities associated with the campaign reflect all utilities in the report that you're importing.\n        </mat-hint>\n    </mat-form-field>\n</div>"
+
+/***/ }),
+
+/***/ "./src/app/imports/widgets/campaigns-selection/campaigns-selection.component.scss":
+/*!****************************************************************************************!*\
+  !*** ./src/app/imports/widgets/campaigns-selection/campaigns-selection.component.scss ***!
+  \****************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzcmMvYXBwL2ltcG9ydHMvd2lkZ2V0cy9jYW1wYWlnbnMtc2VsZWN0aW9uL2NhbXBhaWducy1zZWxlY3Rpb24uY29tcG9uZW50LnNjc3MifQ== */"
+
+/***/ }),
+
+/***/ "./src/app/imports/widgets/campaigns-selection/campaigns-selection.component.ts":
+/*!**************************************************************************************!*\
+  !*** ./src/app/imports/widgets/campaigns-selection/campaigns-selection.component.ts ***!
+  \**************************************************************************************/
+/*! exports provided: CampaignsSelectionComponent, getMatSelectDynamicMultipleError, getMatSelectNonArrayValueError, getMatSelectNonFunctionValueError */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CampaignsSelectionComponent", function() { return CampaignsSelectionComponent; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getMatSelectDynamicMultipleError", function() { return getMatSelectDynamicMultipleError; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getMatSelectNonArrayValueError", function() { return getMatSelectNonArrayValueError; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getMatSelectNonFunctionValueError", function() { return getMatSelectNonFunctionValueError; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _app_imports_imports_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @app/imports/imports.service */ "./src/app/imports/imports.service.ts");
+/* harmony import */ var _app_utils__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @app/utils */ "./src/app/utils/index.ts");
+/* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/material */ "./node_modules/@angular/material/esm5/material.es5.js");
+/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
+/* harmony import */ var _angular_cdk_bidi__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @angular/cdk/bidi */ "./node_modules/@angular/cdk/esm5/bidi.es5.js");
+
+
+
+
+
+
+
+var CampaignsSelectionComponent = /** @class */ (function () {
+    function CampaignsSelectionComponent(service, ngControl, _changeDetectorRef, _dir, _parentForm, _parentFormGroup, _parentFormField) {
+        this.service = service;
+        this.ngControl = ngControl;
+        this._changeDetectorRef = _changeDetectorRef;
+        this._dir = _dir;
+        this._parentFormField = _parentFormField;
+        this._required = false;
+        this._compareWith = function (o1, o2) { return o1 === o2; };
+        /** Aria label of the select. If not specified, the placeholder will be used as label. */
+        this.ariaLabel = '';
+    }
+    Object.defineProperty(CampaignsSelectionComponent.prototype, "required", {
+        /**
+         * INPUT CONTROLS
+         */
+        get: function () { return this._required; },
+        set: function (value) {
+            this._required = Object(_app_utils__WEBPACK_IMPORTED_MODULE_3__["coerceBooleanProperty"])(value);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(CampaignsSelectionComponent.prototype, "placeholder", {
+        /** Placeholder to be shown if no value has been selected. */
+        get: function () { return this._placeholder; },
+        set: function (value) {
+            this._placeholder = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(CampaignsSelectionComponent.prototype, "multiple", {
+        /** Whether the user should be allowed to select multiple options. */
+        get: function () { return this._multiple; },
+        set: function (value) {
+            if (this._selectionModel) {
+                throw getMatSelectDynamicMultipleError();
+            }
+            this._multiple = Object(_app_utils__WEBPACK_IMPORTED_MODULE_3__["coerceBooleanProperty"])(value);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(CampaignsSelectionComponent.prototype, "disableOptionCentering", {
+        /** Whether to center the active option over the trigger. */
+        get: function () { return this._disableOptionCentering; },
+        set: function (value) {
+            this._disableOptionCentering = Object(_app_utils__WEBPACK_IMPORTED_MODULE_3__["coerceBooleanProperty"])(value);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(CampaignsSelectionComponent.prototype, "compareWith", {
+        /**
+         * Function to compare the option values with the selected values. The first argument
+         * is a value from an option. The second is a value from the selection. A boolean
+         * should be returned.
+         */
+        get: function () { return this._compareWith; },
+        set: function (fn) {
+            if (typeof fn !== 'function') {
+                throw getMatSelectNonFunctionValueError();
+            }
+            this._compareWith = fn;
+            if (this._selectionModel) {
+                // A different comparator means the selection could change.
+                this._initializeSelection();
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(CampaignsSelectionComponent.prototype, "value", {
+        /** Value of the select control. */
+        get: function () { return this._value; },
+        set: function (newValue) {
+            if (newValue !== this._value) {
+                this.writeValue(newValue);
+                this._value = newValue;
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(CampaignsSelectionComponent.prototype, "id", {
+        /** Unique id of the element. */
+        get: function () { return this._id; },
+        set: function (value) {
+            this._id = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    CampaignsSelectionComponent.prototype.ngOnInit = function () {
+        this.campaigns = this.service.campaigns;
+        this.service.fetchCampaigns();
+    };
+    /**
+   * Sets the select's value. Part of the ControlValueAccessor interface
+   * required to integrate with Angular's core forms API.
+   *
+   * @param value New value to be written to the model.
+   */
+    CampaignsSelectionComponent.prototype.writeValue = function (value) {
+        if (this.options) {
+            this._setSelectionByValue(value);
+        }
+    };
+    CampaignsSelectionComponent.prototype._initializeSelection = function () {
+        var _this = this;
+        // Defer setting the value in order to avoid the "Expression
+        // has changed after it was checked" errors from Angular.
+        Promise.resolve().then(function () {
+            if (_this.ngControl || _this._value) {
+                _this._setSelectionByValue(_this.ngControl ? _this.ngControl.value : _this._value);
+            }
+        });
+    };
+    /**
+     * Sets the selected option based on a value. If no option can be
+     * found with the designated value, the select trigger is cleared.
+     */
+    CampaignsSelectionComponent.prototype._setSelectionByValue = function (value) {
+        var _this = this;
+        if (this.multiple && value) {
+            if (!Array.isArray(value)) {
+                throw getMatSelectNonArrayValueError();
+            }
+            this._selectionModel.clear();
+            value.forEach(function (currentValue) { return _this._selectValue(currentValue); });
+            this._sortValues();
+        }
+        else {
+            this._selectionModel.clear();
+            var correspondingOption = this._selectValue(value);
+            // Shift focus to the active item. Note that we shouldn't do this in multiple
+            // mode, because we don't know what option the user interacted with last.
+            if (correspondingOption) {
+                this._keyManager.setActiveItem(correspondingOption);
+            }
+        }
+        this._changeDetectorRef.markForCheck();
+    };
+    /** Sorts the selected values in the selected based on their order in the panel. */
+    CampaignsSelectionComponent.prototype._sortValues = function () {
+        var _this = this;
+        if (this.multiple) {
+            var options_1 = this.options.toArray();
+            this._selectionModel.sort(function (a, b) {
+                return _this.sortComparator ? _this.sortComparator(a, b, options_1) :
+                    options_1.indexOf(a) - options_1.indexOf(b);
+            });
+        }
+    };
+    /**
+   * Finds and selects and option based on its value.
+   * @returns Option that has the corresponding value.
+   */
+    CampaignsSelectionComponent.prototype._selectValue = function (value) {
+        var _this = this;
+        var correspondingOption = this.options.find(function (option) {
+            try {
+                // Treat null as a special reset value.
+                return option.value != null && _this._compareWith(option.value, value);
+            }
+            catch (error) {
+                // if (isDevMode()) {
+                // Notify developers of errors in their comparator.
+                console.warn(error);
+                // }
+                return false;
+            }
+        });
+        if (correspondingOption) {
+            this._selectionModel.select(correspondingOption);
+        }
+        return correspondingOption;
+    };
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["ContentChildren"])(_angular_material__WEBPACK_IMPORTED_MODULE_4__["MatOption"], { descendants: true }),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", _angular_core__WEBPACK_IMPORTED_MODULE_1__["QueryList"])
+    ], CampaignsSelectionComponent.prototype, "options", void 0);
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Boolean),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [Boolean])
+    ], CampaignsSelectionComponent.prototype, "required", null);
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Object)
+    ], CampaignsSelectionComponent.prototype, "panelClass", void 0);
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["ContentChild"])(_angular_material__WEBPACK_IMPORTED_MODULE_4__["MatSelectTrigger"]),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", _angular_material__WEBPACK_IMPORTED_MODULE_4__["MatSelectTrigger"])
+    ], CampaignsSelectionComponent.prototype, "customTrigger", void 0);
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", String),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [String])
+    ], CampaignsSelectionComponent.prototype, "placeholder", null);
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Boolean),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [Boolean])
+    ], CampaignsSelectionComponent.prototype, "multiple", null);
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Boolean),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [Boolean])
+    ], CampaignsSelectionComponent.prototype, "disableOptionCentering", null);
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Function),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [Function])
+    ], CampaignsSelectionComponent.prototype, "compareWith", null);
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Object),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [Object])
+    ], CampaignsSelectionComponent.prototype, "value", null);
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])('aria-label'),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", String)
+    ], CampaignsSelectionComponent.prototype, "ariaLabel", void 0);
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])('aria-labelledby'),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", String)
+    ], CampaignsSelectionComponent.prototype, "ariaLabelledby", void 0);
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", _angular_material__WEBPACK_IMPORTED_MODULE_4__["ErrorStateMatcher"])
+    ], CampaignsSelectionComponent.prototype, "errorStateMatcher", void 0);
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Number)
+    ], CampaignsSelectionComponent.prototype, "typeaheadDebounceInterval", void 0);
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Function)
+    ], CampaignsSelectionComponent.prototype, "sortComparator", void 0);
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", String),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [String])
+    ], CampaignsSelectionComponent.prototype, "id", null);
+    CampaignsSelectionComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
+            selector: 'vs-campaigns-selection',
+            template: __webpack_require__(/*! ./campaigns-selection.component.html */ "./src/app/imports/widgets/campaigns-selection/campaigns-selection.component.html"),
+            styles: [__webpack_require__(/*! ./campaigns-selection.component.scss */ "./src/app/imports/widgets/campaigns-selection/campaigns-selection.component.scss")]
+        }),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__param"](1, Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Self"])()), tslib__WEBPACK_IMPORTED_MODULE_0__["__param"](1, Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Optional"])()),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__param"](3, Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Optional"])()),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__param"](4, Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Optional"])()),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__param"](5, Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Optional"])()),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__param"](6, Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Optional"])()),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_app_imports_imports_service__WEBPACK_IMPORTED_MODULE_2__["ImportsService"],
+            _angular_forms__WEBPACK_IMPORTED_MODULE_5__["NgControl"],
+            _angular_core__WEBPACK_IMPORTED_MODULE_1__["ChangeDetectorRef"],
+            _angular_cdk_bidi__WEBPACK_IMPORTED_MODULE_6__["Directionality"],
+            _angular_forms__WEBPACK_IMPORTED_MODULE_5__["NgForm"],
+            _angular_forms__WEBPACK_IMPORTED_MODULE_5__["FormGroupDirective"],
+            _angular_material__WEBPACK_IMPORTED_MODULE_4__["MatFormField"]])
+    ], CampaignsSelectionComponent);
+    return CampaignsSelectionComponent;
+}());
+
+function getMatSelectDynamicMultipleError() {
+    return Error('Cannot change `multiple` mode of select after initialization.');
+}
+/**
+ * Returns an exception to be thrown when attempting to assign a non-array value to a select
+ * in `multiple` mode. Note that `undefined` and `null` are still valid values to allow for
+ * resetting the value.
+ * @docs-private
+ */
+function getMatSelectNonArrayValueError() {
+    return Error('Value must be an array in multiple-selection mode.');
+}
+/**
+ * Returns an exception to be thrown when assigning a non-function value to the comparator
+ * used to determine if a value corresponds to an option. Note that whether the function
+ * actually takes two values and returns a boolean is not checked.
+ */
+function getMatSelectNonFunctionValueError() {
+    return Error('`compareWith` must be a function.');
+}
 
 
 /***/ }),

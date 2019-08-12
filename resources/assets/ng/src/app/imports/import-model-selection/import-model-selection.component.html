@@ -1,0 +1,22 @@
+<div class="shadow-none p-3 pb-0 rounded" *ngIf="(models|async)?.length <= 4; else showDropdown;">
+    <p>Choose Import Model:</p>
+    <mat-radio-group aria-label="Select an import model" class="select-import-model">
+        <mat-radio-button *ngFor="let m of (models|async); let i = index;" [value]="m.importModelId">
+            {{m.shortDesc}}
+        </mat-radio-button>
+    </mat-radio-group>
+</div>
+
+<ng-template #showDropdown>
+    <div class="shadow-none p-3 pb-0 rounded">
+        <p>Choose Import Model:</p>
+        <mat-form-field>
+            <mat-label>Import Model</mat-label>
+            <mat-select>
+                <mat-option *ngFor="let m of (models|async); let i = index;" [value]="m.importModelId">
+                    {{m.shortDesc}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+</ng-template>

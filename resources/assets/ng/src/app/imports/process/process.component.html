@@ -22,15 +22,53 @@
                             </li>
                         </ul>
                     </div>
-                    <div class="shadow-none p-3 mb-5 rounded">
-                        <h5>Upload CSV file</h5>
-                        <div class="p-1">
-                            <button type="button" mat-stroked-button color="primary" (click)="uploadFile()">Upload File</button>
+
+                    <div class="row">
+                        <div class="col-md-2">
+                            <vs-import-model-selection></vs-import-model-selection>
+
+                            <div class="shadow-none p-3 pt-0 mb-2 rounded">
+                                <p>Upload CSV file</p>
+                                <div class="p-1">
+                                    <input #fuRef class="d-none" mat-stroked-button color="primary" *ngIf="fu" type="file" ng2FileSelect [uploader]="fu" />
+                                    <button type="button" mat-stroked-button color="primary" (click)="uploadFile()">Upload File</button>
+                                </div>
+                                <div class="p-1">
+                                    <button type="button" mat-raised-button color="primary" (click)="importReport()">Import Report</button>
+                                </div>
+                            </div>
                         </div>
-                        <div class="p-1">
-                            <button type="button" mat-raised-button color="primary" (click)="importReport()">Import Report</button>
+                        <div class="col-md-10" [class.d-flex]="!hasFile" [class.justify-content-center]="!hasFile">
+                            <div *ngIf="hasFile; else noPreview">
+                                <span>PREVIEW GOES HERE...</span>
+                            </div>
+                            <ng-template #noPreview>
+                                <div class="shadow-none p-3 mb-2 rounded">
+                                    <div class="row d-flex justify-content-center">
+                                        <div class="col-md-4">
+                                            <img src="dist/assets/images/add_file.svg" class="img-fluid clickable m-5" 
+                                                (click)="uploadFile()" />
+                                            <p class="text-muted">
+                                                Import preview will appear here.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-template>
                         </div>
                     </div>
+
+                    <mat-accordion>
+                        <mat-expansion-panel>
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                    Past Uploads
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+
+                            <vs-past-imports></vs-past-imports>
+                        </mat-expansion-panel>
+                    </mat-accordion>
                 </mat-card-content>
             </mat-card>
         </div>

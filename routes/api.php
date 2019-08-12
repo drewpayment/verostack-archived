@@ -31,6 +31,7 @@ include('core/utility.php');
 include('core/session-user.php');
 include('core/dnc-contacts.php');
 include('core/import-models.php');
+include('core/process-imports.php');
 
 //Route::middleware('auth:api')->get('/user', function (Request $request) {
 //    return $request->user();
