@@ -14654,7 +14654,7 @@ var PastImportsComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n<div class=\"container\">\n    <div class=\"row\">\n        <div class=\"col-md-12\">\n            <mat-card class=\"page-header-accent\">\n                <h2 mat-card-title>Import Reports</h2>\n                <mat-card-content>\n                    <div class=\"shadow-none p-3 bg-light rounded\">\n                        <h5>Requirements</h5>\n                        <ul>\n                            <li>\n                                Your CSV file should contain columns that match \n                                the <span class=\"font-weight-bold\">Import Model</span> you select.\n                            </li>\n                            <li>\n                                The order of the columns must match exactly the to your Import Model. If they \n                                do not, please reorder the columns on your report.\n                            </li>\n                            <li>\n                                Confirm correct import in the review field after you've imported the file and make any \n                                last-minute modifications that you might notice.\n                            </li>\n                        </ul>\n                    </div>\n\n                    <div class=\"row\">\n                        <div class=\"col-md-2\">\n                            <vs-import-model-selection></vs-import-model-selection>\n\n                            <div class=\"shadow-none p-3 pt-0 mb-2 rounded\">\n                                <p>Upload CSV file</p>\n                                <div class=\"p-1\">\n                                    <input #fuRef class=\"d-none\" mat-stroked-button color=\"primary\" *ngIf=\"fu\" type=\"file\" ng2FileSelect [uploader]=\"fu\" />\n                                    <button type=\"button\" mat-stroked-button color=\"primary\" (click)=\"uploadFile()\">Upload File</button>\n                                </div>\n                                <div class=\"p-1\">\n                                    <button type=\"button\" mat-raised-button color=\"primary\" (click)=\"importReport()\">Import Report</button>\n                                </div>\n                            </div>\n                        </div>\n                        <div class=\"col-md-10\" [class.d-flex]=\"!hasFile\" [class.justify-content-center]=\"!hasFile\">\n                            <div *ngIf=\"hasFile; else noPreview\">\n                                <span>PREVIEW GOES HERE...</span>\n                            </div>\n                            <ng-template #noPreview>\n                                <div class=\"shadow-none p-3 mb-2 rounded\">\n                                    <div class=\"row d-flex justify-content-center\">\n                                        <div class=\"col-md-4\">\n                                            <img src=\"dist/assets/images/add_file.svg\" class=\"img-fluid clickable m-5\" \n                                                (click)=\"uploadFile()\" />\n                                            <p class=\"text-muted\">\n                                                Import preview will appear here.\n                                            </p>\n                                        </div>\n                                    </div>\n                                </div>\n                            </ng-template>\n                        </div>\n                    </div>\n\n                    <mat-accordion>\n                        <mat-expansion-panel>\n                            <mat-expansion-panel-header>\n                                <mat-panel-title>\n                                    Past Uploads\n                                </mat-panel-title>\n                            </mat-expansion-panel-header>\n\n                            <vs-past-imports></vs-past-imports>\n                        </mat-expansion-panel>\n                    </mat-accordion>\n                </mat-card-content>\n            </mat-card>\n        </div>\n    </div>\n</div>"
+module.exports = "\n<div class=\"container\">\n    <div class=\"row\">\n        <div class=\"col-md-12\">\n            <mat-card class=\"page-header-accent\">\n                <h2 mat-card-title>Import Reports</h2>\n                <mat-card-content>\n                    <div class=\"shadow-none p-3 bg-light rounded\">\n                        <h5>Requirements</h5>\n                        <ul>\n                            <li>\n                                Your CSV file should contain columns that match \n                                the <span class=\"font-weight-bold\">Import Model</span> you select.\n                            </li>\n                            <li>\n                                The order of the columns must match exactly the to your Import Model. If they \n                                do not, please reorder the columns on your report.\n                            </li>\n                            <li>\n                                Confirm correct import in the review field after you've imported the file and make any \n                                last-minute modifications that you might notice.\n                            </li>\n                        </ul>\n                    </div>\n\n                    <div class=\"row\">\n                        <div class=\"col-md-2\">\n                            <vs-import-model-selection></vs-import-model-selection>\n\n                            <div class=\"shadow-none p-3 pt-0 mb-2 rounded\">\n                                <p>Upload CSV file</p>\n                                <div class=\"p-1\">\n                                    <input #fuRef class=\"d-none\" mat-stroked-button color=\"primary\" \n                                        *ngIf=\"fu\" type=\"file\" ng2FileSelect [uploader]=\"fu\" (onFileSelected)=\"fileAddedHandler($event)\" />\n                                    <button type=\"button\" mat-stroked-button color=\"primary\" (click)=\"uploadFile()\">Upload File</button>\n                                </div>\n                                <div class=\"p-1\">\n                                    <button type=\"button\" mat-raised-button color=\"primary\" (click)=\"importReport()\">Import Report</button>\n                                </div>\n                            </div>\n                        </div>\n                        <div class=\"col-md-10\" [class.d-flex]=\"!hasFile\" [class.justify-content-center]=\"!hasFile\">\n                            <div *ngIf=\"hasFile; else noPreview\">\n                                <div class=\"row\">\n                                    <div class=\"col-md-12\">\n                                        Spreadsheet here...\n                                        <div #spreadsheet></div>\n                                    </div>\n                                </div>\n                            </div>\n                            <ng-template #noPreview>\n                                <div class=\"shadow-none p-3 mb-2 rounded\">\n                                    <div class=\"row d-flex justify-content-center\">\n                                        <div class=\"col-md-4\">\n                                            <img src=\"dist/assets/images/add_file.svg\" class=\"img-fluid clickable m-5\" \n                                                (click)=\"uploadFile()\" />\n                                            <p class=\"text-muted\">\n                                                Import preview will appear here.\n                                            </p>\n                                        </div>\n                                    </div>\n                                </div>\n                            </ng-template>\n                        </div>\n                    </div>\n\n                    <mat-accordion>\n                        <mat-expansion-panel>\n                            <mat-expansion-panel-header>\n                                <mat-panel-title>\n                                    Past Uploads\n                                </mat-panel-title>\n                            </mat-expansion-panel-header>\n\n                            <vs-past-imports></vs-past-imports>\n                        </mat-expansion-panel>\n                    </mat-accordion>\n\n                </mat-card-content>\n            </mat-card>\n        </div>\n    </div>\n</div>"
 
 /***/ }),
 
@@ -14683,24 +14683,88 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var ng2_file_upload__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ng2-file-upload */ "./node_modules/ng2-file-upload/index.js");
 /* harmony import */ var ng2_file_upload__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(ng2_file_upload__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var dhx_spreadsheet__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! dhx-spreadsheet */ "./node_modules/dhx-spreadsheet/codebase/spreadsheet.js");
+/* harmony import */ var dhx_spreadsheet__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(dhx_spreadsheet__WEBPACK_IMPORTED_MODULE_3__);
+
 
 
 
 var ProcessComponent = /** @class */ (function () {
-    function ProcessComponent() {
+    function ProcessComponent(cd) {
+        this.cd = cd;
+        this.fu = new ng2_file_upload__WEBPACK_IMPORTED_MODULE_2__["FileUploader"]({
+            url: null,
+            autoUpload: false,
+            allowedFileType: ['csv', 'xsl', 'xslx'],
+        });
         this.hasFile = false;
+        this.workbooksToReview = [];
     }
     ProcessComponent.prototype.ngOnInit = function () {
+    };
+    ProcessComponent.prototype.fileAddedHandler = function (item) {
         var _this = this;
-        var options = {
-            url: '',
-            allowedFileType: ['csv', 'xsl', 'xslx'],
-        };
-        this.fu = new ng2_file_upload__WEBPACK_IMPORTED_MODULE_2__["FileUploader"](options);
-        this.fu.onAfterAddingFile = function (item) { return _this.hasFile = true; };
+        var file = item.item(0);
+        var ext = file.name.split('.').pop();
+        console.log("File extension: " + ext);
+        if (ext == 'csv' || ext == 'xsl' || ext == 'xlsx') {
+            var workerUrl = window.URL.createObjectURL(new Blob([
+                'importScripts("https://cdn.dhtmlx.com/libs/excel2json/1.0/worker.js")',
+            ], { type: 'text/javascript' }));
+            var worker = new Worker(workerUrl);
+            worker.postMessage({
+                type: 'convert',
+                data: file
+            });
+            worker.addEventListener('message', function (e) {
+                if (e.data.type === 'ready') {
+                    _this.hasFile = true;
+                    _this.cd.detectChanges();
+                    _this.workbooksToReview = e.data.data;
+                    _this.styles = e.data.styles;
+                    _this.workbooksToReview.forEach(function (wb, i, a) {
+                        _this.currentlyViewedWb = i;
+                        _this.loadWorkbook(wb);
+                    });
+                }
+            });
+        }
+    };
+    ProcessComponent.prototype.loadWorkbook = function (wb) {
+        var _this = this;
+        this.ss = new dhx_spreadsheet__WEBPACK_IMPORTED_MODULE_3__["Spreadsheet"](this.container.nativeElement, {
+            toolbar: [],
+            menu: true,
+            editLine: false,
+            rowsCount: wb.rows.length,
+            colsCount: wb.cols.length,
+        });
+        var data = [];
+        wb.cells.forEach(function (row, i, a) {
+            row.forEach(function (cell, j, b) {
+                var cellLetters = _this.getCellLetter(j);
+                var rowNo = (i + 1);
+                var cellDest = "" + cellLetters + rowNo;
+                data.push({
+                    cell: cellDest,
+                    value: cell ? cell.v : null,
+                });
+                if (cell)
+                    _this.ss.setStyle(cellDest, _this.styles[cell.s]);
+            });
+        });
+        this.ss.parse(data);
+    };
+    ProcessComponent.prototype.getCellLetter = function (index) {
+        var dict = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
+            'u', 'v', 'w', 'x', 'y', 'z'];
+        if (index > dict.length) {
+            var rem = index - dict.length;
+            return "" + dict[rem - 1] + dict[rem - 1];
+        }
+        return "" + dict[index];
     };
     ProcessComponent.prototype.uploadFile = function () {
-        console.log('UPLOAD FILE');
         this.uploader.nativeElement.click();
     };
     ProcessComponent.prototype.importReport = function () {
@@ -14712,13 +14776,17 @@ var ProcessComponent = /** @class */ (function () {
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewChild"])('fuRef'),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", _angular_core__WEBPACK_IMPORTED_MODULE_1__["ElementRef"])
     ], ProcessComponent.prototype, "uploader", void 0);
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewChild"])('spreadsheet'),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", _angular_core__WEBPACK_IMPORTED_MODULE_1__["ElementRef"])
+    ], ProcessComponent.prototype, "container", void 0);
     ProcessComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
             selector: 'vs-process',
             template: __webpack_require__(/*! ./process.component.html */ "./src/app/imports/process/process.component.html"),
             styles: [__webpack_require__(/*! ./process.component.scss */ "./src/app/imports/process/process.component.scss")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_core__WEBPACK_IMPORTED_MODULE_1__["ChangeDetectorRef"]])
     ], ProcessComponent);
     return ProcessComponent;
 }());
@@ -14734,7 +14802,7 @@ var ProcessComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div style=\"height: 100px !important;\">\n    <mat-form-field class=\"wp-100\" [hideRequiredMarker]=\"true\">\n        <mat-select [formControlName]=\"campaignId\" placeholder=\"Campaign\" [required]=\"required\">\n            <mat-option *ngFor=\"let c of (campaigns|async); let i = index;\" [value]=\"c.campaignId\">\n                {{ c.name }}\n            </mat-option>\n        </mat-select>\n        <mat-error *ngIf=\"form && form.get('campaignId').hasError\">\n            Please select a campaign.\n        </mat-error>\n        <mat-hint>\n            Select the Campaign that this import will be associated with. It is <span class=\"font-weight-bold\">very important</span> \n            that you make sure your utilities associated with the campaign reflect all utilities in the report that you're importing.\n        </mat-hint>\n    </mat-form-field>\n</div>"
+module.exports = "<!-- <div style=\"height: 100px !important;\">\n    <mat-form-field class=\"wp-100\" [hideRequiredMarker]=\"true\">\n        <mat-select [formControlName]=\"campaignId\" placeholder=\"Campaign\" [required]=\"required\">\n            <mat-option *ngFor=\"let c of (campaigns|async); let i = index;\" [value]=\"c.campaignId\">\n                {{ c.name }}\n            </mat-option>\n        </mat-select>\n        <mat-error *ngIf=\"form && form.get('campaignId').hasError\">\n            Please select a campaign.\n        </mat-error>\n        <mat-hint>\n            Select the Campaign that this import will be associated with. It is <span class=\"font-weight-bold\">very important</span> \n            that you make sure your utilities associated with the campaign reflect all utilities in the report that you're importing.\n        </mat-hint>\n    </mat-form-field>\n</div> -->"
 
 /***/ }),
 
