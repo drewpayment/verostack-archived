@@ -14722,10 +14722,8 @@ var ProcessComponent = /** @class */ (function () {
                     _this.cd.detectChanges();
                     _this.workbooksToReview = e.data.data;
                     _this.styles = e.data.styles;
-                    _this.workbooksToReview.forEach(function (wb, i, a) {
-                        _this.currentlyViewedWb = i;
-                        _this.loadWorkbook(wb);
-                    });
+                    _this.currentlyViewedWb = 0;
+                    _this.loadWorkbook(_this.workbooksToReview[_this.currentlyViewedWb]);
                 }
             });
         }
@@ -14736,31 +14734,45 @@ var ProcessComponent = /** @class */ (function () {
             toolbar: [],
             menu: true,
             editLine: false,
-            rowsCount: wb.rows.length,
-            colsCount: wb.cols.length,
+            rowsCount: wb.rows.length + 1,
+            colsCount: wb.cols.length + 1,
         });
-        var data = [];
+        var data = {
+            data: [],
+            styles: {}
+        };
         wb.cells.forEach(function (row, i, a) {
-            row.forEach(function (cell, j, b) {
+            row.forEach(function (col, j, b) {
                 var cellLetters = _this.getCellLetter(j);
                 var rowNo = (i + 1);
                 var cellDest = "" + cellLetters + rowNo;
-                data.push({
+                var styleClassName = "spreadsheet-" + cellDest;
+                data.data.push({
                     cell: cellDest,
-                    value: cell ? cell.v : null,
+                    value: col ? col.v : null,
+                    css: styleClassName,
                 });
-                if (cell)
-                    _this.ss.setStyle(cellDest, _this.styles[cell.s]);
+                if (col) {
+                    data.styles[styleClassName] = _this.styles[col.s];
+                }
             });
         });
+        console.dir(data);
         this.ss.parse(data);
     };
     ProcessComponent.prototype.getCellLetter = function (index) {
+        var adjIdx = index + 1;
         var dict = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
             'u', 'v', 'w', 'x', 'y', 'z'];
-        if (index > dict.length) {
-            var rem = index - dict.length;
-            return "" + dict[rem - 1] + dict[rem - 1];
+        if (adjIdx > dict.length && ((adjIdx % dict.length) % dict.length)) {
+            var firstLetter = Math.floor((index + 1) / dict.length) - 1;
+            var secondLetter = (adjIdx % dict.length) % dict.length - 1;
+            return "" + dict[firstLetter] + dict[secondLetter];
+        }
+        else if (adjIdx > dict.length) {
+            var firstLetter = adjIdx % dict.length;
+            var secondLetter = Math.floor((adjIdx - 1) % dict.length);
+            return "" + dict[firstLetter] + dict[secondLetter];
         }
         return "" + dict[index];
     };

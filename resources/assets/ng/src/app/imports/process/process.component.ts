@@ -55,12 +55,8 @@ export class ProcessComponent implements OnInit {
                     this.workbooksToReview = e.data.data as ISheetData[];
                     this.styles = e.data.styles as IStyle[];
 
-                    this.workbooksToReview.forEach((wb, i, a) => {
-                        this.currentlyViewedWb = i;
-                        this.loadWorkbook(wb);
-                    });
-
-                    
+                    this.currentlyViewedWb = 0;
+                    this.loadWorkbook(this.workbooksToReview[this.currentlyViewedWb]);
                 }
             });
             
@@ -74,34 +70,48 @@ export class ProcessComponent implements OnInit {
             toolbar: [],
             menu: true,
             editLine: false,
-            rowsCount: wb.rows.length,
-            colsCount: wb.cols.length,
+            rowsCount: wb.rows.length + 1,
+            colsCount: wb.cols.length + 1,
         });
         
-        const data = [];
+        const data = {
+            data: [],
+            styles: {}
+        };
         wb.cells.forEach((row, i, a) => {
-            row.forEach((cell, j, b) => {
+            row.forEach((col, j, b) => {
                 const cellLetters = this.getCellLetter(j);
                 const rowNo = (i + 1);
                 const cellDest = `${cellLetters}${rowNo}`;
-                data.push({
+                const styleClassName = `spreadsheet-${cellDest}`;
+                data.data.push({
                     cell: cellDest,
-                    value: cell ? cell.v : null,
+                    value: col ? col.v : null,
+                    css: styleClassName,
                 });
 
-                if (cell) this.ss.setStyle(cellDest, this.styles[cell.s]);
+                if (col) {
+                    data.styles[styleClassName] = this.styles[col.s];
+                }
             });
         });
+        console.dir(data);
         this.ss.parse(data);
     }
 
     private getCellLetter(index: number) {
+        const adjIdx = index + 1;
         const dict = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 
             'u', 'v', 'w', 'x', 'y', 'z'];
 
-        if (index > dict.length) {
-            const rem = index - dict.length;
-            return `${dict[rem - 1]}${dict[rem - 1]}`;
+        if (adjIdx > dict.length && ((adjIdx % dict.length) % dict.length)) {
+            const firstLetter = Math.floor((index + 1) / dict.length) - 1;
+            const secondLetter = (adjIdx % dict.length) % dict.length - 1;
+            return `${dict[firstLetter]}${dict[secondLetter]}`;
+        } else if (adjIdx > dict.length) {
+            const firstLetter = adjIdx % dict.length;
+            const secondLetter = Math.floor((adjIdx - 1) % dict.length);
+            return `${dict[firstLetter]}${dict[secondLetter]}`;
         }
 
         return `${dict[index]}`;
