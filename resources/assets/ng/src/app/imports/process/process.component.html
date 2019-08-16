@@ -35,7 +35,7 @@
                                     <button type="button" mat-stroked-button color="primary" (click)="uploadFile()">Upload File</button>
                                 </div>
                                 <div class="p-1">
-                                    <button type="button" mat-raised-button color="primary" (click)="importReport()">Import Report</button>
+                                    <button type="button" mat-raised-button color="primary" [disabled]="!hasFile" (click)="importReport()">Save Report</button>
                                 </div>
                             </div>
                         </div>
@@ -43,8 +43,7 @@
                             <div *ngIf="hasFile; else noPreview">
                                 <div class="row">
                                     <div class="col-md-12">
-                                        Spreadsheet here...
-                                        <div #spreadsheet></div>
+                                        <div #spreadsheet class="import-spreadsheet"></div>
                                     </div>
                                 </div>
                             </div>
