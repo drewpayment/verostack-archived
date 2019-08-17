@@ -17,7 +17,7 @@ class ImportModel extends Model
 
     protected $primaryKey = 'import_model_id';
 
-    protected $fillable = ['import_model_id', 'client_id', 'shortDesc', 'fullDesc', 'map', 'user_id', 
+    protected $fillable = ['import_model_id', 'client_id', 'shortDesc', 'fullDesc', 'map', 'user_id', 'campaign_id',
         'created_at', 'updated_at', 'deleted_at'];
 
     protected $dates = ['created_at', 'updated_at', 'deleted_at'];
@@ -50,9 +50,9 @@ class ImportModel extends Model
         $query->where('user_id', $id);
     }
 
-    public function getMatchByAgentCodeAttribute($value)
+    public function getMatchByAgentCodeAttribute()
     {
-        return $value == 1;
+        return $this->attributes['match_by_agent_code'] == 1;
     }
 
     public function setMatchByAgentCodeAttribute($value)
@@ -62,11 +62,42 @@ class ImportModel extends Model
 
     public function getSplitCustomerNameAttribute($value)
     {
-        return $value == 1;
+        return $this->attributes['splie_customer_name'] == 1;
     }
 
     public function setSplitCustomerNameAttribute($value)
     {
         $this->attributes['split_customer_name'] = $value == true ? 1 : 0;
     }
+
+    public function getImportModelIdAttribute()
+    {
+        return $this->attributes['import_model_id'];
+    }
+
+    public function getClientIdAttribute()
+    {
+        return $this->attributes['client_id'];
+    }
+
+    public function getUserIdAttribute()
+    {
+        return $this->attributes['user_id'];
+    }
+
+    public function getCampaignIdAttribute()
+    {
+        return $this->attributes['campaign_id'];
+    }
+
+    public function getCreatedAtAttribute()
+    {
+        return $this->attributes['created_at'];
+    }
+
+    public function getUpdatedAtAttribute()
+    {
+        return $this->attributes['updated_at'];
+    }
+
 }

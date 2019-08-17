@@ -1,0 +1,16 @@
+
+type ImportModel {
+    importModelId: ID!
+    clientId: Int!
+    shortDesc: String!
+    fullDesc: String
+    map: String
+    userId: Int!
+    createdAt: DateTime
+    updatedAt: DateTime
+    client: Client @hasOne
+}
+
+extend type Query {
+    importModels: [ImportModel!]! @paginate(type: "paginator" model: "App\\ImportModel") @auth
+}

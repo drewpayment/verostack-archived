@@ -1,0 +1,16 @@
+
+enum RoleType {
+    USER @enum(value: 1)
+    SUPERVISOR @enum(value: 2)
+    MANAGER @enum(value: 3)
+    REGIONAL_MANAGER @enum(value: 4)
+    HUMAN_RESOURCES @enum(value: 5)
+    COMPANY_ADMIN @enum(value: 6)
+    SYSTEM_ADMIN @enum(value: 7)
+}
+
+type Role {
+    user_id: ID!
+    role: RoleType!
+    is_sales_admin: Boolean!
+}

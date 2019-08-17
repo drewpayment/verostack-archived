@@ -13345,6 +13345,7 @@ var UserService = /** @class */ (function () {
         var _this = this;
         this.http = http;
         this.session = session;
+        this.graphql = _env_environment__WEBPACK_IMPORTED_MODULE_7__["environment"].graphql;
         this.apiUrl = _env_environment__WEBPACK_IMPORTED_MODULE_7__["environment"].apiUrl;
         this.api = _env_environment__WEBPACK_IMPORTED_MODULE_7__["environment"].apiUrl + 'api/';
         this.dataStore = {
@@ -13510,8 +13511,22 @@ var UserService = /** @class */ (function () {
      * @param username
      */
     UserService.prototype.loadUser = function (username) {
+        // this.http.get(this.apiUrl + 'api/users/' + username + '/session').subscribe((data: User) => {
+        //     this.dataStore.detail = data.detail;
+        //     this.userDetail$.next(data.detail);
         var _this = this;
-        this.http.get(this.apiUrl + 'api/users/' + username + '/session').subscribe(function (data) {
+        //     this.dataStore.user = data;
+        //     this.session.setUser(this.dataStore.user);
+        //     this.user$.next(this.dataStore.user);
+        //     this.setLocalStorageUser(this.dataStore.user);
+        // });
+        var query = "\n            userByUserName(username: " + username + ") {\n                id\n                firstName\n                lastName\n                username\n                active\n                detail {\n                userDetailId\n                userId\n                street\n                    street2\n                city\n                state\n                zip\n                }\n                role {\n                role\n                is_sales_admin\n                }\n                clients {\n                clientId\n                name\n                }\n                sessionUser {\n                id\n                sessionClient\n                client {\n                    clientId\n                    name\n                    street\n                    city\n                    state\n                    zip\n                    phone\n                    active\n                    modifiedBy\n                }\n                }\n            }\n        ";
+        this.http.post(this.graphql, {
+            body: {
+                query: query,
+            }
+        }).subscribe(function (result) {
+            var data = result.data;
             _this.dataStore.detail = data.detail;
             _this.userDetail$.next(data.detail);
             _this.dataStore.user = data;
@@ -13960,6 +13975,7 @@ var environment = {
     production: false,
     rootUrl: 'http://verostack',
     apiUrl: 'http://verostack/',
+    graphql: 'http://verostack/graphql',
     defaultTitle: 'Payment Dyanmics',
     headless: '5764D6B5E7A5575B22201D646C5695ECB6AEF498A467B01D4D2167637D8F81A1'
 };

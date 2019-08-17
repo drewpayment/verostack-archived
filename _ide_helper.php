@@ -3,7 +3,7 @@
 
 /**
  * A helper file for Laravel 5, to provide autocomplete information to your IDE
- * Generated for Laravel 5.7.28 on 2019-08-07 21:29:26.
+ * Generated for Laravel 5.7.28 on 2019-08-17 13:55:30.
  *
  * This file should not be included in your code, only analyzed by your IDE!
  *
@@ -14576,6 +14576,18 @@ namespace Sentry\Laravel {
  
 }
 
+namespace Nuwave\Lighthouse { 
+
+    /**
+     * 
+     *
+     */ 
+    class GraphQL {
+         
+    }
+ 
+}
+
 
 namespace  { 
 
@@ -17185,6 +17197,8 @@ namespace  {
     class View extends \Illuminate\Support\Facades\View {}
 
     class Sentry extends \Sentry\Laravel\Facade {}
+
+    class graphql extends \Nuwave\Lighthouse\GraphQL {}
  
 }
 

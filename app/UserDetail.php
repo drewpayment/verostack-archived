@@ -104,4 +104,14 @@ class UserDetail extends Model
         return $query->where('user_id', $userId);
     }
 
+    public function getUserDetailIdAttribute()
+    {
+        return $this->attributes['user_detail_id'];
+    }
+
+    public function getUserIdAttribute()
+    {
+        return $this->attributes['user_id'];
+    }
+
 }

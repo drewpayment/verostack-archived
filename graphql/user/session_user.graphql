@@ -1,0 +1,9 @@
+
+type SessionUser {
+    id: ID!
+    userId: Int!
+    sessionClient: Int!
+    createdAt: DateTime
+    updatedAt: DateTime
+    client: Client! @hasOne
+}

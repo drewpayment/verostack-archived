@@ -75,6 +75,26 @@ class SessionUser extends Model
 	public function scopeUserId($query, $id)
 	{
 		return $query->where('user_id', $id);
-	}
+    }
+    
+    public function getUserIdAttribute()
+    {
+        return $this->attributes['user_id'];
+    }
+
+    public function getSessionClientAttribute()
+    {
+        return $this->attributes['session_client'];
+    }
+
+    public function getCreatedAtAttribute()
+    {
+        return $this->attributes['created_at'];
+    }
+
+    public function getUpdatedAtAttribute()
+    {
+        return $this->attributes['updated_at'];
+    }
 
 }

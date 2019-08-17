@@ -1,0 +1,21 @@
+
+type UserDetail {
+    userDetailId: ID!
+    userId: Int!
+    street: String!
+    street2: String
+    city: String!
+    state: String!
+    zip: String!
+    ssn: String
+    phone: Int
+    birthDate: DateTime
+    bankRouting: String
+    bankAccount: String
+    created_at: DateTime!
+    updated_at: DateTime!
+}
+
+extend type Query {
+    userDetail(user_detail_id: ID @eq): UserDetail @find(model: "App\\UserDetail")
+}

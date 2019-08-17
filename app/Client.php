@@ -108,6 +108,16 @@ class Client extends Model
 	public function scopeClientId($query, $clientId)
 	{
 		return $query->where('client_id', $clientId);
-	}
+    }
+    
+    public function getClientIdAttribute()
+    {
+        return $this->attributes['client_id'];
+    }
+
+    public function getModifiedByAttribute()
+    {
+        return $this->attributes['modified_by'];
+    }
 
 }

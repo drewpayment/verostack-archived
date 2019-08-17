@@ -14288,12 +14288,20 @@ __webpack_require__.r(__webpack_exports__);
 var ImportModelSelectionComponent = /** @class */ (function () {
     function ImportModelSelectionComponent(service) {
         this.service = service;
+        this.change = new _angular_core__WEBPACK_IMPORTED_MODULE_1__["EventEmitter"]();
     }
     ImportModelSelectionComponent.prototype.ngOnInit = function () {
         this.models = this.service.getImportModels();
     };
     ImportModelSelectionComponent.prototype.ngOnDestroy = function () {
     };
+    ImportModelSelectionComponent.prototype.changeHandler = function (event) {
+        this.change.emit(event);
+    };
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Output"])(),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", _angular_core__WEBPACK_IMPORTED_MODULE_1__["EventEmitter"])
+    ], ImportModelSelectionComponent.prototype, "change", void 0);
     ImportModelSelectionComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
             selector: 'vs-import-model-selection',

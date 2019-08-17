@@ -219,5 +219,25 @@ class User extends Authenticatable
 	public function scopeByEmail($query, $email)
 	{
 		return $query->where('email', $email);
-	}
+    }
+    
+    public function getFirstNameAttribute() 
+    {
+        return $this->attributes['first_name'];
+    }
+
+    public function getLastNameAttribute()
+    {
+        return $this->attributes['last_name'];
+    }
+
+    public function getCreatedAtAttribute()
+    {
+        return $this->attributes['created_at'];
+    }
+
+    public function getUpdatedAtAttribute()
+    {
+        return $this->attributes['updated_at'];
+    }
 }

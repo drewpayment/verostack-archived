@@ -1,0 +1,14 @@
+
+type Client {
+    clientId: ID!
+    name: String!
+    street: String!
+    city: String!
+    state: String!
+    zip: Int!
+    phone: String
+    taxid: Int
+    active: Boolean
+    modifiedBy: Int!
+    users: [User!] @hasMany
+}

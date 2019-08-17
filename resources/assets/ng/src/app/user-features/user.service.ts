@@ -22,6 +22,7 @@ interface DataStore {
 
 @Injectable()
 export class UserService {
+    private graphql = environment.graphql;
     private apiUrl: string = environment.apiUrl;
     private api = environment.apiUrl + 'api/';
 
@@ -198,7 +199,64 @@ export class UserService {
      * @param username
      */
     loadUser(username: string): void {
-        this.http.get(this.apiUrl + 'api/users/' + username + '/session').subscribe((data: User) => {
+        // this.http.get(this.apiUrl + 'api/users/' + username + '/session').subscribe((data: User) => {
+        //     this.dataStore.detail = data.detail;
+        //     this.userDetail$.next(data.detail);
+
+        //     this.dataStore.user = data;
+        //     this.session.setUser(this.dataStore.user);
+        //     this.user$.next(this.dataStore.user);
+        //     this.setLocalStorageUser(this.dataStore.user);
+        // });
+
+        const query = `
+            userByUserName(username: ${username}) {
+                id
+                firstName
+                lastName
+                username
+                active
+                detail {
+                userDetailId
+                userId
+                street
+                    street2
+                city
+                state
+                zip
+                }
+                role {
+                role
+                is_sales_admin
+                }
+                clients {
+                clientId
+                name
+                }
+                sessionUser {
+                id
+                sessionClient
+                client {
+                    clientId
+                    name
+                    street
+                    city
+                    state
+                    zip
+                    phone
+                    active
+                    modifiedBy
+                }
+                }
+            }
+        `;
+
+        this.http.post(this.graphql, {
+            body: {
+                query: query,
+            }
+        }).subscribe((result: { data: User }) => {
+            const data = result.data;
             this.dataStore.detail = data.detail;
             this.userDetail$.next(data.detail);
 

@@ -1,0 +1,22 @@
+
+type User {
+    id: ID!
+    firstName: String!
+    lastName: String!
+    username: String!
+    active: Boolean
+    email: String!
+    createdAt: DateTime!
+    updatedAt: DateTime!
+    detail: UserDetail @hasOne
+    role: Role @hasOne
+    clients: [Client!] @hasMany
+    sessionUser: SessionUser @hasOne
+}
+
+extend type Query {
+    me: User @auth
+    users: [User!]! @paginate(type: "paginator" model: "App\\User") @auth
+    user(id: ID @eq): User @find(model: "App\\User") @auth
+    userByUsername(username: String @eq): User @find(model: "App\\User") @auth
+}
