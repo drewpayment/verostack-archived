@@ -49,4 +49,24 @@ class ImportModel extends Model
     public function scopeByUser($query, $id) {
         $query->where('user_id', $id);
     }
+
+    public function getMatchByAgentCodeAttribute($value)
+    {
+        return $value == 1;
+    }
+
+    public function setMatchByAgentCodeAttribute($value)
+    {
+        $this->attributes['match_by_agent_code'] = $value == true ? 1 : 0;
+    }
+
+    public function getSplitCustomerNameAttribute($value)
+    {
+        return $value == 1;
+    }
+
+    public function setSplitCustomerNameAttribute($value)
+    {
+        $this->attributes['split_customer_name'] = $value == true ? 1 : 0;
+    }
 }

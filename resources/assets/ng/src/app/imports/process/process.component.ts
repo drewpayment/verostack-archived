@@ -1,10 +1,11 @@
 import { Component, OnInit, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { FileUploader, FileUploaderOptions, FileItem } from 'ng2-file-upload';
 import { Spreadsheet } from 'dhx-spreadsheet';
-import { IConvertMessageData, ISheetData, IStyle, IDataCell } from '@app/models';
+import { IConvertMessageData, ISheetData, IStyle, IDataCell, ExportedCell, DailySale, ImportModel } from '@app/models';
 import { isNumber } from 'util';
 import { Moment } from 'moment';
 import * as moment from 'moment';
+import { MatRadioChange } from '@angular/material';
 
 @Component({
     selector: 'vs-process',
@@ -27,6 +28,7 @@ export class ProcessComponent implements OnInit {
     currentlyViewedWb: number;
     workbooksToReview: ISheetData[] = [];
     styles: IStyle[];
+    selectedImportModel: ImportModel;
 
     constructor(private cd: ChangeDetectorRef) { }
 
@@ -170,9 +172,37 @@ export class ProcessComponent implements OnInit {
     importReport() {
         if (!this.hasFile) return;
 
-        const ssData = this.ss.serialize();
+        const ssData = this.ss.serialize() as ExportedCell[];
+        console.dir(this.ss);
+        const rowsCount = this.ss._sizes.rowsCount;
+        const colsCount = this.ss._sizes.colsCount;
+
+        // get headers
+        const headers = [];
+        for (let i = 0; i < colsCount; i++) {
+            headers.push(ssData[i].value);
+        }
+
+        let sales = [] as DailySale[];
+        for (let r = 1; r < rowsCount; r++) {
+            const startOfRowIndex = r * colsCount;
+
+            for (let c = 0; c < colsCount; c++) {
+                const i = startOfRowIndex + c;
+
+                let sd = ssData[i];
+                // let sale: DailySale = {
+                //     dailySaleId: null,
+                //     agentId: 
+                // };
+            }
+        }
 
         console.dir(ssData);
+    }
+
+    importModelChanged(event: MatRadioChange) {
+        this.selectedImportModel = event.value;
     }
 
 }

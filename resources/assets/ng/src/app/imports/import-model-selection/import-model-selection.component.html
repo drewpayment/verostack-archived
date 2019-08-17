@@ -12,8 +12,8 @@
         <p>Choose Import Model:</p>
         <mat-form-field>
             <mat-label>Import Model</mat-label>
-            <mat-select>
-                <mat-option *ngFor="let m of (models|async); let i = index;" [value]="m.importModelId">
+            <mat-select (selectionChange)="changeHandler($event)">
+                <mat-option *ngFor="let m of (models|async); let i = index;" [value]="m">
                     {{m.shortDesc}}
                 </mat-option>
             </mat-select>

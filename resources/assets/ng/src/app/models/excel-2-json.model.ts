@@ -65,3 +65,9 @@ export interface IStyle {
 
     format?: string;
 }
+
+export interface ExportedCell {
+    cell: string,
+    css: string,
+    value: string,
+}

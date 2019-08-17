@@ -25,7 +25,7 @@
 
                     <div class="row">
                         <div class="col-md-2">
-                            <vs-import-model-selection></vs-import-model-selection>
+                            <vs-import-model-selection (change)="importModelChanged($event)"></vs-import-model-selection>
 
                             <div class="shadow-none p-3 pt-0 mb-2 rounded">
                                 <p>Upload CSV file</p>
@@ -35,7 +35,7 @@
                                     <button type="button" mat-stroked-button color="primary" (click)="uploadFile()">Upload File</button>
                                 </div>
                                 <div class="p-1">
-                                    <button type="button" mat-raised-button color="primary" [disabled]="!hasFile" (click)="importReport()">Save Report</button>
+                                    <button type="button" mat-raised-button color="primary" [disabled]="!hasFile && !selectedImportModel" (click)="importReport()">Save Report</button>
                                 </div>
                             </div>
                         </div>

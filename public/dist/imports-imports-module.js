@@ -13991,7 +13991,7 @@ var ConfirmAgentBottomSheetComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div mat-dialog-title class=\"d-flex justify-content-between\">\n    <h4>Import Model</h4>\n    <button type=\"button\" mat-icon-button (click)=\"onNoClick()\">\n        <mat-icon>clear</mat-icon>\n    </button>\n</div>\n<mat-dialog-content class=\"pb-2\">\n    <form [formGroup]=\"form\" class=\"mb-2\">\n        <div>\n            <mat-form-field [hideRequiredMarker]=\"true\">\n                <input type=\"text\" matInput formControlName=\"shortDesc\" placeholder=\"Model Name\" required />\n                <mat-error *ngIf=\"form.get('shortDesc').hasError\">\n                    Please enter a model name.\n                </mat-error>\n            </mat-form-field>\n        </div>\n\n        <div>\n            <mat-form-field class=\"wp-100\">\n                <textarea matNativeControl matAutosize=\"true\" formControlName=\"fullDesc\" placeholder=\"Description\">\n                </textarea>\n            </mat-form-field>\n        </div>\n\n        <!-- <p class=\"text-black-50 small\">\n            Select the Campaign that this import will be associated with. It is <span class=\"font-weight-bold\">very important</span> \n            that you make sure your utilities associated with the campaign reflect all utilities in the report that you're importing. \n        </p> -->\n\n        <div style=\"height: 100px !important;\">\n            <mat-form-field class=\"wp-100\" [hideRequiredMarker]=\"true\">\n                <mat-select formControlName=\"campaignId\" placeholder=\"Campaign\" required>\n                    <mat-option *ngFor=\"let c of (campaigns|async); let i = index;\" [value]=\"c.campaignId\">\n                        {{ c.name }}\n                    </mat-option>\n                </mat-select>\n                <mat-error *ngIf=\"form.get('campaignId').hasError\">\n                    Please select a campaign.\n                </mat-error>\n                <mat-hint>\n                    Select the Campaign that this import will be associated with. It is <span class=\"font-weight-bold\">very important</span> \n                    that you make sure your utilities associated with the campaign reflect all utilities in the report that you're importing.\n                </mat-hint>\n            </mat-form-field>\n        </div>\n\n        <div>\n            <mat-checkbox [value]=\"splitCustomerName\" class=\"text-black-50\">Report uses one field for Customer Name</mat-checkbox>\n        </div>\n\n        <div>\n            <mat-checkbox [value]=\"matchAgentBySalesCode\" class=\"text-black-50\">Match agents on report by Sales Code</mat-checkbox>\n        </div>\n\n        <div>\n            <p class=\"text-black-50\">\n                Please add all columns from your report. The column header needs to match exactly to the column headers \n                on your XSL file. \n            </p>\n    \n            <p class=\"text-black-50 small\">\n                Column Header - must match exactly with the report column header. <br />\n                Description - used for your reference when working with the Import Model.\n            </p>\n\n            <p class=\"text-black-50 small\">\n                Please make sure that your sales statuses on your import match your \n                <a [routerLink]=\"['..', 'client-information']\" (click)=\"onNoClick()\">Sale Status Configuration</a> statuses. If they do not, \n                we will be unable to properly set the \"Paid Status\" for your sales and they will default to \"Unpaid\".\n            </p>\n        </div>\n        \n        <mat-divider class=\"pb-4\"></mat-divider>\n\n        <div style=\"overflow: scroll; max-height: 25vw;\" formArrayName=\"map\">\n            <div *ngFor=\"let f of map.controls; let i = index;\">\n                <ng-container [formGroupName]=\"i\">\n                    <div class=\"row\">\n                        <div class=\"col-md-4\">\n                            <mat-form-field class=\"pr-1 wp-100\" [hideRequiredMarker]=\"true\">\n                                <input #keyInputs type=\"text\" matInput formControlName=\"key\" placeholder=\"Description\" required />\n                                <mat-error *ngIf=\"map.get([i, 'key']).hasError\">\n                                    Description is required.\n                                </mat-error>\n                            </mat-form-field>\n                        </div>\n\n                        <div class=\"col-md-4\">\n                            <mat-form-field class=\"px-1 wp-100\" [hideRequiredMarker]=\"true\">\n                                <input type=\"text\" matInput formControlName=\"value\" placeholder=\"Column Header\" required />\n                                <mat-error *ngIf=\"map.get([i, 'value']).hasError\">\n                                    Column Header is required.\n                                </mat-error>\n                            </mat-form-field>\n                        </div>\n\n                        <div class=\"col-md-4\">\n                            <mat-form-field class=\"pl-1 wp-100\">\n                                <mat-select formControlName=\"fieldType\" placeholder=\"Field Type\" \n                                    (selectionChange)=\"fieldTypeChanged($event, map.get([i, 'fieldType']))\" (keydown)=\"tabAdd($event, i)\">\n                                    <mat-option *ngFor=\"let f of fieldDescriptions; let j = index;\" [value]=\"j\">\n                                        {{ fieldDescriptions[j] }}\n                                    </mat-option>\n                                </mat-select>\n                                <mat-hint>\n                                    Tell us what your fields are.\n                                </mat-hint>\n                            </mat-form-field>\n                        </div>\n                    </div>\n                    \n                </ng-container>\n            </div>\n        </div>\n\n        <div class=\"mt-2\">\n            <button type=\"button\" mat-button color=\"primary\" (click)=\"addMapRow()\">\n                <mat-icon>add</mat-icon> Add Column\n            </button>\n        </div>\n\n    </form>\n</mat-dialog-content>\n<mat-dialog-actions class=\"d-flex justify-content-end\">\n    <button type=\"button\" mat-button (click)=\"onNoClick()\">\n        <mat-icon>clear</mat-icon>\n        Cancel\n    </button>\n    <button type=\"button\" mat-button (click)=\"saveImportModel()\" color=\"primary\">\n        <mat-icon>save</mat-icon>\n        Save\n    </button>\n</mat-dialog-actions>"
+module.exports = "<div mat-dialog-title class=\"d-flex justify-content-between\">\n    <h4>Import Model</h4>\n    <button type=\"button\" mat-icon-button (click)=\"onNoClick()\">\n        <mat-icon>clear</mat-icon>\n    </button>\n</div>\n<mat-dialog-content class=\"pb-2\">\n    <form [formGroup]=\"form\" class=\"mb-2\">\n        <div>\n            <mat-form-field [hideRequiredMarker]=\"true\">\n                <input type=\"text\" matInput formControlName=\"shortDesc\" placeholder=\"Model Name\" required />\n                <mat-error *ngIf=\"form.get('shortDesc').hasError\">\n                    Please enter a model name.\n                </mat-error>\n            </mat-form-field>\n        </div>\n\n        <div>\n            <mat-form-field class=\"wp-100\">\n                <textarea matNativeControl matAutosize=\"true\" formControlName=\"fullDesc\" placeholder=\"Description\">\n                </textarea>\n            </mat-form-field>\n        </div>\n\n        <!-- <p class=\"text-black-50 small\">\n            Select the Campaign that this import will be associated with. It is <span class=\"font-weight-bold\">very important</span> \n            that you make sure your utilities associated with the campaign reflect all utilities in the report that you're importing. \n        </p> -->\n\n        <div style=\"height: 100px !important;\">\n            <mat-form-field class=\"wp-100\" [hideRequiredMarker]=\"true\">\n                <mat-select formControlName=\"campaignId\" placeholder=\"Campaign\" required>\n                    <mat-option *ngFor=\"let c of (campaigns|async); let i = index;\" [value]=\"c.campaignId\">\n                        {{ c.name }}\n                    </mat-option>\n                </mat-select>\n                <mat-error *ngIf=\"form.get('campaignId').hasError\">\n                    Please select a campaign.\n                </mat-error>\n                <mat-hint>\n                    Select the Campaign that this import will be associated with. It is <span class=\"font-weight-bold\">very important</span> \n                    that you make sure your utilities associated with the campaign reflect all utilities in the report that you're importing.\n                </mat-hint>\n            </mat-form-field>\n        </div>\n\n        <div>\n            <mat-checkbox [checked]=\"matchByAgentCode\" (change)=\"setMatchByAgentCode($event)\" \n                class=\"text-black-50\">Match agents on report by Sales Code</mat-checkbox>\n        </div>\n\n        <div>\n            <mat-checkbox [checked]=\"splitCustomerName\" (change)=\"setSplitCustomerName($event)\" \n                class=\"text-black-50\">Report uses one field for Customer Name</mat-checkbox>\n        </div>\n\n        <div>\n            <p class=\"text-black-50\">\n                Please add all columns from your report. The column header needs to match exactly to the column headers \n                on your XSL file. \n            </p>\n    \n            <p class=\"text-black-50 small\">\n                Column Header - must match exactly with the report column header. <br />\n                Description - used for your reference when working with the Import Model.\n            </p>\n\n            <p class=\"text-black-50 small\">\n                Please make sure that your sales statuses on your import match your \n                <a [routerLink]=\"['..', 'client-information']\" (click)=\"onNoClick()\">Sale Status Configuration</a> statuses. If they do not, \n                we will be unable to properly set the \"Paid Status\" for your sales and they will default to \"Unpaid\".\n            </p>\n        </div>\n        \n        <mat-divider class=\"pb-4\"></mat-divider>\n\n        <div style=\"overflow: scroll; max-height: 25vw;\" formArrayName=\"map\">\n            <div *ngFor=\"let f of map.controls; let i = index;\">\n                <ng-container [formGroupName]=\"i\">\n                    <div class=\"row\">\n                        <div class=\"col-md-4\">\n                            <mat-form-field class=\"pr-1 wp-100\" [hideRequiredMarker]=\"true\">\n                                <input #keyInputs type=\"text\" matInput formControlName=\"key\" placeholder=\"Description\" required />\n                                <mat-error *ngIf=\"map.get([i, 'key']).hasError\">\n                                    Description is required.\n                                </mat-error>\n                            </mat-form-field>\n                        </div>\n\n                        <div class=\"col-md-4\">\n                            <mat-form-field class=\"px-1 wp-100\" [hideRequiredMarker]=\"true\">\n                                <input type=\"text\" matInput formControlName=\"value\" placeholder=\"Column Header\" required />\n                                <mat-error *ngIf=\"map.get([i, 'value']).hasError\">\n                                    Column Header is required.\n                                </mat-error>\n                            </mat-form-field>\n                        </div>\n\n                        <div class=\"col-md-4\">\n                            <mat-form-field class=\"pl-1 wp-100\">\n                                <mat-select formControlName=\"fieldType\" placeholder=\"Field Type\" \n                                    (selectionChange)=\"fieldTypeChanged($event, map.get([i, 'fieldType']))\" (keydown)=\"tabAdd($event, i)\">\n                                    <mat-option *ngFor=\"let f of fieldDescriptions; let j = index;\" [value]=\"j\">\n                                        {{ fieldDescriptions[j] }}\n                                    </mat-option>\n                                </mat-select>\n                            </mat-form-field>\n                        </div>\n                    </div>\n                    \n                </ng-container>\n            </div>\n        </div>\n\n        <div class=\"mt-2\">\n            <button type=\"button\" mat-button color=\"primary\" (click)=\"addMapRow()\">\n                <mat-icon>add</mat-icon> Add Column\n            </button>\n        </div>\n\n    </form>\n</mat-dialog-content>\n<mat-dialog-actions class=\"d-flex justify-content-end\">\n    <button type=\"button\" mat-button (click)=\"onNoClick()\">\n        <mat-icon>clear</mat-icon>\n        Cancel\n    </button>\n    <button type=\"button\" mat-button (click)=\"saveImportModel()\" color=\"primary\">\n        <mat-icon>save</mat-icon>\n        Save\n    </button>\n</mat-dialog-actions>"
 
 /***/ }),
 
@@ -14049,8 +14049,6 @@ var EditImportModelComponent = /** @class */ (function () {
         this.tabAdded = false;
         this.fieldTypes = Object.keys(_app_models__WEBPACK_IMPORTED_MODULE_2__["DailySaleMapType"]);
         this.fieldDescriptions = _app_models__WEBPACK_IMPORTED_MODULE_2__["DailySaleFields"];
-        this.splitCustomerName = false;
-        this.matchAgentBySalesCode = false;
         this.onNoClick = function () { return _this.ref.close(); };
         this.closeAndSaveModel = function () { return _this.ref.close(_this.prepareModel()); };
         this.model = this.data.importModel;
@@ -14062,26 +14060,25 @@ var EditImportModelComponent = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(EditImportModelComponent.prototype, "matchByAgentCode", {
+        get: function () {
+            return this.form.value.matchByAgentCode;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(EditImportModelComponent.prototype, "splitCustomerName", {
+        get: function () {
+            return this.form.value.splitCustomerName;
+        },
+        enumerable: true,
+        configurable: true
+    });
     EditImportModelComponent.prototype.ngOnInit = function () {
-        var _this = this;
         this.user = this.session.lastUser;
         this.campaigns = this.service.campaigns;
         if (this.model) {
-            this.matchAgentBySalesCode = this.model.matchByAgentCode;
-            this.splitCustomerName = this.model.splitCustomerName;
-            var map = JSON.parse(this.model.map);
-            this.form.patchValue({
-                shortDesc: this.model.shortDesc,
-                fullDesc: this.model.fullDesc,
-            });
-            if (map && map.length > this.map.length) {
-                map.forEach(function (m, i, a) {
-                    _this.map.push(_this.fb.group({
-                        key: m.key,
-                        value: m.value,
-                    }));
-                });
-            }
+            this.patchForm();
         }
         else {
             this.addMapRow();
@@ -14100,6 +14097,12 @@ var EditImportModelComponent = /** @class */ (function () {
             }
         });
     };
+    EditImportModelComponent.prototype.setMatchByAgentCode = function (event) {
+        this.form.setValue({ matchByAgentCode: event.checked });
+    };
+    EditImportModelComponent.prototype.setSplitCustomerName = function (event) {
+        this.form.setValue({ splitCustomerName: event.checked });
+    };
     EditImportModelComponent.prototype.addMapRow = function () {
         this.map.push(this.fb.group({
             key: this.fb.control('', [_angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required]),
@@ -14115,7 +14118,7 @@ var EditImportModelComponent = /** @class */ (function () {
             var missingFields = results[1];
             // TODO: need to handle missing fields communication
         });
-        if (!this.matchAgentBySalesCode) {
+        if (!this.form.value.matchByAgentCode) {
             this.bs.open(_app_imports_bottom_sheets_confirm_agent_code_component__WEBPACK_IMPORTED_MODULE_9__["ConfirmAgentBottomSheetComponent"])
                 .afterDismissed()
                 .subscribe(function (result) {
@@ -14123,7 +14126,7 @@ var EditImportModelComponent = /** @class */ (function () {
                     _this.closeAndSaveModel();
                 }
                 else {
-                    _this.matchAgentBySalesCode = true;
+                    _this.form.patchValue({ matchByAgentCode: true }, { emitEvent: false });
                     _this.closeAndSaveModel();
                 }
             });
@@ -14135,7 +14138,7 @@ var EditImportModelComponent = /** @class */ (function () {
     EditImportModelComponent.prototype.checkMatchByCode = function () {
         var _this = this;
         return rxjs__WEBPACK_IMPORTED_MODULE_8__["Observable"].create(function (ob) {
-            if (!_this.matchAgentBySalesCode) {
+            if (!_this.form.value.matchByAgentCode) {
                 _this.bs.open(_app_imports_bottom_sheets_confirm_agent_code_component__WEBPACK_IMPORTED_MODULE_9__["ConfirmAgentBottomSheetComponent"])
                     .afterDismissed()
                     .subscribe(function (result) {
@@ -14143,7 +14146,7 @@ var EditImportModelComponent = /** @class */ (function () {
                         ob.complete();
                     }
                     else {
-                        _this.matchAgentBySalesCode = true;
+                        _this.form.patchValue({ matchByAgentCode: true }, { emitEvent: false });
                         ob.complete();
                     }
                 });
@@ -14173,12 +14176,12 @@ var EditImportModelComponent = /** @class */ (function () {
             importModelId: importModelId,
             userId: this.user.id,
             clientId: this.user.selectedClient.clientId,
-            campaignId: this.form.value.campaign,
+            campaignId: this.form.value.campaignId,
             shortDesc: this.form.value.shortDesc,
             fullDesc: this.form.value.fullDesc,
             map: this.map.value,
-            matchByAgentCode: this.matchAgentBySalesCode,
-            splitCustomerName: this.splitCustomerName,
+            matchByAgentCode: this.form.value.matchByAgentCode,
+            splitCustomerName: this.form.value.splitCustomerName,
         };
     };
     EditImportModelComponent.prototype.createForm = function () {
@@ -14187,7 +14190,39 @@ var EditImportModelComponent = /** @class */ (function () {
             fullDesc: this.fb.control(''),
             campaignId: this.fb.control('', [_angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required]),
             map: this.fb.array([]),
+            matchByAgentCode: this.fb.control(''),
+            splitCustomerName: this.fb.control(''),
         });
+    };
+    EditImportModelComponent.prototype.patchForm = function () {
+        var _this = this;
+        var map = JSON.parse(this.model.map);
+        if (map && map.length > this.map.length) {
+            map.forEach(function (m, i, a) {
+                _this.map.push(_this.fb.group({
+                    key: m.key,
+                    value: m.value,
+                    fieldType: m.fieldType,
+                }));
+            });
+            this.form.setValue({
+                shortDesc: this.model.shortDesc,
+                fullDesc: this.model.fullDesc,
+                campaignId: this.model.campaignId,
+                matchByAgentCode: this.model.matchByAgentCode,
+                splitCustomerName: this.model.splitCustomerName,
+                map: this.map,
+            });
+        }
+        else {
+            this.form.setValue({
+                shortDesc: this.model.shortDesc,
+                fullDesc: this.model.fullDesc,
+                campaignId: this.model.campaignId,
+                matchByAgentCode: this.model.matchByAgentCode,
+                splitCustomerName: this.model.splitCustomerName,
+            });
+        }
     };
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewChildren"])('keyInputs'),
@@ -14219,7 +14254,7 @@ var EditImportModelComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"shadow-none p-3 pb-0 rounded\" *ngIf=\"(models|async)?.length <= 4; else showDropdown;\">\n    <p>Choose Import Model:</p>\n    <mat-radio-group aria-label=\"Select an import model\" class=\"select-import-model\">\n        <mat-radio-button *ngFor=\"let m of (models|async); let i = index;\" [value]=\"m.importModelId\">\n            {{m.shortDesc}}\n        </mat-radio-button>\n    </mat-radio-group>\n</div>\n\n<ng-template #showDropdown>\n    <div class=\"shadow-none p-3 pb-0 rounded\">\n        <p>Choose Import Model:</p>\n        <mat-form-field>\n            <mat-label>Import Model</mat-label>\n            <mat-select>\n                <mat-option *ngFor=\"let m of (models|async); let i = index;\" [value]=\"m.importModelId\">\n                    {{m.shortDesc}}\n                </mat-option>\n            </mat-select>\n        </mat-form-field>\n    </div>\n</ng-template>"
+module.exports = "<div class=\"shadow-none p-3 pb-0 rounded\" *ngIf=\"(models|async)?.length <= 4; else showDropdown;\">\n    <p>Choose Import Model:</p>\n    <mat-radio-group aria-label=\"Select an import model\" class=\"select-import-model\">\n        <mat-radio-button *ngFor=\"let m of (models|async); let i = index;\" [value]=\"m.importModelId\">\n            {{m.shortDesc}}\n        </mat-radio-button>\n    </mat-radio-group>\n</div>\n\n<ng-template #showDropdown>\n    <div class=\"shadow-none p-3 pb-0 rounded\">\n        <p>Choose Import Model:</p>\n        <mat-form-field>\n            <mat-label>Import Model</mat-label>\n            <mat-select (selectionChange)=\"changeHandler($event)\">\n                <mat-option *ngFor=\"let m of (models|async); let i = index;\" [value]=\"m\">\n                    {{m.shortDesc}}\n                </mat-option>\n            </mat-select>\n        </mat-form-field>\n    </div>\n</ng-template>"
 
 /***/ }),
 
@@ -14374,6 +14409,7 @@ var ImportModelsComponent = /** @class */ (function () {
             _this.isFabOpen$.next(false);
             if (!model)
                 return;
+            console.dir(model);
             _this.session.showLoader();
             _this.service.saveImportModel(model).subscribe(function (res) {
                 _this.session.hideLoader();
@@ -14654,7 +14690,7 @@ var PastImportsComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n<div class=\"container\">\n    <div class=\"row\">\n        <div class=\"col-md-12\">\n            <mat-card class=\"page-header-accent\">\n                <h2 mat-card-title>Import Reports</h2>\n                <mat-card-content>\n                    <div class=\"shadow-none p-3 bg-light rounded\">\n                        <h5>Requirements</h5>\n                        <ul>\n                            <li>\n                                Your CSV file should contain columns that match \n                                the <span class=\"font-weight-bold\">Import Model</span> you select.\n                            </li>\n                            <li>\n                                The order of the columns must match exactly the to your Import Model. If they \n                                do not, please reorder the columns on your report.\n                            </li>\n                            <li>\n                                Confirm correct import in the review field after you've imported the file and make any \n                                last-minute modifications that you might notice.\n                            </li>\n                        </ul>\n                    </div>\n\n                    <div class=\"row\">\n                        <div class=\"col-md-2\">\n                            <vs-import-model-selection></vs-import-model-selection>\n\n                            <div class=\"shadow-none p-3 pt-0 mb-2 rounded\">\n                                <p>Upload CSV file</p>\n                                <div class=\"p-1\">\n                                    <input #fuRef class=\"d-none\" mat-stroked-button color=\"primary\" \n                                        *ngIf=\"fu\" type=\"file\" ng2FileSelect [uploader]=\"fu\" (onFileSelected)=\"fileAddedHandler($event)\" />\n                                    <button type=\"button\" mat-stroked-button color=\"primary\" (click)=\"uploadFile()\">Upload File</button>\n                                </div>\n                                <div class=\"p-1\">\n                                    <button type=\"button\" mat-raised-button color=\"primary\" [disabled]=\"!hasFile\" (click)=\"importReport()\">Save Report</button>\n                                </div>\n                            </div>\n                        </div>\n                        <div class=\"col-md-10\" [class.d-flex]=\"!hasFile\" [class.justify-content-center]=\"!hasFile\">\n                            <div *ngIf=\"hasFile; else noPreview\">\n                                <div class=\"row\">\n                                    <div class=\"col-md-12\">\n                                        <div #spreadsheet class=\"import-spreadsheet\"></div>\n                                    </div>\n                                </div>\n                            </div>\n                            <ng-template #noPreview>\n                                <div class=\"shadow-none p-3 mb-2 rounded\">\n                                    <div class=\"row d-flex justify-content-center\">\n                                        <div class=\"col-md-4\">\n                                            <img src=\"dist/assets/images/add_file.svg\" class=\"img-fluid clickable m-5\" \n                                                (click)=\"uploadFile()\" />\n                                            <p class=\"text-muted\">\n                                                Import preview will appear here.\n                                            </p>\n                                        </div>\n                                    </div>\n                                </div>\n                            </ng-template>\n                        </div>\n                    </div>\n\n                    <mat-accordion>\n                        <mat-expansion-panel>\n                            <mat-expansion-panel-header>\n                                <mat-panel-title>\n                                    Past Uploads\n                                </mat-panel-title>\n                            </mat-expansion-panel-header>\n\n                            <vs-past-imports></vs-past-imports>\n                        </mat-expansion-panel>\n                    </mat-accordion>\n\n                </mat-card-content>\n            </mat-card>\n        </div>\n    </div>\n</div>"
+module.exports = "\n<div class=\"container\">\n    <div class=\"row\">\n        <div class=\"col-md-12\">\n            <mat-card class=\"page-header-accent\">\n                <h2 mat-card-title>Import Reports</h2>\n                <mat-card-content>\n                    <div class=\"shadow-none p-3 bg-light rounded\">\n                        <h5>Requirements</h5>\n                        <ul>\n                            <li>\n                                Your CSV file should contain columns that match \n                                the <span class=\"font-weight-bold\">Import Model</span> you select.\n                            </li>\n                            <li>\n                                The order of the columns must match exactly the to your Import Model. If they \n                                do not, please reorder the columns on your report.\n                            </li>\n                            <li>\n                                Confirm correct import in the review field after you've imported the file and make any \n                                last-minute modifications that you might notice.\n                            </li>\n                        </ul>\n                    </div>\n\n                    <div class=\"row\">\n                        <div class=\"col-md-2\">\n                            <vs-import-model-selection (change)=\"importModelChanged($event)\"></vs-import-model-selection>\n\n                            <div class=\"shadow-none p-3 pt-0 mb-2 rounded\">\n                                <p>Upload CSV file</p>\n                                <div class=\"p-1\">\n                                    <input #fuRef class=\"d-none\" mat-stroked-button color=\"primary\" \n                                        *ngIf=\"fu\" type=\"file\" ng2FileSelect [uploader]=\"fu\" (onFileSelected)=\"fileAddedHandler($event)\" />\n                                    <button type=\"button\" mat-stroked-button color=\"primary\" (click)=\"uploadFile()\">Upload File</button>\n                                </div>\n                                <div class=\"p-1\">\n                                    <button type=\"button\" mat-raised-button color=\"primary\" [disabled]=\"!hasFile && !selectedImportModel\" (click)=\"importReport()\">Save Report</button>\n                                </div>\n                            </div>\n                        </div>\n                        <div class=\"col-md-10\" [class.d-flex]=\"!hasFile\" [class.justify-content-center]=\"!hasFile\">\n                            <div *ngIf=\"hasFile; else noPreview\">\n                                <div class=\"row\">\n                                    <div class=\"col-md-12\">\n                                        <div #spreadsheet class=\"import-spreadsheet\"></div>\n                                    </div>\n                                </div>\n                            </div>\n                            <ng-template #noPreview>\n                                <div class=\"shadow-none p-3 mb-2 rounded\">\n                                    <div class=\"row d-flex justify-content-center\">\n                                        <div class=\"col-md-4\">\n                                            <img src=\"dist/assets/images/add_file.svg\" class=\"img-fluid clickable m-5\" \n                                                (click)=\"uploadFile()\" />\n                                            <p class=\"text-muted\">\n                                                Import preview will appear here.\n                                            </p>\n                                        </div>\n                                    </div>\n                                </div>\n                            </ng-template>\n                        </div>\n                    </div>\n\n                    <mat-accordion>\n                        <mat-expansion-panel>\n                            <mat-expansion-panel-header>\n                                <mat-panel-title>\n                                    Past Uploads\n                                </mat-panel-title>\n                            </mat-expansion-panel-header>\n\n                            <vs-past-imports></vs-past-imports>\n                        </mat-expansion-panel>\n                    </mat-accordion>\n\n                </mat-card-content>\n            </mat-card>\n        </div>\n    </div>\n</div>"
 
 /***/ }),
 
@@ -14828,7 +14864,30 @@ var ProcessComponent = /** @class */ (function () {
         if (!this.hasFile)
             return;
         var ssData = this.ss.serialize();
+        console.dir(this.ss);
+        var rowsCount = this.ss._sizes.rowsCount;
+        var colsCount = this.ss._sizes.colsCount;
+        // get headers
+        var headers = [];
+        for (var i = 0; i < colsCount; i++) {
+            headers.push(ssData[i].value);
+        }
+        var sales = [];
+        for (var r = 1; r < rowsCount; r++) {
+            var startOfRowIndex = r * colsCount;
+            for (var c = 0; c < colsCount; c++) {
+                var i = startOfRowIndex + c;
+                var sd = ssData[i];
+                // let sale: DailySale = {
+                //     dailySaleId: null,
+                //     agentId: 
+                // };
+            }
+        }
         console.dir(ssData);
+    };
+    ProcessComponent.prototype.importModelChanged = function (event) {
+        this.selectedImportModel = event.value;
     };
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewChild"])('fuRef'),

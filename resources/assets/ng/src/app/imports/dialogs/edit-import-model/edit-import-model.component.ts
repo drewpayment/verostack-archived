@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject, AfterViewInit, QueryList, ElementRef, ViewChildren } from '@angular/core';
-import { ImportModel, User, ICampaign, DailySaleMapType, DailySaleFields } from '@app/models';
+import { ImportModel, User, ICampaign, DailySaleMapType, DailySaleFields, ImportModelMap } from '@app/models';
 import { FormGroup, Validators, FormBuilder, FormArray, FormControl } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA, MatSelectionListChange, MatBottomSheet } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA, MatSelectionListChange, MatBottomSheet, MatCheckboxChange } from '@angular/material';
 import { SessionService } from '@app/session.service';
 import { ImportsService } from '@app/imports/imports.service';
 import { startWith, delay } from 'rxjs/operators';
@@ -36,8 +36,13 @@ export class EditImportModelComponent implements OnInit, AfterViewInit {
     fieldTypes = Object.keys(DailySaleMapType);
     fieldDescriptions = DailySaleFields;
 
-    splitCustomerName = false;
-    matchAgentBySalesCode = false;
+    get matchByAgentCode(): boolean {
+        return this.form.value.matchByAgentCode;
+    }
+
+    get splitCustomerName(): boolean {
+        return this.form.value.splitCustomerName;
+    }
 
     constructor(
         private fb: FormBuilder,
@@ -56,23 +61,7 @@ export class EditImportModelComponent implements OnInit, AfterViewInit {
         this.campaigns = this.service.campaigns;
 
         if (this.model) {
-            this.matchAgentBySalesCode = this.model.matchByAgentCode;
-            this.splitCustomerName = this.model.splitCustomerName;
-            const map = JSON.parse(this.model.map) as {key: string, value: string}[];
-
-            this.form.patchValue({
-                shortDesc: this.model.shortDesc,
-                fullDesc: this.model.fullDesc,
-            });
-
-            if (map && map.length > this.map.length) {
-                map.forEach((m, i, a) => {
-                    this.map.push(this.fb.group({
-                        key: m.key,
-                        value: m.value,
-                    }));
-                });
-            }
+            this.patchForm();
         } else {
             this.addMapRow();
         }
@@ -91,6 +80,14 @@ export class EditImportModelComponent implements OnInit, AfterViewInit {
                     this.tabAdded = false;
                 }
             });
+    }
+    
+    setMatchByAgentCode(event: MatCheckboxChange) {
+        this.form.setValue({ matchByAgentCode: event.checked });
+    }
+
+    setSplitCustomerName(event: MatCheckboxChange) {
+        this.form.setValue({ splitCustomerName: event.checked });
     }
 
     onNoClick = () => this.ref.close();
@@ -115,14 +112,14 @@ export class EditImportModelComponent implements OnInit, AfterViewInit {
             // TODO: need to handle missing fields communication
         });
 
-        if (!this.matchAgentBySalesCode) {
+        if (!this.form.value.matchByAgentCode) {
             this.bs.open(ConfirmAgentBottomSheetComponent)
                 .afterDismissed()
                 .subscribe(result => {
                     if (!result) {
                         this.closeAndSaveModel();
                     } else {
-                        this.matchAgentBySalesCode = true;
+                        this.form.patchValue({ matchByAgentCode: true }, { emitEvent: false });
                         this.closeAndSaveModel();
                     }
                 });
@@ -133,14 +130,14 @@ export class EditImportModelComponent implements OnInit, AfterViewInit {
 
     checkMatchByCode(): Observable<void> {
         return Observable.create((ob: Observer<void>) => {
-            if (!this.matchAgentBySalesCode) {
+            if (!this.form.value.matchByAgentCode) {
                 this.bs.open(ConfirmAgentBottomSheetComponent)
                     .afterDismissed()
                     .subscribe(result => {
                         if (!result) {
                             ob.complete();
                         } else {
-                            this.matchAgentBySalesCode = true;
+                            this.form.patchValue({ matchByAgentCode: true }, { emitEvent: false });
                             ob.complete();
                         }
                     });
@@ -176,12 +173,12 @@ export class EditImportModelComponent implements OnInit, AfterViewInit {
             importModelId: importModelId,
             userId: this.user.id,
             clientId: this.user.selectedClient.clientId,
-            campaignId: this.form.value.campaign,
+            campaignId: this.form.value.campaignId,
             shortDesc: this.form.value.shortDesc,
             fullDesc: this.form.value.fullDesc,
             map: this.map.value,
-            matchByAgentCode: this.matchAgentBySalesCode,
-            splitCustomerName: this.splitCustomerName,
+            matchByAgentCode: this.form.value.matchByAgentCode,
+            splitCustomerName: this.form.value.splitCustomerName,
         } as ImportModel;
     }
 
@@ -191,7 +188,40 @@ export class EditImportModelComponent implements OnInit, AfterViewInit {
             fullDesc: this.fb.control(''),
             campaignId: this.fb.control('', [Validators.required]),
             map: this.fb.array([]),
+            matchByAgentCode: this.fb.control(''),
+            splitCustomerName: this.fb.control(''),
         });
+    }
+
+    private patchForm() {
+        const map = JSON.parse(this.model.map) as ImportModelMap[];
+
+        if (map && map.length > this.map.length) {
+            map.forEach((m, i, a) => {
+                this.map.push(this.fb.group({
+                    key: m.key,
+                    value: m.value,
+                    fieldType: m.fieldType,
+                }));
+            });
+
+            this.form.setValue({
+                shortDesc: this.model.shortDesc,
+                fullDesc: this.model.fullDesc,
+                campaignId: this.model.campaignId,
+                matchByAgentCode: this.model.matchByAgentCode,
+                splitCustomerName: this.model.splitCustomerName,
+                map: this.map,
+            });
+        } else {
+            this.form.setValue({
+                shortDesc: this.model.shortDesc,
+                fullDesc: this.model.fullDesc,
+                campaignId: this.model.campaignId,
+                matchByAgentCode: this.model.matchByAgentCode,
+                splitCustomerName: this.model.splitCustomerName,
+            });
+        }
     }
 
 }
