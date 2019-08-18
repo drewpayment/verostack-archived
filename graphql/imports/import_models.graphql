@@ -1,16 +1,20 @@
 
-type ImportModel {
+type ImportModel @model {
     importModelId: ID!
     clientId: Int!
     shortDesc: String!
     fullDesc: String
     map: String
+    campaignId: Int!
+    matchByAgentCode: Boolean
+    splitCustomerName: Boolean
     userId: Int!
     createdAt: DateTime
     updatedAt: DateTime
     client: Client @hasOne
+    user: User @hasOne
 }
 
 extend type Query {
-    importModels: [ImportModel!]! @paginate(type: "paginator" model: "App\\ImportModel") @auth
+    importModels: [ImportModel!]! @all @middleware(checks: ["auth:api"])
 }

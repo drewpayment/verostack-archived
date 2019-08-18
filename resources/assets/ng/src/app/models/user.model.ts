@@ -18,7 +18,7 @@ export interface User {
     username:string,
     password?:string,
     createdAt?:any,
-    udpatedAt?:any,
+    updatedAt?:any,
     agent?:IAgent,
 
     selectedClient?: IClient,

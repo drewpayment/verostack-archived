@@ -356,11 +356,11 @@ export class AgentComponent implements OnInit, AfterViewChecked, OnDestroy {
             .subscribe(users => {
                 users = users.filter((u, i, a) => {
                     // if agent entity is null or this is user is a system admin, remove from the list
-                    if (u.agent == null || u.role.role > UserRole.companyAdmin) return;
+                    if (u.agent == null || u.role.role > UserRole.COMPANY_ADMIN) return;
 
                     // check if the logged in user is allowed to see company admins..
                     // only other company admins should be able to see them... 
-                    if (u.role.role === UserRole.companyAdmin && this.user.role.role < UserRole.companyAdmin) return; 
+                    if (u.role.role === UserRole.COMPANY_ADMIN && this.user.role.role < UserRole.COMPANY_ADMIN) return; 
 
                     return u.agent != null;
                 });

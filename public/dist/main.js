@@ -785,11 +785,11 @@ var AgentComponent = /** @class */ (function () {
             .subscribe(function (users) {
             users = users.filter(function (u, i, a) {
                 // if agent entity is null or this is user is a system admin, remove from the list
-                if (u.agent == null || u.role.role > _app_models_role_model__WEBPACK_IMPORTED_MODULE_19__["UserRole"].companyAdmin)
+                if (u.agent == null || u.role.role > _app_models_role_model__WEBPACK_IMPORTED_MODULE_19__["UserRole"].COMPANY_ADMIN)
                     return;
                 // check if the logged in user is allowed to see company admins..
                 // only other company admins should be able to see them... 
-                if (u.role.role === _app_models_role_model__WEBPACK_IMPORTED_MODULE_19__["UserRole"].companyAdmin && _this.user.role.role < _app_models_role_model__WEBPACK_IMPORTED_MODULE_19__["UserRole"].companyAdmin)
+                if (u.role.role === _app_models_role_model__WEBPACK_IMPORTED_MODULE_19__["UserRole"].COMPANY_ADMIN && _this.user.role.role < _app_models_role_model__WEBPACK_IMPORTED_MODULE_19__["UserRole"].COMPANY_ADMIN)
                     return;
                 return u.agent != null;
             });
@@ -2299,7 +2299,7 @@ var CampaignsComponent = /** @class */ (function () {
             _this.user = next;
             // if the user isn't at least a company admin, then we are going to send them back to the page they
             // were prior to reaching this point...
-            if (_this.user.role.role < _app_models_role_model__WEBPACK_IMPORTED_MODULE_9__["UserRole"].companyAdmin)
+            if (_this.user.role.role < _app_models_role_model__WEBPACK_IMPORTED_MODULE_9__["UserRole"].COMPANY_ADMIN)
                 _this.session.navigateBack().then(function (result) {
                     console.dir(result);
                 });
@@ -8169,22 +8169,22 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Role", function() { return Role; });
 var UserRole;
 (function (UserRole) {
-    UserRole[UserRole["user"] = 1] = "user";
-    UserRole[UserRole["supervisor"] = 2] = "supervisor";
-    UserRole[UserRole["manager"] = 3] = "manager";
-    UserRole[UserRole["regionalManager"] = 4] = "regionalManager";
-    UserRole[UserRole["humanResources"] = 5] = "humanResources";
-    UserRole[UserRole["companyAdmin"] = 6] = "companyAdmin";
-    UserRole[UserRole["systemAdmin"] = 7] = "systemAdmin";
+    UserRole[UserRole["USER"] = 1] = "USER";
+    UserRole[UserRole["SUPERVISOR"] = 2] = "SUPERVISOR";
+    UserRole[UserRole["MANAGER"] = 3] = "MANAGER";
+    UserRole[UserRole["REGIONAL_MANAGER"] = 4] = "REGIONAL_MANAGER";
+    UserRole[UserRole["HUMAN_RESOURCES"] = 5] = "HUMAN_RESOURCES";
+    UserRole[UserRole["COMPANY_ADMIN"] = 6] = "COMPANY_ADMIN";
+    UserRole[UserRole["SYSTEM_ADMIN"] = 7] = "SYSTEM_ADMIN";
 })(UserRole || (UserRole = {}));
 var Role = {
-    user: UserRole.user,
-    supervisor: UserRole.supervisor,
-    manager: UserRole.manager,
-    regionalManager: UserRole.regionalManager,
-    humanResources: UserRole.humanResources,
-    companyAdmin: UserRole.companyAdmin,
-    systemAdmin: UserRole.systemAdmin
+    user: UserRole.USER,
+    supervisor: UserRole.SUPERVISOR,
+    manager: UserRole.MANAGER,
+    regionalManager: UserRole.REGIONAL_MANAGER,
+    humanResources: UserRole.HUMAN_RESOURCES,
+    companyAdmin: UserRole.COMPANY_ADMIN,
+    systemAdmin: UserRole.SYSTEM_ADMIN
 };
 
 
@@ -8297,7 +8297,7 @@ var MyInformationComponent = /** @class */ (function () {
             _this.user = user;
             /** set onboarding options */
             _this.hasOnboarding =
-                user.sessionUser.client.options != null && user.role.role >= _app_models_role_model__WEBPACK_IMPORTED_MODULE_10__["UserRole"].companyAdmin
+                user.sessionUser.client.options != null && user.role.role >= _app_models_role_model__WEBPACK_IMPORTED_MODULE_10__["UserRole"].COMPANY_ADMIN
                     ? user.sessionUser.client.options.hasOnboarding
                     : false;
             _this.client = user.sessionUser.client;
@@ -13094,8 +13094,8 @@ var SidenavComponent = /** @class */ (function () {
     };
     Object.defineProperty(SidenavComponent.prototype, "hasMyWorkMenuItem", {
         get: function () {
-            return this.user && this.user.agent && this.user.role && this.user.role.role < _app_models_role_model__WEBPACK_IMPORTED_MODULE_7__["UserRole"].companyAdmin
-                && this.user.role.role != _app_models_role_model__WEBPACK_IMPORTED_MODULE_7__["UserRole"].manager && this.user.role.role != _app_models_role_model__WEBPACK_IMPORTED_MODULE_7__["UserRole"].regionalManager
+            return this.user && this.user.agent && this.user.role && this.user.role.role < _app_models_role_model__WEBPACK_IMPORTED_MODULE_7__["UserRole"].COMPANY_ADMIN
+                && this.user.role.role != _app_models_role_model__WEBPACK_IMPORTED_MODULE_7__["UserRole"].MANAGER && this.user.role.role != _app_models_role_model__WEBPACK_IMPORTED_MODULE_7__["UserRole"].REGIONAL_MANAGER
                 && this.user.agent.isActive;
         },
         enumerable: true,
@@ -13330,7 +13330,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_6__);
 /* harmony import */ var _env_environment__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @env/environment */ "./src/environments/environment.ts");
-/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
+/* harmony import */ var _app_models_role_model__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @app/models/role.model */ "./src/app/models/role.model.ts");
+/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
+
 
 
 
@@ -13520,13 +13522,24 @@ var UserService = /** @class */ (function () {
         //     this.user$.next(this.dataStore.user);
         //     this.setLocalStorageUser(this.dataStore.user);
         // });
-        var query = "\n            userByUserName(username: " + username + ") {\n                id\n                firstName\n                lastName\n                username\n                active\n                detail {\n                userDetailId\n                userId\n                street\n                    street2\n                city\n                state\n                zip\n                }\n                role {\n                role\n                is_sales_admin\n                }\n                clients {\n                clientId\n                name\n                }\n                sessionUser {\n                id\n                sessionClient\n                client {\n                    clientId\n                    name\n                    street\n                    city\n                    state\n                    zip\n                    phone\n                    active\n                    modifiedBy\n                }\n                }\n            }\n        ";
+        var query = "\n        {\n            user(username:\"" + username + "\") {\n              id\n              firstName\n              lastName\n              username\n              active\n              createdAt\n              updatedAt\n              detail {\n                userDetailId\n                userId\n                street\n                  street2\n                city\n                state\n                zip\n              }\n              role {\n                role\n                is_sales_admin\n              }\n              clients {\n                clientId\n                name\n              }\n              sessionUser {\n                id\n                sessionClient\n                client {\n                  clientId\n                  name\n                  street\n                  city\n                  state\n                  zip\n                  phone\n                  active\n                  modifiedBy\n                }\n              }\n            }\n          }\n        ";
         this.http.post(this.graphql, {
-            body: {
-                query: query,
+            query: query,
+        })
+            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_9__["map"])(function (result) {
+            var user = result.data.user;
+            var roles = [];
+            for (var v in _app_models_role_model__WEBPACK_IMPORTED_MODULE_8__["UserRole"]) {
+                if (typeof _app_models_role_model__WEBPACK_IMPORTED_MODULE_8__["UserRole"][v] === 'number')
+                    roles.push(v);
             }
-        }).subscribe(function (result) {
-            var data = result.data;
+            var role = _app_models_role_model__WEBPACK_IMPORTED_MODULE_8__["UserRole"][user.role.role];
+            user.role.role = role;
+            user.createdAt = moment__WEBPACK_IMPORTED_MODULE_6__(user.createdAt);
+            user.updatedAt = moment__WEBPACK_IMPORTED_MODULE_6__(user.updatedAt);
+            return user;
+        }))
+            .subscribe(function (data) {
             _this.dataStore.detail = data.detail;
             _this.userDetail$.next(data.detail);
             _this.dataStore.user = data;
@@ -13570,7 +13583,7 @@ var UserService = /** @class */ (function () {
         var _this = this;
         var url = this.api + "users/select-client/" + clientId;
         return this.http.get(url)
-            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_8__["tap"])(function (res) {
+            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_9__["tap"])(function (res) {
             if (!res)
                 return;
             var newClient = _this.dataStore.user.clients.find(function (c) { return c.clientId == clientId; });
@@ -13589,7 +13602,7 @@ var UserService = /** @class */ (function () {
             detail: detail
         };
         return this.http.post(url, body)
-            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_8__["tap"])(function (data) {
+            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_9__["tap"])(function (data) {
             if (data.user) {
                 _this.dataStore.user = data.user;
                 _this.session.setUser(_this.dataStore.user);
@@ -13603,7 +13616,7 @@ var UserService = /** @class */ (function () {
             }
             _this.user$.next(_this.dataStore.user);
             _this.setLocalStorageUser(_this.dataStore.user);
-        }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_8__["map"])(function (resp) {
+        }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_9__["map"])(function (resp) {
             if (resp.user)
                 return resp.user;
             else

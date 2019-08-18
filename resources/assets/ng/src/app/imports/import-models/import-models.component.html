@@ -41,7 +41,7 @@
 
                 <ng-container matColumnDef="modifiedBy">
                     <mat-header-cell *matHeaderCellDef>Owner</mat-header-cell>
-                    <mat-cell *matCellDef="let item">{{item.userId}}</mat-cell>
+                    <mat-cell *matCellDef="let item">{{item.user?.firstName}} {{item.user?.lastName}}</mat-cell>
                 </ng-container>
 
                 <ng-container matColumnDef="createdAt">

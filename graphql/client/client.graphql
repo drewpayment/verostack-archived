@@ -12,3 +12,7 @@ type Client {
     modifiedBy: Int!
     users: [User!] @hasMany
 }
+
+extend type Query {
+    client(client_id: ID! @eq): Client! @find @middleware(checks: ["auth:api"])
+}

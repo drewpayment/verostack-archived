@@ -63,7 +63,7 @@ export class MyInformationComponent implements OnInit, AfterViewChecked {
 
             /** set onboarding options */
             this.hasOnboarding =
-                user.sessionUser.client.options != null && user.role.role >= UserRole.companyAdmin
+                user.sessionUser.client.options != null && user.role.role >= UserRole.COMPANY_ADMIN
                     ? user.sessionUser.client.options.hasOnboarding
                     : false;
 

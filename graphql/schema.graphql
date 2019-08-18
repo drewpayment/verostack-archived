@@ -6,5 +6,10 @@ scalar Date @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date")
 
 type Query 
 
+type Mutation
+
+type Subscription
+
 #import user/*.graphql
 #import client/*.graphql
+#import imports/*.graphql

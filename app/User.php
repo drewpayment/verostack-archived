@@ -169,7 +169,7 @@ class User extends Authenticatable
 	 *
 	 * @return \Illuminate\Database\Eloquent\Builder
 	 */
-	public function scopeUsername($query, $username)
+	public function scopeByUsername($query, $username)
     {
     	return $query->where('username', $username);
     }

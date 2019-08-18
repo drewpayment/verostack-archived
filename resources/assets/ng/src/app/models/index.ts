@@ -31,3 +31,4 @@ export * from './update-agent-meta.model';
 export * from './dnc-contact.model';
 export * from './import-model.model';
 export * from './excel-2-json.model';
+export * from './gql.model';

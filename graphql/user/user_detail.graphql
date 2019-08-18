@@ -17,5 +17,5 @@ type UserDetail {
 }
 
 extend type Query {
-    userDetail(user_detail_id: ID @eq): UserDetail @find(model: "App\\UserDetail")
+    userDetail(user_detail_id: ID @eq): UserDetail @find @middleware(checks: ["auth:api"])
 }

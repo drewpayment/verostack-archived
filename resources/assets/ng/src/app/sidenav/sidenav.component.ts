@@ -58,8 +58,8 @@ export class SidenavComponent implements OnInit {
     }
 
     get hasMyWorkMenuItem(): boolean {
-        return this.user && this.user.agent && this.user.role && this.user.role.role < UserRole.companyAdmin
-            && this.user.role.role != UserRole.manager && this.user.role.role != UserRole.regionalManager
+        return this.user && this.user.agent && this.user.role && this.user.role.role < UserRole.COMPANY_ADMIN
+            && this.user.role.role != UserRole.MANAGER && this.user.role.role != UserRole.REGIONAL_MANAGER
             && this.user.agent.isActive;
     }
 }

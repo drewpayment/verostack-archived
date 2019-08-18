@@ -3,6 +3,7 @@
 namespace App;
 
 use App\User;
+use App\Client;
 use App\Scopes\ClientScope;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
@@ -36,7 +37,12 @@ class ImportModel extends Model
 
     public function user()
     {
-        return $this->hasOne(User::class, 'id');
+        return $this->hasOne(User::class, 'id', 'user_id');
+    }
+
+    public function client()
+    {
+        return $this->hasOne(Client::class, 'client_id');
     }
 
     /**
@@ -62,7 +68,7 @@ class ImportModel extends Model
 
     public function getSplitCustomerNameAttribute($value)
     {
-        return $this->attributes['splie_customer_name'] == 1;
+        return $this->attributes['split_customer_name'] == 1;
     }
 
     public function setSplitCustomerNameAttribute($value)

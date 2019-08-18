@@ -67,7 +67,7 @@ export class CampaignsComponent implements OnInit {
 
             // if the user isn't at least a company admin, then we are going to send them back to the page they
             // were prior to reaching this point...
-            if (this.user.role.role < UserRole.companyAdmin)
+            if (this.user.role.role < UserRole.COMPANY_ADMIN)
                 this.session.navigateBack().then(result => {
                     console.dir(result);
                 });

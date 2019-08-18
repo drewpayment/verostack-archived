@@ -9,9 +9,8 @@ import * as _ from 'lodash';
 import * as moment from 'moment';
 import {environment} from '@env/environment';
 import {IUserDetailInfo} from '@app/models/user-detail-info.model';
-import {IRole} from '@app/models/role.model';
-import { catchError, tap, map } from 'rxjs/operators';
-import { Location } from '@angular/common';
+import {IRole, UserRole} from '@app/models/role.model';
+import { tap, map } from 'rxjs/operators';
 
 interface DataStore {
     user: User;
@@ -210,53 +209,69 @@ export class UserService {
         // });
 
         const query = `
-            userByUserName(username: ${username}) {
-                id
-                firstName
-                lastName
-                username
-                active
-                detail {
+        {
+            user(username:"${username}") {
+              id
+              firstName
+              lastName
+              username
+              active
+              createdAt
+              updatedAt
+              detail {
                 userDetailId
                 userId
                 street
-                    street2
+                  street2
                 city
                 state
                 zip
-                }
-                role {
+              }
+              role {
                 role
                 is_sales_admin
-                }
-                clients {
+              }
+              clients {
                 clientId
                 name
-                }
-                sessionUser {
+              }
+              sessionUser {
                 id
                 sessionClient
                 client {
-                    clientId
-                    name
-                    street
-                    city
-                    state
-                    zip
-                    phone
-                    active
-                    modifiedBy
+                  clientId
+                  name
+                  street
+                  city
+                  state
+                  zip
+                  phone
+                  active
+                  modifiedBy
                 }
-                }
+              }
             }
+          }
         `;
 
         this.http.post(this.graphql, {
-            body: {
-                query: query,
-            }
-        }).subscribe((result: { data: User }) => {
-            const data = result.data;
+            query: query,
+        })
+        .pipe(
+            map((result: { data: {user: User} }) => {
+                const user = result.data.user;
+                const roles = [];
+                for (const v in UserRole) {
+                    if (typeof UserRole[v] === 'number') roles.push(v);
+                }
+                const role = UserRole[(<unknown>user.role.role as string)];
+                user.role.role = role;
+                user.createdAt = moment(user.createdAt);
+                user.updatedAt = moment(user.updatedAt);
+                return user;
+            })
+        )
+        .subscribe((data: User) => {
             this.dataStore.detail = data.detail;
             this.userDetail$.next(data.detail);
 

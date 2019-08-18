@@ -24,13 +24,13 @@ export interface RoleType {
 }
 
 export enum UserRole {
-    user = 1,
-    supervisor,
-    manager,
-    regionalManager,
-    humanResources,
-    companyAdmin,
-    systemAdmin
+    USER = 1,
+    SUPERVISOR,
+    MANAGER,
+    REGIONAL_MANAGER,
+    HUMAN_RESOURCES,
+    COMPANY_ADMIN,
+    SYSTEM_ADMIN
 }
 
 export interface IRoleType {
@@ -44,11 +44,11 @@ export interface IRoleType {
 }
 
 export const Role:IRoleType = {
-    user: UserRole.user,
-    supervisor: UserRole.supervisor,
-    manager: UserRole.manager,
-    regionalManager: UserRole.regionalManager, 
-    humanResources: UserRole.humanResources,
-    companyAdmin: UserRole.companyAdmin,
-    systemAdmin: UserRole.systemAdmin
+    user: UserRole.USER,
+    supervisor: UserRole.SUPERVISOR,
+    manager: UserRole.MANAGER,
+    regionalManager: UserRole.REGIONAL_MANAGER, 
+    humanResources: UserRole.HUMAN_RESOURCES,
+    companyAdmin: UserRole.COMPANY_ADMIN,
+    systemAdmin: UserRole.SYSTEM_ADMIN
 }
