@@ -1,9 +1,7 @@
 <mat-card class="page-header-accent">
     <form #f="ngForm" (ngSubmit)="save(f)" *ngIf="user$|async">
+        <h2 mat-card-title>Welcome, {{welcome}}.</h2>
         <mat-card-header class="justify-content-between">
-            <mat-card-title>
-                <h2>Welcome, {{welcome}}.</h2>
-            </mat-card-title>
             <mat-slide-toggle [ngClass]="{'float-right': true, 'text-muted': !editProfile, 'text-light': editProfile}"
                 [checked]="editProfile" (change)="changeEditMode(f)" [disabled]="f.touched" color="primary"
                 *ngIf="user?.role.role > 5"></mat-slide-toggle>

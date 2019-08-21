@@ -52,5 +52,5 @@
 
 
     <small class="text-muted font-weight-light text-center legal-footer">Payment Group, Inc. &#xa9;2018</small>
-<script type="text/javascript" src="dist/runtime.f1498bbb5842592d40f0.js"></script><script type="text/javascript" src="dist/polyfills.30b5c0daca886afc0d4e.js"></script><script type="text/javascript" src="dist/vend.lib.917d066848c5f8907f85.js"></script><script type="text/javascript" src="dist/main.3e367e4156ba5cfaab66.js"></script></body>
+<script type="text/javascript" src="dist/runtime.8c7c361b8d0f7e2cdc3a.js"></script><script type="text/javascript" src="dist/polyfills.30b5c0daca886afc0d4e.js"></script><script type="text/javascript" src="dist/vend.lib.917d066848c5f8907f85.js"></script><script type="text/javascript" src="dist/main.148095376ff876505074.js"></script></body>
 </html>

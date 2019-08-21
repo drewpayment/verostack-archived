@@ -48,10 +48,31 @@
             <mat-icon>pie_chart</mat-icon>
             <span>Analyze</span>
         </a> -->
-        <a mat-list-item routerLink="imports" routerLinkActive="mat-router-link-active">
-            <mat-icon>cloud_upload</mat-icon>
-            <span>Imports</span>
-        </a>
+        
+        <mat-accordion mat-list-item class="navigation-accordion">
+            <mat-expansion-panel [expanded]="expandImports" (opened)="expandImports=!expandImports;"
+                (closed)="expandImports=!expandImports;">
+                <mat-expansion-panel-header [class.expanded-menu-item]="expandImports">
+                    <mat-panel-title>
+                        <mat-icon>import_contacts</mat-icon>
+                        <span>Imports</span>
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+
+                <mat-nav-list>
+                    <a mat-list-item routerLink="imports/models" routerLinkActive="mat-router-link-active">
+                        <mat-icon>build</mat-icon>
+                        <span>Manage</span>
+                    </a>
+
+                    <a mat-list-item routerLink="imports/process" routerLinkActive="mat-router-link-active">
+                        <mat-icon>backup</mat-icon>
+                        <span>Process</span>
+                    </a>
+                </mat-nav-list>
+            </mat-expansion-panel>
+        </mat-accordion>
+
         <a mat-list-item routerLink="daily-tracker" routerLinkActive="mat-router-link-active">
             <mat-icon>ballot</mat-icon>
             <span>Sales</span>
@@ -60,6 +81,7 @@
             <mat-icon>business</mat-icon>
             <span>Company</span>
         </a>
+
         <mat-accordion mat-list-item class="navigation-accordion">
             <mat-expansion-panel [expanded]="expandPayrollLinks" (opened)="expandPayrollLinks=!expandPayrollLinks;"
                 (closed)="expandPayrollLinks=!expandPayrollLinks;">

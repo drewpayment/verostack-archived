@@ -45,11 +45,13 @@
         </div>
 
         <div>
-            <mat-checkbox [value]="splitCustomerName" class="text-black-50">Report uses one field for Customer Name</mat-checkbox>
+            <mat-checkbox [checked]="matchByAgentCode" (change)="setMatchByAgentCode($event)" 
+                class="text-black-50">Match agents on report by Sales Code</mat-checkbox>
         </div>
 
         <div>
-            <mat-checkbox [value]="matchAgentBySalesCode" class="text-black-50">Match agents on report by Sales Code</mat-checkbox>
+            <mat-checkbox [checked]="splitCustomerName" (change)="setSplitCustomerName($event)" 
+                class="text-black-50">Report uses one field for Customer Name</mat-checkbox>
         </div>
 
         <div>
@@ -102,9 +104,6 @@
                                         {{ fieldDescriptions[j] }}
                                     </mat-option>
                                 </mat-select>
-                                <mat-hint>
-                                    Tell us what your fields are.
-                                </mat-hint>
                             </mat-form-field>
                         </div>
                     </div>

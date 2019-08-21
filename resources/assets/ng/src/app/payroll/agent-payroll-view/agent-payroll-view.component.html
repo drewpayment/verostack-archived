@@ -12,7 +12,7 @@
     <div class="row mb-2" *ngIf="!isMobile; else mobileView">
         <div class="col-md-12">
             <mat-card class="border-top-primary">
-                <mat-card-content>
+                <mat-card-content *ngIf="hasPaychecks; else noPayrolls">
                     <mat-table [dataSource]="paychecks">
                         <ng-container matColumnDef="date">
                             <mat-header-cell *matHeaderCellDef>Date</mat-header-cell>
@@ -32,6 +32,16 @@
                         <mat-row *matRowDef="let item; columns: ['date', 'gross']" (click)="viewPaycheck(item)"></mat-row>
                     </mat-table>
                 </mat-card-content>
+                <ng-template #noPayrolls>
+                    <div class="row d-flex justify-content-center py-5">
+                        <div class="col-md-6">
+                            <h4 class="text-center display-4 pb-4">
+                                Paychecks will show up here as soon as they're available!
+                            </h4>
+                            <img src="dist/assets/images/printing_invoices.svg" class="img-fluid" />
+                        </div>
+                    </div>
+                </ng-template>
             </mat-card>
         </div>
     </div>
