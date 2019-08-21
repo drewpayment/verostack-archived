@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { FileUploader, FileUploaderOptions, FileItem } from 'ng2-file-upload';
 import { Spreadsheet } from 'dhx-spreadsheet';
-import { IConvertMessageData, ISheetData, IStyle, IDataCell, ExportedCell, DailySale, ImportModel } from '@app/models';
+import { IConvertMessageData, ISheetData, IStyle, IDataCell, ExportedCell, DailySale, ImportModel, ImportModelMap, DailySaleMapType } from '@app/models';
 import { isNumber } from 'util';
 import { Moment } from 'moment';
 import * as moment from 'moment';
@@ -172,25 +172,38 @@ export class ProcessComponent implements OnInit {
     importReport() {
         if (!this.hasFile) return;
 
-        const ssData = this.ss.serialize() as ExportedCell[];
-        console.dir(this.ss);
+        const ssData = this.ss.serialize();
+        // console.dir(ssData);
         const rowsCount = this.ss._sizes.rowsCount;
         const colsCount = this.ss._sizes.colsCount;
 
+        const map = JSON.parse(this.selectedImportModel.map) as ImportModelMap[];
+
         // get headers
-        const headers = [];
+        const headerMap = [] as ImportModelMap[];
         for (let i = 0; i < colsCount; i++) {
-            headers.push(ssData[i].value);
+            const val = ssData.data[i].value;
+            const m = map.find(x => x.value == val);
+            console.log(val, m);
+
+            if (m) {
+                headerMap.push(m);
+            }
         }
+
+        console.dir(headerMap);
 
         let sales = [] as DailySale[];
         for (let r = 1; r < rowsCount; r++) {
-            const startOfRowIndex = r * colsCount;
+            const startOfRowIndex = r;
 
             for (let c = 0; c < colsCount; c++) {
                 const i = startOfRowIndex + c;
+                const m = map.find(x => x.fieldType == headerMap.find(hm => hm.fieldType == c).fieldType);
+                const sd = ssData.data[i];
 
-                let sd = ssData[i];
+                // console.log(m, sd);
+                
                 // let sale: DailySale = {
                 //     dailySaleId: null,
                 //     agentId: 
@@ -198,11 +211,11 @@ export class ProcessComponent implements OnInit {
             }
         }
 
-        console.dir(ssData);
+        // console.dir(ssData);
     }
 
-    importModelChanged(event: MatRadioChange) {
-        this.selectedImportModel = event.value;
+    importModelChanged(value: ImportModel) {
+        this.selectedImportModel = value;
     }
 
 }

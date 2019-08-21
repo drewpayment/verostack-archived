@@ -14254,7 +14254,7 @@ var EditImportModelComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"shadow-none p-3 pb-0 rounded\" *ngIf=\"(models|async)?.length <= 4; else showDropdown;\">\n    <p>Choose Import Model:</p>\n    <mat-radio-group aria-label=\"Select an import model\" class=\"select-import-model\">\n        <mat-radio-button *ngFor=\"let m of (models|async); let i = index;\" [value]=\"m.importModelId\">\n            {{m.shortDesc}}\n        </mat-radio-button>\n    </mat-radio-group>\n</div>\n\n<ng-template #showDropdown>\n    <div class=\"shadow-none p-3 pb-0 rounded\">\n        <p>Choose Import Model:</p>\n        <mat-form-field>\n            <mat-label>Import Model</mat-label>\n            <mat-select (selectionChange)=\"changeHandler($event)\">\n                <mat-option *ngFor=\"let m of (models|async); let i = index;\" [value]=\"m\">\n                    {{m.shortDesc}}\n                </mat-option>\n            </mat-select>\n        </mat-form-field>\n    </div>\n</ng-template>"
+module.exports = "<div class=\"shadow-none p-3 pb-0 rounded\" *ngIf=\"(models|async)?.length <= 4; else showDropdown;\">\n    <p>Choose Import Model:</p>\n    <mat-radio-group aria-label=\"Select an import model\" class=\"select-import-model\" (change)=\"radioChange($event)\">\n        <mat-radio-button *ngFor=\"let m of (models|async); let i = index;\" [value]=\"m\">\n            {{m.shortDesc}}\n        </mat-radio-button>\n    </mat-radio-group>\n</div>\n\n<ng-template #showDropdown>\n    <div class=\"shadow-none p-3 pb-0 rounded\">\n        <p>Choose Import Model:</p>\n        <mat-form-field>\n            <mat-label>Import Model</mat-label>\n            <mat-select (selectionChange)=\"changeHandler($event)\">\n                <mat-option *ngFor=\"let m of (models|async); let i = index;\" [value]=\"m\">\n                    {{m.shortDesc}}\n                </mat-option>\n            </mat-select>\n        </mat-form-field>\n    </div>\n</ng-template>"
 
 /***/ }),
 
@@ -14296,7 +14296,10 @@ var ImportModelSelectionComponent = /** @class */ (function () {
     ImportModelSelectionComponent.prototype.ngOnDestroy = function () {
     };
     ImportModelSelectionComponent.prototype.changeHandler = function (event) {
-        this.change.emit(event);
+        this.change.emit(event.value);
+    };
+    ImportModelSelectionComponent.prototype.radioChange = function (event) {
+        this.change.emit(event.value);
     };
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Output"])(),
@@ -14877,30 +14880,45 @@ var ProcessComponent = /** @class */ (function () {
         if (!this.hasFile)
             return;
         var ssData = this.ss.serialize();
-        console.dir(this.ss);
+        // console.dir(ssData);
         var rowsCount = this.ss._sizes.rowsCount;
         var colsCount = this.ss._sizes.colsCount;
+        var map = JSON.parse(this.selectedImportModel.map);
         // get headers
-        var headers = [];
+        var headerMap = [];
+        var _loop_1 = function (i) {
+            var val = ssData.data[i].value;
+            var m = map.find(function (x) { return x.value == val; });
+            console.log(val, m);
+            if (m) {
+                headerMap.push(m);
+            }
+        };
         for (var i = 0; i < colsCount; i++) {
-            headers.push(ssData[i].value);
+            _loop_1(i);
         }
+        console.dir(headerMap);
         var sales = [];
         for (var r = 1; r < rowsCount; r++) {
-            var startOfRowIndex = r * colsCount;
-            for (var c = 0; c < colsCount; c++) {
+            var startOfRowIndex = r;
+            var _loop_2 = function (c) {
                 var i = startOfRowIndex + c;
-                var sd = ssData[i];
+                var m = map.find(function (x) { return x.fieldType == headerMap.find(function (hm) { return hm.fieldType == c; }).fieldType; });
+                var sd = ssData.data[i];
+                // console.log(m, sd);
                 // let sale: DailySale = {
                 //     dailySaleId: null,
                 //     agentId: 
                 // };
+            };
+            for (var c = 0; c < colsCount; c++) {
+                _loop_2(c);
             }
         }
-        console.dir(ssData);
+        // console.dir(ssData);
     };
-    ProcessComponent.prototype.importModelChanged = function (event) {
-        this.selectedImportModel = event.value;
+    ProcessComponent.prototype.importModelChanged = function (value) {
+        this.selectedImportModel = value;
     };
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewChild"])('fuRef'),

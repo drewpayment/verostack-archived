@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, Output, EventEmitter } from '@angular/cor
 import { ImportsService } from '../imports.service';
 import { ImportModel } from '@app/models';
 import { Observable } from 'rxjs';
-import { MatRadioChange } from '@angular/material';
+import { MatRadioChange, MatSelectChange } from '@angular/material';
 
 @Component({
     selector: 'vs-import-model-selection',
@@ -13,7 +13,7 @@ export class ImportModelSelectionComponent implements OnInit, OnDestroy {
 
     models: Observable<ImportModel[]>;
 
-    @Output() readonly change: EventEmitter<MatRadioChange> = new EventEmitter<MatRadioChange>();
+    @Output() change: EventEmitter<ImportModel> = new EventEmitter<ImportModel>();
 
     constructor(private service: ImportsService) { }
 
@@ -24,8 +24,12 @@ export class ImportModelSelectionComponent implements OnInit, OnDestroy {
     ngOnDestroy() {
     }
 
-    changeHandler(event: MatRadioChange) {
-        this.change.emit(event);
+    changeHandler(event: MatSelectChange) {
+        this.change.emit(event.value);
+    }
+
+    radioChange(event: MatRadioChange) {
+        this.change.emit(event.value);
     }
 
 }

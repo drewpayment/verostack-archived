@@ -1,11 +1,11 @@
 
 type User {
     id: ID!
-    firstName: String!
-    lastName: String!
-    username: String!
+    firstName: String
+    lastName: String
+    username: String
     active: Boolean
-    email: String!
+    email: String
     createdAt: DateTime
     updatedAt: DateTime
     detail: UserDetail @hasOne
@@ -20,4 +20,14 @@ type User {
 # }
 extend type Query {
     user(username: String @eq): User @find @middleware(checks: ["auth:api"])
+}
+
+extend type Mutation {
+    updateUser(id: ID!, 
+        first_name: String,
+        last_name: String,
+        username: String,
+        active: Boolean,
+        email: String,
+    ): User @update @middleware(checks: ["auth:api"])
 }
