@@ -28,6 +28,7 @@ export class SidenavComponent implements OnInit {
     role: any;
     expandPayrollLinks = false;
     expandPeopleLinks = false;
+    expandImports = false;
 
     constructor(
         private session: SessionService, 

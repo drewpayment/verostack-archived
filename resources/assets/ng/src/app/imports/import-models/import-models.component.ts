@@ -65,6 +65,7 @@ export class ImportModelsComponent implements OnInit {
         .subscribe((model: ImportModel) => {
             this.isFabOpen$.next(false);
             if (!model) return;
+            console.dir(model);
 
             this.session.showLoader();
             this.service.saveImportModel(model).subscribe(res => {
