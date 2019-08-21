@@ -8095,7 +8095,7 @@ var DailySaleFields = [
 /*!*********************************!*\
   !*** ./src/app/models/index.ts ***!
   \*********************************/
-/*! exports provided: AgentSale, PaidStatusType, PayrollFilterType, UserType, ContactType, DailySaleMapType, DailySaleFields */
+/*! exports provided: AgentSale, PayrollFilterType, UserType, ContactType, PaidStatusType, DailySaleMapType, DailySaleFields */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";

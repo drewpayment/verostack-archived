@@ -111,4 +111,25 @@ class DncContact extends Model
             ['zip', '=', $zip]
         ]);
     }
+
+    public function getDncContactIdAttribute()
+    {
+        return $this->attributes['dnc_contact_id'];
+    }
+
+    public function getClientIdAttribute()
+    {
+        return $this->attributes['client_id'];
+    }
+
+    public function getFirstNameAttribute()
+    {
+        return $this->attributes['first_name'];
+    }
+
+    public function getLastNameAttribute()
+    {
+        return $this->attributes['last_name'];
+    }
+    
 }

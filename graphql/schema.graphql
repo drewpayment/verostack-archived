@@ -13,3 +13,4 @@ type Mutation
 #import user/*.graphql
 #import client/*.graphql
 #import imports/*.graphql
+#import contacts/*.graphql
