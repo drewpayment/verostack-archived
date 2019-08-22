@@ -300,9 +300,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/material */ "./node_modules/@angular/material/esm5/material.es5.js");
 /* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
-/* harmony import */ var _app_session_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @app/session.service */ "./src/app/session.service.ts");
-/* harmony import */ var _app_shared__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @app/shared */ "./src/app/shared/index.ts");
-/* harmony import */ var _app_message_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @app/message.service */ "./src/app/message.service.ts");
+/* harmony import */ var _app_models__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @app/models */ "./src/app/models/index.ts");
+/* harmony import */ var _app_session_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @app/session.service */ "./src/app/session.service.ts");
+/* harmony import */ var _app_shared__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @app/shared */ "./src/app/shared/index.ts");
+/* harmony import */ var _app_message_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @app/message.service */ "./src/app/message.service.ts");
+/* harmony import */ var _app_contact_contact_service__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @app/contact/contact.service */ "./src/app/contact/contact.service.ts");
+
+
 
 
 
@@ -311,14 +315,15 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var AddDncContactDialogComponent = /** @class */ (function () {
-    function AddDncContactDialogComponent(ref, data, fb, session, message) {
+    function AddDncContactDialogComponent(ref, data, fb, session, message, service) {
         this.ref = ref;
         this.data = data;
         this.fb = fb;
         this.session = session;
         this.message = message;
+        this.service = service;
         this.formSubmitted = false;
-        this.states = _app_shared__WEBPACK_IMPORTED_MODULE_5__["States"].$get();
+        this.states = _app_shared__WEBPACK_IMPORTED_MODULE_6__["States"].$get();
     }
     AddDncContactDialogComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -370,6 +375,7 @@ var AddDncContactDialogComponent = /** @class */ (function () {
         this.ref.close();
     };
     AddDncContactDialogComponent.prototype.saveDncContact = function () {
+        var _this = this;
         if (!this.form.value.firstName && !this.form.value.lastName && !this.form.value.description) {
             this.form.get('firstName').setErrors({ required: true });
             this.form.get('lastName').setErrors({ required: true });
@@ -381,8 +387,25 @@ var AddDncContactDialogComponent = /** @class */ (function () {
         console.log("The form is valid: " + this.form.valid);
         console.dir(this.form);
         if (this.form.valid) {
-            var model = this.prepareModel();
-            this.ref.close(model);
+            var address = {
+                address: this.form.value.address,
+                city: this.form.value.city,
+                state: this.form.value.state,
+            };
+            if (this.form.value.addressCont) {
+                address.address2 = this.form.value.addressCont;
+            }
+            this.service.getGeocoding(address).subscribe(function (result) {
+                if (result.status !== _app_models__WEBPACK_IMPORTED_MODULE_4__["GeocodingResponseStatus"].Ok) {
+                    _this.message.addMessage('We were unable to resolve that address. Please review for accuracy.', 'dismiss', 5000);
+                    return;
+                }
+                var model = _this.prepareModel();
+                model.lat = result.results[0].geometry.location.lat.toString();
+                model.long = result.results[0].geometry.location.lng.toString();
+                model.geocode = JSON.stringify(result.results[0].geometry);
+                _this.ref.close(model);
+            });
         }
     };
     AddDncContactDialogComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
@@ -393,8 +416,9 @@ var AddDncContactDialogComponent = /** @class */ (function () {
         }),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__param"](1, Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Inject"])(_angular_material__WEBPACK_IMPORTED_MODULE_2__["MAT_DIALOG_DATA"])),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_material__WEBPACK_IMPORTED_MODULE_2__["MatDialogRef"], Object, _angular_forms__WEBPACK_IMPORTED_MODULE_3__["FormBuilder"],
-            _app_session_service__WEBPACK_IMPORTED_MODULE_4__["SessionService"],
-            _app_message_service__WEBPACK_IMPORTED_MODULE_6__["MessageService"]])
+            _app_session_service__WEBPACK_IMPORTED_MODULE_5__["SessionService"],
+            _app_message_service__WEBPACK_IMPORTED_MODULE_7__["MessageService"],
+            _app_contact_contact_service__WEBPACK_IMPORTED_MODULE_8__["ContactService"]])
     ], AddDncContactDialogComponent);
     return AddDncContactDialogComponent;
 }());

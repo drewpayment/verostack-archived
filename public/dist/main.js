@@ -3736,6 +3736,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _app_message_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @app/message.service */ "./src/app/message.service.ts");
 /* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
 /* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var _env_environment__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @env/environment */ "./src/environments/environment.ts");
+
 
 
 
@@ -3750,8 +3752,22 @@ var ContactService = /** @class */ (function () {
         this.auth = auth;
         this.msg = msg;
         this._restrictedContacts$ = new rxjs__WEBPACK_IMPORTED_MODULE_3__["BehaviorSubject"](null);
+        this.gUrl = _env_environment__WEBPACK_IMPORTED_MODULE_8__["environment"].geocoding;
+        this.gKey = _env_environment__WEBPACK_IMPORTED_MODULE_8__["environment"].geocodingApi;
         this.api = this.auth.apiUrl + "api";
     }
+    ContactService.prototype.getGeocoding = function (address) {
+        var query = '';
+        for (var p in address) {
+            if (address[p]) {
+                if (query.length)
+                    query += '+';
+                query += "" + address[p];
+            }
+        }
+        query += "&key=" + this.gKey;
+        return this.http.get(this.gUrl + query);
+    };
     /**
      * Get collection of contact entities by the current client.
      *
@@ -8029,6 +8045,72 @@ var ContactType;
 
 /***/ }),
 
+/***/ "./src/app/models/geocoding-response.model.ts":
+/*!****************************************************!*\
+  !*** ./src/app/models/geocoding-response.model.ts ***!
+  \****************************************************/
+/*! exports provided: GeocodingLocationType, GeocodingAddressType, GeocodingResponseStatus */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GeocodingLocationType", function() { return GeocodingLocationType; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GeocodingAddressType", function() { return GeocodingAddressType; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GeocodingResponseStatus", function() { return GeocodingResponseStatus; });
+var GeocodingLocationType;
+(function (GeocodingLocationType) {
+    GeocodingLocationType["rooftop"] = "ROOFTOP";
+    GeocodingLocationType["rangeInterpolated"] = "RANGE_INTERPOLATED";
+    GeocodingLocationType["geometricCenter"] = "GEOMETRIC_CENTER";
+    GeocodingLocationType["approximate"] = "APPROXIMATE";
+})(GeocodingLocationType || (GeocodingLocationType = {}));
+/**
+ * Non-exhaustive and subject to changes by Google Cloud Platform.
+ * https://developers.google.com/maps/documentation/geocoding/intro#Types
+ */
+var GeocodingAddressType;
+(function (GeocodingAddressType) {
+    GeocodingAddressType["streetAddress"] = "street_address";
+    GeocodingAddressType["route"] = "route";
+    GeocodingAddressType["intersection"] = "intersection";
+    GeocodingAddressType["political"] = "political";
+    GeocodingAddressType["country"] = "country";
+    GeocodingAddressType["administrativeAreaLevel1"] = "administrative_area_level_1";
+    GeocodingAddressType["administrativeAreaLevel2"] = "administrative_area_level_2";
+    GeocodingAddressType["administrativeAreaLevel3"] = "administrative_area_level_3";
+    GeocodingAddressType["administrativeAreaLevel4"] = "administrative_area_level_4";
+    GeocodingAddressType["administrativeAreaLevel5"] = "administrative_area_level_5";
+    GeocodingAddressType["colloquialArea"] = "colloquial_area";
+    GeocodingAddressType["locality"] = "locality";
+    GeocodingAddressType["sublocality"] = "sublocality";
+    GeocodingAddressType["neighborhood"] = "neighborhood";
+    GeocodingAddressType["premise"] = "premise";
+    GeocodingAddressType["subpremise"] = "subpremise";
+    GeocodingAddressType["postalCode"] = "postal_code";
+    GeocodingAddressType["naturalFeature"] = "natural_feature";
+    GeocodingAddressType["airport"] = "airport";
+    GeocodingAddressType["park"] = "park";
+    GeocodingAddressType["pointOfInterest"] = "point_of_interest";
+    GeocodingAddressType["floor"] = "floor";
+    GeocodingAddressType["establishment"] = "establishment";
+    GeocodingAddressType["parking"] = "parking";
+    GeocodingAddressType["postBox"] = "post_box";
+    GeocodingAddressType["postalTown"] = "postal_town";
+})(GeocodingAddressType || (GeocodingAddressType = {}));
+var GeocodingResponseStatus;
+(function (GeocodingResponseStatus) {
+    GeocodingResponseStatus["Ok"] = "OK";
+    GeocodingResponseStatus["ZeroResults"] = "ZERO_RESULTS";
+    GeocodingResponseStatus["OverDailyLimit"] = "OVER_DAILY_LIMIT";
+    GeocodingResponseStatus["OverQueryLimit"] = "OVER_QUERY_LIMIT";
+    GeocodingResponseStatus["RequestDenied"] = "REQUEST_DENIED";
+    GeocodingResponseStatus["InvalidRequest"] = "INVALID_REQUEST";
+    GeocodingResponseStatus["UnknownError"] = "UNKNOWN_ERROR";
+})(GeocodingResponseStatus || (GeocodingResponseStatus = {}));
+
+
+/***/ }),
+
 /***/ "./src/app/models/import-model.model.ts":
 /*!**********************************************!*\
   !*** ./src/app/models/import-model.model.ts ***!
@@ -8095,7 +8177,7 @@ var DailySaleFields = [
 /*!*********************************!*\
   !*** ./src/app/models/index.ts ***!
   \*********************************/
-/*! exports provided: AgentSale, PayrollFilterType, UserType, ContactType, PaidStatusType, DailySaleMapType, DailySaleFields */
+/*! exports provided: AgentSale, PayrollFilterType, UserType, ContactType, DailySaleMapType, DailySaleFields, PaidStatusType, GeocodingLocationType, GeocodingAddressType, GeocodingResponseStatus */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -8119,6 +8201,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DailySaleMapType", function() { return _import_model_model__WEBPACK_IMPORTED_MODULE_5__["DailySaleMapType"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DailySaleFields", function() { return _import_model_model__WEBPACK_IMPORTED_MODULE_5__["DailySaleFields"]; });
+
+/* harmony import */ var _geocoding_response_model__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./geocoding-response.model */ "./src/app/models/geocoding-response.model.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "GeocodingLocationType", function() { return _geocoding_response_model__WEBPACK_IMPORTED_MODULE_6__["GeocodingLocationType"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "GeocodingAddressType", function() { return _geocoding_response_model__WEBPACK_IMPORTED_MODULE_6__["GeocodingAddressType"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "GeocodingResponseStatus", function() { return _geocoding_response_model__WEBPACK_IMPORTED_MODULE_6__["GeocodingResponseStatus"]; });
+
 
 
 
@@ -13990,7 +14080,11 @@ var environment = {
     apiUrl: 'http://verostack/',
     graphql: 'http://verostack/graphql',
     defaultTitle: 'Payment Dyanmics',
-    headless: '5764D6B5E7A5575B22201D646C5695ECB6AEF498A467B01D4D2167637D8F81A1'
+    headless: '5764D6B5E7A5575B22201D646C5695ECB6AEF498A467B01D4D2167637D8F81A1',
+    // Geocoding API Key
+    geocodingApi: 'AIzaSyACQIjgGrlpl1-DtmI6CP6-6_7qrtx_rh0',
+    // Geocoding API URL 
+    geocoding: 'https://maps.googleapis.com/maps/api/geocode/json?address='
 };
 
 

@@ -1,11 +1,12 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { FormGroup, FormBuilder, Validators, ValidationErrors, AbstractControl } from '@angular/forms';
-import { User, DncContact } from '@app/models';
+import { User, DncContact, GeocodingRequest, GeocodingResponseStatus } from '@app/models';
 import { SessionService } from '@app/session.service';
 import { States } from '@app/shared';
 import { distinctUntilChanged } from 'rxjs/operators';
 import { MessageService } from '@app/message.service';
+import { ContactService } from '@app/contact/contact.service';
 
 @Component({
     selector: 'vs-add-dnc-contact-dialog',
@@ -25,7 +26,8 @@ export class AddDncContactDialogComponent implements OnInit {
         @Inject(MAT_DIALOG_DATA) public data: any,
         private fb:FormBuilder,
         private session:SessionService,
-        private message:MessageService
+        private message:MessageService,
+        private service: ContactService
     ) { }
 
     ngOnInit() {
@@ -96,8 +98,28 @@ export class AddDncContactDialogComponent implements OnInit {
         console.dir(this.form);
 
         if (this.form.valid) {
-            const model = this.prepareModel();
-            this.ref.close(model);
+            const address: GeocodingRequest = {
+                address: this.form.value.address,
+                city: this.form.value.city,
+                state: this.form.value.state,
+            };
+            if (this.form.value.addressCont) {
+                address.address2 = this.form.value.addressCont;
+            }
+
+            this.service.getGeocoding(address).subscribe(result => {
+                if (result.status !== GeocodingResponseStatus.Ok) {
+                    this.message.addMessage('We were unable to resolve that address. Please review for accuracy.', 'dismiss', 5000);
+                    return;
+                }
+
+                const model = this.prepareModel();
+                model.lat = result.results[0].geometry.location.lat.toString();
+                model.long = result.results[0].geometry.location.lng.toString();
+                model.geocode = JSON.stringify(result.results[0].geometry);
+
+                this.ref.close(model);
+            });
         }
     }
 

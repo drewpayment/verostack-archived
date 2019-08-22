@@ -10,5 +10,8 @@ export interface DncContact {
     city:string,
     state:string,
     zip:string,
-    note:string
+    note:string,
+    lat: string,
+    long: string,
+    geocode: string,
 }

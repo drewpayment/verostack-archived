@@ -32,3 +32,5 @@ export * from './dnc-contact.model';
 export * from './import-model.model';
 export * from './excel-2-json.model';
 export * from './gql.model';
+export * from './geocoding-request.model';
+export * from './geocoding-response.model';

@@ -8,7 +8,8 @@ import { catchError, tap } from 'rxjs/operators';
 import { LaravelErrorResponse } from '@app/models/validator-error.model';
 import { MessageService } from '@app/message.service';
 import * as _ from 'lodash';
-import { DncContact } from '@app/models';
+import { DncContact, GeocodingRequest, GeocodingResponse } from '@app/models';
+import { environment } from '@env/environment';
 
 @Injectable({
     providedIn: 'root'
@@ -20,12 +21,27 @@ export class ContactService {
     private restrictedContacts:DncContact[];
     _restrictedContacts$ = new BehaviorSubject<DncContact[]>(null);
 
+    private gUrl = environment.geocoding;
+    private gKey = environment.geocodingApi;
+
     constructor(
         private http: HttpClient,
         private auth:AuthService,
         private msg:MessageService
     ) {
         this.api = `${this.auth.apiUrl}api`;
+    }
+
+    getGeocoding(address: GeocodingRequest): Observable<GeocodingResponse> {
+        let query = '';
+        for (const p in address) {
+            if (address[p]) {
+                if (query.length) query += '+';
+                query += `${address[p]}`;
+            }
+        }
+        query += `&key=${this.gKey}`;
+        return this.http.get<GeocodingResponse>(this.gUrl + query);
     }
 
     /**
