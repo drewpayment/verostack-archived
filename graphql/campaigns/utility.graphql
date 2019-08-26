@@ -1,0 +1,41 @@
+
+type Utility {
+    utilityId: ID!
+    campaignId: Int!
+    commodity: String
+    agentCompanyId: Int
+    agentCompanyName: String
+    utilityName: String
+    meterNumber: String
+    classification: String
+    price: Float
+    unitOfMeasure: String
+    term: Int
+    isActive: Boolean
+    modifiedBy: Int!
+    createdAt: DateTime
+    updatedAt: DateTime
+    campaign: Campaign @belongsTo
+}
+
+extend type Query {
+    utilities: [Utility!]! @all @middleware(checks: ["auth:api"])
+    utilityByName(agent_company_name: String @eq): Utility @find
+}
+
+extend type Mutation {
+    updateUtility(
+        utility_id: ID!,
+        commodity: String,
+        agent_company_id: Int,
+        agent_company_name: String,
+        utility_name: String,
+        meter_number: String,
+        classification: String,
+        price: Float,
+        unit_of_measure: String,
+        term: Int,
+        is_active: Boolean,
+        modified_by: Int
+    ): Utility! @update @middleware(checks: ["auth:api"])
+}

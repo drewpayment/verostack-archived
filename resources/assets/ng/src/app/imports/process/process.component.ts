@@ -1,11 +1,12 @@
 import { Component, OnInit, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { FileUploader, FileUploaderOptions, FileItem } from 'ng2-file-upload';
 import { Spreadsheet } from 'dhx-spreadsheet';
-import { IConvertMessageData, ISheetData, IStyle, IDataCell, ExportedCell, DailySale, ImportModel, ImportModelMap, DailySaleMapType } from '@app/models';
+import { IConvertMessageData, ISheetData, IStyle, IDataCell, ExportedCell, DailySale, ImportModel, ImportModelMap, DailySaleMapType, User } from '@app/models';
 import { isNumber } from 'util';
 import { Moment } from 'moment';
 import * as moment from 'moment';
 import { MatRadioChange } from '@angular/material';
+import { SessionService } from '@app/session.service';
 
 @Component({
     selector: 'vs-process',
@@ -29,10 +30,12 @@ export class ProcessComponent implements OnInit {
     workbooksToReview: ISheetData[] = [];
     styles: IStyle[];
     selectedImportModel: ImportModel;
+    user: User;
 
-    constructor(private cd: ChangeDetectorRef) { }
+    constructor(private cd: ChangeDetectorRef, private session: SessionService) { }
 
     ngOnInit() {
+        this.session.getUserItem().subscribe(u => this.user = u);
     }
 
     fileAddedHandler(item: FileList) {
@@ -172,7 +175,16 @@ export class ProcessComponent implements OnInit {
     importReport() {
         if (!this.hasFile) return;
 
-        const ssData = this.ss.serialize();
+        const ssData = this.ss.serialize() as {
+            columns: {[key: string]: any},
+            data: {
+                cell: string,
+                css: string,
+                value: string
+            }[],
+            format: {[key: string]: any}[],
+            styles: {[key: string]: any}
+        };
         // console.dir(ssData);
         const rowsCount = this.ss._sizes.rowsCount;
         const colsCount = this.ss._sizes.colsCount;
@@ -180,38 +192,51 @@ export class ProcessComponent implements OnInit {
         const map = JSON.parse(this.selectedImportModel.map) as ImportModelMap[];
 
         // get headers
-        const headerMap = [] as ImportModelMap[];
+        const headerMap = [] as {
+            colName: string,
+            mapName: string,
+            value: string,
+            fieldType: DailySaleMapType
+        }[];
         for (let i = 0; i < colsCount; i++) {
             const val = ssData.data[i].value;
             const m = map.find(x => x.value == val);
-            console.log(val, m);
 
             if (m) {
-                headerMap.push(m);
+                headerMap.push({
+                    colName: m.value,
+                    mapName: m.key,
+                    value: i.toString(),
+                    fieldType: m.fieldType
+                });
             }
         }
 
         console.dir(headerMap);
 
-        let sales = [] as DailySale[];
-        for (let r = 1; r < rowsCount; r++) {
-            const startOfRowIndex = r;
+        const sales = [] as DailySale[];
+        for (let r = 0; r < rowsCount; r++) {
+            const rowStart = (colsCount * r);
+            if (rowStart == 0) continue;
+            
+            const sale = {
+                clientId: this.user.sessionUser.sessionClient,
+            } as DailySale;
+            for (let i = 0; i < headerMap.length; i++) {
+                const header = headerMap[i];
+                const index = rowStart + +header.value;
+                const item = ssData.data[index];
 
-            for (let c = 0; c < colsCount; c++) {
-                const i = startOfRowIndex + c;
-                const m = map.find(x => x.fieldType == headerMap.find(hm => hm.fieldType == c).fieldType);
-                const sd = ssData.data[i];
-
-                // console.log(m, sd);
-                
-                // let sale: DailySale = {
-                //     dailySaleId: null,
-                //     agentId: 
-                // };
+                console.log(header);
+                if (item) sale[DailySaleMapType[header.fieldType]] = item.value;
             }
+            
+            if (Object.keys(sale).length > 1) sales.push(sale);
         }
 
-        // console.dir(ssData);
+        sales.forEach((s, i, a) => {
+            console.log(s);
+        });
     }
 
     importModelChanged(value: ImportModel) {

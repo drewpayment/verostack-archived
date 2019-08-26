@@ -4,6 +4,7 @@ namespace App;
 
 use App\Payroll;
 use App\Utility;
+use App\Scopes\ClientScope;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -54,12 +55,26 @@ class Campaign extends Model
 	    'compensation',
 	    'md_details',
 	    'md_onboarding',
-	    'md_other'
+        'md_other',
+        'created_at',
+        'updated_at'
     ];
 
-    protected $casts = [
-        'active' => 'boolean'
-    ];
+    /**
+     * Filters all queries of this model by the user's selected client to ensure that they 
+     * do not have cross-client interactions.
+     *
+     * @return void
+     */
+    protected static function boot() {
+        parent::boot();
+        static::addGlobalScope(new ClientScope);
+    }
+
+    public function getActiveAttribute()
+    {
+        return $this->attributes['active'] == 1;
+    }
 
 	/**
 	 * Set's the campaign's active attribute.
@@ -142,6 +157,34 @@ class Campaign extends Model
     	return $query->where('campaign_id', $id);
     }
 
+    public function getClientIdAttribute()
+    {
+        return $this->attributes['client_id'];
+    }
 
+    public function getCreatedAtAttribute()
+    {
+        return $this->attributes['created_at'];
+    }
+
+    public function getUpdatedAtAttribute()
+    {
+        return $this->attributes['updated_at'];
+    }
+
+    public function getMdDetailsAttribute()
+    {
+        return $this->attributes['md_details'];
+    }
+
+    public function getMdOnboardingAttribute()
+    {
+        return $this->attributes['md_onboarding'];
+    }
+
+    public function getMdOtherAttribute()
+    {
+        return $this->attributes['md_other'];
+    }
 
 }

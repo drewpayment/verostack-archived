@@ -4,6 +4,7 @@ namespace App;
 
 use App\User;
 use App\Campaign;
+use App\Scopes\ClientScope;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -114,6 +115,46 @@ class Utility extends Model
     public function setIsActiveAttribute($value)
     {
         $this->attributes['is_active'] = $value == true ? 1 : 0;
+    }
+
+    public function getUtilityIdAttribute()
+    {
+        return $this->attributes['utility_id'];
+    }
+
+    public function getCampaignIdAttribute()
+    {
+        return $this->attributes['campaign_id'];
+    }
+
+    public function getAgentCompanyIdAttribute()
+    {
+        return $this->attributes['agent_company_id'];
+    }
+
+    public function getAgentCompanyNameAttribute()
+    {
+        return $this->attributes['agent_company_name'];
+    }
+
+    public function getUtilityNameAttribute()
+    {
+        return $this->attributes['utility_name'];
+    }
+
+    public function getMeterNumberAttribute()
+    {
+        return $this->attributes['meter_number'];
+    }
+
+    public function getUnitOfMeasureAttribute()
+    {
+        return $this->attributes['unit_of_measure'];
+    }
+
+    public function getModifiedByAttribute()
+    {
+        return $this->attributes['modified_by'];
     }
 
 }

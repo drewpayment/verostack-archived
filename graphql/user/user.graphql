@@ -29,5 +29,5 @@ extend type Mutation {
         username: String,
         active: Boolean,
         email: String,
-    ): User @update @middleware(checks: ["auth:api"])
+    ): User! @update @middleware(checks: ["auth:api"])
 }

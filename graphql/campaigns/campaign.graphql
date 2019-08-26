@@ -1,0 +1,23 @@
+
+type Campaign {
+    campaignId: ID!
+    clientId: Int!
+    name: String
+    active: Boolean
+    createdAt: DateTime
+    updatedAt: DateTime
+    compensation: Float
+    mdDetails: String
+    mdOnboarding: String
+    mdOther: String
+    utilities: [Utility!]! @hasMany(relation: "utilities")
+}
+
+extend type Query {
+    campaigns: [Campaign!]! @all @middleware(checks: ["auth:api"])
+    campaigns(active: Boolean @eq): [Campaign!]! @all @middleware(checks: ["auth:api"])
+}
+
+# extend type Mutation {
+
+# }

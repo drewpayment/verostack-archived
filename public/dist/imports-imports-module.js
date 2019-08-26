@@ -14737,16 +14737,21 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var ng2_file_upload__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(ng2_file_upload__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var dhx_spreadsheet__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! dhx-spreadsheet */ "./node_modules/dhx-spreadsheet/codebase/spreadsheet.js");
 /* harmony import */ var dhx_spreadsheet__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(dhx_spreadsheet__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _app_models__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @app/models */ "./src/app/models/index.ts");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _app_session_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @app/session.service */ "./src/app/session.service.ts");
+
+
 
 
 
 
 
 var ProcessComponent = /** @class */ (function () {
-    function ProcessComponent(cd) {
+    function ProcessComponent(cd, session) {
         this.cd = cd;
+        this.session = session;
         this.fu = new ng2_file_upload__WEBPACK_IMPORTED_MODULE_2__["FileUploader"]({
             url: null,
             autoUpload: false,
@@ -14756,6 +14761,8 @@ var ProcessComponent = /** @class */ (function () {
         this.workbooksToReview = [];
     }
     ProcessComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this.session.getUserItem().subscribe(function (u) { return _this.user = u; });
     };
     ProcessComponent.prototype.fileAddedHandler = function (item) {
         var _this = this;
@@ -14842,11 +14849,11 @@ var ProcessComponent = /** @class */ (function () {
     ProcessComponent.prototype.excelDateToMoment = function (serial) {
         var utcDays = Math.floor(serial - 25569);
         var utcValue = utcDays * 86400;
-        var dateInfo = moment__WEBPACK_IMPORTED_MODULE_4__(utcValue * 1000);
+        var dateInfo = moment__WEBPACK_IMPORTED_MODULE_5__(utcValue * 1000);
         if (!dateInfo.isValid())
             return null;
         // TODO: Not the best way to do this... there is still a chance that some number converted to a moment date
-        if (dateInfo.isBefore(moment__WEBPACK_IMPORTED_MODULE_4__().subtract(1, 'year'), 'day') || dateInfo.isAfter(moment__WEBPACK_IMPORTED_MODULE_4__(), 'day')) {
+        if (dateInfo.isBefore(moment__WEBPACK_IMPORTED_MODULE_5__().subtract(1, 'year'), 'day') || dateInfo.isAfter(moment__WEBPACK_IMPORTED_MODULE_5__(), 'day')) {
             return null;
         }
         var fractionalDay = serial - Math.floor(serial) + 0.0000001;
@@ -14889,9 +14896,13 @@ var ProcessComponent = /** @class */ (function () {
         var _loop_1 = function (i) {
             var val = ssData.data[i].value;
             var m = map.find(function (x) { return x.value == val; });
-            console.log(val, m);
             if (m) {
-                headerMap.push(m);
+                headerMap.push({
+                    colName: m.value,
+                    mapName: m.key,
+                    value: i.toString(),
+                    fieldType: m.fieldType
+                });
             }
         };
         for (var i = 0; i < colsCount; i++) {
@@ -14899,23 +14910,27 @@ var ProcessComponent = /** @class */ (function () {
         }
         console.dir(headerMap);
         var sales = [];
-        for (var r = 1; r < rowsCount; r++) {
-            var startOfRowIndex = r;
-            var _loop_2 = function (c) {
-                var i = startOfRowIndex + c;
-                var m = map.find(function (x) { return x.fieldType == headerMap.find(function (hm) { return hm.fieldType == c; }).fieldType; });
-                var sd = ssData.data[i];
-                // console.log(m, sd);
-                // let sale: DailySale = {
-                //     dailySaleId: null,
-                //     agentId: 
-                // };
+        for (var r = 0; r < rowsCount; r++) {
+            var rowStart = (colsCount * r);
+            if (rowStart == 0)
+                continue;
+            var sale = {
+                clientId: this.user.sessionUser.sessionClient,
             };
-            for (var c = 0; c < colsCount; c++) {
-                _loop_2(c);
+            for (var i = 0; i < headerMap.length; i++) {
+                var header = headerMap[i];
+                var index = rowStart + +header.value;
+                var item = ssData.data[index];
+                console.log(header);
+                if (item)
+                    sale[_app_models__WEBPACK_IMPORTED_MODULE_4__["DailySaleMapType"][header.fieldType]] = item.value;
             }
+            if (Object.keys(sale).length > 1)
+                sales.push(sale);
         }
-        // console.dir(ssData);
+        sales.forEach(function (s, i, a) {
+            console.log(s);
+        });
     };
     ProcessComponent.prototype.importModelChanged = function (value) {
         this.selectedImportModel = value;
@@ -14934,7 +14949,7 @@ var ProcessComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./process.component.html */ "./src/app/imports/process/process.component.html"),
             styles: [__webpack_require__(/*! ./process.component.scss */ "./src/app/imports/process/process.component.scss")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_core__WEBPACK_IMPORTED_MODULE_1__["ChangeDetectorRef"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_core__WEBPACK_IMPORTED_MODULE_1__["ChangeDetectorRef"], _app_session_service__WEBPACK_IMPORTED_MODULE_6__["SessionService"]])
     ], ProcessComponent);
     return ProcessComponent;
 }());
