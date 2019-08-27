@@ -1,0 +1,54 @@
+
+type DncContact @model {
+    dncContactId: ID!
+    clientId: Int!
+    firstName: String!
+    lastName: String!
+    description: String
+    address: String!
+    addressCont: String
+    city: String!
+    state: String!
+    zip: String!
+    note: String
+    lat: Float!
+    long: Float!
+    geocode: String
+}
+
+extend type Query {
+    dncContacts: [DncContact!]! @all @middleware(checks: ["auth:api"])
+}
+
+extend type Mutation {
+    newDncContact(
+        client_id: Int!,
+        first_name: String!,
+        last_name: String!,
+        description: String,
+        address: String!,
+        address_cont: String,
+        city: String!,
+        state: String!,
+        zip: String!,
+        note: String,
+        lat: Float,
+        long: Float
+        geocode: String
+    ): DncContact @create @middleware(checks: ["auth:api"])
+    updateDncContact(dnc_contact_id: Int!,
+        client_id: Int,
+        first_name: String,
+        last_name: String,
+        description: String,
+        address: String,
+        address_cont: String,
+        city: String,
+        state: String,
+        zip: String,
+        note: String,
+        lat: Float,
+        long: Float
+        geocode: String
+    ): DncContact @update @middleware(checks: ["auth:api"])
+}

@@ -3,10 +3,12 @@
 namespace App;
 
 use App\Contact;
+use App\Utility;
 use App\Campaign;
 use App\PayCycle;
 use Carbon\Carbon;
 use App\SaleStatus;
+use App\Scopes\ClientScope;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -99,10 +101,24 @@ class DailySale extends Model
 	    'status',
 	    'paid_status',
 	    'sale_date',
-	    'last_touch_date'
+        'last_touch_date',
+        'paid_date',
+        'charge_date',
+        'repaid_date'
     ];
 
-	protected $dates = ['created_at', 'updated_at', 'deleted_at'];
+    protected $dates = ['created_at', 'updated_at', 'deleted_at'];
+    
+    /**
+     * Filters all queries of this model by the user's selected client to ensure that they 
+     * do not have cross-client interactions.
+     *
+     * @return void
+     */
+    protected static function boot() {
+        parent::boot();
+        static::addGlobalScope(new ClientScope);
+    }
 	
 	/**
 	 * Boolean column mutators.
@@ -163,6 +179,11 @@ class DailySale extends Model
 	public function campaign()
 	{
 		return $this->hasOne(Campaign::class, 'campaign_id', 'campaign_id');
+    }
+
+    public function utility()
+    {
+        return $this->hasOne(Utility::class, 'utility_id', 'utility_id');
     }
 
     /**
@@ -300,6 +321,91 @@ class DailySale extends Model
 	public function scopeByNonGeocodedSales($query)
 	{
 		return $query->where('has_geo', 0);
-	}
+    }
+    
+    public function getDailySaleIdAttribute()
+    {
+        return $this->attributes['daily_sale_id'];
+    }
+
+    public function getAgentIdAttribute()
+    {
+        return $this->attributes['agent_id'];
+    }
+
+    public function getClientIdAttribute()
+    {
+        return $this->attributes['client_id'];
+    }
+
+    public function getUtilityIdAttribute()
+    {
+        return $this->attributes['utility_id'];
+    }
+
+    public function getCampaignIdAttribute()
+    {
+        return $this->attributes['campaign_id'];
+    }
+
+    public function getContactIdAttribute()
+    {
+        return $this->attributes['contact_id'];
+    }
+
+    public function getPodAccountAttribute()
+    {
+        return $this->attributes['pod_account'];
+    }
+
+    public function getPaidStatusAttribute()
+    {
+        return $this->attributes['paid_status'];
+    }
+
+    public function getPayCycleIdAttribute()
+    {
+        return $this->attributes['pay_cycle_id'];
+    }
+
+    public function getHasGeoAttribute()
+    {
+        return $this->attributes['has_geo'];
+    }
+
+    public function getSaleDateAttribute()
+    {
+        return $this->attributes['sale_date'];
+    }
+
+    public function getLastTouchDateAttribute()
+    {
+        return $this->attributes['last_touch_date'];
+    }
+
+    public function getCreatedAtAttribute()
+    {
+        return $this->attributes['created_at'];
+    }
+
+    public function getUpdatedAtAttribute()
+    {
+        return $this->attributes['updated_at'];
+    }
+
+    public function getPaidDateAttribute()
+    {
+        return $this->attributes['paid_date'];
+    }
+
+    public function getChargeDateAttribute()
+    {
+        return $this->attributes['charge_date'];
+    }
+
+    public function getRepaidDateAttribute()
+    {
+        return $this->attributes['repaid_date'];
+    }
 
 }

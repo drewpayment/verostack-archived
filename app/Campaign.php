@@ -157,6 +157,11 @@ class Campaign extends Model
     	return $query->where('campaign_id', $id);
     }
 
+    public function getCampaignIdAttribute()
+    {
+        return $this->attributes['campaign_id'];
+    }
+
     public function getClientIdAttribute()
     {
         return $this->attributes['client_id'];

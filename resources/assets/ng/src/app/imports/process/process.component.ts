@@ -7,6 +7,10 @@ import { Moment } from 'moment';
 import * as moment from 'moment';
 import { MatRadioChange } from '@angular/material';
 import { SessionService } from '@app/session.service';
+import { ImportsService } from '../imports.service';
+import { Contact } from '@app/models/contact.model';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Component({
     selector: 'vs-process',
@@ -32,7 +36,24 @@ export class ProcessComponent implements OnInit {
     selectedImportModel: ImportModel;
     user: User;
 
-    constructor(private cd: ChangeDetectorRef, private session: SessionService) { }
+    saleType = {
+        agentId: DailySaleMapType[DailySaleMapType.salesAgentId],
+        agentName: DailySaleMapType[DailySaleMapType.salesAgentName],
+        podAccount: DailySaleMapType[DailySaleMapType.podAccount],
+        utilityName: DailySaleMapType[DailySaleMapType.utilityName],
+        saleDate: DailySaleMapType[DailySaleMapType.saleDate],
+        firstName: DailySaleMapType[DailySaleMapType.contactFirstName],
+        lastName: DailySaleMapType[DailySaleMapType.contactLastName],
+        businessName: DailySaleMapType[DailySaleMapType.contactBusinessName],
+        address: DailySaleMapType[DailySaleMapType.contactStreet],
+        address2: DailySaleMapType[DailySaleMapType.contactStreet2],
+        city: DailySaleMapType[DailySaleMapType.contactCity],
+        state: DailySaleMapType[DailySaleMapType.contactState],
+        zip: DailySaleMapType[DailySaleMapType.contactZip]
+    };
+    
+
+    constructor(private cd: ChangeDetectorRef, private session: SessionService, private service: ImportsService) { }
 
     ngOnInit() {
         this.session.getUserItem().subscribe(u => this.user = u);
@@ -214,7 +235,7 @@ export class ProcessComponent implements OnInit {
 
         console.dir(headerMap);
 
-        const sales = [] as DailySale[];
+        const sales = [] as {[key: string]: any}[];
         for (let r = 0; r < rowsCount; r++) {
             const rowStart = (colsCount * r);
             if (rowStart == 0) continue;
@@ -234,8 +255,35 @@ export class ProcessComponent implements OnInit {
             if (Object.keys(sale).length > 1) sales.push(sale);
         }
 
+        const dtos = [] as DailySale[];
         sales.forEach((s, i, a) => {
-            console.log(s);
+            const obs = [];
+            const d = {} as DailySale;
+            for (const p in s) {
+                switch (p) {
+                    case this.saleType.agentId: 
+                        d.agentId = s[p];
+                        break;
+                    case this.saleType.podAccount:
+                        d.podAccount = s[p];
+                        break;
+                    case this.saleType.utilityName: 
+                        this.service.getUtilityByName(s[p])
+                            .subscribe(u => {
+                                d.utilityId = u.utilityId;
+                            });
+                        break;
+                    case this.saleType.saleDate:
+                        d.saleDate = s[p];
+                        break;
+                    case this.saleType.firstName: 
+                    case this.saleType.lastName: 
+                    case this.saleType.businessName:
+                        this.createContact(s).subscribe(contactId => d.contactId = contactId);
+                        break;
+                                            
+                }
+            }
         });
     }
 
@@ -243,4 +291,18 @@ export class ProcessComponent implements OnInit {
         this.selectedImportModel = value;
     }
 
+    createContact(item: {[key: string]: any}): Observable<number> {
+        const dto = {} as Contact;
+        dto.clientId = this.user.sessionUser.sessionClient;
+        dto.firstName = item[this.saleType.firstName];
+        dto.lastName = item[this.saleType.lastName];
+        dto.street = item[this.saleType.address];
+        dto.street2 = item[this.saleType.address2];
+        dto.city = item[this.saleType.city];
+        dto.state = item[this.saleType.state];
+        dto.zip = item[this.saleType.zip];
+        return this.service.createContact(dto).pipe(
+            map(c => c.contactId)
+        );
+    }
 }

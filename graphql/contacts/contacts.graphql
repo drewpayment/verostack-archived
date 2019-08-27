@@ -1,54 +1,55 @@
 
-type DncContact @model {
-    dncContactId: ID!
+type Contact {
+    contactId: ID!
     clientId: Int!
+    contactType: Int!
+    businessName: String
     firstName: String!
     lastName: String!
-    description: String
-    address: String!
-    addressCont: String
+    middleName: String
+    prefix: String
+    suffix: String
+    ssn: Int
+    dob: DateTime
+    street: String!
+    street2: String
     city: String!
     state: String!
     zip: String!
-    note: String
-    lat: Float!
-    long: Float!
-    geocode: String
+    phoneCountry: Int
+    phone: Int
+    email: String
+    faxCountry: Int
+    fax: Int
+    createdAt: DateTime
+    updatedAt: DateTime
 }
 
 extend type Query {
-    contacts: [DncContact!]! @all @middleware(checks: ["auth:api"])
+    contacts: [Contact!]! @all @middleware(checks: ["auth:api"])
+    contactByFullName(first_name: String @eq, last_name: String @eq): Contact! @find @middleware(checks: ["auth:api"])
 }
 
 extend type Mutation {
-    newContact(
-        client_id: Int!,
-        first_name: String!,
-        last_name: String!,
-        description: String,
-        address: String!,
-        address_cont: String,
-        city: String!,
-        state: String!,
-        zip: String!,
-        note: String,
-        lat: Float,
-        long: Float
-        geocode: String
-    ): DncContact @create @middleware(checks: ["auth:api"])
-    updateContact(dnc_contact_id: Int!,
-        client_id: Int,
-        first_name: String,
-        last_name: String,
-        description: String,
-        address: String,
-        address_cont: String,
-        city: String,
-        state: String,
-        zip: String,
-        note: String,
-        lat: Float,
-        long: Float
-        geocode: String
-    ): DncContact @update @middleware(checks: ["auth:api"])
+    createContact(
+        client_id: Int!
+        first_name: String!
+        last_name: String!
+        business_name: String
+        middle_name: String
+        prefix: String
+        suffix: String
+        ssn: Int
+        dob: DateTime
+        street: String!
+        street2: String
+        city: String!
+        state: String!
+        zip: String!
+        phoneCountry: Int
+        phone: Int
+        email: String
+        faxCountry: Int
+        fax: Int
+    ): Contact @create @middleware(checks: ["auth:api"])
 }

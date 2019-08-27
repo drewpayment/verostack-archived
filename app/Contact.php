@@ -66,7 +66,7 @@ class Contact extends Model
 {
     protected $table = 'contacts';
 
-    protected $primary_key = 'contact_id';
+    protected $primaryKey = 'contact_id';
 
     protected $fillable = [
         'contact_id',
@@ -124,5 +124,60 @@ class Contact extends Model
     public function scopeByClient($query, $clientId)
     {
         return $query->where('client_id', $clientId);
+    }
+
+    public function getContactIdAttribute()
+    {
+        return $this->attributes['contact_id'];
+    }
+
+    public function getClientIdAttribute()
+    {
+        return $this->attributes['client_id'];
+    }
+
+    public function getContactTypeAttribute()
+    {
+        return $this->attributes['contact_type'];
+    }
+
+    public function getBusinessNameAttribute()
+    {
+        return $this->attributes['business_name'];
+    }
+
+    public function getFirstNameAttribute()
+    {
+        return $this->attributes['first_name'];
+    }
+
+    public function getLastNameAttribute()
+    {
+        return $this->attributes['last_name'];
+    }
+
+    public function getMiddleNameAttribute()
+    {
+        return $this->attributes['middle_name'];
+    }
+
+    public function getPhoneCountryAttribute()
+    {
+        return $this->attributes['phone_country'];
+    }
+
+    public function getFaxCountryAttribute()
+    {
+        return $this->attributes['fax_country'];
+    }
+
+    public function getCreatedAtAttribute()
+    {
+        return $this->attributes['created_at'];
+    }
+
+    public function getUpdatedAtAttribute()
+    {
+        return $this->attributes['updated_at'];
     }
 }

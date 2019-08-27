@@ -15,3 +15,4 @@ type Mutation
 #import imports/*.graphql
 #import contacts/*.graphql
 #import campaigns/*.graphql
+#import sales/*.graphql

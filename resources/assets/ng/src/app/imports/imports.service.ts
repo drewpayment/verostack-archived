@@ -6,6 +6,7 @@ import { Observable, BehaviorSubject, of } from 'rxjs';
 import { SessionService } from '@app/session.service';
 import { shareReplay, catchError, map } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { Contact } from '@app/models/contact.model';
 
 @Injectable({
     providedIn: 'root'
@@ -71,4 +72,43 @@ export class ImportsService {
             if (sub) sub.unsubscribe();
         });
     }
+
+    getUtilityByName(name: string): Observable<Utility> {
+        return this.http.post<Graphql<Utility[]>>(this.graphql, {
+            query: `
+                {
+                    utilityByName(agent_company_name: ${name}) {
+                        utilityId
+                    }
+                }
+            `
+        })
+        .pipe(
+            map(utils => utils.data.utilityName[0])
+        );
+    }
+
+    createContact(dto: Contact): Observable<Contact> {
+        return this.http.post<Graphql<Contact>>(this.graphql, {
+            query: `
+                mutation {
+                    createContact(
+                        client_id: ${dto.clientId},
+                        first_name: ${dto.firstName},
+                        last_name: ${dto.lastName},
+                        street: ${dto.street},
+                        street2: ${dto.street2},
+                        city: ${dto.city},
+                        state: ${dto.state},
+                        zip: ${dto.zip},
+                    ) {
+                        contactId
+                    }
+                }
+            `
+        }).pipe(
+            map(res => res.data.createContact)
+        );
+    }
+
 }

@@ -14630,6 +14630,17 @@ var ImportsService = /** @class */ (function () {
                 sub.unsubscribe();
         });
     };
+    ImportsService.prototype.getUtilityByName = function (name) {
+        return this.http.post(this.graphql, {
+            query: "\n                {\n                    utilityByName(agent_company_name: " + name + ") {\n                        utilityId\n                    }\n                }\n            "
+        })
+            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_6__["map"])(function (utils) { return utils.data.utilityName[0]; }));
+    };
+    ImportsService.prototype.createContact = function (dto) {
+        return this.http.post(this.graphql, {
+            query: "\n                mutation {\n                    createContact(\n                        client_id: " + dto.clientId + ",\n                        first_name: " + dto.firstName + ",\n                        last_name: " + dto.lastName + ",\n                        street: " + dto.street + ",\n                        street2: " + dto.street2 + ",\n                        city: " + dto.city + ",\n                        state: " + dto.state + ",\n                        zip: " + dto.zip + ",\n                    ) {\n                        contactId\n                    }\n                }\n            "
+        }).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_6__["map"])(function (res) { return res.data.createContact; }));
+    };
     ImportsService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
             providedIn: 'root'
@@ -14741,6 +14752,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_5__);
 /* harmony import */ var _app_session_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @app/session.service */ "./src/app/session.service.ts");
+/* harmony import */ var _imports_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../imports.service */ "./src/app/imports/imports.service.ts");
+/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
+
+
 
 
 
@@ -14749,9 +14764,10 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var ProcessComponent = /** @class */ (function () {
-    function ProcessComponent(cd, session) {
+    function ProcessComponent(cd, session, service) {
         this.cd = cd;
         this.session = session;
+        this.service = service;
         this.fu = new ng2_file_upload__WEBPACK_IMPORTED_MODULE_2__["FileUploader"]({
             url: null,
             autoUpload: false,
@@ -14759,6 +14775,21 @@ var ProcessComponent = /** @class */ (function () {
         });
         this.hasFile = false;
         this.workbooksToReview = [];
+        this.saleType = {
+            agentId: _app_models__WEBPACK_IMPORTED_MODULE_4__["DailySaleMapType"][_app_models__WEBPACK_IMPORTED_MODULE_4__["DailySaleMapType"].salesAgentId],
+            agentName: _app_models__WEBPACK_IMPORTED_MODULE_4__["DailySaleMapType"][_app_models__WEBPACK_IMPORTED_MODULE_4__["DailySaleMapType"].salesAgentName],
+            podAccount: _app_models__WEBPACK_IMPORTED_MODULE_4__["DailySaleMapType"][_app_models__WEBPACK_IMPORTED_MODULE_4__["DailySaleMapType"].podAccount],
+            utilityName: _app_models__WEBPACK_IMPORTED_MODULE_4__["DailySaleMapType"][_app_models__WEBPACK_IMPORTED_MODULE_4__["DailySaleMapType"].utilityName],
+            saleDate: _app_models__WEBPACK_IMPORTED_MODULE_4__["DailySaleMapType"][_app_models__WEBPACK_IMPORTED_MODULE_4__["DailySaleMapType"].saleDate],
+            firstName: _app_models__WEBPACK_IMPORTED_MODULE_4__["DailySaleMapType"][_app_models__WEBPACK_IMPORTED_MODULE_4__["DailySaleMapType"].contactFirstName],
+            lastName: _app_models__WEBPACK_IMPORTED_MODULE_4__["DailySaleMapType"][_app_models__WEBPACK_IMPORTED_MODULE_4__["DailySaleMapType"].contactLastName],
+            businessName: _app_models__WEBPACK_IMPORTED_MODULE_4__["DailySaleMapType"][_app_models__WEBPACK_IMPORTED_MODULE_4__["DailySaleMapType"].contactBusinessName],
+            address: _app_models__WEBPACK_IMPORTED_MODULE_4__["DailySaleMapType"][_app_models__WEBPACK_IMPORTED_MODULE_4__["DailySaleMapType"].contactStreet],
+            address2: _app_models__WEBPACK_IMPORTED_MODULE_4__["DailySaleMapType"][_app_models__WEBPACK_IMPORTED_MODULE_4__["DailySaleMapType"].contactStreet2],
+            city: _app_models__WEBPACK_IMPORTED_MODULE_4__["DailySaleMapType"][_app_models__WEBPACK_IMPORTED_MODULE_4__["DailySaleMapType"].contactCity],
+            state: _app_models__WEBPACK_IMPORTED_MODULE_4__["DailySaleMapType"][_app_models__WEBPACK_IMPORTED_MODULE_4__["DailySaleMapType"].contactState],
+            zip: _app_models__WEBPACK_IMPORTED_MODULE_4__["DailySaleMapType"][_app_models__WEBPACK_IMPORTED_MODULE_4__["DailySaleMapType"].contactZip]
+        };
     }
     ProcessComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -14884,6 +14915,7 @@ var ProcessComponent = /** @class */ (function () {
         this.uploader.nativeElement.click();
     };
     ProcessComponent.prototype.importReport = function () {
+        var _this = this;
         if (!this.hasFile)
             return;
         var ssData = this.ss.serialize();
@@ -14928,12 +14960,50 @@ var ProcessComponent = /** @class */ (function () {
             if (Object.keys(sale).length > 1)
                 sales.push(sale);
         }
+        var dtos = [];
         sales.forEach(function (s, i, a) {
-            console.log(s);
+            var obs = [];
+            var d = {};
+            for (var p in s) {
+                switch (p) {
+                    case _this.saleType.agentId:
+                        d.agentId = s[p];
+                        break;
+                    case _this.saleType.podAccount:
+                        d.podAccount = s[p];
+                        break;
+                    case _this.saleType.utilityName:
+                        _this.service.getUtilityByName(s[p])
+                            .subscribe(function (u) {
+                            d.utilityId = u.utilityId;
+                        });
+                        break;
+                    case _this.saleType.saleDate:
+                        d.saleDate = s[p];
+                        break;
+                    case _this.saleType.firstName:
+                    case _this.saleType.lastName:
+                    case _this.saleType.businessName:
+                        _this.createContact(s).subscribe(function (contactId) { return d.contactId = contactId; });
+                        break;
+                }
+            }
         });
     };
     ProcessComponent.prototype.importModelChanged = function (value) {
         this.selectedImportModel = value;
+    };
+    ProcessComponent.prototype.createContact = function (item) {
+        var dto = {};
+        dto.clientId = this.user.sessionUser.sessionClient;
+        dto.firstName = item[this.saleType.firstName];
+        dto.lastName = item[this.saleType.lastName];
+        dto.street = item[this.saleType.address];
+        dto.street2 = item[this.saleType.address2];
+        dto.city = item[this.saleType.city];
+        dto.state = item[this.saleType.state];
+        dto.zip = item[this.saleType.zip];
+        return this.service.createContact(dto).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_8__["map"])(function (c) { return c.contactId; }));
     };
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewChild"])('fuRef'),
@@ -14949,7 +15019,7 @@ var ProcessComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./process.component.html */ "./src/app/imports/process/process.component.html"),
             styles: [__webpack_require__(/*! ./process.component.scss */ "./src/app/imports/process/process.component.scss")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_core__WEBPACK_IMPORTED_MODULE_1__["ChangeDetectorRef"], _app_session_service__WEBPACK_IMPORTED_MODULE_6__["SessionService"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_core__WEBPACK_IMPORTED_MODULE_1__["ChangeDetectorRef"], _app_session_service__WEBPACK_IMPORTED_MODULE_6__["SessionService"], _imports_service__WEBPACK_IMPORTED_MODULE_7__["ImportsService"]])
     ], ProcessComponent);
     return ProcessComponent;
 }());
