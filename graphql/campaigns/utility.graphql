@@ -21,6 +21,7 @@ type Utility {
 extend type Query {
     utilities: [Utility!]! @all @middleware(checks: ["auth:api"])
     utilityByName(agent_company_name: String @eq): Utility @find
+    utilitiesByCampaign(campaign_id: Int @eq): [Utility!]! @all @middleware(checks: ["auth:api"])
 }
 
 extend type Mutation {

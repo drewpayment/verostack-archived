@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { FileUploader, FileUploaderOptions, FileItem } from 'ng2-file-upload';
 import { Spreadsheet } from 'dhx-spreadsheet';
 import { IConvertMessageData, ISheetData, IStyle, IDataCell, ExportedCell, DailySale, ImportModel, ImportModelMap, DailySaleMapType, User } from '@app/models';
@@ -9,7 +9,7 @@ import { MatRadioChange } from '@angular/material';
 import { SessionService } from '@app/session.service';
 import { ImportsService } from '../imports.service';
 import { Contact } from '@app/models/contact.model';
-import { Observable } from 'rxjs';
+import { Observable, Subscription, Observer } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Component({
@@ -17,7 +17,7 @@ import { map } from 'rxjs/operators';
     templateUrl: './process.component.html',
     styleUrls: ['./process.component.scss']
 })
-export class ProcessComponent implements OnInit {
+export class ProcessComponent implements OnInit, OnDestroy {
 
     fu = new FileUploader({
         url: null,
@@ -52,11 +52,17 @@ export class ProcessComponent implements OnInit {
         zip: DailySaleMapType[DailySaleMapType.contactZip]
     };
     
+    contactIdSub: Subscription;
+    dtos = [] as DailySale[];
 
     constructor(private cd: ChangeDetectorRef, private session: SessionService, private service: ImportsService) { }
 
     ngOnInit() {
         this.session.getUserItem().subscribe(u => this.user = u);
+    }
+
+    ngOnDestroy() {
+        if (this.contactIdSub) this.contactIdSub.unsubscribe();
     }
 
     fileAddedHandler(item: FileList) {
@@ -255,10 +261,21 @@ export class ProcessComponent implements OnInit {
             if (Object.keys(sale).length > 1) sales.push(sale);
         }
 
-        const dtos = [] as DailySale[];
-        sales.forEach((s, i, a) => {
-            const obs = [];
-            const d = {} as DailySale;
+        this.processSales(sales).subscribe(() => console.dir(this.dtos));
+    }
+
+    private processSales(sales: {[key: string]: any}[]): Observable<void> {
+        return Observable.create((ob: Observer<void>) => {
+            sales.forEach((s, i, a) => {
+                const d = {} as DailySale;
+                this.buildDailySale(s, d).subscribe(sale => this.dtos.push(sale));
+            });
+            return ob.complete();
+        });
+    }
+
+    private buildDailySale(s: { [key: string]: any }, d: DailySale): Observable<DailySale> {
+        return Observable.create((ob: Observer<DailySale>) => {
             for (const p in s) {
                 switch (p) {
                     case this.saleType.agentId: 
@@ -268,10 +285,8 @@ export class ProcessComponent implements OnInit {
                         d.podAccount = s[p];
                         break;
                     case this.saleType.utilityName: 
-                        this.service.getUtilityByName(s[p])
-                            .subscribe(u => {
-                                d.utilityId = u.utilityId;
-                            });
+                        this.resolveUtilityId(this.selectedImportModel.campaignId, p)
+                            .subscribe(id => d.utilityId = id);
                         break;
                     case this.saleType.saleDate:
                         d.saleDate = s[p];
@@ -279,11 +294,34 @@ export class ProcessComponent implements OnInit {
                     case this.saleType.firstName: 
                     case this.saleType.lastName: 
                     case this.saleType.businessName:
-                        this.createContact(s).subscribe(contactId => d.contactId = contactId);
+                        if (!this.contactIdSub) this.contactIdSub = this.createContact(s)
+                            .subscribe(contactId => d.contactId = contactId);
                         break;
-                                            
                 }
             }
+
+            if (this.contactIdSub) {
+                this.contactIdSub.unsubscribe();
+                this.contactIdSub = null;
+            }
+
+            ob.next(d);
+            ob.complete();
+        });
+    }
+
+    private resolveUtilityId(campaignId: number, utilityName: string): Observable<number> {
+        return Observable.create((ob: Observer<number>) => {
+            this.service.getUtilitiesByCampaign(campaignId).subscribe(resp => {
+                const utils = resp.data.utilitiesByCampaign;
+                const s = new RegExp(`\\b${utilityName}\\b`, `i`);
+                const found = utils.find(u => u.utilityName.search(s) > -1);
+                if (!found) 
+                    ob.next(null);
+                else 
+                    ob.next(found.utilityId);
+                ob.complete();
+            }); 
         });
     }
 

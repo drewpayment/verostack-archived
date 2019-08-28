@@ -14631,14 +14631,33 @@ var ImportsService = /** @class */ (function () {
         });
     };
     ImportsService.prototype.getUtilityByName = function (name) {
+        var sb = ['{'];
+        sb.push("utilityByName(agent_company_name: \"" + name + "\") {");
+        sb.push("utilityId");
+        sb.push("}}");
         return this.http.post(this.graphql, {
-            query: "\n                {\n                    utilityByName(agent_company_name: " + name + ") {\n                        utilityId\n                    }\n                }\n            "
+            query: sb.join('')
         })
             .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_6__["map"])(function (utils) { return utils.data.utilityName[0]; }));
     };
+    ImportsService.prototype.getUtilitiesByCampaign = function (campaignId) {
+        var q = "{ utilitiesByCampaign(campaign_id: " + campaignId + ") { utilityId, utilityName } }";
+        return this.http.post(this.graphql, { query: q });
+    };
     ImportsService.prototype.createContact = function (dto) {
+        var sb = ['mutation { createContact('];
+        sb.push("client_id: " + dto.clientId + ",");
+        sb.push("first_name: \"" + dto.firstName + "\",");
+        sb.push("last_name: \"" + dto.lastName + "\",");
+        sb.push("street: \"" + dto.street + "\",");
+        if (dto.street2)
+            sb.push("street2: \"" + dto.street2 + "\",");
+        sb.push("city: \"" + dto.city + "\",");
+        sb.push("state: \"" + dto.state + "\",");
+        sb.push("zip: \"" + dto.zip + "\"");
+        sb.push(") { contactId } }");
         return this.http.post(this.graphql, {
-            query: "\n                mutation {\n                    createContact(\n                        client_id: " + dto.clientId + ",\n                        first_name: " + dto.firstName + ",\n                        last_name: " + dto.lastName + ",\n                        street: " + dto.street + ",\n                        street2: " + dto.street2 + ",\n                        city: " + dto.city + ",\n                        state: " + dto.state + ",\n                        zip: " + dto.zip + ",\n                    ) {\n                        contactId\n                    }\n                }\n            "
+            query: sb.join('')
         }).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_6__["map"])(function (res) { return res.data.createContact; }));
     };
     ImportsService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
@@ -14753,7 +14772,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_5__);
 /* harmony import */ var _app_session_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @app/session.service */ "./src/app/session.service.ts");
 /* harmony import */ var _imports_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../imports.service */ "./src/app/imports/imports.service.ts");
-/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
+/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
+
 
 
 
@@ -14790,10 +14811,15 @@ var ProcessComponent = /** @class */ (function () {
             state: _app_models__WEBPACK_IMPORTED_MODULE_4__["DailySaleMapType"][_app_models__WEBPACK_IMPORTED_MODULE_4__["DailySaleMapType"].contactState],
             zip: _app_models__WEBPACK_IMPORTED_MODULE_4__["DailySaleMapType"][_app_models__WEBPACK_IMPORTED_MODULE_4__["DailySaleMapType"].contactZip]
         };
+        this.dtos = [];
     }
     ProcessComponent.prototype.ngOnInit = function () {
         var _this = this;
         this.session.getUserItem().subscribe(function (u) { return _this.user = u; });
+    };
+    ProcessComponent.prototype.ngOnDestroy = function () {
+        if (this.contactIdSub)
+            this.contactIdSub.unsubscribe();
     };
     ProcessComponent.prototype.fileAddedHandler = function (item) {
         var _this = this;
@@ -14960,10 +14986,21 @@ var ProcessComponent = /** @class */ (function () {
             if (Object.keys(sale).length > 1)
                 sales.push(sale);
         }
-        var dtos = [];
-        sales.forEach(function (s, i, a) {
-            var obs = [];
-            var d = {};
+        this.processSales(sales).subscribe(function () { return console.dir(_this.dtos); });
+    };
+    ProcessComponent.prototype.processSales = function (sales) {
+        var _this = this;
+        return rxjs__WEBPACK_IMPORTED_MODULE_8__["Observable"].create(function (ob) {
+            sales.forEach(function (s, i, a) {
+                var d = {};
+                _this.buildDailySale(s, d).subscribe(function (sale) { return _this.dtos.push(sale); });
+            });
+            return ob.complete();
+        });
+    };
+    ProcessComponent.prototype.buildDailySale = function (s, d) {
+        var _this = this;
+        return rxjs__WEBPACK_IMPORTED_MODULE_8__["Observable"].create(function (ob) {
             for (var p in s) {
                 switch (p) {
                     case _this.saleType.agentId:
@@ -14973,10 +15010,8 @@ var ProcessComponent = /** @class */ (function () {
                         d.podAccount = s[p];
                         break;
                     case _this.saleType.utilityName:
-                        _this.service.getUtilityByName(s[p])
-                            .subscribe(function (u) {
-                            d.utilityId = u.utilityId;
-                        });
+                        _this.resolveUtilityId(_this.selectedImportModel.campaignId, p)
+                            .subscribe(function (id) { return d.utilityId = id; });
                         break;
                     case _this.saleType.saleDate:
                         d.saleDate = s[p];
@@ -14984,10 +15019,33 @@ var ProcessComponent = /** @class */ (function () {
                     case _this.saleType.firstName:
                     case _this.saleType.lastName:
                     case _this.saleType.businessName:
-                        _this.createContact(s).subscribe(function (contactId) { return d.contactId = contactId; });
+                        if (!_this.contactIdSub)
+                            _this.contactIdSub = _this.createContact(s)
+                                .subscribe(function (contactId) { return d.contactId = contactId; });
                         break;
                 }
             }
+            if (_this.contactIdSub) {
+                _this.contactIdSub.unsubscribe();
+                _this.contactIdSub = null;
+            }
+            ob.next(d);
+            ob.complete();
+        });
+    };
+    ProcessComponent.prototype.resolveUtilityId = function (campaignId, utilityName) {
+        var _this = this;
+        return rxjs__WEBPACK_IMPORTED_MODULE_8__["Observable"].create(function (ob) {
+            _this.service.getUtilitiesByCampaign(campaignId).subscribe(function (resp) {
+                var utils = resp.data.utilitiesByCampaign;
+                var s = new RegExp("\\b" + utilityName + "\\b", "i");
+                var found = utils.find(function (u) { return u.utilityName.search(s) > -1; });
+                if (!found)
+                    ob.next(null);
+                else
+                    ob.next(found.utilityId);
+                ob.complete();
+            });
         });
     };
     ProcessComponent.prototype.importModelChanged = function (value) {
@@ -15003,7 +15061,7 @@ var ProcessComponent = /** @class */ (function () {
         dto.city = item[this.saleType.city];
         dto.state = item[this.saleType.state];
         dto.zip = item[this.saleType.zip];
-        return this.service.createContact(dto).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_8__["map"])(function (c) { return c.contactId; }));
+        return this.service.createContact(dto).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_9__["map"])(function (c) { return c.contactId; }));
     };
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewChild"])('fuRef'),

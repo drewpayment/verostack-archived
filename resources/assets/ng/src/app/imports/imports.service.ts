@@ -74,38 +74,39 @@ export class ImportsService {
     }
 
     getUtilityByName(name: string): Observable<Utility> {
+        const sb = ['{'];
+        sb.push(`utilityByName(agent_company_name: "${name}") {`);
+        sb.push(`utilityId`);
+        sb.push(`}}`);
+
         return this.http.post<Graphql<Utility[]>>(this.graphql, {
-            query: `
-                {
-                    utilityByName(agent_company_name: ${name}) {
-                        utilityId
-                    }
-                }
-            `
+            query: sb.join('')
         })
         .pipe(
             map(utils => utils.data.utilityName[0])
         );
     }
 
+    getUtilitiesByCampaign(campaignId: number): Observable<Graphql<Utility[]>> {
+        const q = `{ utilitiesByCampaign(campaign_id: ${campaignId}) { utilityId, utilityName } }`;
+        return this.http.post<Graphql<Utility[]>>(this.graphql, { query: q });
+    }
+
     createContact(dto: Contact): Observable<Contact> {
+
+        const sb = ['mutation { createContact('];
+        sb.push(`client_id: ${dto.clientId},`);
+        sb.push(`first_name: "${dto.firstName}",`);
+        sb.push(`last_name: "${dto.lastName}",`);
+        sb.push(`street: "${dto.street}",`);
+        if (dto.street2) sb.push(`street2: "${dto.street2}",`);
+        sb.push(`city: "${dto.city}",`);
+        sb.push(`state: "${dto.state}",`);
+        sb.push(`zip: "${dto.zip}"`);
+        sb.push(`) { contactId } }`);
+
         return this.http.post<Graphql<Contact>>(this.graphql, {
-            query: `
-                mutation {
-                    createContact(
-                        client_id: ${dto.clientId},
-                        first_name: ${dto.firstName},
-                        last_name: ${dto.lastName},
-                        street: ${dto.street},
-                        street2: ${dto.street2},
-                        city: ${dto.city},
-                        state: ${dto.state},
-                        zip: ${dto.zip},
-                    ) {
-                        contactId
-                    }
-                }
-            `
+            query: sb.join('')
         }).pipe(
             map(res => res.data.createContact)
         );
