@@ -12,7 +12,7 @@
         color: $off-white;
     }
 
-    /deep/ .mat-card-header-text {
+    ::ng-deep .mat-card-header-text {
         width: 100%;
     }
 
@@ -76,6 +76,6 @@ mat-header-row {
     }
 }
 
-/deep/ .mat-sort-header-arrow {
+::ng-deep .mat-sort-header-arrow {
     color: $white;
 }

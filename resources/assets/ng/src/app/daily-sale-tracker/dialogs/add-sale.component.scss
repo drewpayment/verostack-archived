@@ -5,7 +5,7 @@
     display: block;
   }
 
-  /deep/ .mat-form-field-infix {
+  ::ng-deep .mat-form-field-infix {
     width: 100%;
   }
 

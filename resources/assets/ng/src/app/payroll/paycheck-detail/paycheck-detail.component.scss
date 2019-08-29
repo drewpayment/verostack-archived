@@ -24,14 +24,14 @@ mat-card.invoice-card {
     letter-spacing: 0.07rem;
 }
 
-/deep/ .mat-column-amount, .mat-column-total, .mat-column-date, .mat-column-saleDate, .mat-column-titleColumn {
+::ng-deep .mat-column-amount, .mat-column-total, .mat-column-date, .mat-column-saleDate, .mat-column-titleColumn {
     max-width: 100px;
 }
 
-/deep/ .mat-column-title {
+::ng-deep .mat-column-title {
     max-width: 250px;
 }
 
-/deep/ .mat-column-no {
+::ng-deep .mat-column-no {
     max-width: 80px;
 }

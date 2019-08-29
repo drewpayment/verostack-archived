@@ -52,7 +52,7 @@ tr {
     height: 0;
 }
 
-/deep/ .mat-header-cell:last-child,
+::ng-deep .mat-header-cell:last-child,
 .mat-cell:last-child {
     padding: 0;
 }
@@ -65,11 +65,11 @@ tr {
 
 tr {
     * {
-        /deep/ .mat-form-field-underline {
+        ::ng-deep .mat-form-field-underline {
             background: transparent;
         }
 
-        /deep/ .mat-form-field-infix {
+        ::ng-deep .mat-form-field-infix {
             padding-bottom: 0;
         }
     }

@@ -1,5 +1,5 @@
 
-/deep/ .mat-row {
+::ng-deep .mat-row {
 
     &:hover {
         background-color: darken(#fff, 5%);
