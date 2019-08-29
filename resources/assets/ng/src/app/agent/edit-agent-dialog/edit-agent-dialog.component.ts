@@ -1,7 +1,7 @@
 import {Component, OnInit, Inject} from '@angular/core';
 import {User, UpdateAgentMetaData} from '@app/models';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { IState, States } from '@app/shared/models/state.model';
 import { map } from 'rxjs/operators';
 

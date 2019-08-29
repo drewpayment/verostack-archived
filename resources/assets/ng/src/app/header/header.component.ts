@@ -4,7 +4,8 @@ import {BehaviorSubject, Observable, of} from 'rxjs';
 import {AuthService} from '../auth.service';
 import {SessionService} from '../session.service';
 import {User} from '../models/user.model';
-import {MatDialog, MatToolbar} from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
+import { MatToolbar } from '@angular/material/toolbar';
 import {ClientSelectorComponent} from '../client-selector/client-selector.component';
 import {Router, NavigationEnd} from '@angular/router';
 import {UserService} from '../user-features/user.service';
@@ -29,7 +30,7 @@ export class HeaderComponent implements OnInit, AfterViewInit {
     loggedInStatus:Observable<boolean>;
     navOpen:Observable<boolean>;
 
-    @ViewChild('toolbar') toolbar:MatToolbar;
+    @ViewChild('toolbar', { static: false }) toolbar:MatToolbar;
 
     isMobile = false;
 

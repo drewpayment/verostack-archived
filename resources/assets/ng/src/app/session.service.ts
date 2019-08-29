@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {User} from './models/user.model';
 import {Observable, BehaviorSubject, Subject, ReplaySubject, Observer, forkJoin} from 'rxjs';
-import {MatSidenav} from '@angular/material';
+import { MatSidenav } from '@angular/material/sidenav';
 import {LocalStorage, JSONSchema} from '@ngx-pwa/local-storage';
 import {ILocalStorage, IToken} from './models';
 import {HttpRequest} from '@angular/common/http';

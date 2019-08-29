@@ -1,9 +1,6 @@
 import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import {
-  MatDialogRef,
-  MAT_DIALOG_DATA
-} from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AuthService } from '../auth.service';
 import { User, IClient } from '../models/index';
 import { Observable ,  BehaviorSubject, Subscription } from 'rxjs';

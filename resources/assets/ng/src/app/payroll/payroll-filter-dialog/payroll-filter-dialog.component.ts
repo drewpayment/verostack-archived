@@ -1,5 +1,5 @@
 import {Component, OnInit, Inject} from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { PayrollFilter, IAgent, PayrollFilterType, ICampaign } from '@app/models';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Moment } from '@app/shared/moment-extensions';

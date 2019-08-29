@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import * as _ from 'lodash';
-import {MatDialog, MatSlideToggleChange} from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import {NewCampaignDialogComponent} from '@app/campaigns/new-campaign-dialog/new-campaign-dialog.component';
 import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import {User, ICampaign} from '@app/models';

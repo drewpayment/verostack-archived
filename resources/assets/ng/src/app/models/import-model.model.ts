@@ -1,5 +1,6 @@
 import { Moment } from 'moment';
 import { User } from './user.model';
+import { ICampaign } from './campaign.model';
 
 export interface ImportModel {
     importModelId: number,
@@ -17,6 +18,7 @@ export interface ImportModel {
 
     // relationship
     user?:User
+    campaign?: ICampaign
 }
 
 export interface ImportModelMap {

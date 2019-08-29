@@ -30,8 +30,10 @@
                             <div class="shadow-none p-3 pt-0 mb-2 rounded">
                                 <p>Upload CSV file</p>
                                 <div class="p-1">
-                                    <input #fuRef class="d-none" mat-stroked-button color="primary" 
-                                        *ngIf="fu" type="file" ng2FileSelect [uploader]="fu" (onFileSelected)="fileAddedHandler($event)" />
+                                    <ng-container *ngIf="fu != null">
+                                        <input #fuRef class="d-none" mat-stroked-button color="primary" 
+                                            type="file" adFileSelect [uploader]="fu" (onFileSelected)="fileAddedHandler($event)" />
+                                    </ng-container>
                                     <button type="button" mat-stroked-button color="primary" (click)="uploadFile()">Upload File</button>
                                 </div>
                                 <div class="p-1">

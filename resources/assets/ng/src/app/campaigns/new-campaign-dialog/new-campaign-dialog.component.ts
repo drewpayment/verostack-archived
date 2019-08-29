@@ -1,6 +1,6 @@
 import {Component, OnInit, Inject, ViewChild, OnChanges} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import {CampaignService} from '@app/campaigns/campaign.service';
 import {User, ICampaign} from '@app/models';
 import {SessionService} from '@app/session.service';
@@ -21,7 +21,7 @@ export class NewCampaignDialogComponent implements OnInit {
     user: User;
     campaign: ICampaign;
     form: FormGroup;
-    @ViewChild('editor') editor: QuillEditorComponent
+    @ViewChild('editor', { static: false }) editor: QuillEditorComponent
 
     // set to true if an existing campaign has been opened
     hasExistingCampaign: boolean = false;

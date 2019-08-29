@@ -2,7 +2,7 @@ import {Component, OnInit, Inject} from '@angular/core';
 import { PayCycle } from '@app/models/pay-cycle.model';
 import { SessionService } from '@app/session.service';
 import { User } from '@app/models';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import * as moment from 'moment';
 import { Moment } from 'moment';

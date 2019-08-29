@@ -1,7 +1,10 @@
 import { Component, OnInit, Inject, AfterViewInit, QueryList, ElementRef, ViewChildren } from '@angular/core';
 import { ImportModel, User, ICampaign, DailySaleMapType, DailySaleFields, ImportModelMap } from '@app/models';
 import { FormGroup, Validators, FormBuilder, FormArray, FormControl } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA, MatSelectionListChange, MatBottomSheet, MatCheckboxChange } from '@angular/material';
+import { MatBottomSheet } from '@angular/material/bottom-sheet';
+import { MatCheckboxChange } from '@angular/material/checkbox';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatSelectionListChange } from '@angular/material/list';
 import { SessionService } from '@app/session.service';
 import { ImportsService } from '@app/imports/imports.service';
 import { startWith, delay } from 'rxjs/operators';

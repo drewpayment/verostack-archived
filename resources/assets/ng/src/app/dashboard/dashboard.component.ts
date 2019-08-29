@@ -9,7 +9,10 @@ import {Observable, of, Subject} from 'rxjs';
 import {User, IAgent, ICampaign, SaleStatus, DailySale, PaidStatusType} from '@app/models';
 import {SessionService} from '@app/session.service';
 import {AgentsService} from '@app/core/agents/agents.service';
-import {MatDialog, MatSelectChange, MatDatepickerInputEvent, MatButtonToggleChange} from '@angular/material';
+import { MatButtonToggleChange } from '@angular/material/button-toggle';
+import { MatDatepickerInputEvent } from '@angular/material/datepicker';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSelectChange } from '@angular/material/select';
 import {AgentAddSaleDialogComponent} from '@app/dashboard/dialogs/add-sale-dialog.component';
 import {CampaignService} from '@app/campaigns/campaign.service';
 import {ClientService} from '@app/client-information/client.service';
@@ -60,9 +63,9 @@ export class DashboardComponent implements OnInit, AfterContentInit {
 
     messages: any[];
     chartData:any;
-    @ViewChild('chart') chartRef:any;
-    @ViewChild('chartTemplate') private chartTemplate:TemplateRef<any>;
-    @ViewChild('chartContainer', {read: 'ViewContainerRef'}) private vc:ViewContainerRef;
+    @ViewChild('chart', { static: false }) chartRef:any;
+    @ViewChild('chartTemplate', { static: false }) private chartTemplate:TemplateRef<any>;
+    @ViewChild('chartContainer', { read: 'ViewContainerRef', static: false }) private vc:ViewContainerRef;
     isMobileLayout: boolean;
     portal:TemplatePortal;
 

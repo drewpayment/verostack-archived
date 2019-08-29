@@ -1,5 +1,5 @@
 import {Injectable, OnChanges, SimpleChanges} from '@angular/core';
-import { MatSidenav, MatDrawerToggleResult } from '@angular/material';
+import { MatSidenav, MatDrawerToggleResult } from '@angular/material/sidenav';
 import { Subject } from 'rxjs';
 
 @Injectable({

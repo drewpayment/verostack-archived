@@ -1,11 +1,10 @@
 import { Component, OnInit, ViewChild, ElementRef, ChangeDetectorRef, OnDestroy } from '@angular/core';
-import { FileUploader, FileUploaderOptions, FileItem } from 'ng2-file-upload';
+import { FileUploader } from 'ad-file-upload';
 import { Spreadsheet } from 'dhx-spreadsheet';
-import { IConvertMessageData, ISheetData, IStyle, IDataCell, ExportedCell, DailySale, ImportModel, ImportModelMap, DailySaleMapType, User } from '@app/models';
-import { isNumber } from 'util';
+import { ISheetData, IStyle, IDataCell, DailySale, ImportModel, 
+    ImportModelMap, DailySaleMapType, User } from '@app/models';
 import { Moment } from 'moment';
 import * as moment from 'moment';
-import { MatRadioChange } from '@angular/material';
 import { SessionService } from '@app/session.service';
 import { ImportsService } from '../imports.service';
 import { Contact } from '@app/models/contact.model';
@@ -25,9 +24,9 @@ export class ProcessComponent implements OnInit, OnDestroy {
         allowedFileType: ['csv', 'xsl', 'xslx'],
     });
     hasFile = false;
-    @ViewChild('fuRef') uploader: ElementRef;
+    @ViewChild('fuRef', { static: false }) fileUploadElement: ElementRef;
 
-    @ViewChild('spreadsheet') container: ElementRef;
+    @ViewChild('spreadsheet', { static: false }) spreadsheetContainer: ElementRef;
     ss: Spreadsheet;
 
     currentlyViewedWb: number;
@@ -99,7 +98,7 @@ export class ProcessComponent implements OnInit, OnDestroy {
     }
 
     loadWorkbook(wb: ISheetData) {
-        this.ss = new Spreadsheet(this.container.nativeElement, {
+        this.ss = new Spreadsheet(this.spreadsheetContainer.nativeElement, {
             menu: true,
             editLine: false,
             rowsCount: wb.rows.length,
@@ -111,8 +110,8 @@ export class ProcessComponent implements OnInit, OnDestroy {
             data: [],
             styles: {}
         };
-        wb.cells.forEach((row, i, a) => {
-            row.forEach((col, j, b) => {
+        wb.cells.forEach((row, i) => {
+            row.forEach((col, j) => {
                 const cellLetters = this.getCellLetter(j);
                 const rowNo = (i + 1);
                 const cellDest = `${cellLetters}${rowNo}`;
@@ -196,7 +195,7 @@ export class ProcessComponent implements OnInit, OnDestroy {
     }
 
     uploadFile() {
-        this.uploader.nativeElement.click();
+        this.fileUploadElement.nativeElement.click();
     }
 
     importReport() {
@@ -254,19 +253,32 @@ export class ProcessComponent implements OnInit, OnDestroy {
                 const index = rowStart + +header.value;
                 const item = ssData.data[index];
 
-                console.log(header);
                 if (item) sale[DailySaleMapType[header.fieldType]] = item.value;
             }
             
             if (Object.keys(sale).length > 1) sales.push(sale);
         }
 
-        this.processSales(sales).subscribe(() => console.dir(this.dtos));
+        this.processSales(sales).subscribe(() => {
+            console.dir(this.dtos);
+
+            // TODO: 
+            // send all pending contacts to graphql to add them all at the same time
+            // 
+            // this.service.saveContacts(this.pendingContactQueue).subscribe(res => {
+            //  DO SOME STUFF IN HERE... 
+            //
+            //  NEED TO MATCH THE CONTACT IDS BACK AGAINST THE DAILY SALES SO THAT THE CONTACT IDS 
+            //  ARE RELATED... 
+            // })
+            // 
+
+        });
     }
 
     private processSales(sales: {[key: string]: any}[]): Observable<void> {
         return Observable.create((ob: Observer<void>) => {
-            sales.forEach((s, i, a) => {
+            sales.forEach((s) => {
                 const d = {} as DailySale;
                 this.buildDailySale(s, d).subscribe(sale => this.dtos.push(sale));
             });
@@ -285,8 +297,10 @@ export class ProcessComponent implements OnInit, OnDestroy {
                         d.podAccount = s[p];
                         break;
                     case this.saleType.utilityName: 
-                        this.resolveUtilityId(this.selectedImportModel.campaignId, p)
-                            .subscribe(id => d.utilityId = id);
+                        const ut = this.selectedImportModel.campaign.utilities.find(u => u.utilityName == s[p]);
+                        if (ut) d.utilityId = ut.utilityId;
+                        // this.resolveUtilityId(this.selectedImportModel.campaignId, p)
+                        //     .subscribe(id => d.utilityId = id);
                         break;
                     case this.saleType.saleDate:
                         d.saleDate = s[p];
@@ -294,8 +308,7 @@ export class ProcessComponent implements OnInit, OnDestroy {
                     case this.saleType.firstName: 
                     case this.saleType.lastName: 
                     case this.saleType.businessName:
-                        if (!this.contactIdSub) this.contactIdSub = this.createContact(s)
-                            .subscribe(contactId => d.contactId = contactId);
+                        this.addToCreateContactQueue(s);
                         break;
                 }
             }
@@ -329,7 +342,9 @@ export class ProcessComponent implements OnInit, OnDestroy {
         this.selectedImportModel = value;
     }
 
-    createContact(item: {[key: string]: any}): Observable<number> {
+    pendingContactQueue: Contact[] = [];
+
+    addToCreateContactQueue(item: {[key: string]: any}): void {
         const dto = {} as Contact;
         dto.clientId = this.user.sessionUser.sessionClient;
         dto.firstName = item[this.saleType.firstName];
@@ -339,8 +354,10 @@ export class ProcessComponent implements OnInit, OnDestroy {
         dto.city = item[this.saleType.city];
         dto.state = item[this.saleType.state];
         dto.zip = item[this.saleType.zip];
-        return this.service.createContact(dto).pipe(
-            map(c => c.contactId)
-        );
+
+        const matches = this.pendingContactQueue
+            .find(pc => pc.firstName == dto.firstName && pc.lastName == dto.lastName);
+        if (!matches)
+            this.pendingContactQueue.push(dto);
     }
 }

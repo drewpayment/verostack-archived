@@ -1,7 +1,7 @@
 import {Component, OnInit, AfterViewInit, OnDestroy} from '@angular/core';
 import { User, ICampaign, PayrollDetails, Payroll } from '@app/models';
 import { SessionService } from '@app/session.service';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { CampaignService } from '@app/campaigns/campaign.service';
 import { MessageService } from '@app/message.service';
 import { PayCycle } from '@app/models/pay-cycle.model';

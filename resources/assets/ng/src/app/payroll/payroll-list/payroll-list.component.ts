@@ -4,7 +4,10 @@ import { BehaviorSubject } from 'rxjs';
 import { MessageService } from '@app/message.service';
 import { PayrollService } from '../payroll.service';
 import { SessionService } from '@app/session.service';
-import { MatDialog, MatTable, MatTableDataSource, MatDatepickerInputEvent, MatCheckboxChange } from '@angular/material';
+import { MatCheckboxChange } from '@angular/material/checkbox';
+import { MatDatepickerInputEvent } from '@angular/material/datepicker';
+import { MatDialog } from '@angular/material/dialog';
+import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { PayrollFilterDialogComponent } from '../payroll-filter-dialog/payroll-filter-dialog.component';
 import { Moment } from '@app/shared/moment-extensions';
 import * as moment from 'moment';
@@ -77,7 +80,7 @@ export class PayrollListComponent implements OnInit {
     initialSelection = [];
     allowMultiSelect = true;
     selection = new SelectionModel<Payroll>(true, []);
-    @ViewChild('tableRef') table:MatTable<MatTableDataSource<Payroll>>; 
+    @ViewChild('tableRef', { static: false }) table:MatTable<MatTableDataSource<Payroll>>; 
     disableRelease = true;
 
     selectedAutoReleaseDate:Moment;

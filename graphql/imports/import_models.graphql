@@ -13,6 +13,7 @@ type ImportModel @model {
     updatedAt: DateTime
     client: Client @hasOne
     user: User @hasOne
+    campaign: Campaign @hasOne
 }
 
 extend type Query {

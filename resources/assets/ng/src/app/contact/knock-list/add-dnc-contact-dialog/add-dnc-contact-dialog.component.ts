@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormGroup, FormBuilder, Validators, ValidationErrors, AbstractControl } from '@angular/forms';
 import { User, DncContact, GeocodingRequest, GeocodingResponseStatus } from '@app/models';
 import { SessionService } from '@app/session.service';

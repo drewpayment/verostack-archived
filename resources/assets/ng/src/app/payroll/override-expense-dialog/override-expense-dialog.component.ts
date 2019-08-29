@@ -1,9 +1,9 @@
 import {Component, OnInit, Inject, ViewChild, AfterViewInit} from '@angular/core';
 import { PayrollDetails, IAgent, IOverride, IExpense } from '@app/models';
-import { MatDialogRef, MAT_DIALOG_DATA, MatTab } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatTab } from '@angular/material/tabs';
 import { FormGroup, FormBuilder, FormArray, Validators, FormControl } from '@angular/forms';
 import { trigger, transition, style, animate } from '@angular/animations';
-import { DEFAULT_VALUE_ACCESSOR } from '@angular/forms/src/directives/default_value_accessor';
 import { coerceNumberProperty } from '@app/utils';
 import { CurrencyPipe } from '@angular/common';
 import { PayCycle } from '@app/models/pay-cycle.model';
@@ -41,8 +41,8 @@ export class OverrideExpenseDialogComponent implements OnInit, AfterViewInit {
     agents:IAgent[];
     f:FormGroup = this.createForm();
 
-    @ViewChild('overrideTab') overrideTab:MatTab;
-    @ViewChild('expenseTab') expenseTab:MatTab;
+    @ViewChild('overrideTab', { static: true }) overrideTab:MatTab;
+    @ViewChild('expenseTab', { static: true }) expenseTab:MatTab;
 
     constructor(
         private ref:MatDialogRef<OverrideExpenseDialogComponent>,

@@ -3,7 +3,10 @@ import { IAgent, PayrollDetails, User, Paginator, ICampaign } from '@app/models'
 import { PaycheckService } from './paycheck.service';
 import { SessionService } from '@app/session.service';
 import { FormControl } from '@angular/forms';
-import { MatPaginator, MatTable, SortDirection, MatChipInputEvent } from '@angular/material';
+import { MatChipInputEvent } from '@angular/material/chips';
+import { MatPaginator } from '@angular/material/paginator';
+import { SortDirection } from '@angular/material/sort';
+import { MatTable } from '@angular/material/table';
 import { BehaviorSubject, combineLatest } from 'rxjs';
 import { Moment } from '@app/shared';
 import { CampaignService } from '@app/campaigns/campaign.service';
@@ -57,7 +60,7 @@ export class PaycheckListComponent implements OnInit {
     paginator:Paginator<PayrollDetails>;
     private _paychecks:PayrollDetails[];
     paychecks$ = new BehaviorSubject<PayrollDetails[]>(null);
-    @ViewChild('paging') paging:MatPaginator;
+    @ViewChild('paging', { static: false }) paging:MatPaginator;
     startDate:Moment|Date|string;
     endDate:Moment|Date|string;
     searchInput = new FormControl('');

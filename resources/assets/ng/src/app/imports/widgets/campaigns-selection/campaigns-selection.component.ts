@@ -3,7 +3,9 @@ import { ImportsService } from '@app/imports/imports.service';
 import { Observable } from 'rxjs';
 import { ICampaign } from '@app/models';
 import { coerceBooleanProperty } from '@app/utils';
-import { MatSelectTrigger, MatOption, MatFormField, ErrorStateMatcher } from '@angular/material';
+import { MatOption, ErrorStateMatcher } from '@angular/material/core';
+import { MatFormField } from '@angular/material/form-field';
+import { MatSelectTrigger } from '@angular/material/select';
 import { SelectionModel } from '@angular/cdk/collections';
 import { NgControl, NgForm, FormGroupDirective } from '@angular/forms';
 import { Directionality } from '@angular/cdk/bidi';
@@ -37,7 +39,7 @@ export class CampaignsSelectionComponent implements OnInit {
     @Input() panelClass: string | string[] | Set<string> | { [key: string]: any };
 
     /** User-supplied override of the trigger element. */
-    @ContentChild(MatSelectTrigger) customTrigger: MatSelectTrigger;
+    @ContentChild(MatSelectTrigger, { static: true }) customTrigger: MatSelectTrigger;
 
     private _placeholder: string;
 

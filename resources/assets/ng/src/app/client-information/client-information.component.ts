@@ -7,7 +7,8 @@ import { BehaviorSubject } from 'rxjs';
 import * as _ from 'lodash';
 import { UserService } from '../user-features/user.service';
 import { SessionService } from '@app/session.service';
-import { MatDialog, MatCheckboxChange } from '@angular/material';
+import { MatCheckboxChange } from '@angular/material/checkbox';
+import { MatDialog } from '@angular/material/dialog';
 import { AddSaleStatusDialog } from '@app/client-information/dialogs/add-sale-status.component';
 
 @Component({

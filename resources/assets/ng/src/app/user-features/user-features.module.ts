@@ -3,7 +3,8 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, RequiredValidator } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MaterialModule } from '../material/material.module';
-import { FileUploadModule } from 'ng2-file-upload';
+// import { FileUploadModule } from 'ng2-file-upload';
+import { AdFileUploadModule } from 'ad-file-upload';
 
 import { WeatherService } from '../weather.service';
 
@@ -28,7 +29,7 @@ import { CampaignsModule } from '@app/campaigns/campaigns.module';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    FileUploadModule,
+    AdFileUploadModule,
     CampaignsModule
   ],
   declarations: [

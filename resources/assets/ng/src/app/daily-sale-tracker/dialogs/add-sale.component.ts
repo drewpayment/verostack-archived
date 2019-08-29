@@ -1,5 +1,7 @@
 import {Component, OnInit, Inject, ViewChild, AfterViewInit, ChangeDetectorRef} from '@angular/core';
-import {MatDialogRef, MAT_DIALOG_DATA, MatAutocomplete, MatButtonToggleChange} from '@angular/material';
+import { MatAutocomplete } from '@angular/material/autocomplete';
+import { MatButtonToggleChange } from '@angular/material/button-toggle';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import {FormBuilder, FormGroup, Validators, FormArray, FormControl, ValidatorFn, AbstractControl} from '@angular/forms';
 import {SaleStatus, IAgent, ICampaign, DailySale, User, Remark, PaidStatusType, Utility, ContactType} from '@app/models';
 
@@ -35,7 +37,7 @@ interface ViewRemark extends Remark {
     selector: 'vs-add-daily-sale',
     templateUrl: './add-sale.component.html',
     styleUrls: ['./add-sale.component.scss'],
-    animations: [...showFieldAnimation]
+    animations: showFieldAnimation
 })
 export class AddSaleDialogComponent implements OnInit, AfterViewInit {
     form: FormGroup;
@@ -66,7 +68,7 @@ export class AddSaleDialogComponent implements OnInit, AfterViewInit {
     /** internal use only, keeps track of all available utilities */
     private _utilities:Utility[];
     utilities:BehaviorSubject<Utility[]> = new BehaviorSubject<Utility[]>(null);
-    @ViewChild(MatAutocomplete) agentAutocomplete:MatAutocomplete;
+    @ViewChild(MatAutocomplete, { static: true }) agentAutocomplete:MatAutocomplete;
 
     constructor(
         public ref: MatDialogRef<AddSaleDialogComponent>,

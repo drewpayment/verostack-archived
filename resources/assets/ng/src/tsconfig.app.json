@@ -7,6 +7,9 @@
     "types": [],
     "experimentalDecorators": true,
   },
+  "angularCompilerOptions": {
+      "enableIvy": true
+  },
   "exclude": [
     "test.ts",
     "**/*.spec.ts"

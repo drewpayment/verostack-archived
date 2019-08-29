@@ -7,7 +7,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '../material/material.module';
-import { MomentModule } from 'angular2-moment';
 import { SharedModule } from '@app/shared';
 import { MessagesComponent } from '@app/messages/messages.component';
 import { FabFloatBtnModule } from '@app/fab-float-btn/fab-float-btn.module';
@@ -29,7 +28,6 @@ import { PipesModule } from '@app/pipes/pipes.module';
     MaterialModule,
     SharedModule,
     ReactiveFormsModule,
-    MomentModule,
     FabFloatBtnModule,
     RouterModule,
     DirectivesModule,

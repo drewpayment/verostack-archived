@@ -32,9 +32,16 @@ export class ImportsService {
      * Get all ImportModels.
      */
     getImportModels():Observable<ImportModel[]> {
+        const query = [`{ importModels { importModelId client {`];
+        query.push(`name clientId } shortDesc campaignId matchByAgentCode splitCustomerName `);
+        query.push(`fullDesc map userId user { id firstName lastName username active } `);
+        query.push(`campaign { campaignId name utilities { utilityId utilityName } }`);
+        query.push(`createdAt updatedAt }}`);
+
         return this.http.post<Graphql<ImportModel[]>>(this.graphql, {
-                query: `{importModels {importModelId client {name clientId} shortDesc campaignId matchByAgentCode splitCustomerName
-                    fullDesc map userId user{id firstName lastName username active} createdAt updatedAt}}`
+                // query: `{importModels {importModelId client {name clientId} shortDesc campaignId matchByAgentCode splitCustomerName
+                //     fullDesc map userId user{id firstName lastName username active} createdAt updatedAt}}`
+                query: query.join('')
             })
             .pipe(
                 map((result) => {

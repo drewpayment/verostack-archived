@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { CampaignFilters, CompOperator } from '@app/models/campaign-filters.model';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import * as _ from 'lodash';
 
 interface DialogData {

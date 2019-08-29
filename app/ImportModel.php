@@ -4,6 +4,7 @@ namespace App;
 
 use App\User;
 use App\Client;
+use App\Campaign;
 use App\Scopes\ClientScope;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
@@ -43,6 +44,11 @@ class ImportModel extends Model
     public function client()
     {
         return $this->hasOne(Client::class, 'client_id');
+    }
+
+    public function campaign()
+    {
+        return $this->hasOne(Campaign::class, 'campaign_id');
     }
 
     /**

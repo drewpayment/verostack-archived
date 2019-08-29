@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewChild, ChangeDetectorRef, AfterViewChecked, AfterViewInit, AfterContentInit} from '@angular/core';
 import {Observable, Subscription, of, BehaviorSubject} from 'rxjs';
 import {SessionService} from './session.service';
-import {MatSidenav} from '@angular/material';
+import { MatSidenav } from '@angular/material/sidenav';
 import {environment} from '@env/environment.prod';
 import {MomentExtensions} from '@app/shared/moment-extensions';
 import {SidenavService} from '@app/sidenav/sidenav.service';
@@ -22,7 +22,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
     _loading = new BehaviorSubject<boolean>(false);
     _loggedIn:boolean;
 
-    @ViewChild('navigation') public sidenav: MatSidenav;
+    @ViewChild('navigation', { static: false }) public sidenav: MatSidenav;
 
     routerSubscription:Subscription;
 

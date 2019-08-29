@@ -2,7 +2,8 @@ import { Component, OnInit, OnDestroy, Output, EventEmitter } from '@angular/cor
 import { ImportsService } from '../imports.service';
 import { ImportModel } from '@app/models';
 import { Observable } from 'rxjs';
-import { MatRadioChange, MatSelectChange } from '@angular/material';
+import { MatRadioChange } from '@angular/material/radio';
+import { MatSelectChange } from '@angular/material/select';
 
 @Component({
     selector: 'vs-import-model-selection',

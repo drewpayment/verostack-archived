@@ -1,6 +1,7 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { MatCheckboxChange, MatDialog } from '@angular/material';
+import { MatCheckboxChange } from '@angular/material/checkbox';
+import { MatDialog } from '@angular/material/dialog';
 import { ImportModel, User } from '@app/models';
 import { ImportsService } from '../imports.service';
 import { SessionService } from '@app/session.service';

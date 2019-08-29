@@ -9,13 +9,13 @@ import { ImportModelsComponent } from './import-models/import-models.component';
 import { AuthGuard } from '@app/auth.guard';
 import { EditImportModelComponent } from './dialogs/edit-import-model/edit-import-model.component';
 import { SpreadsheetModule } from '@app/spreadsheet/spreadsheet.module';
-import { MAT_BOTTOM_SHEET_DEFAULT_OPTIONS } from '@angular/material';
+import { MAT_BOTTOM_SHEET_DEFAULT_OPTIONS } from '@angular/material/bottom-sheet';
 import { ConfirmAgentBottomSheetComponent } from './bottom-sheets/confirm-agent-code.component';
 import { ProcessComponent } from './process/process.component';
 import { PastImportsComponent } from './past-imports/past-imports.component';
 import { ImportModelSelectionComponent } from './import-model-selection/import-model-selection.component';
-import { FileUploadModule } from 'ng2-file-upload';
 import { CampaignsSelectionComponent } from './widgets/campaigns-selection/campaigns-selection.component';
+import { AdFileUploadModule } from 'ad-file-upload';
 
 const routes: Route[] = [
     { path: '', redirectTo: 'models', pathMatch: 'full' },
@@ -41,7 +41,7 @@ const routes: Route[] = [
         FormsModule,
         ReactiveFormsModule,
         SpreadsheetModule,
-        FileUploadModule,
+        AdFileUploadModule,
 
         RouterModule.forChild(routes)
     ],

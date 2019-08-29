@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
 import { MaterialModule } from '../material/material.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MomentModule } from 'angular2-moment';
 import { CampaignsModule } from '../campaigns/campaigns.module';
 import { UserFeaturesModule } from '../user-features/user-features.module';
 import { ClientSelectorComponent } from '../client-selector/client-selector.component';
@@ -17,7 +16,6 @@ import { BaseModule } from '@app/base/base.module';
         BrowserModule,
         MaterialModule,
         FormsModule,
-        MomentModule,
         CampaignsModule,
         UserFeaturesModule,
         ReactiveFormsModule,

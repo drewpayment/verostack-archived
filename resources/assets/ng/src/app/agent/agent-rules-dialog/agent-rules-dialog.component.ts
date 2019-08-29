@@ -1,6 +1,6 @@
 import {Component, OnInit, Inject} from '@angular/core';
 import { IAgent, User } from '@app/models';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { IRole, Role, RoleType, IRoleType } from '@app/models/role.model';
 import { AgentService } from '@app/agent/agent.service';

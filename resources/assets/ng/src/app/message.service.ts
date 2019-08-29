@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {MatSnackBar, MatSnackBarRef, SimpleSnackBar, MatSnackBarConfig} from '@angular/material';
+import { MatSnackBar, MatSnackBarRef, SimpleSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 import {HttpErrorResponse} from '@angular/common/http';
 import {SessionService} from '@app/session.service';
 
