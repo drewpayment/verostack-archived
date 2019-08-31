@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import { Contact } from '@app/models/contact.model';
+import { Contact, ContactRequest } from '@app/models/contact.model';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { SessionService } from '@app/session.service';
 import { AuthService } from '@app/auth.service';
@@ -81,6 +81,34 @@ export class ContactService {
 
     getAllRestrictedContacts():DncContact[] {
         return this.restrictedContacts;
+    }
+
+    saveContactList(dtos: ContactRequest[]): Observable<Contact[]> {
+        const s = ['mutation { newContactList(input: [{'];
+        dtos.forEach((d, i, a) => {
+            for (const p in d) {
+                if (p == 'client_id' || p == 'contact_type' || p == 'ssn' || p == 'phone' || p == 'fax'
+                    || p == 'phone_country' || p == 'fax_country') {
+                        s.push(`${p}: ${d[p]}`);
+                    } else {
+                        s.push(`${p}: "${d[p]}"`);
+                    }
+
+                if (i < dtos.length - 1) {
+                    s.push(`}, {`);
+                } else {
+                    s.push(`}]) {`);
+                    s.push(`contactId clientId contactType businessName firstName lastName middleName prefix `);
+                    s.push(`suffix ssn dob street street2 city state zip phoneCountry phone faxCountry fax email `);
+                }
+            }
+        });
+        return this.http.post<Graphql<Contact[]>>(this.graphql, {
+                query: s.join(' ')
+            })
+            .pipe(
+                map(r => r.data.newContactList)
+            );
     }
 
     saveDncContactList(dtos: DncContactRequest[]): Observable<DncContact[]> {

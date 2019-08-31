@@ -2,12 +2,12 @@ import { Component, OnInit, ViewChild, ElementRef, ChangeDetectorRef, OnDestroy 
 import { FileUploader } from 'ad-file-upload';
 import { Spreadsheet } from 'dhx-spreadsheet';
 import { ISheetData, IStyle, IDataCell, DailySale, ImportModel, 
-    ImportModelMap, DailySaleMapType, User, GeocodingRequest, GeocodingResponse, DncContact, DncContactRequest } from '@app/models';
+    ImportModelMap, DailySaleMapType, User, GeocodingRequest, GeocodingResponse, DncContact, DncContactRequest, ContactType } from '@app/models';
 import { Moment } from 'moment';
 import * as moment from 'moment';
 import { SessionService } from '@app/session.service';
 import { ImportsService } from '../imports.service';
-import { Contact } from '@app/models/contact.model';
+import { Contact, ContactRequest } from '@app/models/contact.model';
 import { Observable, Subscription, Observer, forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ContactService } from '@app/contact/contact.service';
@@ -290,9 +290,6 @@ export class ProcessComponent implements OnInit, OnDestroy {
             });
 
             forkJoin(joins).subscribe(sales => {
-                console.dir(this.pendingContactQueue);
-                console.dir(sales);
-
                 const dtos: DncContactRequest[] = this.pendingContactQueue.map(p => {
                     return {
                         first_name: p.firstName,
@@ -301,18 +298,66 @@ export class ProcessComponent implements OnInit, OnDestroy {
                     } as DncContactRequest;
                 });
 
-                this.saveDncContacts(dtos).subscribe(dncContacts => {
+                // Save contacts
+                forkJoin(
+                    this.saveContacts(this.pendingContactQueue),
+                    this.saveDncContacts(dtos)
+                ).subscribe((resp: any[]) => {
+                    const contacts = resp[0];
                     sales.forEach((s, i, a) => {
-                        
+                        a[i].contactId = contacts[i].contactId;
                     });
-                });
 
-                ob.next(true);
-                ob.complete();
+                    // TODO: SAVE THE SALES MOTHER FUCKER
+
+                    ob.next(true);
+                    ob.complete();
+                });
             }, err => {
                 ob.next(false);
                 ob.complete();
             });
+        });
+    }
+
+    private saveContacts(pending: Contact[]): Observable<Contact[]> {
+        return Observable.create((o: Observer<Contact[]>) => {
+            const dtos: ContactRequest[] = [];
+
+            pending.forEach((p, i, a) => {
+                const dto = {
+                    first_name: p.firstName,
+                    last_name: p.lastName,
+                    contact_type: p.businessName ? ContactType.business : ContactType.residential,
+                    street: p.street,
+                    city: p.city,
+                    state: p.state,
+                    zip: `${p.zip}`,
+                } as ContactRequest;
+                
+                if (p.businessName) dto.business_name = p.businessName;
+                if (p.street2) dto.street2 = p.street2;
+                if (p.dob) dto.dob = p.dob;
+                if (p.email) dto.email = p.email;
+                if (p.fax) dto.fax = p.fax;
+                if (p.phone) dto.phone = p.phone;
+                if (p.middleName) dto.middle_name = p.middleName;
+                if (p.prefix) dto.prefix = p.prefix;
+                if (p.ssn) dto.ssn = p.ssn;
+                if (p.suffix) dto.suffix = p.suffix;
+
+                dtos.push(dto);
+            });
+
+            if (dtos.length) {
+                this.contactService.saveContactList(dtos).subscribe(contacts => {
+                    o.next(contacts);
+                    o.complete();
+                });
+            } else {
+                o.next([]);
+                o.complete();
+            }
         });
     }
 
@@ -408,6 +453,7 @@ export class ProcessComponent implements OnInit, OnDestroy {
         dto.clientId = this.user.sessionUser.sessionClient;
         dto.firstName = item[this.saleType.firstName];
         dto.lastName = item[this.saleType.lastName];
+        dto.businessName = item[this.saleType.businessName];
         dto.street = item[this.saleType.address];
         dto.street2 = item[this.saleType.address2];
         dto.city = item[this.saleType.city];

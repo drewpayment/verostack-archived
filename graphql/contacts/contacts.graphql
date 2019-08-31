@@ -21,8 +21,6 @@ type Contact {
     email: String
     faxCountry: Int
     fax: Int
-    createdAt: DateTime
-    updatedAt: DateTime
 }
 
 extend type Query {
@@ -52,4 +50,27 @@ extend type Mutation {
         faxCountry: Int
         fax: Int
     ): Contact @create @middleware(checks: ["auth:api"])
+    newContactList(input: [ContactInput]!): [ContactInput]! @middleware(checks: ["auth:api"])
+}
+
+input ContactInput {
+    client_id: Int
+    first_name: String
+    last_name: String
+    business_name: String
+    middle_name: String
+    prefix: String
+    suffix: String
+    ssn: Int
+    dob: DateTime
+    street: String
+    street2: String
+    city: String
+    state: String
+    zip: String
+    phoneCountry: Int
+    phone: Int
+    email: String
+    faxCountry: Int
+    fax: Int
 }
