@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Resolve, ActivatedRoute, RouterStateSnapshot, ActivatedRouteSnapshot } from '@angular/router';
-import { DncContact } from '@app/models';
+import { DncContact, Graphql } from '@app/models';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '@env/environment';
 import { Observable, Observer } from 'rxjs';
 import { ContactService } from '../contact.service';
-import { tap } from 'rxjs/operators';
+import { tap, map } from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root'
@@ -53,4 +53,6 @@ export class KnockListService implements Resolve<DncContact[]> {
         if (aField > bField) return 1;
         return 0;
     }
+
+    
 }

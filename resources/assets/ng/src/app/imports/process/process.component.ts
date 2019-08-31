@@ -2,14 +2,15 @@ import { Component, OnInit, ViewChild, ElementRef, ChangeDetectorRef, OnDestroy 
 import { FileUploader } from 'ad-file-upload';
 import { Spreadsheet } from 'dhx-spreadsheet';
 import { ISheetData, IStyle, IDataCell, DailySale, ImportModel, 
-    ImportModelMap, DailySaleMapType, User } from '@app/models';
+    ImportModelMap, DailySaleMapType, User, GeocodingRequest, GeocodingResponse, DncContact, DncContactRequest } from '@app/models';
 import { Moment } from 'moment';
 import * as moment from 'moment';
 import { SessionService } from '@app/session.service';
 import { ImportsService } from '../imports.service';
 import { Contact } from '@app/models/contact.model';
-import { Observable, Subscription, Observer } from 'rxjs';
+import { Observable, Subscription, Observer, forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { ContactService } from '@app/contact/contact.service';
 
 @Component({
     selector: 'vs-process',
@@ -54,7 +55,12 @@ export class ProcessComponent implements OnInit, OnDestroy {
     contactIdSub: Subscription;
     dtos = [] as DailySale[];
 
-    constructor(private cd: ChangeDetectorRef, private session: SessionService, private service: ImportsService) { }
+    constructor(
+        private cd: ChangeDetectorRef, 
+        private session: SessionService, 
+        private service: ImportsService,
+        private contactService: ContactService
+    ) { }
 
     ngOnInit() {
         this.session.getUserItem().subscribe(u => this.user = u);
@@ -238,8 +244,6 @@ export class ProcessComponent implements OnInit, OnDestroy {
             }
         }
 
-        console.dir(headerMap);
-
         const sales = [] as {[key: string]: any}[];
         for (let r = 0; r < rowsCount; r++) {
             const rowStart = (colsCount * r);
@@ -259,8 +263,8 @@ export class ProcessComponent implements OnInit, OnDestroy {
             if (Object.keys(sale).length > 1) sales.push(sale);
         }
 
-        this.processSales(sales).subscribe(() => {
-            console.dir(this.dtos);
+        this.processSales(sales).subscribe((res) => {
+            if (res) console.dir(this.dtos);
 
             // TODO: 
             // send all pending contacts to graphql to add them all at the same time
@@ -276,13 +280,66 @@ export class ProcessComponent implements OnInit, OnDestroy {
         });
     }
 
-    private processSales(sales: {[key: string]: any}[]): Observable<void> {
-        return Observable.create((ob: Observer<void>) => {
+    private processSales(sales: {[key: string]: any}[]): Observable<Boolean> {
+        return Observable.create((ob: Observer<Boolean>) => {
+            const joins:Observable<DailySale>[] = [];
             sales.forEach((s) => {
                 const d = {} as DailySale;
-                this.buildDailySale(s, d).subscribe(sale => this.dtos.push(sale));
+                joins.push(this.buildDailySale(s, d));
+                // this.buildDailySale(s, d).subscribe(sale => this.dtos.push(sale));
             });
-            return ob.complete();
+
+            forkJoin(joins).subscribe(sales => {
+                console.dir(this.pendingContactQueue);
+                console.dir(sales);
+
+                const dtos: DncContactRequest[] = this.pendingContactQueue.map(p => {
+                    return {
+                        first_name: p.firstName,
+                        last_name: p.lastName,
+                        address: p.street,
+                    } as DncContactRequest;
+                });
+
+                this.saveDncContacts(dtos).subscribe(dncContacts => {
+                    sales.forEach((s, i, a) => {
+                        
+                    });
+                });
+
+                ob.next(true);
+                ob.complete();
+            }, err => {
+                ob.next(false);
+                ob.complete();
+            });
+        });
+    }
+
+    private saveDncContacts(dtos: DncContactRequest[]): Observable<DncContact[]> {
+        return Observable.create((ob: Observer<DncContact[]>) => {
+            const joins: Observable<GeocodingResponse>[] = [];
+            dtos.forEach((d, i, a) => {
+                const req: GeocodingRequest = {
+                    address: d.address, 
+                    city: d.city,
+                    state: d.state
+                };
+                joins.push(this.contactService.getGeocoding(req));
+            });
+            forkJoin(joins).subscribe(geocodingResponseList => {
+                geocodingResponseList.forEach((g, ii, aa) => {
+                    dtos[ii].lat = g.results[0].geometry.location.lat;
+                    dtos[ii].long = g.results[0].geometry.location.lng;
+                    dtos[ii].geocode = JSON.stringify(g.results[0].geometry);
+                });
+
+                this.contactService.saveDncContactList(dtos)
+                    .subscribe(dncs => {
+                        ob.next(dncs);
+                        ob.complete();
+                    });
+            });
         });
     }
 
@@ -297,10 +354,12 @@ export class ProcessComponent implements OnInit, OnDestroy {
                         d.podAccount = s[p];
                         break;
                     case this.saleType.utilityName: 
-                        const ut = this.selectedImportModel.campaign.utilities.find(u => u.utilityName == s[p]);
-                        if (ut) d.utilityId = ut.utilityId;
-                        // this.resolveUtilityId(this.selectedImportModel.campaignId, p)
-                        //     .subscribe(id => d.utilityId = id);
+                        const cmp = this.selectedImportModel.campaign;
+                        if (cmp) {
+                            d.campaignId = cmp.campaignId;
+                            const ut = cmp.utilities.find(u => u.utilityName == s[p]);
+                            if (ut) d.utilityId = ut.utilityId;
+                        }
                         break;
                     case this.saleType.saleDate:
                         d.saleDate = s[p];

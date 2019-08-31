@@ -4,11 +4,11 @@ import { Contact } from '@app/models/contact.model';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { SessionService } from '@app/session.service';
 import { AuthService } from '@app/auth.service';
-import { catchError, tap } from 'rxjs/operators';
+import { catchError, tap, map } from 'rxjs/operators';
 import { LaravelErrorResponse } from '@app/models/validator-error.model';
 import { MessageService } from '@app/message.service';
 import * as _ from 'lodash';
-import { DncContact, GeocodingRequest, GeocodingResponse } from '@app/models';
+import { DncContact, GeocodingRequest, GeocodingResponse, Graphql, DncContactRequest } from '@app/models';
 import { environment } from '@env/environment';
 
 @Injectable({
@@ -23,6 +23,7 @@ export class ContactService {
 
     private gUrl = environment.geocoding;
     private gKey = environment.geocodingApi;
+    graphql = environment.graphql;
 
     constructor(
         private http: HttpClient,
@@ -80,6 +81,35 @@ export class ContactService {
 
     getAllRestrictedContacts():DncContact[] {
         return this.restrictedContacts;
+    }
+
+    saveDncContactList(dtos: DncContactRequest[]): Observable<DncContact[]> {
+        const sb = [`mutation { newDncContactList(input: [{`];
+        dtos.forEach((d, i, a) => {
+            for (const p in d) {
+                if (p == 'client_id' || p == 'lat' || p == 'long') {
+                    sb.push(`${p}: ${d[p]}`);
+                } else if (p == 'geocode') {
+                    sb.push(`${p}: ${JSON.stringify(d[p])}`);
+                } else {
+                    sb.push(`${p}: "${d[p]}"`);
+                }
+            }
+
+            if (i < (dtos.length - 1)) {
+                sb.push(`}, {`);
+            } else {
+                sb.push(`}]) {`);
+                sb.push(`dncContactId clientId firstName lastName description address `);
+                sb.push(`addressCont city state zip note lat long geocode }}`);
+            }
+        });
+        return this.http.post<Graphql<DncContact[]>>(this.graphql, {
+                query: sb.join(' ')
+            })
+            .pipe(
+                map(result => result.data.newDncContactList)
+            );
     }
 
     private handleError<T>(resp:LaravelErrorResponse, caught:Observable<T>):Observable<T> {

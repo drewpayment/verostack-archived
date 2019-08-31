@@ -15290,12 +15290,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _app_session_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @app/session.service */ "./src/app/session.service.ts");
 /* harmony import */ var _imports_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../imports.service */ "./src/app/imports/imports.service.ts");
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
-/* harmony import */ var _angular_material_card__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @angular/material/card */ "./node_modules/@angular/material/__ivy_ngcc__/esm5/card.es5.js");
-/* harmony import */ var _import_model_selection_import_model_selection_component__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../import-model-selection/import-model-selection.component */ "./src/app/imports/import-model-selection/import-model-selection.component.ts");
-/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/__ivy_ngcc__/fesm5/common.js");
-/* harmony import */ var _angular_material_button__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @angular/material/button */ "./node_modules/@angular/material/__ivy_ngcc__/esm5/button.es5.js");
-/* harmony import */ var _angular_material_expansion__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @angular/material/expansion */ "./node_modules/@angular/material/__ivy_ngcc__/esm5/expansion.es5.js");
-/* harmony import */ var _past_imports_past_imports_component__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../past-imports/past-imports.component */ "./src/app/imports/past-imports/past-imports.component.ts");
+/* harmony import */ var _app_contact_contact_service__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @app/contact/contact.service */ "./src/app/contact/contact.service.ts");
+/* harmony import */ var _angular_material_card__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @angular/material/card */ "./node_modules/@angular/material/__ivy_ngcc__/esm5/card.es5.js");
+/* harmony import */ var _import_model_selection_import_model_selection_component__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../import-model-selection/import-model-selection.component */ "./src/app/imports/import-model-selection/import-model-selection.component.ts");
+/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/__ivy_ngcc__/fesm5/common.js");
+/* harmony import */ var _angular_material_button__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @angular/material/button */ "./node_modules/@angular/material/__ivy_ngcc__/esm5/button.es5.js");
+/* harmony import */ var _angular_material_expansion__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @angular/material/expansion */ "./node_modules/@angular/material/__ivy_ngcc__/esm5/expansion.es5.js");
+/* harmony import */ var _past_imports_past_imports_component__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../past-imports/past-imports.component */ "./src/app/imports/past-imports/past-imports.component.ts");
+
+
 
 
 
@@ -15379,10 +15382,11 @@ function ProcessComponent_ng_template_35_Template(rf, ctx) { if (rf & 1) {
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
 } }
 var ProcessComponent = /** @class */ (function () {
-    function ProcessComponent(cd, session, service) {
+    function ProcessComponent(cd, session, service, contactService) {
         this.cd = cd;
         this.session = session;
         this.service = service;
+        this.contactService = contactService;
         this.fu = new ad_file_upload__WEBPACK_IMPORTED_MODULE_1__["FileUploader"]({
             url: null,
             autoUpload: false,
@@ -15561,7 +15565,6 @@ var ProcessComponent = /** @class */ (function () {
         for (var i = 0; i < colsCount; i++) {
             _loop_1(i);
         }
-        console.dir(headerMap);
         var sales = [];
         for (var r = 0; r < rowsCount; r++) {
             var rowStart = (colsCount * r);
@@ -15580,8 +15583,9 @@ var ProcessComponent = /** @class */ (function () {
             if (Object.keys(sale).length > 1)
                 sales.push(sale);
         }
-        this.processSales(sales).subscribe(function () {
-            console.dir(_this.dtos);
+        this.processSales(sales).subscribe(function (res) {
+            if (res)
+                console.dir(_this.dtos);
             // TODO: 
             // send all pending contacts to graphql to add them all at the same time
             // 
@@ -15597,11 +15601,58 @@ var ProcessComponent = /** @class */ (function () {
     ProcessComponent.prototype.processSales = function (sales) {
         var _this = this;
         return rxjs__WEBPACK_IMPORTED_MODULE_7__["Observable"].create(function (ob) {
+            var joins = [];
             sales.forEach(function (s) {
                 var d = {};
-                _this.buildDailySale(s, d).subscribe(function (sale) { return _this.dtos.push(sale); });
+                joins.push(_this.buildDailySale(s, d));
+                // this.buildDailySale(s, d).subscribe(sale => this.dtos.push(sale));
             });
-            return ob.complete();
+            Object(rxjs__WEBPACK_IMPORTED_MODULE_7__["forkJoin"])(joins).subscribe(function (sales) {
+                console.dir(_this.pendingContactQueue);
+                console.dir(sales);
+                var dtos = _this.pendingContactQueue.map(function (p) {
+                    return {
+                        first_name: p.firstName,
+                        last_name: p.lastName,
+                        address: p.street,
+                    };
+                });
+                _this.saveDncContacts(dtos).subscribe(function (dncContacts) {
+                    sales.forEach(function (s, i, a) {
+                    });
+                });
+                ob.next(true);
+                ob.complete();
+            }, function (err) {
+                ob.next(false);
+                ob.complete();
+            });
+        });
+    };
+    ProcessComponent.prototype.saveDncContacts = function (dtos) {
+        var _this = this;
+        return rxjs__WEBPACK_IMPORTED_MODULE_7__["Observable"].create(function (ob) {
+            var joins = [];
+            dtos.forEach(function (d, i, a) {
+                var req = {
+                    address: d.address,
+                    city: d.city,
+                    state: d.state
+                };
+                joins.push(_this.contactService.getGeocoding(req));
+            });
+            Object(rxjs__WEBPACK_IMPORTED_MODULE_7__["forkJoin"])(joins).subscribe(function (geocodingResponseList) {
+                geocodingResponseList.forEach(function (g, ii, aa) {
+                    dtos[ii].lat = g.results[0].geometry.location.lat;
+                    dtos[ii].long = g.results[0].geometry.location.lng;
+                    dtos[ii].geocode = JSON.stringify(g.results[0].geometry);
+                });
+                _this.contactService.saveDncContactList(dtos)
+                    .subscribe(function (dncs) {
+                    ob.next(dncs);
+                    ob.complete();
+                });
+            });
         });
     };
     ProcessComponent.prototype.buildDailySale = function (s, d) {
@@ -15616,11 +15667,13 @@ var ProcessComponent = /** @class */ (function () {
                         d.podAccount = s[p];
                         break;
                     case _this.saleType.utilityName:
-                        var ut = _this.selectedImportModel.campaign.utilities.find(function (u) { return u.utilityName == s[p]; });
-                        if (ut)
-                            d.utilityId = ut.utilityId;
-                        // this.resolveUtilityId(this.selectedImportModel.campaignId, p)
-                        //     .subscribe(id => d.utilityId = id);
+                        var cmp = _this.selectedImportModel.campaign;
+                        if (cmp) {
+                            d.campaignId = cmp.campaignId;
+                            var ut = cmp.utilities.find(function (u) { return u.utilityName == s[p]; });
+                            if (ut)
+                                d.utilityId = ut.utilityId;
+                        }
                         break;
                     case _this.saleType.saleDate:
                         d.saleDate = s[p];
@@ -15676,7 +15729,7 @@ var ProcessComponent = /** @class */ (function () {
         if (!matches)
             this.pendingContactQueue.push(dto);
     };
-    ProcessComponent.ngComponentDef = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineComponent"]({ type: ProcessComponent, selectors: [["vs-process"]], factory: function ProcessComponent_Factory(t) { return new (t || ProcessComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_angular_core__WEBPACK_IMPORTED_MODULE_0__["ChangeDetectorRef"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_app_session_service__WEBPACK_IMPORTED_MODULE_5__["SessionService"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_imports_service__WEBPACK_IMPORTED_MODULE_6__["ImportsService"])); }, viewQuery: function ProcessComponent_Query(rf, ctx) { if (rf & 1) {
+    ProcessComponent.ngComponentDef = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineComponent"]({ type: ProcessComponent, selectors: [["vs-process"]], factory: function ProcessComponent_Factory(t) { return new (t || ProcessComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_angular_core__WEBPACK_IMPORTED_MODULE_0__["ChangeDetectorRef"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_app_session_service__WEBPACK_IMPORTED_MODULE_5__["SessionService"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_imports_service__WEBPACK_IMPORTED_MODULE_6__["ImportsService"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_app_contact_contact_service__WEBPACK_IMPORTED_MODULE_8__["ContactService"])); }, viewQuery: function ProcessComponent_Query(rf, ctx) { if (rf & 1) {
             _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵviewQuery"](_c0, true);
             _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵviewQuery"](_c1, true);
         } if (rf & 2) {
@@ -15769,7 +15822,7 @@ var ProcessComponent = /** @class */ (function () {
             _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵstylingApply"]();
             _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵselect"](34);
             _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngIf", ctx.hasFile)("ngIfElse", _r1293);
-        } }, directives: [_angular_material_card__WEBPACK_IMPORTED_MODULE_8__["MatCard"], _angular_material_card__WEBPACK_IMPORTED_MODULE_8__["MatCardTitle"], _angular_material_card__WEBPACK_IMPORTED_MODULE_8__["MatCardContent"], _import_model_selection_import_model_selection_component__WEBPACK_IMPORTED_MODULE_9__["ImportModelSelectionComponent"], _angular_common__WEBPACK_IMPORTED_MODULE_10__["NgIf"], _angular_material_button__WEBPACK_IMPORTED_MODULE_11__["MatButton"], _angular_material_expansion__WEBPACK_IMPORTED_MODULE_12__["MatAccordion"], _angular_material_expansion__WEBPACK_IMPORTED_MODULE_12__["MatExpansionPanel"], _angular_material_expansion__WEBPACK_IMPORTED_MODULE_12__["MatExpansionPanelHeader"], _angular_material_expansion__WEBPACK_IMPORTED_MODULE_12__["MatExpansionPanelTitle"], _past_imports_past_imports_component__WEBPACK_IMPORTED_MODULE_13__["PastImportsComponent"], ad_file_upload__WEBPACK_IMPORTED_MODULE_1__["FileSelectDirective"]], styles: [".import-spreadsheet[_ngcontent-%COMP%] {\n  height: 40vh;\n  margin: 1.5rem 0.5rem 1.5rem 0.5rem; }\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy9kcmV3cGF5bWVudC9kZXYvYWN0aXZlL3Zlcm9zdGFjay9yZXNvdXJjZXMvYXNzZXRzL25nL3NyYy9hcHAvaW1wb3J0cy9wcm9jZXNzL3Byb2Nlc3MuY29tcG9uZW50LnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQ0E7RUFDSSxZQUFZO0VBQ1osbUNBQW1DLEVBQUEiLCJmaWxlIjoic3JjL2FwcC9pbXBvcnRzL3Byb2Nlc3MvcHJvY2Vzcy5jb21wb25lbnQuc2NzcyIsInNvdXJjZXNDb250ZW50IjpbIlxuLmltcG9ydC1zcHJlYWRzaGVldCB7XG4gICAgaGVpZ2h0OiA0MHZoO1xuICAgIG1hcmdpbjogMS41cmVtIDAuNXJlbSAxLjVyZW0gMC41cmVtO1xufSJdfQ== */"] });
+        } }, directives: [_angular_material_card__WEBPACK_IMPORTED_MODULE_9__["MatCard"], _angular_material_card__WEBPACK_IMPORTED_MODULE_9__["MatCardTitle"], _angular_material_card__WEBPACK_IMPORTED_MODULE_9__["MatCardContent"], _import_model_selection_import_model_selection_component__WEBPACK_IMPORTED_MODULE_10__["ImportModelSelectionComponent"], _angular_common__WEBPACK_IMPORTED_MODULE_11__["NgIf"], _angular_material_button__WEBPACK_IMPORTED_MODULE_12__["MatButton"], _angular_material_expansion__WEBPACK_IMPORTED_MODULE_13__["MatAccordion"], _angular_material_expansion__WEBPACK_IMPORTED_MODULE_13__["MatExpansionPanel"], _angular_material_expansion__WEBPACK_IMPORTED_MODULE_13__["MatExpansionPanelHeader"], _angular_material_expansion__WEBPACK_IMPORTED_MODULE_13__["MatExpansionPanelTitle"], _past_imports_past_imports_component__WEBPACK_IMPORTED_MODULE_14__["PastImportsComponent"], ad_file_upload__WEBPACK_IMPORTED_MODULE_1__["FileSelectDirective"]], styles: [".import-spreadsheet[_ngcontent-%COMP%] {\n  height: 40vh;\n  margin: 1.5rem 0.5rem 1.5rem 0.5rem; }\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy9kcmV3cGF5bWVudC9kZXYvYWN0aXZlL3Zlcm9zdGFjay9yZXNvdXJjZXMvYXNzZXRzL25nL3NyYy9hcHAvaW1wb3J0cy9wcm9jZXNzL3Byb2Nlc3MuY29tcG9uZW50LnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQ0E7RUFDSSxZQUFZO0VBQ1osbUNBQW1DLEVBQUEiLCJmaWxlIjoic3JjL2FwcC9pbXBvcnRzL3Byb2Nlc3MvcHJvY2Vzcy5jb21wb25lbnQuc2NzcyIsInNvdXJjZXNDb250ZW50IjpbIlxuLmltcG9ydC1zcHJlYWRzaGVldCB7XG4gICAgaGVpZ2h0OiA0MHZoO1xuICAgIG1hcmdpbjogMS41cmVtIDAuNXJlbSAxLjVyZW0gMC41cmVtO1xufSJdfQ== */"] });
     return ProcessComponent;
 }());
 
@@ -15780,7 +15833,7 @@ var ProcessComponent = /** @class */ (function () {
                 templateUrl: './process.component.html',
                 styleUrls: ['./process.component.scss']
             }]
-    }], function () { return [{ type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["ChangeDetectorRef"] }, { type: _app_session_service__WEBPACK_IMPORTED_MODULE_5__["SessionService"] }, { type: _imports_service__WEBPACK_IMPORTED_MODULE_6__["ImportsService"] }]; }, { fileUploadElement: [{
+    }], function () { return [{ type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["ChangeDetectorRef"] }, { type: _app_session_service__WEBPACK_IMPORTED_MODULE_5__["SessionService"] }, { type: _imports_service__WEBPACK_IMPORTED_MODULE_6__["ImportsService"] }, { type: _app_contact_contact_service__WEBPACK_IMPORTED_MODULE_8__["ContactService"] }]; }, { fileUploadElement: [{
             type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["ViewChild"],
             args: ['fuRef', { static: false }]
         }], spreadsheetContainer: [{
