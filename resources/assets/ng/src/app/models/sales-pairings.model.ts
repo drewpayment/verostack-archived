@@ -4,6 +4,6 @@ export interface ISalesPairing {
   agentId:number,
   campaignId:number,
   commission?:number|null,
-  salesId:number,
+  salesId:string,
   clientId:number
 }

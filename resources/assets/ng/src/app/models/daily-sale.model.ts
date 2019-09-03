@@ -43,3 +43,30 @@ export interface DailySale {
   // UI ONLY PROPERTIES 
   readonly?:boolean
 }
+
+export interface DailySaleRequest {
+    daily_sale_id?: number,
+    agent_id?: number,
+    client_id?: number,
+    campaign_id?: number,
+    utility_id?: number,
+    contact_id?: number,
+    pod_account?: number,
+    first_name?: string,
+    last_name?: string,
+    street?: string,
+    street2?: string,
+    city?: string,
+    state?: string,
+    zip?: string,
+    status?: number,
+    paid_status?: number,
+    pay_cycle_id?: number,
+    has_geo?: Boolean,
+    sale_date?: Date | string | Moment,
+    paid_date?: Date | string | Moment,
+    charge_date?: Date | string | Moment,
+    repaid_date?: Date | string | Moment,
+    last_touch_date?: Date | string | Moment,
+    notes?: string
+}

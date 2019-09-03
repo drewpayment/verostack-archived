@@ -1,0 +1,26 @@
+
+type Agent {
+    agentId: Int!
+    clientId: Int
+    userId: Int
+    firstName: String
+    lastName: String
+    managerId: Int
+    isManager: Boolean
+    isActive: Boolean
+}
+
+extend type Query {
+    agents: [Agent!]! @all @middleware(checks: ["auth:api"])
+}
+
+input AgentInput {
+    agent_id: Int,
+    client_id: Int,
+    user_id: Int,
+    first_name: String,
+    last_name: String,
+    manager_id: Int,
+    is_manager: Boolean,
+    is_active: Boolean
+}

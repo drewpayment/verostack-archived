@@ -4,6 +4,7 @@ namespace App;
 
 use App\Payroll;
 use App\PayrollDetail;
+use App\Scopes\ClientScope;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 
@@ -64,25 +65,16 @@ class Agent extends Model
 		'is_active'
 	];
 
-	public function getIsActiveAttribute($value)
-	{
-		return $value == 1;
-	}
-
-	public function setIsActiveAttribute($value)
-	{
-		$this->attributes['is_active'] = $value == true ? 1 : 0;
-	}
-
-	public function getIsManagerAttribute($value)
-	{
-		return $value == 1;
-	}
-
-	public function setIsManagerAttribute($value)
-	{
-		$this->attributes['is_manager'] = $value == true ? 1 : 0;
-	}
+	/**
+     * Filters all queries of this model by the user's selected client to ensure that they 
+     * do not have cross-client interactions.
+     *
+     * @return void
+     */
+    protected static function boot() {
+        parent::boot();
+        static::addGlobalScope(new ClientScope);
+    }
 
 	/**
 	 * Filter entities by agent id.
@@ -214,6 +206,68 @@ class Agent extends Model
 	public function sales()
 	{
 		return $this->hasMany(DailySale::class, 'agent_id');
+    }
+    
+    public function getIsActiveAttribute($value)
+	{
+		return $value == 1;
+    }
+    
+    /** ATTRIBUTE MUTATORS */
+
+	public function setIsActiveAttribute($value)
+	{
+		$this->attributes['is_active'] = $value == true ? 1 : 0;
 	}
+
+	public function getIsManagerAttribute($value)
+	{
+		return $value == 1;
+	}
+
+	public function setIsManagerAttribute($value)
+	{
+		$this->attributes['is_manager'] = $value == true ? 1 : 0;
+    }
+    
+    public function getAgentIdAttribute()
+    {
+        return $this->attributes['agent_id'];
+    }
+
+    public function getClientIdAttribute()
+    {
+        return $this->attributes['client_id'];
+    }
+
+    public function getUserIdAttribute()
+    {
+        return $this->attributes['user_id'];
+    }
+
+    public function getFirstNameAttribute()
+    {
+        return $this->attributes['first_name'];
+    }
+
+    public function getLastNameAttribute()
+    {
+        return $this->attributes['last_name'];
+    }
+
+    public function getManagerIdAttribute()
+    {
+        return $this->attributes['manager_id'];
+    }
+
+    public function getCreatedAtAttribute()
+    {
+        return $this->attributes['created_at'];
+    }
+
+    public function getUpdatedAtAttribute()
+    {
+        return $this->attributes['updated_at'];
+    }
 
 }

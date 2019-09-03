@@ -1,11 +1,17 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {IAgent, User} from '@app/models';
-import {Observable, throwError} from 'rxjs';
+import {Observable, throwError, BehaviorSubject} from 'rxjs';
 import {AuthService} from '@app/auth.service';
 import {catchError, tap} from 'rxjs/operators';
 import {ISalesPairing} from '@app/models/sales-pairings.model';
 import {RoleType} from '@app/models/role.model';
+import { environment } from '@env/environment';
+import { Observable as ApolloOb } from 'apollo-link';
+import { Buoy } from '@app/buoy/buoy';
+import gql from 'graphql-tag';
+import { QueryResult } from '@app/buoy/operations/query/query-result';
+import { QueryError } from '@app/buoy/operations/query/query-error';
 
 interface DataStore {
     agents: IAgent[];
@@ -18,8 +24,38 @@ export class AgentService {
     _agents:IAgent[];
     api: string;
     store: DataStore;
-    constructor(private auth: AuthService, private http: HttpClient) {
+    graphql = environment.graphql;
+
+    agents$ = new BehaviorSubject<IAgent[]>(this._agents);
+
+
+    constructor(private auth: AuthService, private http: HttpClient, private buoy: Buoy) {
         this.api = this.auth.apiUrl + 'api' || '';
+    }
+
+    private _getAgents(): ApolloOb<QueryResult<IAgent[]> | QueryError> {
+        return this.buoy.query<IAgent[]>(
+            gql`
+                {
+                    agents {
+                        agentId
+                        firstName
+                        lastName
+                        clientId
+                        managerId
+                        isManager
+                        isActive
+                    }
+                }
+            `
+        );
+    }
+
+    fetchGraphqlAgents() {
+        this._getAgents().subscribe(resp => {
+            this._agents = resp.data.agents;
+            this.agents$.next(this._agents);
+        });
     }
 
     /**
@@ -28,7 +64,7 @@ export class AgentService {
      * @param clientId
      */
     getUserAgentsByClient(clientId: number): Observable<User[]> {
-        let url = `${this.api}/clients/${clientId}/user-agents`;
+        const url = `${this.api}/clients/${clientId}/user-agents`;
         return this.http.get<User[]>(url).pipe(catchError(this.handleError));
     }
 

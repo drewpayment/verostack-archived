@@ -27,6 +27,10 @@ import { LoginComponent } from './login/login.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ErrorInterceptor } from './http/error-interceptor';
+import { LocalStorage } from '@ngx-pwa/local-storage';
+import { BuoyModule } from './buoy/buoy.module';
+import { BuoyConfig, buoyConfig, BuoyHeadersManipulator } from './buoy/buoy-config';
+import { Buoy } from './buoy/buoy';
 
 @NgModule({
     imports: [
@@ -43,6 +47,7 @@ import { ErrorInterceptor } from './http/error-interceptor';
         DirectivesModule,
         PayrollModule,
         BaseModule,
+        BuoyModule,
 
         /** ROUTING FOR ENTIRE APPLICATION */
         AppRoutingModule
@@ -69,12 +74,13 @@ import { ErrorInterceptor } from './http/error-interceptor';
             provide: HTTP_INTERCEPTORS,
             useClass: ErrorInterceptor,
             multi: true,
-        }
+        },
+        { provide: BuoyConfig, useValue: buoyConfig }
     ],
     bootstrap: [AppComponent]
 })
 export class AppModule {
-    constructor() {
+    constructor(private buoy: Buoy, private localStorage: LocalStorage) {
         // <!-- Global site tag (gtag.js) - Google Analytics -->
         if (environment.production) {
             const head = document.getElementsByTagName('head')[0];
@@ -95,5 +101,11 @@ export class AppModule {
             head.prepend(gtagmgrNode);
             head.insertBefore(gtagCodeNode, head.childNodes[1]);
         }
+
+        // Register middleware 
+        this.buoy.registerMiddleware(
+            BuoyHeadersManipulator,
+            [this.localStorage]
+        );
     }
 }

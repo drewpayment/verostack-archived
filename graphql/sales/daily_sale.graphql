@@ -45,4 +45,25 @@ extend type Mutation {
         charge_date: DateTime
         repaid_date: DateTime
     ): DailySale @create @middleware(checks: ["auth:api"])
+
+    # imports a list of daily_sales and assumes that they have geocoding information with them 
+    saveDailySales(input: [DailySaleInput!]!): [DailySaleInput]! @middleware(checks: ["auth:api"])
+}
+
+input DailySaleInput {
+    daily_sale_id: Int,
+    agent_id: Int,
+    client_id: Int,
+    utility_id: Int,
+    contact_id: Int,
+    pod_account: Int,
+    status: Int,
+    paid_status: Int,
+    pay_cycle_id: Int,
+    has_geo: Boolean,
+    sale_date: DateTime,
+    last_touch_date: DateTime,
+    paid_date: DateTime,
+    charge_date: DateTime,
+    repaid_date: DateTime
 }

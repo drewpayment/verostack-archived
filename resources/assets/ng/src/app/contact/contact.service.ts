@@ -10,6 +10,11 @@ import { MessageService } from '@app/message.service';
 import * as _ from 'lodash';
 import { DncContact, GeocodingRequest, GeocodingResponse, Graphql, DncContactRequest } from '@app/models';
 import { environment } from '@env/environment';
+import { Observable as ApolloObservable } from 'apollo-link';
+import { QueryResult } from '@app/buoy/operations/query/query-result';
+import { QueryError } from '@app/buoy/operations/query/query-error';
+import { Buoy } from '@app/buoy/buoy';
+import gql from 'graphql-tag';
 
 @Injectable({
     providedIn: 'root'
@@ -28,7 +33,8 @@ export class ContactService {
     constructor(
         private http: HttpClient,
         private auth:AuthService,
-        private msg:MessageService
+        private msg:MessageService,
+        private buoy: Buoy
     ) {
         this.api = `${this.auth.apiUrl}api`;
     }
@@ -83,33 +89,50 @@ export class ContactService {
         return this.restrictedContacts;
     }
 
-    saveContactList(dtos: ContactRequest[]): Observable<Contact[]> {
-        const s = ['mutation { newContactList(input: [{'];
-        dtos.forEach((d, i, a) => {
-            for (const p in d) {
-                if (p == 'client_id' || p == 'contact_type' || p == 'ssn' || p == 'phone' || p == 'fax'
-                    || p == 'phone_country' || p == 'fax_country') {
-                        s.push(`${p}: ${d[p]}`);
-                    } else {
-                        s.push(`${p}: "${d[p]}"`);
+    saveContactList(dtos: ContactRequest[]): ApolloObservable<QueryResult<Contact[]> | QueryError> {
+        return this.buoy.mutate(
+            gql`
+                mutation {
+                    newContactList(input: $dtos) {
+                        contactId clientId contactType businessName firstName lastName 
+                        middleName prefix suffix ssn dob street street2 city state zip 
+                        phoneCountry phone faxCountry fax email
                     }
-
-                if (i < dtos.length - 1) {
-                    s.push(`}, {`);
-                } else {
-                    s.push(`}]) {`);
-                    s.push(`contactId clientId contactType businessName firstName lastName middleName prefix `);
-                    s.push(`suffix ssn dob street street2 city state zip phoneCountry phone faxCountry fax email `);
                 }
+            `,
+            {
+                dtos: dtos
             }
-        });
-        return this.http.post<Graphql<Contact[]>>(this.graphql, {
-                query: s.join(' ')
-            })
-            .pipe(
-                map(r => r.data.newContactList)
-            );
+        );
     }
+
+    // saveContactList(dtos: ContactRequest[]): Observable<Contact[]> {
+    //     const s = ['mutation { newContactList(input: [{'];
+    //     dtos.forEach((d, i, a) => {
+    //         for (const p in d) {
+    //             if (p == 'client_id' || p == 'contact_type' || p == 'ssn' || p == 'phone' || p == 'fax'
+    //                 || p == 'phone_country' || p == 'fax_country') {
+    //                     s.push(`${p}: ${d[p]}`);
+    //                 } else {
+    //                     s.push(`${p}: "${d[p]}"`);
+    //                 }
+
+    //             if (i < dtos.length - 1) {
+    //                 s.push(`}, {`);
+    //             } else {
+    //                 s.push(`}]) {`);
+    //                 s.push(`contactId clientId contactType businessName firstName lastName middleName prefix `);
+    //                 s.push(`suffix ssn dob street street2 city state zip phoneCountry phone faxCountry fax email `);
+    //             }
+    //         }
+    //     });
+    //     return this.http.post<Graphql<Contact[]>>(this.graphql, {
+    //             query: s.join(' ')
+    //         })
+    //         .pipe(
+    //             map(r => r.data.newContactList)
+    //         );
+    // }
 
     saveDncContactList(dtos: DncContactRequest[]): Observable<DncContact[]> {
         const sb = [`mutation { newDncContactList(input: [{`];
