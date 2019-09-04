@@ -55,6 +55,7 @@ extend type Mutation {
 
 input ContactInput {
     client_id: Int
+    contact_type: Int
     first_name: String
     last_name: String
     business_name: String

@@ -340,10 +340,13 @@ export class ProcessComponent implements OnInit, OnDestroy {
                     });
 
                     if (sd.length) {
-                        this.saleService.saveSalesList(sd).subscribe(result => {
-                            ob.next(result);
-                            ob.complete();
-                        });
+                        console.log('Save daily sales');
+                        console.dir(sd);
+
+                        // this.saleService.saveSalesList(sd).subscribe(result => {
+                        //     ob.next(result);
+                        //     ob.complete();
+                        // });
                     } else {
                         ob.next([]);
                         ob.complete();

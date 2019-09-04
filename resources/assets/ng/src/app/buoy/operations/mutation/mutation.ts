@@ -36,7 +36,7 @@ export class Mutation extends Operation {
                     for (const error of response.errors) {
                         if (error.extensions.category === 'graphql') {
                             throw new Error(
-                                '[Buoy :: GraphQL error]: ${error.message}, on line ' +
+                                `[Buoy :: GraphQL error]: ${error.message}, on line ` +
                                 `${error.locations[0].line}:${error.locations[0].column}.`,
                             );
                         }

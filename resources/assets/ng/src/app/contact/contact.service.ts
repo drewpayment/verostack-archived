@@ -15,6 +15,8 @@ import { QueryResult } from '@app/buoy/operations/query/query-result';
 import { QueryError } from '@app/buoy/operations/query/query-error';
 import { Buoy } from '@app/buoy/buoy';
 import gql from 'graphql-tag';
+import { MutationOptions } from '@app/buoy/operations/mutation/mutation-options';
+import { NewContactListGQL } from '@app/apollo/new-contact-list-gql';
 
 @Injectable({
     providedIn: 'root'
@@ -34,7 +36,8 @@ export class ContactService {
         private http: HttpClient,
         private auth:AuthService,
         private msg:MessageService,
-        private buoy: Buoy
+        private buoy: Buoy,
+        private newContactList: NewContactListGQL
     ) {
         this.api = `${this.auth.apiUrl}api`;
     }
@@ -90,20 +93,23 @@ export class ContactService {
     }
 
     saveContactList(dtos: ContactRequest[]): ApolloObservable<QueryResult<Contact[]> | QueryError> {
-        return this.buoy.mutate(
-            gql`
+        return this.newContactList.mutate({
+            dtos: dtos
+        }) as any;
+        return this.buoy.mutate({
+            mutation: gql`
                 mutation {
-                    newContactList(input: $dtos) {
+                    newContactList(input: ${dtos}) {
                         contactId clientId contactType businessName firstName lastName 
                         middleName prefix suffix ssn dob street street2 city state zip 
                         phoneCountry phone faxCountry fax email
                     }
                 }
             `,
-            {
+            variables: {
                 dtos: dtos
             }
-        );
+        });
     }
 
     // saveContactList(dtos: ContactRequest[]): Observable<Contact[]> {

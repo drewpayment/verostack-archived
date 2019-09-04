@@ -69,8 +69,12 @@ export class Buoy {
     /**
      * Run a mutation.
      */
-    public mutate<T>(mutation, variables?: any, options?: MutationOptions): ApolloObservable<MutationResult<T>|MutationError> {
-        return new Mutation(this, operationId++, mutation, variables, options).execute<T>();
+    // public mutate<T>(mutation, variables?: any, options?: MutationOptions): ApolloObservable<MutationResult<T>|MutationError> {
+    //     return new Mutation(this, operationId++, mutation, variables, options).execute<T>();
+    // }
+
+    public mutate<T>(params: MutationParams): ApolloObservable<MutationResult<T> | MutationError> {
+        return new Mutation(this, operationId++, params.mutation, params.variables, params.options).execute<T>();
     }
 
     /**
@@ -94,4 +98,10 @@ export class Buoy {
     public resetCache(): void {
         this.cache.reset();
     }
+}
+
+export interface MutationParams {
+    mutation: string,
+    variables?: { [key: string]: any },
+    options?: MutationOptions
 }

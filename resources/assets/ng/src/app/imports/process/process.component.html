@@ -37,7 +37,9 @@
                                     <button type="button" mat-stroked-button color="primary" (click)="uploadFile()">Upload File</button>
                                 </div>
                                 <div class="p-1">
-                                    <button type="button" mat-raised-button color="primary" [disabled]="!hasFile && !selectedImportModel" (click)="importReport()">Save Report</button>
+                                    <button type="button" mat-raised-button color="primary" 
+                                        [disabled]="!hasFile && !selectedImportModel" 
+                                        (click)="importReport()">Save Report</button>
                                 </div>
                             </div>
                         </div>

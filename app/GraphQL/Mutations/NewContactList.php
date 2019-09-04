@@ -5,6 +5,7 @@ namespace App\GraphQL\Mutations;
 use App\Contact;
 use Exception;
 use GraphQL\Type\Definition\ResolveInfo;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 
