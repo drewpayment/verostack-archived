@@ -17,17 +17,17 @@ export interface DncContact {
 }
 
 export interface DncContactRequest {
-    dnc_contact_id: number,
-    first_name: string,
-    last_name: string,
-    description: string,
-    address: string,
-    address_cont: string,
-    city: string,
-    state: string,
-    zip: string,
-    note: string,
-    lat: number,
-    long: number,
-    geocode: string
+    dnc_contact_id?: number,
+    first_name?: string,
+    last_name?: string,
+    description?: string,
+    address?: string,
+    address_cont?: string,
+    city?: string,
+    state?: string,
+    zip?: string,
+    note?: string,
+    lat?: number,
+    long?: number,
+    geocode?: string
 }

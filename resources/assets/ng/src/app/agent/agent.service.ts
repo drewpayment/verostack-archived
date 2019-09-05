@@ -34,8 +34,8 @@ export class AgentService {
     }
 
     private _getAgents(): ApolloOb<QueryResult<IAgent[]> | QueryError> {
-        return this.buoy.query<IAgent[]>(
-            gql`
+        return this.buoy.query<IAgent[]>({
+            query: gql`
                 {
                     agents {
                         agentId
@@ -45,10 +45,18 @@ export class AgentService {
                         managerId
                         isManager
                         isActive
+                        salesPairings {
+                            salesPairingsId
+                            campaignId
+                            commission
+                            salesId
+                            clientId
+                            agentId
+                        }
                     }
                 }
             `
-        );
+        });
     }
 
     fetchGraphqlAgents() {

@@ -1,0 +1,15 @@
+
+type SalesPairing {
+    salesPairingsId: ID!
+    campaignId: Int!
+    commission: Float
+    salesId: String
+    clientId: Int
+    agentId: Int
+    createdAt: DateTime
+    updatedAt: DateTime
+}
+
+extend type Query {
+    salesPairings: [SalesPairing!]! @all @middleware(checks: ["auth:api"])
+}

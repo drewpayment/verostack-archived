@@ -3,7 +3,7 @@ import { FileUploader } from 'ad-file-upload';
 import { Spreadsheet } from 'dhx-spreadsheet';
 import { ISheetData, IStyle, IDataCell, DailySale, ImportModel, 
     ImportModelMap, DailySaleMapType, User, GeocodingRequest, GeocodingResponse, DncContact, 
-    DncContactRequest, ContactType, DailySaleRequest, IAgent } from '@app/models';
+    DncContactRequest, ContactType, DailySaleRequest, IAgent, SaleStatus } from '@app/models';
 import { Moment } from 'moment';
 import * as moment from 'moment';
 import { SessionService } from '@app/session.service';
@@ -293,24 +293,32 @@ export class ProcessComponent implements OnInit, OnDestroy {
             sales.forEach((s) => {
                 const d = {} as DailySale;
                 joins.push(this.buildDailySale(s, d));
-                // this.buildDailySale(s, d).subscribe(sale => this.dtos.push(sale));
             });
 
             forkJoin(joins).subscribe(sales => {
-                const dtos: DncContactRequest[] = this.pendingContactQueue.map(p => {
-                    return {
+                const dncDtos: DncContactRequest[] = this.pendingContactQueue.map(p => {
+                    const req: DncContactRequest = {
                         first_name: p.firstName,
                         last_name: p.lastName,
                         address: p.street,
-                    } as DncContactRequest;
+                        city: p.city,
+                        state: p.state,
+                        zip: `${p.zip}`,
+                    };
+
+                    if (p.street2) req.address_cont = p.street2;
+                    
+                    return req;
                 });
 
                 // Save contacts
                 forkJoin(
                     this.saveContacts(this.pendingContactQueue),
-                    this.saveDncContacts(dtos)
+                    this.saveDncContacts(dncDtos),
+                    this.getSaleStatuses()
                 ).subscribe((resp: any[]) => {
                     const contacts: Contact[] = resp[0];
+                    const statuses = resp[2] as SaleStatus[];
                     const sd: DailySaleRequest[] = [];
                     const agents = this.agentsService.agents$.getValue();
                     
@@ -324,13 +332,8 @@ export class ProcessComponent implements OnInit, OnDestroy {
                             campaign_id: s.campaignId,
                             utility_id: s.utilityId,
                             agent_id: selectedAgent.agentId,
-                            first_name: s.firstName,
-                            last_name: s.lastName,
-                            street: s.street,
-                            city: s.city,
-                            state: s.state,
-                            zip: `${s.zip}`,
-                            sale_date: s.saleDate,
+                            sale_date: moment(s.saleDate, 'MM-DD-YYYY').format('YYYY-MM-DD HH:mm:ss'),
+                            last_touch_date: moment().format('YYYY-MM-DD HH:mm:ss'),
                             contact_id: contacts[i].contactId,
                             pod_account: s.podAccount,
                             status: s.status,
@@ -340,13 +343,13 @@ export class ProcessComponent implements OnInit, OnDestroy {
                     });
 
                     if (sd.length) {
-                        console.log('Save daily sales');
-                        console.dir(sd);
+                        this.saleService.saveSalesList(sd).subscribe(resp => {
+                            const sales = resp.data.saveDailySales;
+                            console.dir(sales);
 
-                        // this.saleService.saveSalesList(sd).subscribe(result => {
-                        //     ob.next(result);
-                        //     ob.complete();
-                        // });
+                            ob.next(sales);
+                            ob.complete();
+                        });
                     } else {
                         ob.next([]);
                         ob.complete();
@@ -355,6 +358,16 @@ export class ProcessComponent implements OnInit, OnDestroy {
             }, err => {
                 ob.next([]);
                 ob.complete();
+            });
+        });
+    }
+
+    private getSaleStatuses(): Observable<SaleStatus[]> {
+        return Observable.create((o: Observer<SaleStatus[]>) => {
+            this.saleService.getSaleStatuses().subscribe(resp => {
+                const statuses = resp.data.saleStatuses;
+                o.next(statuses);
+                o.complete();
             });
         });
     }
@@ -391,9 +404,7 @@ export class ProcessComponent implements OnInit, OnDestroy {
             if (dtos.length) {
                 this.contactService.saveContactList(dtos)
                     .subscribe(resp => {
-                        // TODO: NEED TO FINISH THIS... not sure the type is coming back right after converting 
-                        // to use buoy client and apollo-link
-                        const contacts = resp.data.saveContactList;
+                        const contacts = resp.data.newContactList;
                         o.next(contacts);
                         o.complete();
                     });
@@ -415,6 +426,7 @@ export class ProcessComponent implements OnInit, OnDestroy {
                 };
                 joins.push(this.contactService.getGeocoding(req));
             });
+
             forkJoin(joins).subscribe(geocodingResponseList => {
                 geocodingResponseList.forEach((g, ii, aa) => {
                     dtos[ii].lat = g.results[0].geometry.location.lat;
@@ -423,7 +435,8 @@ export class ProcessComponent implements OnInit, OnDestroy {
                 });
 
                 this.contactService.saveDncContactList(dtos)
-                    .subscribe(dncs => {
+                    .subscribe(resp => {
+                        const dncs = resp.data.newDncContactList;
                         ob.next(dncs);
                         ob.complete();
                     });

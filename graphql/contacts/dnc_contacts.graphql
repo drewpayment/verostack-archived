@@ -39,6 +39,6 @@ input DncContactInput {
     zip: String,
     note: String,
     lat: Float,
-    long: Float
+    long: Float,
     geocode: String
 }

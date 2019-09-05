@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Scopes\ClientScope;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -34,8 +35,19 @@ class SaleStatus extends Model
     protected $primaryKey = 'sale_status_id';
 
 	protected $fillable = [
-		'sale_status_id', 'client_id', 'name', 'is_active'
-	];
+		'sale_status_id', 'client_id', 'name', 'is_active', 'created_at', 'updated_at'
+    ];
+    
+    /**
+     * Filters all queries of this model by the user's selected client to ensure that they 
+     * do not have cross-client interactions.
+     *
+     * @return void
+     */
+    protected static function boot() {
+        parent::boot();
+        static::addGlobalScope(new ClientScope);
+    }
 
 	public function getIsActiveAttribute($value)
 	{
@@ -81,5 +93,25 @@ class SaleStatus extends Model
 	public function client()
 	{
 		return $this->hasOne(Client::class, 'client_id');
-	}
+    }
+    
+    public function getSaleStatusIdAttribute()
+    {
+        return $this->attributes['sale_status_id'];
+    }
+
+    public function getClientIdAttribute()
+    {
+        return $this->attributes['client_id'];
+    }
+
+    public function getCreatedAtAttribute()
+    {
+        return $this->attributes['created_at'];
+    }
+
+    public function getUpdatedAtAttribute()
+    {
+        return $this->attributes['updated_at'];
+    }
 }

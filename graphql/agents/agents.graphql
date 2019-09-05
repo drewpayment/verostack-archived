@@ -8,6 +8,7 @@ type Agent {
     managerId: Int
     isManager: Boolean
     isActive: Boolean
+    salesPairings: [SalesPairing]! @hasMany
 }
 
 extend type Query {

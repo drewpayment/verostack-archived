@@ -55,8 +55,8 @@ export class Buoy {
     /**
      * Run a query.
      */
-    public query<T>(query, variables?: any, options?: QueryOptions): ApolloObservable<QueryResult<T>|QueryError> {
-        return new Query(this, operationId++, query, variables, options).execute<T>();
+    public query<T>(params: QueryParams): ApolloObservable<QueryResult<T>|QueryError> {
+        return new Query(this, operationId++, params.query, params.variables, params.options).execute<T>();
     }
 
     /**
@@ -89,7 +89,7 @@ export class Buoy {
     }
 
     public registerMiddleware(middleware: any, args: any[]): void {
-        this._middleware.push(new middleware(...args));
+        this._middleware.push(new middleware(args));
     }
 
     /**
@@ -104,4 +104,10 @@ export interface MutationParams {
     mutation: string,
     variables?: { [key: string]: any },
     options?: MutationOptions
+}
+
+export interface QueryParams {
+    query: string,
+    variables?: { [key: string]: any },
+    options?: QueryOptions
 }

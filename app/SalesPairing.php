@@ -104,6 +104,41 @@ class SalesPairing extends Model
 	public function scopeAgentId($query, $id)
 	{
 		return $query->where('agent_id', $id);
-	}
+    }
+    
+    public function getSalesPairingsIdAttribute()
+    {
+        return $this->attributes['sales_pairings_id'];
+    }
+
+    public function getAgentIdAttribute()
+    {
+        return $this->attributes['agent_id'];
+    }
+
+    public function getCampaignIdAttribute()
+    {
+        return $this->attributes['campaign_id'];
+    }
+
+    public function getSalesIdAttribute()
+    {
+        return $this->attributes['sales_id'];
+    }
+
+    public function getClientIdAttribute()
+    {
+        return $this->attributes['client_id'];
+    }
+
+    public function getCreatedAtAttribute()
+    {
+        return $this->attributes['created_at'];
+    }
+
+    public function getUpdatedAtAttribute()
+    {
+        return $this->attributes['updated_at'];
+    }
 
 }

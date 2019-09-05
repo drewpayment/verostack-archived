@@ -33,7 +33,7 @@ class NewContactList
             foreach($dtos as $d)
             {
                 if (!array_key_exists('client_id', $d)) {
-                    $d['client_id'] = $user->sessionClient;
+                    $d['client_id'] = $user->sessionUser->session_client;
                 }
                 $contacts[] = Contact::create($d);
             }

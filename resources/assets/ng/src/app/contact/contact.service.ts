@@ -17,6 +17,8 @@ import { Buoy } from '@app/buoy/buoy';
 import gql from 'graphql-tag';
 import { MutationOptions } from '@app/buoy/operations/mutation/mutation-options';
 import { NewContactListGQL } from '@app/apollo/new-contact-list-gql';
+import { MutationResult } from '@app/buoy/operations/mutation/mutation-result';
+import { MutationError } from '@app/buoy/operations/mutation/mutation-error';
 
 @Injectable({
     providedIn: 'root'
@@ -93,13 +95,10 @@ export class ContactService {
     }
 
     saveContactList(dtos: ContactRequest[]): ApolloObservable<QueryResult<Contact[]> | QueryError> {
-        return this.newContactList.mutate({
-            dtos: dtos
-        }) as any;
         return this.buoy.mutate({
             mutation: gql`
-                mutation {
-                    newContactList(input: ${dtos}) {
+                mutation newContactList($dtos: [ContactInput]!) {
+                    newContactList(input: $dtos) {
                         contactId clientId contactType businessName firstName lastName 
                         middleName prefix suffix ssn dob street street2 city state zip 
                         phoneCountry phone faxCountry fax email
@@ -112,61 +111,20 @@ export class ContactService {
         });
     }
 
-    // saveContactList(dtos: ContactRequest[]): Observable<Contact[]> {
-    //     const s = ['mutation { newContactList(input: [{'];
-    //     dtos.forEach((d, i, a) => {
-    //         for (const p in d) {
-    //             if (p == 'client_id' || p == 'contact_type' || p == 'ssn' || p == 'phone' || p == 'fax'
-    //                 || p == 'phone_country' || p == 'fax_country') {
-    //                     s.push(`${p}: ${d[p]}`);
-    //                 } else {
-    //                     s.push(`${p}: "${d[p]}"`);
-    //                 }
-
-    //             if (i < dtos.length - 1) {
-    //                 s.push(`}, {`);
-    //             } else {
-    //                 s.push(`}]) {`);
-    //                 s.push(`contactId clientId contactType businessName firstName lastName middleName prefix `);
-    //                 s.push(`suffix ssn dob street street2 city state zip phoneCountry phone faxCountry fax email `);
-    //             }
-    //         }
-    //     });
-    //     return this.http.post<Graphql<Contact[]>>(this.graphql, {
-    //             query: s.join(' ')
-    //         })
-    //         .pipe(
-    //             map(r => r.data.newContactList)
-    //         );
-    // }
-
-    saveDncContactList(dtos: DncContactRequest[]): Observable<DncContact[]> {
-        const sb = [`mutation { newDncContactList(input: [{`];
-        dtos.forEach((d, i, a) => {
-            for (const p in d) {
-                if (p == 'client_id' || p == 'lat' || p == 'long') {
-                    sb.push(`${p}: ${d[p]}`);
-                } else if (p == 'geocode') {
-                    sb.push(`${p}: ${JSON.stringify(d[p])}`);
-                } else {
-                    sb.push(`${p}: "${d[p]}"`);
+    saveDncContactList(dtos: DncContactRequest[]): ApolloObservable<QueryResult<DncContact[]> | QueryError> {
+        return this.buoy.mutate({
+            mutation: gql`
+                mutation newDncContactList($dtos: [DncContactInput]!) {
+                    newDncContactList(input: $dtos) {
+                        dncContactId clientId firstName lastName description address addressCont
+                        city state zip note lat long geocode
+                    }
                 }
-            }
-
-            if (i < (dtos.length - 1)) {
-                sb.push(`}, {`);
-            } else {
-                sb.push(`}]) {`);
-                sb.push(`dncContactId clientId firstName lastName description address `);
-                sb.push(`addressCont city state zip note lat long geocode }}`);
+            `,
+            variables: {
+                dtos: dtos
             }
         });
-        return this.http.post<Graphql<DncContact[]>>(this.graphql, {
-                query: sb.join(' ')
-            })
-            .pipe(
-                map(result => result.data.newDncContactList)
-            );
     }
 
     private handleError<T>(resp:LaravelErrorResponse, caught:Observable<T>):Observable<T> {

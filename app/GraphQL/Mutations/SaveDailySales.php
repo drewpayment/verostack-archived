@@ -3,6 +3,7 @@
 namespace App\GraphQL\Mutations;
 
 use App\DailySale;
+use App\SaleStatus;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use GraphQL\Type\Definition\ResolveInfo;
@@ -33,10 +34,12 @@ class SaveDailySales
             foreach($dtos as $d) 
             {
                 if (!array_key_exists('client_id', $d)) {
-                    $d['client_id'] = $user->sessionClient;
+                    $d['client_id'] = $user->sessionUser->session_client;
                 }
 
-                $d['has_geo'] = true;
+                if (!array_key_exists('has_geo', $d)) {
+                    $d['has_geo'] = true;
+                }
 
                 $sales[] = DailySale::create($d);
             }

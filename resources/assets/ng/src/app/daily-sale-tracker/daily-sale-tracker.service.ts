@@ -6,6 +6,11 @@ import { HttpClient } from '@angular/common/http';
 import { catchError, map } from 'rxjs/operators';
 import { Moment } from 'moment';
 import { environment } from '@env/environment';
+import { Observable as ApolloObservable } from 'apollo-link';
+import { Buoy } from '@app/buoy/buoy';
+import { QueryError } from '@app/buoy/operations/query/query-error';
+import { QueryResult } from '@app/buoy/operations/query/query-result';
+import gql from 'graphql-tag';
 
 @Injectable({
     providedIn: 'root'
@@ -15,7 +20,7 @@ export class DailySaleTrackerService {
     url: string;
     graphql = environment.graphql;
 
-    constructor(private http: HttpClient, private auth: AuthService) {
+    constructor(private http: HttpClient, private auth: AuthService, private buoy: Buoy) {
         this.url = `${this.auth.apiUrl}api`;
     }
 
@@ -72,34 +77,33 @@ export class DailySaleTrackerService {
         return this.http.post<DailySale>(url, saleWithContact);
     }
 
-    saveSalesList(dtos: DailySaleRequest[]): Observable<DailySale[]> {
-        const s = [`mutation { saveDailySales(input: [{`];
-        dtos.forEach((d, i, a) => {
-            for (const p in d) {
-                if (p == 'agent_id' || p == 'client_id' || p == 'campaign_id' || p == 'utility_id'
-                    || p == 'contact_id' || p == 'pod_account' || p == 'status' || p == 'paid_status'
-                    || p == 'pay_cycle_id' || p == 'has_geo') {
-                        s.push(`${p}: ${d[p]}`);
-                    } else {
-                        s.push(`${p}: "${d[p]}"`);
+    saveSalesList(dtos: DailySaleRequest[]): ApolloObservable<QueryResult<DailySale[]> | QueryError> {
+        return this.buoy.mutate({
+            mutation: gql`
+                mutation saveDailySales($dtos: [DailySaleInput]!) {
+                    saveDailySales(input: $dtos) {
+                        dailySaleId agentId clientId utilityId contactId podAccount status
+                        paidStatus payCycleId hasGeo saleDate lastTouchDate paidDate chargeDate
+                        repaidDate createdAt updatedAt
                     }
-
-                if (i < dtos.length - 1) {
-                    s.push(`}, {`);
-                } else {
-                    s.push(`}]) {`);
-                    s.push(`dailySaleId agentId clientId utilityId contactId podAccount status `);
-                    s.push(`paidStatus payCycleId hasGeo saleDate lastTouchDate paidDate`);
-                    s.push(`chargeDate repaidDate createdAt updatedAt`);
                 }
+            `,
+            variables: {
+                dtos: dtos
             }
         });
-        return this.http.post<Graphql<DailySale[]>>(this.graphql, {
-                query: s.join(' ')
-            })
-            .pipe(
-                map(r => r.data.saveDailySales)
-            );
+    }
+
+    getSaleStatuses(): ApolloObservable<QueryResult<SaleStatus[]> | QueryError> {
+        return this.buoy.query({
+            query: gql`
+                {
+                    saleStatuses {
+                        saleStatusId clientId name isActive createdAt updatedAt
+                    }
+                }
+            `,
+        });
     }
 
     private handleError(error: HttpErrorResponse) {

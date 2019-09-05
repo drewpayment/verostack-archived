@@ -1,0 +1,13 @@
+
+type SaleStatus {
+    saleStatusId: ID!
+    clientId: Int!
+    name: String!
+    isActive: Boolean
+    createdAt: DateTime
+    updatedAt: DateTime
+}
+
+extend type Query {
+    saleStatuses: [SaleStatus]! @all @middleware(checks: ["auth:api"])
+}

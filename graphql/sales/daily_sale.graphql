@@ -8,7 +8,7 @@ type DailySale {
     contactId: Int!
     podAccount: Int!
     status: Int!
-    paidStatus: Int
+    paidStatus: Int!
     payCycleId: Int
     hasGeo: Boolean!
     saleDate: DateTime!
@@ -47,13 +47,14 @@ extend type Mutation {
     ): DailySale @create @middleware(checks: ["auth:api"])
 
     # imports a list of daily_sales and assumes that they have geocoding information with them 
-    saveDailySales(input: [DailySaleInput!]!): [DailySaleInput]! @middleware(checks: ["auth:api"])
+    saveDailySales(input: [DailySaleInput]!): [DailySale]! @middleware(checks: ["auth:api"])
 }
 
 input DailySaleInput {
     daily_sale_id: Int,
     agent_id: Int,
     client_id: Int,
+    campaign_id: Int,
     utility_id: Int,
     contact_id: Int,
     pod_account: Int,

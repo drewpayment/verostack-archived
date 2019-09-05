@@ -48,7 +48,8 @@ export enum DailySaleMapType {
     contactState,
     contactZip,
     contactPhone,
-    contactEmail
+    contactEmail,
+    saleStatus
 }
 
 export const DailySaleFields = [
@@ -72,5 +73,6 @@ export const DailySaleFields = [
     'State',
     'Zip',
     'Phone',
-    'Email'
+    'Email',
+    'Sale Status'
 ];

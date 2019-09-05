@@ -2,7 +2,7 @@
 type Contact {
     contactId: ID!
     clientId: Int!
-    contactType: Int!
+    contactType: Int
     businessName: String
     firstName: String!
     lastName: String!
@@ -50,7 +50,7 @@ extend type Mutation {
         faxCountry: Int
         fax: Int
     ): Contact @create @middleware(checks: ["auth:api"])
-    newContactList(input: [ContactInput]!): [ContactInput]! @middleware(checks: ["auth:api"])
+    newContactList(input: [ContactInput]!): [Contact]! @middleware(checks: ["auth:api"])
 }
 
 input ContactInput {
