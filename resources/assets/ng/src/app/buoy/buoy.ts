@@ -89,7 +89,7 @@ export class Buoy {
     }
 
     public registerMiddleware(middleware: any, args: any[]): void {
-        this._middleware.push(new middleware(args));
+        this._middleware.push(new middleware(...args));
     }
 
     /**

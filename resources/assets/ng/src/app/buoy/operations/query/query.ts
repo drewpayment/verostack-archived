@@ -4,7 +4,7 @@ import { QueryResult } from './query-result';
 import { QueryError } from './query-error';
 import { Operation } from '../operation';
 import { QueryOptions } from './query-options';
-import { Observable } from 'apollo-link';
+import { Observable as ApolloObservable } from 'apollo-link';
 import { Observer } from 'apollo-client/util/Observable';
 
 export class Query extends Operation {
@@ -27,15 +27,14 @@ export class Query extends Operation {
     /**
      * Execute the query and return an observable.
      */
-    public execute<T = any>(): Observable<QueryResult<T>|QueryError> {
-        return new Observable((ob: Observer<QueryResult<T> | QueryError>) => {
+    public execute<T = any>(): ApolloObservable<QueryResult<T>|QueryError> {
+        return new ApolloObservable((ob: Observer<QueryResult<T> | QueryError>) => {
             this._buoy.apollo.query({
-                query: this.getQuery(),
-                variables: this.getVariables(),
+                query: this.operationQuery,
+                variables: this.operationVariables,
                 errorPolicy: 'all',
                 fetchResults: true
-            }).toPromise().then(
-                (response) => {
+            }).toPromise().then((response) => {
                 if (typeof response.errors === 'undefined') {
                     response.errors = [];
                 }

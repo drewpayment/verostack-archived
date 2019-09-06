@@ -328,6 +328,7 @@ export class ProcessComponent implements OnInit, OnDestroy {
                         const selectedAgent = agents.find(a => a.salesPairings.find(sp => sp.salesId == `${s.agentId}`) != null);
                         if (!selectedAgent) return;
                         
+                        // TODO: need to set a status for each sale, right now inserting null and failing...
                         sd.push({
                             campaign_id: s.campaignId,
                             utility_id: s.utilityId,

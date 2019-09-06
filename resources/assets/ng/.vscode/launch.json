@@ -5,6 +5,28 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Launch Chrome",
+            "webRoot": "${workspaceFolder}/public",
+            "trace": true
+        },
+        {
+            "type": "devtools-for-chrome",
+            "request": "attach",
+            "name": "Devtools-for-Chrome",
+            "url": "http://verostack/#/"
+        },
+        {
+            "type": "chrome",
+            "request": "attach",
+            "name": "Attach to Chrome",
+            "port": 9222,
+            // "webRoot": "${workspaceFolder}",
+            "sourceMaps": true,
+            "trace": true
+        },
+        {
             "name": "Listen for XDebug",
             "type": "php",
             "request": "launch",

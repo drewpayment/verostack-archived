@@ -67,6 +67,24 @@ export class Operation {
         return this._query;
     }
 
+    protected get operationQuery() {
+        return this._query;
+    }
+
+    protected get operationVariables() {
+        let variables = this._variables;
+
+        // Run VariableManipulator middleware
+        this._buoy._middleware.forEach((middleware: any) => {
+            if (isFunction(middleware.manipulateVariables)) {
+                // TODO Check response from middleware
+                variables = middleware.manipulateVariables(this._query, variables, this._options);
+            }
+        });
+
+        return variables;
+    }
+
     /**
      * Check if the query has a
      */

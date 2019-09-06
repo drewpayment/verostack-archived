@@ -10,7 +10,7 @@ export const buoyConfig = <BuoyConfig>{
 
 export class BuoyHeadersManipulator implements HeaderManipulator {
 
-    constructor(private localStorage: LocalStorage) {}
+    constructor(public localStorage: LocalStorage) {}
     
     manipulateHeaders(headers: HttpHeaders, query: any, variables: any): HttpHeaders {
         this.localStorage.getItem('token').subscribe((token: ILocalStorage<IToken>) => {

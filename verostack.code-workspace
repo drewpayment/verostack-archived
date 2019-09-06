@@ -1,7 +1,8 @@
 {
 	"folders": [
 		{
-			"path": "resources/assets/ng"
+            "name": "ng",
+            "path": "resources/assets/ng"
 		},
 		{
 			"path": "."
