@@ -14072,30 +14072,28 @@ var _c6 = ["type", "text", "matInput", "", "formControlName", "shortDesc", "plac
 var _c7 = [4, "ngIf"];
 var _c8 = [1, "wp-100"];
 var _c9 = ["matNativeControl", "", "matAutosize", "true", "formControlName", "fullDesc", "placeholder", "Description"];
-var _c10 = [2, "height", "100px !important"];
-var _c11 = [1, "wp-100", 3, "hideRequiredMarker"];
-var _c12 = ["formControlName", "campaignId", "placeholder", "Campaign", "required", ""];
-var _c13 = [3, "value", 4, "ngFor", "ngForOf"];
-var _c14 = [1, "font-weight-bold"];
-var _c15 = [1, "text-black-50", 3, "checked", "change"];
-var _c16 = [1, "text-black-50"];
-var _c17 = [1, "text-black-50", "small"];
-var _c18 = [3, "routerLink", "click"];
-var _c19 = [1, "pb-4"];
-var _c20 = ["formArrayName", "map", 2, "overflow", "scroll", "max-height", "25vw"];
-var _c21 = [4, "ngFor", "ngForOf"];
-var _c22 = [1, "mt-2"];
-var _c23 = ["type", "button", "mat-button", "", "color", "primary", 3, "click"];
-var _c24 = [1, "d-flex", "justify-content-end"];
-var _c25 = ["type", "button", "mat-button", "", 3, "click"];
+var _c10 = [1, "wp-100", 3, "hideRequiredMarker"];
+var _c11 = ["formControlName", "campaignId", "placeholder", "Campaign", "required", ""];
+var _c12 = [3, "value", 4, "ngFor", "ngForOf"];
+var _c13 = [1, "text-black-50", 3, "checked", "change"];
+var _c14 = [1, "text-black-50"];
+var _c15 = [1, "text-black-50", "small"];
+var _c16 = [3, "routerLink", "click"];
+var _c17 = [1, "pb-4"];
+var _c18 = ["formArrayName", "map", 2, "overflow", "scroll", "max-height", "25vw"];
+var _c19 = [4, "ngFor", "ngForOf"];
+var _c20 = [1, "mt-2"];
+var _c21 = ["type", "button", "mat-button", "", "color", "primary", 3, "click"];
+var _c22 = [1, "d-flex", "justify-content-end"];
+var _c23 = ["type", "button", "mat-button", "", 3, "click"];
 function EditImportModelComponent_mat_error_11_Template(rf, ctx) { if (rf & 1) {
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "mat-error");
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](1, " Please enter a model name. ");
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
 } }
-var _c26 = [3, "value"];
+var _c24 = [3, "value"];
 function EditImportModelComponent_mat_option_19_Template(rf, ctx) { if (rf & 1) {
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "mat-option", _c26);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "mat-option", _c24);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](1);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
 } if (rf & 2) {
@@ -14109,28 +14107,28 @@ function EditImportModelComponent_mat_error_21_Template(rf, ctx) { if (rf & 1) {
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](1, " Please select a campaign. ");
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
 } }
-var _c27 = [3, "formGroupName"];
-var _c28 = [1, "row"];
-var _c29 = [1, "col-md-4"];
-var _c30 = [1, "pr-1", "wp-100", 3, "hideRequiredMarker"];
-var _c31 = ["type", "text", "matInput", "", "formControlName", "key", "placeholder", "Description", "required", ""];
-var _c32 = ["keyInputs", ""];
-var _c33 = [1, "px-1", "wp-100", 3, "hideRequiredMarker"];
-var _c34 = ["type", "text", "matInput", "", "formControlName", "value", "placeholder", "Column Header", "required", ""];
-var _c35 = [1, "pl-1", "wp-100"];
-var _c36 = ["formControlName", "fieldType", "placeholder", "Field Type", 3, "selectionChange", "keydown"];
-function EditImportModelComponent_div_47_mat_error_7_Template(rf, ctx) { if (rf & 1) {
+var _c25 = [3, "formGroupName"];
+var _c26 = [1, "row"];
+var _c27 = [1, "col-md-4"];
+var _c28 = [1, "pr-1", "wp-100", 3, "hideRequiredMarker"];
+var _c29 = ["type", "text", "matInput", "", "formControlName", "key", "placeholder", "Description", "required", ""];
+var _c30 = ["keyInputs", ""];
+var _c31 = [1, "px-1", "wp-100", 3, "hideRequiredMarker"];
+var _c32 = ["type", "text", "matInput", "", "formControlName", "value", "placeholder", "Column Header", "required", ""];
+var _c33 = [1, "pl-1", "wp-100"];
+var _c34 = ["formControlName", "fieldType", "placeholder", "Field Type", 3, "selectionChange", "keydown"];
+function EditImportModelComponent_div_42_mat_error_7_Template(rf, ctx) { if (rf & 1) {
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "mat-error");
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](1, " Description is required. ");
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
 } }
-function EditImportModelComponent_div_47_mat_error_11_Template(rf, ctx) { if (rf & 1) {
+function EditImportModelComponent_div_42_mat_error_11_Template(rf, ctx) { if (rf & 1) {
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "mat-error");
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](1, " Column Header is required. ");
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
 } }
-function EditImportModelComponent_div_47_mat_option_15_Template(rf, ctx) { if (rf & 1) {
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "mat-option", _c26);
+function EditImportModelComponent_div_42_mat_option_15_Template(rf, ctx) { if (rf & 1) {
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "mat-option", _c24);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](1);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
 } if (rf & 2) {
@@ -14140,31 +14138,31 @@ function EditImportModelComponent_div_47_mat_option_15_Template(rf, ctx) { if (r
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵselect"](1);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate1"](" ", ctx_r934.fieldDescriptions[j_r936], " ");
 } }
-var _c37 = function (a0) { return [a0, "key"]; };
-var _c38 = function (a0) { return [a0, "value"]; };
-function EditImportModelComponent_div_47_Template(rf, ctx) { if (rf & 1) {
+var _c35 = function (a0) { return [a0, "key"]; };
+var _c36 = function (a0) { return [a0, "value"]; };
+function EditImportModelComponent_div_42_Template(rf, ctx) { if (rf & 1) {
     var _r938 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵgetCurrentView"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "div");
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementContainerStart"](1, _c27);
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](2, "div", _c28);
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](3, "div", _c29);
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](4, "mat-form-field", _c30);
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](5, "input", _c31, _c32);
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](7, EditImportModelComponent_div_47_mat_error_7_Template, 2, 0, "mat-error", _c7);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementContainerStart"](1, _c25);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](2, "div", _c26);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](3, "div", _c27);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](4, "mat-form-field", _c28);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](5, "input", _c29, _c30);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](7, EditImportModelComponent_div_42_mat_error_7_Template, 2, 0, "mat-error", _c7);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](8, "div", _c29);
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](9, "mat-form-field", _c33);
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](10, "input", _c34);
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](11, EditImportModelComponent_div_47_mat_error_11_Template, 2, 0, "mat-error", _c7);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](8, "div", _c27);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](9, "mat-form-field", _c31);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](10, "input", _c32);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](11, EditImportModelComponent_div_42_mat_error_11_Template, 2, 0, "mat-error", _c7);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](12, "div", _c29);
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](13, "mat-form-field", _c35);
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](14, "mat-select", _c36);
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("selectionChange", function EditImportModelComponent_div_47_Template_mat_select_selectionChange_14_listener($event) { _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵrestoreView"](_r938); var i_r930 = ctx.index; var ctx_r937 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"](); return ctx_r937.fieldTypeChanged($event, ctx_r937.map.get([i_r930, "fieldType"])); });
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("keydown", function EditImportModelComponent_div_47_Template_mat_select_keydown_14_listener($event) { _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵrestoreView"](_r938); var i_r930 = ctx.index; var ctx_r939 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"](); return ctx_r939.tabAdd($event, i_r930); });
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](15, EditImportModelComponent_div_47_mat_option_15_Template, 2, 2, "mat-option", _c13);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](12, "div", _c27);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](13, "mat-form-field", _c33);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](14, "mat-select", _c34);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("selectionChange", function EditImportModelComponent_div_42_Template_mat_select_selectionChange_14_listener($event) { _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵrestoreView"](_r938); var i_r930 = ctx.index; var ctx_r937 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"](); return ctx_r937.fieldTypeChanged($event, ctx_r937.map.get([i_r930, "fieldType"])); });
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("keydown", function EditImportModelComponent_div_42_Template_mat_select_keydown_14_listener($event) { _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵrestoreView"](_r938); var i_r930 = ctx.index; var ctx_r939 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"](); return ctx_r939.tabAdd($event, i_r930); });
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](15, EditImportModelComponent_div_42_mat_option_15_Template, 2, 2, "mat-option", _c12);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
@@ -14179,15 +14177,15 @@ function EditImportModelComponent_div_47_Template(rf, ctx) { if (rf & 1) {
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵselect"](4);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("hideRequiredMarker", true);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵselect"](7);
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngIf", ctx_r926.map.get(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpureFunction1"](6, _c37, i_r930)).hasError);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngIf", ctx_r926.map.get(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpureFunction1"](6, _c35, i_r930)).hasError);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵselect"](9);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("hideRequiredMarker", true);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵselect"](11);
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngIf", ctx_r926.map.get(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpureFunction1"](8, _c38, i_r930)).hasError);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngIf", ctx_r926.map.get(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpureFunction1"](8, _c36, i_r930)).hasError);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵselect"](15);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngForOf", ctx_r926.fieldDescriptions);
 } }
-var _c39 = ["..", "client-information"];
+var _c37 = ["..", "client-information"];
 var EditImportModelComponent = /** @class */ (function () {
     function EditImportModelComponent(fb, ref, data, session, service, bs) {
         var _this = this;
@@ -14381,7 +14379,7 @@ var EditImportModelComponent = /** @class */ (function () {
         } if (rf & 2) {
             var _t;
             _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵqueryRefresh"]((_t = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵloadViewQuery"]())) && (ctx.keys = _t);
-        } }, consts: 62, vars: 12, template: function EditImportModelComponent_Template(rf, ctx) { if (rf & 1) {
+        } }, consts: 57, vars: 12, template: function EditImportModelComponent_Template(rf, ctx) { if (rf & 1) {
             _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "div", _c1);
             _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](1, "h4");
             _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](2, "Import Model");
@@ -14408,81 +14406,74 @@ var EditImportModelComponent = /** @class */ (function () {
             _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
             _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
             _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](16, "div", _c10);
-            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](17, "mat-form-field", _c11);
-            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](18, "mat-select", _c12);
-            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](19, EditImportModelComponent_mat_option_19_Template, 2, 2, "mat-option", _c13);
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](16, "div");
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](17, "mat-form-field", _c10);
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](18, "mat-select", _c11);
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](19, EditImportModelComponent_mat_option_19_Template, 2, 2, "mat-option", _c12);
             _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpipe"](20, "async");
             _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
             _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](21, EditImportModelComponent_mat_error_21_Template, 2, 0, "mat-error", _c7);
-            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](22, "mat-hint");
-            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](23, " Select the Campaign that this import will be associated with. It is ");
-            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](24, "span", _c14);
-            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](25, "very important");
-            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](26, " that you make sure your utilities associated with the campaign reflect all utilities in the report that you're importing. ");
             _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
             _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](27, "div");
-            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](28, "mat-checkbox", _c15);
-            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("change", function EditImportModelComponent_Template_mat_checkbox_change_28_listener($event) { return ctx.setMatchByAgentCode($event); });
-            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](29, "Match agents on report by Sales Code");
-            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](30, "div");
-            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](31, "mat-checkbox", _c15);
-            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("change", function EditImportModelComponent_Template_mat_checkbox_change_31_listener($event) { return ctx.setSplitCustomerName($event); });
-            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](32, "Report uses one field for Customer Name");
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](22, "div");
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](23, "mat-checkbox", _c13);
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("change", function EditImportModelComponent_Template_mat_checkbox_change_23_listener($event) { return ctx.setMatchByAgentCode($event); });
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](24, "Match agents on report by Sales Code");
             _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
             _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](33, "div");
-            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](34, "p", _c16);
-            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](35, " Please add all columns from your report. The column header needs to match exactly to the column headers on your XSL file. ");
-            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](36, "p", _c17);
-            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](37, " Column Header - must match exactly with the report column header. ");
-            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](38, "br");
-            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](39, " Description - used for your reference when working with the Import Model. ");
-            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](40, "p", _c17);
-            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](41, " Please make sure that your sales statuses on your import match your ");
-            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](42, "a", _c18);
-            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("click", function EditImportModelComponent_Template_a_click_42_listener($event) { return ctx.onNoClick(); });
-            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](43, "Sale Status Configuration");
-            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](44, " statuses. If they do not, we will be unable to properly set the \"Paid Status\" for your sales and they will default to \"Unpaid\". ");
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](25, "div");
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](26, "mat-checkbox", _c13);
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("change", function EditImportModelComponent_Template_mat_checkbox_change_26_listener($event) { return ctx.setSplitCustomerName($event); });
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](27, "Report uses one field for Customer Name");
             _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
             _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](45, "mat-divider", _c19);
-            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](46, "div", _c20);
-            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](47, EditImportModelComponent_div_47_Template, 16, 10, "div", _c21);
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](28, "div");
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](29, "p", _c14);
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](30, " Please add all columns from your report. The column header needs to match exactly to the column headers on your XSL file. ");
             _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](48, "div", _c22);
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](31, "p", _c15);
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](32, " Column Header - must match exactly with the report column header. ");
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](33, "br");
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](34, " Description - used for your reference when working with the Import Model. ");
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](35, "p", _c15);
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](36, " Please make sure that your sales statuses on your import match your ");
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](37, "a", _c16);
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("click", function EditImportModelComponent_Template_a_click_37_listener($event) { return ctx.onNoClick(); });
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](38, "Sale Status Configuration");
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](39, " statuses. If they do not, we will be unable to properly set the \"Paid Status\" for your sales and they will default to \"Unpaid\". ");
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](40, "mat-divider", _c17);
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](41, "div", _c18);
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](42, EditImportModelComponent_div_42_Template, 16, 10, "div", _c19);
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](43, "div", _c20);
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](44, "button", _c21);
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("click", function EditImportModelComponent_Template_button_click_44_listener($event) { return ctx.addMapRow(); });
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](45, "mat-icon");
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](46, "add");
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](47, " Add Column ");
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](48, "mat-dialog-actions", _c22);
             _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](49, "button", _c23);
-            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("click", function EditImportModelComponent_Template_button_click_49_listener($event) { return ctx.addMapRow(); });
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("click", function EditImportModelComponent_Template_button_click_49_listener($event) { return ctx.onNoClick(); });
             _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](50, "mat-icon");
-            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](51, "add");
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](51, "clear");
             _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](52, " Add Column ");
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](52, " Cancel ");
             _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](53, "button", _c21);
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("click", function EditImportModelComponent_Template_button_click_53_listener($event) { return ctx.saveImportModel(); });
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](54, "mat-icon");
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](55, "save");
             _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](53, "mat-dialog-actions", _c24);
-            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](54, "button", _c25);
-            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("click", function EditImportModelComponent_Template_button_click_54_listener($event) { return ctx.onNoClick(); });
-            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](55, "mat-icon");
-            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](56, "clear");
-            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](57, " Cancel ");
-            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](58, "button", _c23);
-            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("click", function EditImportModelComponent_Template_button_click_58_listener($event) { return ctx.saveImportModel(); });
-            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](59, "mat-icon");
-            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](60, "save");
-            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](61, " Save ");
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](56, " Save ");
             _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
             _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
         } if (rf & 2) {
@@ -14498,15 +14489,15 @@ var EditImportModelComponent = /** @class */ (function () {
             _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngForOf", _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpipeBind1"](20, 10, ctx.campaigns));
             _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵselect"](21);
             _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngIf", ctx.form.get("campaignId").hasError);
-            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵselect"](28);
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵselect"](23);
             _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("checked", ctx.matchByAgentCode);
-            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵselect"](31);
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵselect"](26);
             _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("checked", ctx.splitCustomerName);
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵselect"](37);
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("routerLink", _c37);
             _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵselect"](42);
-            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("routerLink", _c39);
-            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵselect"](47);
             _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngForOf", ctx.map.controls);
-        } }, directives: [_angular_material_dialog__WEBPACK_IMPORTED_MODULE_4__["MatDialogTitle"], _angular_material_button__WEBPACK_IMPORTED_MODULE_10__["MatButton"], _angular_material_icon__WEBPACK_IMPORTED_MODULE_11__["MatIcon"], _angular_material_dialog__WEBPACK_IMPORTED_MODULE_4__["MatDialogContent"], _angular_forms__WEBPACK_IMPORTED_MODULE_2__["ɵangular_packages_forms_forms_z"], _angular_forms__WEBPACK_IMPORTED_MODULE_2__["NgControlStatusGroup"], _angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormGroupDirective"], _angular_material_form_field__WEBPACK_IMPORTED_MODULE_12__["MatFormField"], _angular_material_input__WEBPACK_IMPORTED_MODULE_13__["MatInput"], _angular_forms__WEBPACK_IMPORTED_MODULE_2__["DefaultValueAccessor"], _angular_forms__WEBPACK_IMPORTED_MODULE_2__["NgControlStatus"], _angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormControlName"], _angular_forms__WEBPACK_IMPORTED_MODULE_2__["RequiredValidator"], _angular_common__WEBPACK_IMPORTED_MODULE_14__["NgIf"], _angular_material_select__WEBPACK_IMPORTED_MODULE_15__["MatSelect"], _angular_common__WEBPACK_IMPORTED_MODULE_14__["NgForOf"], _angular_material_form_field__WEBPACK_IMPORTED_MODULE_12__["MatHint"], _angular_material_checkbox__WEBPACK_IMPORTED_MODULE_16__["MatCheckbox"], _angular_router__WEBPACK_IMPORTED_MODULE_17__["RouterLinkWithHref"], _angular_material_divider__WEBPACK_IMPORTED_MODULE_18__["MatDivider"], _angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormArrayName"], _angular_material_dialog__WEBPACK_IMPORTED_MODULE_4__["MatDialogActions"], _angular_material_form_field__WEBPACK_IMPORTED_MODULE_12__["MatError"], _angular_material_core__WEBPACK_IMPORTED_MODULE_19__["MatOption"], _angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormGroupName"]], pipes: [_angular_common__WEBPACK_IMPORTED_MODULE_14__["AsyncPipe"]], styles: ["\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzcmMvYXBwL2ltcG9ydHMvZGlhbG9ncy9lZGl0LWltcG9ydC1tb2RlbC9lZGl0LWltcG9ydC1tb2RlbC5jb21wb25lbnQuc2NzcyJ9 */"] });
+        } }, directives: [_angular_material_dialog__WEBPACK_IMPORTED_MODULE_4__["MatDialogTitle"], _angular_material_button__WEBPACK_IMPORTED_MODULE_10__["MatButton"], _angular_material_icon__WEBPACK_IMPORTED_MODULE_11__["MatIcon"], _angular_material_dialog__WEBPACK_IMPORTED_MODULE_4__["MatDialogContent"], _angular_forms__WEBPACK_IMPORTED_MODULE_2__["ɵangular_packages_forms_forms_z"], _angular_forms__WEBPACK_IMPORTED_MODULE_2__["NgControlStatusGroup"], _angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormGroupDirective"], _angular_material_form_field__WEBPACK_IMPORTED_MODULE_12__["MatFormField"], _angular_material_input__WEBPACK_IMPORTED_MODULE_13__["MatInput"], _angular_forms__WEBPACK_IMPORTED_MODULE_2__["DefaultValueAccessor"], _angular_forms__WEBPACK_IMPORTED_MODULE_2__["NgControlStatus"], _angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormControlName"], _angular_forms__WEBPACK_IMPORTED_MODULE_2__["RequiredValidator"], _angular_common__WEBPACK_IMPORTED_MODULE_14__["NgIf"], _angular_material_select__WEBPACK_IMPORTED_MODULE_15__["MatSelect"], _angular_common__WEBPACK_IMPORTED_MODULE_14__["NgForOf"], _angular_material_checkbox__WEBPACK_IMPORTED_MODULE_16__["MatCheckbox"], _angular_router__WEBPACK_IMPORTED_MODULE_17__["RouterLinkWithHref"], _angular_material_divider__WEBPACK_IMPORTED_MODULE_18__["MatDivider"], _angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormArrayName"], _angular_material_dialog__WEBPACK_IMPORTED_MODULE_4__["MatDialogActions"], _angular_material_form_field__WEBPACK_IMPORTED_MODULE_12__["MatError"], _angular_material_core__WEBPACK_IMPORTED_MODULE_19__["MatOption"], _angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormGroupName"]], pipes: [_angular_common__WEBPACK_IMPORTED_MODULE_14__["AsyncPipe"]], styles: ["\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzcmMvYXBwL2ltcG9ydHMvZGlhbG9ncy9lZGl0LWltcG9ydC1tb2RlbC9lZGl0LWltcG9ydC1tb2RlbC5jb21wb25lbnQuc2NzcyJ9 */"] });
     return EditImportModelComponent;
 }());
 
@@ -15345,16 +15336,16 @@ var _c18 = ["noPreview", ""];
 var _c19 = ["mat-stroked-button", "", "color", "primary", "type", "file", "adFileSelect", "", 1, "d-none", 3, "uploader", "onFileSelected"];
 var _c20 = ["fuRef", ""];
 function ProcessComponent_ng_container_27_Template(rf, ctx) { if (rf & 1) {
-    var _r1037 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵgetCurrentView"]();
+    var _r1232 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵgetCurrentView"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementContainerStart"](0);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](1, "input", _c19, _c20);
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("onFileSelected", function ProcessComponent_ng_container_27_Template_input_onFileSelected_1_listener($event) { _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵrestoreView"](_r1037); var ctx_r1036 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"](); return ctx_r1036.fileAddedHandler($event); });
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("onFileSelected", function ProcessComponent_ng_container_27_Template_input_onFileSelected_1_listener($event) { _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵrestoreView"](_r1232); var ctx_r1231 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"](); return ctx_r1231.fileAddedHandler($event); });
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementContainerEnd"]();
 } if (rf & 2) {
-    var ctx_r1031 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
+    var ctx_r1226 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵselect"](1);
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("uploader", ctx_r1031.fu);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("uploader", ctx_r1226.fu);
 } }
 var _c21 = [1, "import-spreadsheet"];
 var _c22 = ["spreadsheet", ""];
@@ -15373,12 +15364,12 @@ var _c25 = [1, "col-md-4"];
 var _c26 = ["src", "dist/assets/images/add_file.svg", 1, "img-fluid", "clickable", "m-5", 3, "click"];
 var _c27 = [1, "text-muted"];
 function ProcessComponent_ng_template_35_Template(rf, ctx) { if (rf & 1) {
-    var _r1040 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵgetCurrentView"]();
+    var _r1235 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵgetCurrentView"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "div", _c23);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](1, "div", _c24);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](2, "div", _c25);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](3, "img", _c26);
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("click", function ProcessComponent_ng_template_35_Template_img_click_3_listener($event) { _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵrestoreView"](_r1040); var ctx_r1039 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"](); return ctx_r1039.uploadFile(); });
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("click", function ProcessComponent_ng_template_35_Template_img_click_3_listener($event) { _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵrestoreView"](_r1235); var ctx_r1234 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"](); return ctx_r1234.uploadFile(); });
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](4, "p", _c27);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](5, " Import preview will appear here. ");
@@ -15640,7 +15631,6 @@ var ProcessComponent = /** @class */ (function () {
                         var selectedAgent = agents.find(function (a) { return a.salesPairings.find(function (sp) { return sp.salesId == "" + s.agentId; }) != null; });
                         if (!selectedAgent)
                             return;
-                        // TODO: need to set a status for each sale, right now inserting null and failing...
                         sd.push({
                             campaign_id: s.campaignId,
                             utility_id: s.utilityId,
@@ -15649,8 +15639,8 @@ var ProcessComponent = /** @class */ (function () {
                             last_touch_date: moment__WEBPACK_IMPORTED_MODULE_4__().format('YYYY-MM-DD HH:mm:ss'),
                             contact_id: contacts[i].contactId,
                             pod_account: s.podAccount,
-                            status: s.status,
-                            paid_status: s.paidStatus,
+                            status: _this.guessSaleStatus(statuses, "" + s.saleStatus),
+                            paid_status: s.paidStatus || _app_models__WEBPACK_IMPORTED_MODULE_3__["PaidStatusType"].unpaid,
                             has_geo: true
                         });
                     });
@@ -15672,6 +15662,18 @@ var ProcessComponent = /** @class */ (function () {
                 ob.complete();
             });
         });
+    };
+    ProcessComponent.prototype.guessSaleStatus = function (statuses, input) {
+        statuses.forEach(function (s, i, a) {
+            if (input.trim().toLowerCase().includes(s.name.toLowerCase())) {
+                return s.saleStatusId;
+            }
+        });
+        var acceptedStatus = statuses.find(function (s) { return s.name.toLowerCase().includes('accept'); });
+        if (acceptedStatus)
+            return acceptedStatus.saleStatusId;
+        // unable to find any similar types, so we are going to return -1.
+        return -1;
     };
     ProcessComponent.prototype.getSaleStatuses = function () {
         var _this = this;
@@ -15917,7 +15919,7 @@ var ProcessComponent = /** @class */ (function () {
             _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
             _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
         } if (rf & 2) {
-            var _r1033 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵreference"](36);
+            var _r1228 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵreference"](36);
             _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵselect"](27);
             _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngIf", ctx.fu != null);
             _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵselect"](31);
@@ -15927,7 +15929,7 @@ var ProcessComponent = /** @class */ (function () {
             _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵclassProp"]("justify-content-center", !ctx.hasFile);
             _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵstylingApply"]();
             _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵselect"](34);
-            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngIf", ctx.hasFile)("ngIfElse", _r1033);
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngIf", ctx.hasFile)("ngIfElse", _r1228);
         } }, directives: [_angular_material_card__WEBPACK_IMPORTED_MODULE_11__["MatCard"], _angular_material_card__WEBPACK_IMPORTED_MODULE_11__["MatCardTitle"], _angular_material_card__WEBPACK_IMPORTED_MODULE_11__["MatCardContent"], _import_model_selection_import_model_selection_component__WEBPACK_IMPORTED_MODULE_12__["ImportModelSelectionComponent"], _angular_common__WEBPACK_IMPORTED_MODULE_13__["NgIf"], _angular_material_button__WEBPACK_IMPORTED_MODULE_14__["MatButton"], _angular_material_expansion__WEBPACK_IMPORTED_MODULE_15__["MatAccordion"], _angular_material_expansion__WEBPACK_IMPORTED_MODULE_15__["MatExpansionPanel"], _angular_material_expansion__WEBPACK_IMPORTED_MODULE_15__["MatExpansionPanelHeader"], _angular_material_expansion__WEBPACK_IMPORTED_MODULE_15__["MatExpansionPanelTitle"], _past_imports_past_imports_component__WEBPACK_IMPORTED_MODULE_16__["PastImportsComponent"], ad_file_upload__WEBPACK_IMPORTED_MODULE_1__["FileSelectDirective"]], styles: [".import-spreadsheet[_ngcontent-%COMP%] {\n  height: 40vh;\n  margin: 1.5rem 0.5rem 1.5rem 0.5rem; }\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy9kcmV3cGF5bWVudC9kZXYvYWN0aXZlL3Zlcm9zdGFjay9yZXNvdXJjZXMvYXNzZXRzL25nL3NyYy9hcHAvaW1wb3J0cy9wcm9jZXNzL3Byb2Nlc3MuY29tcG9uZW50LnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQ0E7RUFDSSxZQUFZO0VBQ1osbUNBQW1DLEVBQUEiLCJmaWxlIjoic3JjL2FwcC9pbXBvcnRzL3Byb2Nlc3MvcHJvY2Vzcy5jb21wb25lbnQuc2NzcyIsInNvdXJjZXNDb250ZW50IjpbIlxuLmltcG9ydC1zcHJlYWRzaGVldCB7XG4gICAgaGVpZ2h0OiA0MHZoO1xuICAgIG1hcmdpbjogMS41cmVtIDAuNXJlbSAxLjVyZW0gMC41cmVtO1xufSJdfQ== */"] });
     return ProcessComponent;
 }());

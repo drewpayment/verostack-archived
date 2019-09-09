@@ -3,7 +3,7 @@ import { FileUploader } from 'ad-file-upload';
 import { Spreadsheet } from 'dhx-spreadsheet';
 import { ISheetData, IStyle, IDataCell, DailySale, ImportModel, 
     ImportModelMap, DailySaleMapType, User, GeocodingRequest, GeocodingResponse, DncContact, 
-    DncContactRequest, ContactType, DailySaleRequest, IAgent, SaleStatus } from '@app/models';
+    DncContactRequest, ContactType, DailySaleRequest, IAgent, SaleStatus, PaidStatusType } from '@app/models';
 import { Moment } from 'moment';
 import * as moment from 'moment';
 import { SessionService } from '@app/session.service';
@@ -327,8 +327,7 @@ export class ProcessComponent implements OnInit, OnDestroy {
 
                         const selectedAgent = agents.find(a => a.salesPairings.find(sp => sp.salesId == `${s.agentId}`) != null);
                         if (!selectedAgent) return;
-                        
-                        // TODO: need to set a status for each sale, right now inserting null and failing...
+
                         sd.push({
                             campaign_id: s.campaignId,
                             utility_id: s.utilityId,
@@ -337,8 +336,8 @@ export class ProcessComponent implements OnInit, OnDestroy {
                             last_touch_date: moment().format('YYYY-MM-DD HH:mm:ss'),
                             contact_id: contacts[i].contactId,
                             pod_account: s.podAccount,
-                            status: s.status,
-                            paid_status: s.paidStatus,
+                            status: this.guessSaleStatus(statuses, `${s.saleStatus}`),
+                            paid_status: s.paidStatus || PaidStatusType.unpaid,
                             has_geo: true
                         });
                     });
@@ -361,6 +360,20 @@ export class ProcessComponent implements OnInit, OnDestroy {
                 ob.complete();
             });
         });
+    }
+
+    private guessSaleStatus(statuses: SaleStatus[], input: string): number {
+        statuses.forEach((s, i, a) => {
+            if (input.trim().toLowerCase().includes(s.name.toLowerCase())) {
+                return s.saleStatusId;
+            }
+        });
+
+        const acceptedStatus = statuses.find(s => s.name.toLowerCase().includes('accept'));
+        if (acceptedStatus) return acceptedStatus.saleStatusId;
+
+        // unable to find any similar types, so we are going to return -1.
+        return -1;
     }
 
     private getSaleStatuses(): Observable<SaleStatus[]> {

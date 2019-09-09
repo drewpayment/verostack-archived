@@ -127,12 +127,12 @@ class DailySale extends Model
 	 * @param int $value
 	 * @return void
 	 */
-	public function getHasGeo($value)
+	public function getHasGeoAttribute($value)
     {
         return $value == 1;
     }
 
-    public function setHasGeo($value)
+    public function setHasGeoAttribute($value)
     {
         $this->attributes['has_geo'] = $value == true ? 1 : 0;
     }
@@ -367,11 +367,6 @@ class DailySale extends Model
     public function getPayCycleIdAttribute()
     {
         return $this->attributes['pay_cycle_id'];
-    }
-
-    public function getHasGeoAttribute()
-    {
-        return $this->attributes['has_geo'];
     }
 
     public function getSaleDateAttribute()

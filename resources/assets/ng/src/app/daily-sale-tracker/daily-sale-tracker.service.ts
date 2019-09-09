@@ -83,8 +83,7 @@ export class DailySaleTrackerService {
                 mutation saveDailySales($dtos: [DailySaleInput]!) {
                     saveDailySales(input: $dtos) {
                         dailySaleId agentId clientId utilityId contactId podAccount status
-                        paidStatus payCycleId hasGeo saleDate lastTouchDate paidDate chargeDate
-                        repaidDate createdAt updatedAt
+                        paidStatus hasGeo saleDate lastTouchDate
                     }
                 }
             `,
