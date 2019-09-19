@@ -76,3 +76,28 @@ export const DailySaleFields = [
     'Email',
     'Sale Status'
 ];
+
+export interface SpreadsheetSerialized {
+    columns: SpreadsheetSerializeColumns;
+    data: SpreadsheetSerializeData[];
+    format: SpreadsheetSerializeFormat;
+    styles: SpreadsheetSerializeStyle[];
+}
+
+export interface SpreadsheetSerializeColumns {
+    [key: string]: any;
+}
+
+export interface SpreadsheetSerializeData {
+    cell: string;
+    css: string;
+    value: string;
+}
+
+export interface SpreadsheetSerializeFormat {
+    [key: string]: any;
+}
+
+export interface SpreadsheetSerializeStyle {
+    [key: string]: any;
+}

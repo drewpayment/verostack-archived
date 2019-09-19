@@ -3,7 +3,7 @@ import { FileUploader } from 'ad-file-upload';
 import { Spreadsheet } from 'dhx-spreadsheet';
 import { ISheetData, IStyle, IDataCell, DailySale, ImportModel, 
     ImportModelMap, DailySaleMapType, User, GeocodingRequest, GeocodingResponse, DncContact, 
-    DncContactRequest, ContactType, DailySaleRequest, IAgent, SaleStatus, PaidStatusType } from '@app/models';
+    DncContactRequest, ContactType, DailySaleRequest, IAgent, SaleStatus, PaidStatusType, SpreadsheetSerialized, ReportImport } from '@app/models';
 import { Moment } from 'moment';
 import * as moment from 'moment';
 import { SessionService } from '@app/session.service';
@@ -37,6 +37,8 @@ export class ProcessComponent implements OnInit, OnDestroy {
     workbooksToReview: ISheetData[] = [];
     styles: IStyle[];
     selectedImportModel: ImportModel;
+    reportImportName: string;
+    reportImports: ReportImport[];
     user: User;
     _agents: Observable<IAgent[]>;
 
@@ -71,6 +73,7 @@ export class ProcessComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.session.getUserItem().subscribe(u => this.user = u);
         this.agentsService.fetchGraphqlAgents();
+        this.saleService.getReportImports().subscribe(r => this.reportImports = r.data.reportImports);
     }
 
     ngOnDestroy() {
@@ -79,7 +82,9 @@ export class ProcessComponent implements OnInit, OnDestroy {
 
     fileAddedHandler(item: FileList) {
         const file = item.item(0);
+        this.reportImportName = file.name.split('.').shift();
         const ext = file.name.split('.').pop();
+
 
         if (ext == 'csv' || ext == 'xsl' || ext == 'xlsx') {
             const workerUrl = window.URL.createObjectURL(new Blob([
@@ -214,16 +219,7 @@ export class ProcessComponent implements OnInit, OnDestroy {
     importReport() {
         if (!this.hasFile) return;
 
-        const ssData = this.ss.serialize() as {
-            columns: {[key: string]: any},
-            data: {
-                cell: string,
-                css: string,
-                value: string
-            }[],
-            format: {[key: string]: any}[],
-            styles: {[key: string]: any}
-        };
+        const ssData = this.ss.serialize() as SpreadsheetSerialized;
         // console.dir(ssData);
         const rowsCount = this.ss._sizes.rowsCount;
         const colsCount = this.ss._sizes.colsCount;
@@ -273,17 +269,23 @@ export class ProcessComponent implements OnInit, OnDestroy {
         this.processSales(sales).subscribe((res) => {
             if (res) console.dir(this.dtos);
 
-            // TODO: 
-            // send all pending contacts to graphql to add them all at the same time
-            // 
-            // this.service.saveContacts(this.pendingContactQueue).subscribe(res => {
-            //  DO SOME STUFF IN HERE... 
-            //
-            //  NEED TO MATCH THE CONTACT IDS BACK AGAINST THE DAILY SALES SO THAT THE CONTACT IDS 
-            //  ARE RELATED... 
-            // })
-            // 
 
+            const importModelId = this.selectedImportModel.importModelId;
+            const dto: ReportImport = {
+                importModelId: importModelId,
+                name: this.reportImportName
+            };
+            
+            this.saleService.saveReportImport(dto).subscribe(result => {
+                const saved = result.data.saveReportImport;
+                const exists = this.reportImports.findIndex(ri => ri.reportImportId == saved.reportImportId);
+
+                if (exists) {
+                    this.reportImports[exists] = saved;
+                } else {
+                    this.reportImports.push(saved);
+                }
+            });
         });
     }
 

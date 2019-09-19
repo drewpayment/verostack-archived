@@ -34,3 +34,4 @@ export * from './excel-2-json.model';
 export * from './gql.model';
 export * from './geocoding-request.model';
 export * from './geocoding-response.model';
+export * from './report-import.model';

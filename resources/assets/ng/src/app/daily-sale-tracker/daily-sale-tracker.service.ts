@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AuthService } from '@app/auth.service';
 import { Observable, throwError } from 'rxjs';
-import { SaleStatus, DailySale, HttpErrorResponse, DailySaleRequest, Graphql } from '@app/models';
+import { SaleStatus, DailySale, HttpErrorResponse, DailySaleRequest, Graphql, ReportImport } from '@app/models';
 import { HttpClient } from '@angular/common/http';
 import { catchError, map } from 'rxjs/operators';
 import { Moment } from 'moment';
@@ -90,6 +90,33 @@ export class DailySaleTrackerService {
             variables: {
                 dtos: dtos
             }
+        });
+    }
+
+    saveReportImport(dto: ReportImport): ApolloObservable<QueryResult<ReportImport>> {
+        return this.buoy.mutate({
+            mutation: gql`
+                mutation saveReportImport($dto: ReportImportInput!) {
+                    saveReportImport(input: $dto) {
+                        reportImportId name importModelId createdAt updatedAt
+                    }
+                }
+            `,
+            variables: {
+                dto: dto
+            }
+        });
+    }
+
+    getReportImports(): ApolloObservable<QueryResult<ReportImport[]>> {
+        return this.buoy.query({
+            query: gql`
+                {
+                    reportImports {
+                        reportImportId name importModelId createdAt updatedAt
+                    }
+                } 
+            `
         });
     }
 
