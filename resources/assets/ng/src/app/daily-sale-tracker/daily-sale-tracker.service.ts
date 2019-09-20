@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AuthService } from '@app/auth.service';
-import { Observable, throwError } from 'rxjs';
+import { Observable, throwError, BehaviorSubject } from 'rxjs';
 import { SaleStatus, DailySale, HttpErrorResponse, DailySaleRequest, Graphql, ReportImport } from '@app/models';
 import { HttpClient } from '@angular/common/http';
 import { catchError, map } from 'rxjs/operators';
@@ -19,6 +19,8 @@ export class DailySaleTrackerService {
 
     url: string;
     graphql = environment.graphql;
+
+    pastImports$ = new BehaviorSubject<ReportImport[]>(null);
 
     constructor(private http: HttpClient, private auth: AuthService, private buoy: Buoy) {
         this.url = `${this.auth.apiUrl}api`;
@@ -103,13 +105,17 @@ export class DailySaleTrackerService {
                 }
             `,
             variables: {
-                dto: dto
+                dto: {
+                    name: dto.name,
+                    import_model_id: dto.importModelId,
+                    client_id: dto.clientId
+                }
             }
         });
     }
 
-    getReportImports(): ApolloObservable<QueryResult<ReportImport[]>> {
-        return this.buoy.query({
+    fetchReportImports() {
+        this.buoy.query<ReportImport[]>({
             query: gql`
                 {
                     reportImports {
@@ -117,6 +123,11 @@ export class DailySaleTrackerService {
                     }
                 } 
             `
+        }).subscribe(result => {
+            const imports = result.data.reportImports as ReportImport[];
+            if (!imports) return;
+
+            this.pastImports$.next(imports);
         });
     }
 

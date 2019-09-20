@@ -43,6 +43,7 @@ class SaveDailySales
 
                 $sales[] = DailySale::create($d);
             }
+            DB::commit();
         } catch (Exception $e) {
             DB::rollback();
         }

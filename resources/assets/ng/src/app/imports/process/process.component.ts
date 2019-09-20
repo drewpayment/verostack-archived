@@ -73,7 +73,9 @@ export class ProcessComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.session.getUserItem().subscribe(u => this.user = u);
         this.agentsService.fetchGraphqlAgents();
-        this.saleService.getReportImports().subscribe(r => this.reportImports = r.data.reportImports);
+        this.saleService.fetchReportImports();
+
+        this.saleService.pastImports$.subscribe(imports => this.reportImports = imports);
     }
 
     ngOnDestroy() {
@@ -273,7 +275,8 @@ export class ProcessComponent implements OnInit, OnDestroy {
             const importModelId = this.selectedImportModel.importModelId;
             const dto: ReportImport = {
                 importModelId: importModelId,
-                name: this.reportImportName
+                name: this.reportImportName,
+                clientId: this.user.sessionUser.sessionClient
             };
             
             this.saleService.saveReportImport(dto).subscribe(result => {
@@ -347,7 +350,6 @@ export class ProcessComponent implements OnInit, OnDestroy {
                     if (sd.length) {
                         this.saleService.saveSalesList(sd).subscribe(resp => {
                             const sales = resp.data.saveDailySales;
-                            console.dir(sales);
 
                             ob.next(sales);
                             ob.complete();
@@ -493,6 +495,9 @@ export class ProcessComponent implements OnInit, OnDestroy {
                 this.contactIdSub.unsubscribe();
                 this.contactIdSub = null;
             }
+
+            // add has geo
+            d.hasGeo = true;
 
             ob.next(d);
             ob.complete();

@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { DailySaleTrackerService } from '@app/daily-sale-tracker/daily-sale-tracker.service';
+import { Observable } from 'rxjs';
+import { ReportImport } from '@app/models';
 
 @Component({
     selector: 'vs-past-imports',
@@ -7,9 +10,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PastImportsComponent implements OnInit {
 
-    constructor() { }
+    pastImports: ReportImport[];
+    displayColumns = ['name', 'date', 'importModel'];
+
+    constructor(private saleService: DailySaleTrackerService) {     
+    }
 
     ngOnInit() {
+        this.saleService.pastImports$.subscribe(imports => this.pastImports = imports);
     }
 
 }

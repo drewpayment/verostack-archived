@@ -1,4 +1,28 @@
 
 <div class="shadow-none p-3 mb-2 bg-light rounded">
-    <p class="display-4">Past Imports</p>
+    <div class="table-container" *ngIf="pastImports?.length; else noImports">
+        <mat-table [dataSource]="pastImports">
+            <ng-container matColumnDef="name">
+                <mat-header-cell *matHeaderCellDef>Report</mat-header-cell>
+                <mat-cell *matCellDef="let item">{{ item.name }}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="date">
+                <mat-header-cell *matHeaderCellDef>Date</mat-header-cell>
+                <mat-cell *matCellDef="let item">{{ item.updatedAt | date:'shortDate' }}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="importModel">
+                <mat-header-cell *matHeaderCellDef>Model</mat-header-cell>
+                <mat-cell *matCellDef="let item">{{ item.itemModel?.shortDesc }}</mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="displayColumns; sticky: true;"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayColumns;"></mat-row>
+        </mat-table>
+    </div>
+
+    <ng-template #noImports>
+        <p class="font-italic">No reports have been imported yet!</p>
+    </ng-template>
 </div>
