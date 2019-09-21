@@ -1,0 +1,25 @@
+
+type ReportImport {
+    reportImportId: ID!
+    name: String
+    importModelId: Int!
+    clientId: Int!
+    createdAt: DateTime
+    updatedAt: DateTime
+    importModel: ImportModel @hasOne
+}
+
+extend type Query {
+    reportImports: [ReportImport]! @all @middleware(checks: ["auth:api"])
+}
+
+extend type Mutation {
+    saveReportImport(input: ReportImportInput!): ReportImport! @middleware(checks: ["auth:api"])
+}
+
+input ReportImportInput {
+    report_import_id: Int
+    name: String
+    import_model_id: Int
+    client_id: Int
+}

@@ -120,6 +120,9 @@ export class DailySaleTrackerService {
                 {
                     reportImports {
                         reportImportId name importModelId createdAt updatedAt
+                        importModel {
+                            importModelId shortDesc
+                        }
                     }
                 } 
             `
@@ -127,6 +130,7 @@ export class DailySaleTrackerService {
             const imports = result.data.reportImports as ReportImport[];
             if (!imports) return;
 
+            console.dir(imports);
             this.pastImports$.next(imports);
         });
     }

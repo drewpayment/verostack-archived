@@ -1,7 +1,7 @@
 
 <div class="shadow-none p-3 mb-2 bg-light rounded">
-    <div class="table-container" *ngIf="pastImports?.length; else noImports">
-        <mat-table [dataSource]="pastImports">
+    <div class="table-container" *ngIf="(imports$|async)?.length; else noImports">
+        <mat-table [dataSource]="imports$ | async">
             <ng-container matColumnDef="name">
                 <mat-header-cell *matHeaderCellDef>Report</mat-header-cell>
                 <mat-cell *matCellDef="let item">{{ item.name }}</mat-cell>
@@ -14,7 +14,7 @@
 
             <ng-container matColumnDef="importModel">
                 <mat-header-cell *matHeaderCellDef>Model</mat-header-cell>
-                <mat-cell *matCellDef="let item">{{ item.itemModel?.shortDesc }}</mat-cell>
+                <mat-cell *matCellDef="let item">{{ item.importModel?.shortDesc }}</mat-cell>
             </ng-container>
 
             <mat-header-row *matHeaderRowDef="displayColumns; sticky: true;"></mat-header-row>

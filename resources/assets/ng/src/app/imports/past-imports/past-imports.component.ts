@@ -10,14 +10,16 @@ import { ReportImport } from '@app/models';
 })
 export class PastImportsComponent implements OnInit {
 
+    imports$: Observable<ReportImport[]>;
     pastImports: ReportImport[];
     displayColumns = ['name', 'date', 'importModel'];
 
     constructor(private saleService: DailySaleTrackerService) {     
+        this.imports$ = this.saleService.pastImports$.asObservable();
     }
 
     ngOnInit() {
-        this.saleService.pastImports$.subscribe(imports => this.pastImports = imports);
+        // this.saleService.pastImports$.subscribe(imports => this.pastImports = imports);
     }
 
 }
