@@ -3,6 +3,7 @@
 namespace App\GraphQL\Mutations;
 
 use App\DailySale;
+use App\Exceptions\GraphQLException;
 use App\SaleStatus;
 use Exception;
 use Illuminate\Support\Facades\Auth;
@@ -46,6 +47,8 @@ class SaveDailySales
             DB::commit();
         } catch (Exception $e) {
             DB::rollback();
+
+            throw new GraphQLException($e->getMessage(), $e->getTraceAsString(), true, 'SaleDailySales');
         }
 
         return $sales;

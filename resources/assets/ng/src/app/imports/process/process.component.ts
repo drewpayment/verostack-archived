@@ -3,7 +3,8 @@ import { FileUploader } from 'ad-file-upload';
 import { Spreadsheet } from 'dhx-spreadsheet';
 import { ISheetData, IStyle, IDataCell, DailySale, ImportModel, 
     ImportModelMap, DailySaleMapType, User, GeocodingRequest, GeocodingResponse, DncContact, 
-    DncContactRequest, ContactType, DailySaleRequest, IAgent, SaleStatus, PaidStatusType, SpreadsheetSerialized, ReportImport } from '@app/models';
+    DncContactRequest, ContactType, DailySaleRequest, IAgent, SaleStatus, PaidStatusType, 
+    SpreadsheetSerialized, ReportImport } from '@app/models';
 import { Moment } from 'moment';
 import * as moment from 'moment';
 import { SessionService } from '@app/session.service';
@@ -14,6 +15,8 @@ import { map } from 'rxjs/operators';
 import { ContactService } from '@app/contact/contact.service';
 import { DailySaleTrackerService } from '@app/daily-sale-tracker/daily-sale-tracker.service';
 import { AgentService } from '@app/agent/agent.service';
+import { MessageService } from '@app/message.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
     selector: 'vs-process',
@@ -67,7 +70,8 @@ export class ProcessComponent implements OnInit, OnDestroy {
         private service: ImportsService,
         private contactService: ContactService,
         private saleService: DailySaleTrackerService,
-        private agentsService: AgentService        
+        private agentsService: AgentService,
+        private msg: MessageService        
     ) { }
 
     ngOnInit() {
@@ -269,8 +273,11 @@ export class ProcessComponent implements OnInit, OnDestroy {
         }
 
         this.processSales(sales).subscribe((res) => {
-            if (res) console.dir(this.dtos);
+            if (!res) return;
+            this.dtos = res;
 
+            this.clearSpreadsheet();
+            this.msg.addMessage('Your sales have been imported.');
 
             const importModelId = this.selectedImportModel.importModelId;
             const dto: ReportImport = {
@@ -290,6 +297,10 @@ export class ProcessComponent implements OnInit, OnDestroy {
                 }
             });
         });
+    }
+
+    private clearSpreadsheet() {
+        this.ss.parse([]);
     }
 
     private processSales(sales: {[key: string]: any}[]): Observable<DailySale[]> {
@@ -348,10 +359,20 @@ export class ProcessComponent implements OnInit, OnDestroy {
                     });
 
                     if (sd.length) {
-                        this.saleService.saveSalesList(sd).subscribe(resp => {
-                            const sales = resp.data.saveDailySales;
+                        this.saleService.saveSalesList(sd).subscribe((resp: any) => {
+                            // this is an error from graphql, but i'm not sure how to customize this yet 
+                            if (!resp.data || resp.errors) {
+                                this.msg.addMessage(
+                                    'Failed to save. Make sure you aren\'t trying to duplicate existings sales',
+                                    'dismiss',
+                                    3500
+                                );
+                                ob.next([]);
+                            } else {
+                                const sales = resp.data.saveDailySales;
+                                ob.next(sales);
+                            }
 
-                            ob.next(sales);
                             ob.complete();
                         });
                     } else {

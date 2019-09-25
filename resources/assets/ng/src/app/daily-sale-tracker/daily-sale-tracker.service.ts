@@ -129,8 +129,6 @@ export class DailySaleTrackerService {
         }).subscribe(result => {
             const imports = result.data.reportImports as ReportImport[];
             if (!imports) return;
-
-            console.dir(imports);
             this.pastImports$.next(imports);
         });
     }
