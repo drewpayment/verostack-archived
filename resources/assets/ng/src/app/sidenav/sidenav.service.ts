@@ -1,13 +1,13 @@
-import {Injectable, OnChanges, SimpleChanges} from '@angular/core';
+import {Injectable} from '@angular/core';
 import { MatSidenav, MatDrawerToggleResult } from '@angular/material/sidenav';
-import { Subject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
 })
 export class SidenavService {
     private sidenav:MatSidenav;
-    opened$:Subject<boolean> = new Subject<boolean>();
+    opened$ = new BehaviorSubject<boolean>(false);
 
     constructor() {
         // if(this.sidenav != null) 
@@ -23,12 +23,12 @@ export class SidenavService {
 
     close():Promise<MatDrawerToggleResult> {
         this.opened$.next(false);
-        if(this.sidenav == null) return;
+        if (this.sidenav == null) return;
         return this.sidenav.close();
     }
 
     toggle(isOpen?:boolean):Promise<MatDrawerToggleResult> {
-        if(this.sidenav != null) 
+        if (this.sidenav != null) 
             this.opened$.next(!this.sidenav.opened);
         return this.sidenav.toggle(isOpen);
     }

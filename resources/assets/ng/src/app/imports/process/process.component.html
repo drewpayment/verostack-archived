@@ -47,7 +47,18 @@
                             <div *ngIf="hasFile; else noPreview">
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <div #spreadsheet class="import-spreadsheet"></div>
+                                        <button mat-raised-button type="button" (click)="toggleFullscreen()" 
+                                            color="primary"
+                                            [class.fs-exit-position]="isFullscreen"
+                                            [class.ml-2]="!isFullscreen"
+                                            [class.mt-2]="!isFullscreen">
+                                            <mat-icon>{{ isFullscreen ? 'fullscreen_exit' : 'fullscreen' }}</mat-icon>
+                                            <span>{{ isFullscreen ? 'Exit' : 'Fullscreen' }}</span>
+                                        </button>
+                                        <!-- SPREADSHEET CONTAINER FOR FULLSCREEN -->
+                                        <div [class.fullscreen]="isFullscreen">
+                                            <div #spreadsheet class="import-spreadsheet"></div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

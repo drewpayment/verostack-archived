@@ -17,6 +17,7 @@ import { DailySaleTrackerService } from '@app/daily-sale-tracker/daily-sale-trac
 import { AgentService } from '@app/agent/agent.service';
 import { MessageService } from '@app/message.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { SidenavService } from '@app/sidenav/sidenav.service';
 
 @Component({
     selector: 'vs-process',
@@ -63,6 +64,7 @@ export class ProcessComponent implements OnInit, OnDestroy {
     
     contactIdSub: Subscription;
     dtos = [] as DailySale[];
+    isFullscreen = false;
 
     constructor(
         private cd: ChangeDetectorRef, 
@@ -71,7 +73,8 @@ export class ProcessComponent implements OnInit, OnDestroy {
         private contactService: ContactService,
         private saleService: DailySaleTrackerService,
         private agentsService: AgentService,
-        private msg: MessageService        
+        private msg: MessageService,
+        private sidenav: SidenavService     
     ) { }
 
     ngOnInit() {
@@ -84,6 +87,10 @@ export class ProcessComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         if (this.contactIdSub) this.contactIdSub.unsubscribe();
+    }
+
+    toggleFullscreen() {
+        this.isFullscreen = !this.isFullscreen;
     }
 
     fileAddedHandler(item: FileList) {
@@ -219,6 +226,12 @@ export class ProcessComponent implements OnInit, OnDestroy {
     }
 
     uploadFile() {
+        const opened = this.sidenav.opened$.getValue();
+
+        if (opened) {
+            this.sidenav.close();
+        }
+
         this.fileUploadElement.nativeElement.click();
     }
 
