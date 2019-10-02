@@ -18,6 +18,8 @@ import { AgentService } from '@app/agent/agent.service';
 import { MessageService } from '@app/message.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { SidenavService } from '@app/sidenav/sidenav.service';
+import { Router, NavigationEnd, ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
+import { Location } from '@angular/common';
 
 @Component({
     selector: 'vs-process',
@@ -74,8 +76,10 @@ export class ProcessComponent implements OnInit, OnDestroy {
         private saleService: DailySaleTrackerService,
         private agentsService: AgentService,
         private msg: MessageService,
-        private sidenav: SidenavService     
-    ) { }
+        private sidenav: SidenavService,
+        private router: Router,
+        private location: Location
+    ) {}
 
     ngOnInit() {
         this.session.getUserItem().subscribe(u => this.user = u);
@@ -266,6 +270,12 @@ export class ProcessComponent implements OnInit, OnDestroy {
             }
         }
 
+        /** CHECK THAT WE HAVE AN ACTUAL HEADER MAP */
+        if (!headerMap.length) {
+            this.msg.addMessage('We were unable to match your model to the report you chose. Please verify your import model.');
+            return;
+        }
+
         const sales = [] as {[key: string]: any}[];
         for (let r = 0; r < rowsCount; r++) {
             const rowStart = (colsCount * r);
@@ -308,6 +318,10 @@ export class ProcessComponent implements OnInit, OnDestroy {
                 } else {
                     this.reportImports.push(saved);
                 }
+
+                this.router.navigateByUrl('/refresh', { skipLocationChange: true }).then(() => {
+                    this.router.navigate([decodeURI(this.location.path())], { skipLocationChange: true });
+                });
             });
         });
     }

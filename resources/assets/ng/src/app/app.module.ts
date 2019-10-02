@@ -31,6 +31,7 @@ import { LocalStorage } from '@ngx-pwa/local-storage';
 import { BuoyModule } from './buoy/buoy.module';
 import { BuoyConfig, buoyConfig, BuoyHeadersManipulator } from './buoy/buoy-config';
 import { Buoy } from './buoy/buoy';
+import { RefreshComponent } from './refresh/refresh.component';
 
 @NgModule({
     imports: [
@@ -64,6 +65,7 @@ import { Buoy } from './buoy/buoy';
         NewSaleComponent,
         ForgotPasswordComponent,
         ResetPasswordComponent,
+        RefreshComponent,
     ],
     entryComponents: [
         EditAgentDialogComponent,

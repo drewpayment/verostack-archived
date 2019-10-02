@@ -17,6 +17,7 @@ import { NewSaleComponent } from './daily-sale-tracker/components/new-sale/new-s
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { environment } from '@env/environment';
+import { RefreshComponent } from './refresh/refresh.component';
 
 const routes: Routes = [
     { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -36,8 +37,9 @@ const routes: Routes = [
     { path: 'new-sale-contact', component: NewSaleComponent, canActivate: [AuthGuard] },
     { path: 'contacts', loadChildren: './contact/contact.module#ContactModule' },
     { path: 'imports', loadChildren: './imports/imports.module#ImportsModule' },
+    { path: 'refresh', component: RefreshComponent },
     { path: '**', redirectTo: 'home' }
-]
+];
 
 @NgModule({
   exports: [ RouterModule ],

@@ -20,7 +20,7 @@ mat-card {
   }
 }
 
-::ng-deep mat-card-content {
+::ng-deep .mat-card-content {
   max-height: 225px;
   overflow-y: auto;
   overflow-x: hidden;
